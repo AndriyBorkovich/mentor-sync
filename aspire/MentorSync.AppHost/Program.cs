@@ -2,8 +2,10 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // Postgres database
 var postgres = builder.AddPostgres("postgres-db")
-                        .WithPgAdmin()
-                        .WithDataVolume(name: "postgres-data", isReadOnly: false);
+                        .WithPgAdmin(containerBuilder =>
+                            containerBuilder.WithLifetime(ContainerLifetime.Persistent))
+                        .WithDataVolume(name: "postgres-data", isReadOnly: false)
+                        .WithLifetime(ContainerLifetime.Persistent);
 var postgresDb = postgres.AddDatabase("MentorSyncDb");
 
 // API project
