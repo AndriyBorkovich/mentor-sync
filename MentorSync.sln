@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MentorSync.AppHost", "aspir
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MentorSync.ServiceDefaults", "aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj", "{4EC2BDB4-F7AA-47A9-9157-384BA277BF68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MentorSync.MigrationService", "src\MentorSync.MigrationService\MentorSync.MigrationService.csproj", "{AE138BD0-E5DA-44CF-BD73-C6992FD07917}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,5 +76,9 @@ Global
 		{4EC2BDB4-F7AA-47A9-9157-384BA277BF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EC2BDB4-F7AA-47A9-9157-384BA277BF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EC2BDB4-F7AA-47A9-9157-384BA277BF68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE138BD0-E5DA-44CF-BD73-C6992FD07917}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE138BD0-E5DA-44CF-BD73-C6992FD07917}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE138BD0-E5DA-44CF-BD73-C6992FD07917}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE138BD0-E5DA-44CF-BD73-C6992FD07917}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

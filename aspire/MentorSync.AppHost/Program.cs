@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Postgres database
+// postgres database
 var postgres = builder.AddPostgres("postgres-db")
                         .WithPgAdmin(containerBuilder =>
                             containerBuilder.WithLifetime(ContainerLifetime.Persistent))
@@ -9,7 +9,12 @@ var postgres = builder.AddPostgres("postgres-db")
 var postgresDb = postgres.AddDatabase("MentorSyncDb");
 
 // API project
-builder.AddProject<Projects.MentorSync_API>("MentorSyncApi")
+builder.AddProject<Projects.MentorSync_API>("api")
+    .WithReference(postgresDb)
+    .WaitFor(postgresDb);
+
+// migrations service
+builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
     .WithReference(postgresDb)
     .WaitFor(postgresDb);
 
