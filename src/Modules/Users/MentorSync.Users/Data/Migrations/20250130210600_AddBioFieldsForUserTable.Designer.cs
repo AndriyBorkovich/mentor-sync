@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MentorSync.Users.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MentorSync.Users.Data.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250130210600_AddBioFieldsForUserTable")]
+    partial class AddBioFieldsForUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,76 +244,6 @@ namespace MentorSync.Users.Data.Migrations
                     b.ToTable("UserTokens", "users");
                 });
 
-            modelBuilder.Entity("MentorSync.Users.Domain.MenteeProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.PrimitiveCollection<List<string>>("DesiredSkills")
-                        .HasColumnType("text[]");
-
-                    b.Property<string>("LearningGoals")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("MenteeId")
-                        .HasColumnType("integer");
-
-                    b.PrimitiveCollection<List<string>>("PreferredLanguages")
-                        .HasColumnType("text[]");
-
-                    b.Property<int>("PreferredMentorIndustry")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MenteeProfiles", "users");
-                });
-
-            modelBuilder.Entity("MentorSync.Users.Domain.MentorProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Availability")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ExperienceYears")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Industries")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MentorId")
-                        .HasColumnType("integer");
-
-                    b.PrimitiveCollection<List<string>>("ProgrammingLanguages")
-                        .HasColumnType("text[]");
-
-                    b.PrimitiveCollection<List<string>>("Skills")
-                        .HasColumnType("text[]");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MentorProfiles", "users");
-                });
-
             modelBuilder.Entity("MentorSync.Users.Domain.AppRoleClaim", b =>
                 {
                     b.HasOne("MentorSync.Users.Domain.AppRole", "Role")
@@ -370,24 +303,6 @@ namespace MentorSync.Users.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MentorSync.Users.Domain.MenteeProfile", b =>
-                {
-                    b.HasOne("MentorSync.Users.Domain.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MentorSync.Users.Domain.MentorProfile", b =>
-                {
-                    b.HasOne("MentorSync.Users.Domain.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

@@ -2,8 +2,8 @@
 
 namespace MentorSync.Users.Domain;
 
-public class AppRole : IdentityRole<int>
+public sealed class AppRole : IdentityRole<int>
 {
-    public virtual ICollection<AppUserRole> UserRoles { get; set; }
-    public virtual ICollection<AppRoleClaim> RoleClaims { get; set; }
+    public ICollection<AppUserRole> UserRoles { get; set; }
+    public ICollection<AppRoleClaim> RoleClaims { get; set; }
 }

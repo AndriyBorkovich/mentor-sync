@@ -2,7 +2,7 @@
 
 namespace MentorSync.Users.Domain;
 
-public class AppUserToken : IdentityUserToken<int>
+public sealed class AppUserToken : IdentityUserToken<int>
 {
-    public virtual AppUser User { get; set; }
+    public AppUser User { get; set; }
 }

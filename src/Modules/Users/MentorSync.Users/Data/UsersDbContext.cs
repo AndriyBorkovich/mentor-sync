@@ -5,20 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Data;
 
-public class UsersDbContext 
-    : IdentityDbContext<
+public class UsersDbContext(DbContextOptions<UsersDbContext> options) : 
+    IdentityDbContext<
         AppUser, AppRole, int,
         AppUserClaim, AppUserRole, AppUserLogin,
-        AppRoleClaim, AppUserToken>
+        AppRoleClaim, AppUserToken>(options)
 {
-    public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) { }
-    
+    public DbSet<MentorProfile> MentorProfiles { get; set; }
+    public DbSet<MenteeProfile> MenteeProfiles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.HasDefaultSchema(SchemaConstants.Users);
         
+        // reconfigure base Identity tables
         modelBuilder.Entity<AppUser>(b =>
         {
             // Each User can have many UserClaims
