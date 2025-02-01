@@ -1,4 +1,7 @@
-﻿using MentorSync.SharedKernel;
+﻿using System.Reflection;
+using FluentValidation;
+using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +13,7 @@ namespace MentorSync.Users;
 
 public static class ModuleRegistration
 {
-    public static void AddUsersModule(this IServiceCollection services, IHostApplicationBuilder builder)
+    public static void AddUsersModule(this IHostApplicationBuilder builder)
     {
         builder.AddNpgsqlDbContext<UsersDbContext>(
             connectionName: GeneralConstants.DatabaseName,
@@ -19,7 +22,7 @@ public static class ModuleRegistration
                 opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Users));
             });
 
-        services.AddIdentity<AppUser, AppRole>(options =>
+        builder.Services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.SignIn.RequireConfirmedEmail = true;
@@ -37,11 +40,15 @@ public static class ModuleRegistration
         .AddEntityFrameworkStores<UsersDbContext>()
         .AddDefaultTokenProviders();
         
-        services.Configure<IdentityOptions>(options =>
+        builder.Services.Configure<IdentityOptions>(options =>
         {
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
         });
+
+        builder.Services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        builder.Services.AddEndpoints(typeof(UsersDbContext).Assembly);
     }
 }
