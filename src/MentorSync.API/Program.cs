@@ -1,5 +1,7 @@
+using System.Reflection;
 using MentorSync.API;
 using MentorSync.ServiceDefaults;
+using MentorSync.SharedKernel.Behaviours;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users;
 using Serilog;
@@ -25,6 +27,12 @@ builder.Services.AddProblemDetails(options =>
 );
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 
 builder.Services.AddCors(options =>
 {

@@ -48,7 +48,7 @@ public static class ModuleRegistration
         });
 
         builder.Services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
         builder.Services.AddEndpoints(typeof(UsersDbContext).Assembly);
     }
 }

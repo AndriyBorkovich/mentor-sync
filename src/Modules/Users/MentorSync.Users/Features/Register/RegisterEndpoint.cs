@@ -1,17 +1,25 @@
-﻿using MentorSync.SharedKernel.Interfaces;
+﻿using Ardalis.Result;
+using MediatR;
+using MentorSync.SharedKernel.Extensions;
+using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Features.Register;
 
 public sealed class RegisterEndpoint : IEndpoint
 {
-    public  void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/register", (ILogger<RegisterEndpoint> logger) =>
+        app.MapPost("users/register", async (RegisterCommand request, ISender sender) =>
         {
-            logger.LogInformation("Register is called");
-        });
+            var result = await sender.Send(request);
+            
+            return result.ToMinimalApiResult();
+        })
+        .WithTags("Users")
+        .Produces(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest);;
     }
 }
