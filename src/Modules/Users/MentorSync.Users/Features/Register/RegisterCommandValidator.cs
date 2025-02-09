@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MentorSync.SharedKernel;
 
 namespace MentorSync.Users.Features.Register;
 
@@ -11,6 +12,18 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             .EmailAddress()
             .MaximumLength(256);
 
+        RuleFor(x => x.UserName)
+            .NotEmpty()
+            .MinimumLength(4)
+            .MaximumLength(50);
+        
+        RuleFor(x => x.Role)
+            .NotEmpty()
+            .Must(x => x.Equals(Roles.Admin, StringComparison.InvariantCultureIgnoreCase)
+                        || x.Equals(Roles.Mentor, StringComparison.InvariantCultureIgnoreCase)
+                        || x.Equals(Roles.Mentee, StringComparison.InvariantCultureIgnoreCase))
+            .WithMessage("Such role doesn't exist");
+
         RuleFor(x => x.Password)
             .NotEmpty()
             .MinimumLength(8)
@@ -21,6 +34,7 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character");
 
         RuleFor(x => x.ConfirmPassword)
-            .Equal(x => x.Password).WithMessage("Passwords do not match");
+            .Equal(x => x.Password)
+            .WithMessage("Passwords do not match");
     }
 }

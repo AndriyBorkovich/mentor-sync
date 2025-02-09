@@ -1,5 +1,4 @@
-﻿using Ardalis.Result;
-using MediatR;
+﻿using MediatR;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +17,7 @@ public sealed class RegisterEndpoint : IEndpoint
             
             return result.DecideWhatToReturn();
         })
+        .AllowAnonymous()
         .WithTags("Users")
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);;
