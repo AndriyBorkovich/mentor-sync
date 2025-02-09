@@ -6,7 +6,7 @@ namespace MentorSync.SharedKernel.Extensions;
 
 public static class ResultExtensions
 {
-    public static IResult ToMinimalApiResult<T>(this Result<T> result)
+    public static IResult DecideWhatToReturn<T>(this Result<T> result)
     {
         return result.Status switch
         {
@@ -43,7 +43,7 @@ public static class ResultExtensions
         };
     }
 
-    public static IResult ToMinimalApiResult(this Result result)
+    public static IResult DecideWhatToReturn(this Result result)
     {
         return result.Status switch
         {

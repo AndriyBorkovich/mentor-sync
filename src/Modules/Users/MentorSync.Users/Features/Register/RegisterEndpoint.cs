@@ -16,7 +16,7 @@ public sealed class RegisterEndpoint : IEndpoint
         {
             var result = await sender.Send(request);
             
-            return result.ToMinimalApiResult();
+            return result.DecideWhatToReturn();
         })
         .WithTags("Users")
         .Produces(StatusCodes.Status200OK)
