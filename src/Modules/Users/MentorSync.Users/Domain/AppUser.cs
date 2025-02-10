@@ -5,6 +5,9 @@ namespace MentorSync.Users.Domain;
 
 public sealed class AppUser : IdentityUser<int>
 {
+    [StringLength(300)]
+    public string RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiryTime { get; set; }
     [StringLength(500)]
     public string ProfileImageUrl { get; set; }
     public bool IsActive { get; set; }

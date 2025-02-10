@@ -10,13 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(SwaggerConfiguration.Configure);
 
 builder.Services.AddSerilog((_, lc) => lc.ReadFrom.Configuration(builder.Configuration));
-
-builder.Services.AddAuthorization();
-
-builder.Services.AddSwaggerGen(options => options.CustomSchemaIds(t => t.FullName?.Replace('+', '.')));
 
 builder.Services.AddProblemDetails(options =>
     options.CustomizeProblemDetails = ctx =>
@@ -40,7 +36,6 @@ builder.Services.AddCors(options =>
         policyConfig => policyConfig.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
 
-
 builder.AddUsersModule();
 
 var app = builder.Build();
@@ -58,6 +53,7 @@ app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapEndpoints();

@@ -7,6 +7,11 @@ public static class GeneralConstants
     public const string DefaultPassword = "qadbsfzYFJHS!";
 }
 
+public static class TagsConstants
+{
+    public const string Users = nameof(Users);
+}
+
 public static class SchemaConstants
 {
     public const string Users = "users";
