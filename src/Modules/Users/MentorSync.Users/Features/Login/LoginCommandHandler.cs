@@ -27,17 +27,10 @@ public sealed class LoginCommandHandler(
         var result = await signInManager.CheckPasswordSignInAsync(
             user,
             command.Password,
-            lockoutOnFailure: true);
+            lockoutOnFailure: false);
 
         if (!result.Succeeded)
         {
-            if (result.IsLockedOut)
-            {
-                logger.LogWarning("Login failed: User {Email} is locked out", command.Email);
-                
-                return Result.Error("Account is locked. Please try again later");
-            }
-
             if (result.IsNotAllowed)
             {
                 logger.LogWarning("Login failed: User {Email} is not allowed to sign in", command.Email);
