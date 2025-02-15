@@ -1,18 +1,19 @@
-name: .NET 9 Aspire to Azure Deployment
+name: Deploy to Azure
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-     - master
+  workflow_run:
+    workflows: ["Build & test"]
+    types:
+      - completed
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
     env:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
@@ -60,10 +61,10 @@ jobs:
       - name: Extract Solution Name
         id: extract_solution_name
         run: |
-            # Extract the solution name from the .sln file
-            SOLUTION_NAME=$(ls *.sln | sed 's/\.sln$//')
-            echo "Solution Name: $SOLUTION_NAME"
-            echo "SOLUTION_NAME=$SOLUTION_NAME" >> $GITHUB_ENV
+          # Extract the solution name from the .sln file
+          SOLUTION_NAME=$(ls *.sln | sed 's/\.sln$//')
+          echo "Solution Name: $SOLUTION_NAME"
+          echo "SOLUTION_NAME=$SOLUTION_NAME" >> $GITHUB_ENV
 
       - name: Provision Infrastructure
         run: azd provision --no-prompt
