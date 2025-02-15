@@ -62,14 +62,14 @@ jobs:
 
       - name: Provision Infrastructure
         run: azd provision --no-prompt
-        working-directory: ${{ env.SOLUTION_NAME }}.AppHost
+        working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
 
       - name: Refresh azd env (pulls latest infrastructure provision)
         run: azd env refresh --no-prompt
         env:
           AZURE_LOCATION: ${{ env.AZURE_LOCATION }}
-        working-directory: ${{ env.SOLUTION_NAME }}.AppHost
+        working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
 
       - name: Deploy Application
         run: azd deploy --no-prompt
-        working-directory: ${{ env.SOLUTION_NAME }}.AppHost
+        working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
