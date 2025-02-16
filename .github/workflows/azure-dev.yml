@@ -67,6 +67,11 @@ jobs:
           echo "Solution Name: $SOLUTION_NAME"
           echo "SOLUTION_NAME=$SOLUTION_NAME" >> $GITHUB_ENV
 
+      - name: Set AZD environment variables
+        run: |
+          echo $AZD_INITIAL_ENVIRONMENT_CONFIG | jq -r 'to_entries | .[] | "azd env set \(.key) \(.value)"' | sh
+        shell: bash
+
       - name: Provision Infrastructure
         run: azd provision --no-prompt
         working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
