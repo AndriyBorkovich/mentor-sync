@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json.schemastore.org/aspire-8.0.json",
+  "resources": {
+    "username": {
+      "type": "parameter.v0",
+      "value": "{username.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true
+        }
+      }
+    },
+    "password": {
+      "type": "parameter.v0",
+      "value": "{password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true
+        }
+      }
+    },
+    "postgres-db": {
+      "type": "azure.bicep.v0",
+      "connectionString": "{postgres-db.secretOutputs.connectionString}",
+      "path": "postgres-db.module.bicep",
+      "params": {
+        "keyVaultName": "",
+        "administratorLogin": "{username.value}",
+        "administratorLoginPassword": "{password.value}"
+      }
+    },
+    "MentorSyncDb": {
+      "type": "value.v0",
+      "connectionString": "{postgres-db.secretOutputs.MentorSyncDb-connectionString}"
+    },
+    "api": {
+      "type": "project.v0",
+      "path": "../../src/MentorSync.API/MentorSync.API.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "HTTP_PORTS": "{api.bindings.http.targetPort}",
+        "ConnectionStrings__MentorSyncDb": "{MentorSyncDb.connectionString}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "external": true
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http",
+          "external": true
+        }
+      }
+    },
+    "migration-service": {
+      "type": "project.v0",
+      "path": "../../src/MentorSync.MigrationService/MentorSync.MigrationService.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ConnectionStrings__MentorSyncDb": "{MentorSyncDb.connectionString}"
+      }
+    }
+  }
+}
