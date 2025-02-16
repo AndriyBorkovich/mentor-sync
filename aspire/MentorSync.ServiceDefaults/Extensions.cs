@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -63,11 +64,11 @@ public static class Extensions
             {
                 tracing.AddSource(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation(t =>
-                        t.Filter =  (HttpContext httpContext) =>
-                            !(httpContext.Request.Path.StartsWithSegments("/health")
+                        t.Filter =  httpContext => !(httpContext.Request.Path.StartsWithSegments("/health")
                               || httpContext.Request.Path.StartsWithSegments("/alive")))
                     .AddHttpClientInstrumentation()
                     .AddEntityFrameworkCoreInstrumentation()
+                    .AddNpgsql()
                     .SetSampler(new AlwaysOnSampler());
             });
 

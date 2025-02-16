@@ -22,6 +22,7 @@ public static class ModuleRegistration
     {
         builder.AddNpgsqlDbContext<UsersDbContext>(
             connectionName: GeneralConstants.DatabaseName,
+            configureSettings: c => c.DisableTracing = true,
             configureDbContextOptions: opt =>
             {
                 opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Users));
