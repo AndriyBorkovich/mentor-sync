@@ -16,6 +16,7 @@ var postgresDb = postgres.AddDatabase("MentorSyncDb");
 
 // API project
 builder.AddProject<Projects.MentorSync_API>("api")
+    .WithExternalHttpEndpoints()
     .WithReference(postgresDb)
     .WaitFor(postgresDb);
 
