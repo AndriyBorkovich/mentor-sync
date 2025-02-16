@@ -1,7 +1,10 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 // postgres database
-var postgres = builder.AddAzurePostgresFlexibleServer("postgres-db");
+var username = builder.AddParameter("username", secret: true);
+var password = builder.AddParameter("password", secret: true);
+var postgres = builder.AddAzurePostgresFlexibleServer("postgres-db")
+                    .WithPasswordAuthentication(username, password);
                        // for local development
                     //    .RunAsContainer(b => 
                     //     {
