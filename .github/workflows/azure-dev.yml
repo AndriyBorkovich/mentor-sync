@@ -70,6 +70,8 @@ jobs:
       - name: Provision Infrastructure
         run: azd provision --no-prompt
         working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
+        env:
+          AZD_INITIAL_ENVIRONMENT_CONFIG: ${{ secrets.AZD_INITIAL_ENVIRONMENT_CONFIG }}
 
       - name: Refresh azd env (pulls latest infrastructure provision)
         run: azd env refresh --no-prompt
