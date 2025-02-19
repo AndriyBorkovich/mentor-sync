@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MentorSync.Users.Services;
 
 namespace MentorSync.Users;
 
@@ -28,11 +29,27 @@ public static class ModuleRegistration
                 opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Users));
             });
 
+        AddElasticSearch(builder);
+
         AddIdentity(builder.Services);
 
         AddCustomAuthorization(builder.Services, builder.Configuration);
 
         AddEndpoints(builder.Services);
+    }
+
+    private static void AddElasticSearch(IHostApplicationBuilder builder)
+    {
+        builder.AddElasticsearchClient("elasticsearch"/*, configureClientSettings: ConfigureClientSettings*/);
+        builder.Services.AddSingleton<IElasticSearchService, ElasticSearchService>();
+
+        // void ConfigureClientSettings(ElasticsearchClientSettings settings)
+        // {
+        //     settings.DefaultMappingFor<AppUser>(m =>
+        //     {
+        //         m.IndexName("users");
+        //     });
+        // }
     }
 
     private static void AddIdentity(IServiceCollection services)
@@ -41,15 +58,15 @@ public static class ModuleRegistration
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.SignIn.RequireConfirmedEmail = true;
-                
+
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = true;
-                
+
                 options.User.RequireUniqueEmail = true;
-                
+
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             })
             .AddSignInManager()
@@ -74,12 +91,12 @@ public static class ModuleRegistration
     private static void AddCustomAuthorization(IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthorization();
-        
+
         var jwtOptions = new JwtOptions();
         configuration.GetSection(JwtOptions.SectionName).Bind(jwtOptions);
-        
+
         services.AddSingleton(Options.Create(jwtOptions));
-        
+
         // jwt & google
         services.AddAuthentication(options =>
             {
@@ -101,7 +118,7 @@ public static class ModuleRegistration
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                 };
-                
+
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>

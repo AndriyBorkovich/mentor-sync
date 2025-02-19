@@ -1,26 +1,28 @@
-﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
+using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace MentorSync.Users.Features.Register;
+namespace MentorSync.Users.Features.Bio.Search;
 
-public sealed class RegisterEndpoint : IEndpoint
+public class SearchBioEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("users/register", async (RegisterCommand request, ISender sender) =>
+        app.MapGet("users/bio", async ([FromQuery, Required] string text, ISender sender) =>
         {
-            var result = await sender.Send(request);
+            var result = await sender.Send(new SearchUsersByBioRequest(text));
 
             return result.DecideWhatToReturn();
         })
         .AllowAnonymous()
         .WithTags(TagsConstants.Users)
-        .Produces(StatusCodes.Status200OK)
+        .Produces<List<SearchUserByBioResponse>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }

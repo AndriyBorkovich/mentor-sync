@@ -56,9 +56,9 @@ public class GoogleCallbackEndpoint : IEndpoint
                         return Results.Problem("Failed to create user account");
                     }
 
-                    var addLoginResult = await userManager.AddLoginAsync(user, 
+                    var addLoginResult = await userManager.AddLoginAsync(user,
                         new UserLoginInfo("Google", googleId, "Google"));
-                    
+
                     if (!addLoginResult.Succeeded)
                     {
                         return Results.Problem("Failed to add external login info");
@@ -77,7 +77,7 @@ public class GoogleCallbackEndpoint : IEndpoint
                 // }
 
                 // 2. Or return the token directly as JSON
-                return Results.Ok(new AuthResponse(token.AccessToken,token.RefreshToken, token.Expiration));
+                return Results.Ok(new AuthResponse(token.AccessToken, token.RefreshToken, token.Expiration));
             }
             catch (Exception ex)
             {

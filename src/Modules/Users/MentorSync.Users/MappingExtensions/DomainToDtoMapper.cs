@@ -1,6 +1,12 @@
-﻿namespace MentorSync.Users.MappingExtensions;
+﻿using MentorSync.Users.Domain;
+using MentorSync.Users.Features.Bio.Search;
 
-public class DomainToDtoMapper
+namespace MentorSync.Users.MappingExtensions;
+
+public static class DomainToDtoMapper
 {
-    
+    public static SearchUserByBioResponse ToSearchByBioResponse(this AppUser user)
+    {
+        return new SearchUserByBioResponse(user.Id, user.Bio);
+    }
 }
