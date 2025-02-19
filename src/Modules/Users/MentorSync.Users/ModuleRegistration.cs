@@ -14,7 +14,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MentorSync.Users.Services;
-using Elastic.Clients.Elasticsearch;
 
 namespace MentorSync.Users;
 

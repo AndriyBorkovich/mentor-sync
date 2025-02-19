@@ -22,7 +22,7 @@ public class SearchBioEndpoint : IEndpoint
         })
         .AllowAnonymous()
         .WithTags(TagsConstants.Users)
-        .Produces<string>(StatusCodes.Status200OK)
+        .Produces<List<SearchUserByBioResponse>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
