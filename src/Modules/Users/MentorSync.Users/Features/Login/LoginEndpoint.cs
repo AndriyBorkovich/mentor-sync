@@ -14,14 +14,14 @@ public sealed class LoginEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/users/login", async (LoginCommand command,ISender sender) =>
+        app.MapPost("/users/login", async (LoginCommand command, ISender sender) =>
             {
                 var result = await sender.Send(command);
                 return result.DecideWhatToReturn();
             })
             .WithTags(TagsConstants.Users)
             .AllowAnonymous()
-            .Produces<AuthResponse>()
+            .Produces<AuthResponse>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 }
