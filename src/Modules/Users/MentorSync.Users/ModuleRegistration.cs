@@ -14,6 +14,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MentorSync.Users.Services;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authentication.Google;
+using MentorSync.Users.Services.Google;
 
 namespace MentorSync.Users;
 
@@ -36,6 +39,14 @@ public static class ModuleRegistration
         AddCustomAuthorization(builder.Services, builder.Configuration);
 
         AddEndpoints(builder.Services);
+
+        builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(10);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
     }
 
     private static void AddElasticSearch(IHostApplicationBuilder builder)
@@ -97,20 +108,20 @@ public static class ModuleRegistration
 
         services.AddSingleton(Options.Create(jwtOptions));
 
-        // jwt & google
-        services.AddAuthentication(options =>
+        services.AddAuthentication(
+            opt =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddCookie()
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtOptions.Issuer,
@@ -137,15 +148,36 @@ public static class ModuleRegistration
                         return Task.CompletedTask;
                     },
                 };
-            })
-            /*.AddGoogle(options =>
-            {
-                options.ClientId = configuration["Authentication:Google:ClientId"]!;
-                options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
-                options.Scope.Add("email");
-                options.Scope.Add("profile");
-            })*/;
+            });
+
+        // TODO: implement google authentication of frontend
+        // .AddGoogle(options =>
+        // {
+        //     options.ClientId = configuration["Authentication:Google:ClientId"]!;
+        //     options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+
+        //     options.Events = new OAuthEvents
+        //     {
+        //         OnRedirectToAuthorizationEndpoint = context =>
+        //         {
+        //             return Task.CompletedTask;
+        //         },
+        //         OnCreatingTicket = context =>
+        //         {
+        //             return Task.CompletedTask;
+        //         },
+        //         OnRemoteFailure = context =>
+        //         {
+        //             return Task.CompletedTask;
+        //         },
+        //         OnTicketReceived = context =>
+        //         {
+        //             return Task.CompletedTask;
+        //         }
+        //     };
+        // });
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IGoogleOAuthService, GoogleOAuthService>();
     }
 }

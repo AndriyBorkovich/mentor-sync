@@ -20,7 +20,7 @@ public class SearchBioEndpoint : IEndpoint
 
             return result.DecideWhatToReturn();
         })
-        .AllowAnonymous()
+        .RequireAuthorization(policyNames: "GooglePolicy")
         .WithTags(TagsConstants.Users)
         .Produces<List<SearchUserByBioResponse>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);

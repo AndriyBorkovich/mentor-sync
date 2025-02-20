@@ -2,6 +2,7 @@ using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -18,7 +19,7 @@ public sealed class AddBioEndpoint : IEndpoint
 
             return result.DecideWhatToReturn();
         })
-        .AllowAnonymous()
+        .RequireAuthorization()
         .WithTags(TagsConstants.Users)
         .Produces<string>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);
