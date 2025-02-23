@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+        <PackageReference Include="Aspire.Hosting.Azure" Version="9.0.0" />
         <PackageReference Include="Aspire.Hosting.Azure.PostgreSQL" Version="9.0.0" />
         <PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.5.24551.3" />
     </ItemGroup>
@@ -20,6 +21,10 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\MentorSync.API\MentorSync.API.csproj" />
       <ProjectReference Include="..\..\src\MentorSync.MigrationService\MentorSync.MigrationService.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="infra\communication-service\" />
     </ItemGroup>
 
 </Project>

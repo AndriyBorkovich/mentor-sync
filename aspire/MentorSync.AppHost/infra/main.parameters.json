@@ -8,6 +8,9 @@
       "password": {
         "value": "${AZURE_PASSWORD}"
       },
+      "password_es": {
+        "value": "${AZURE_PASSWORD_ES}"
+      },
       "username": {
         "value": "${AZURE_USERNAME}"
       },

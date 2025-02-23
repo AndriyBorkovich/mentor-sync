@@ -1,6 +1,8 @@
+using Aspire.Hosting.Azure;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-// postgres database
+// Azure postgres database
 var usernameDb = builder.AddParameter("username", secret: true);
 var passwordDb = builder.AddParameter("password", secret: true);
 
@@ -35,17 +37,27 @@ var kibana = builder
     .WithEndpoint(port: 5601, targetPort: 5601)
     .WithLifetime(ContainerLifetime.Persistent);
 
+// Azure SMTP server
+var communicationService = builder.AddBicepTemplate(name: "communication-service", "../bicep-templates/communication-service.module.bicep")
+                                   .WithParameter("isProd", false)
+                                   .WithParameter("communicationServiceName", "cs-mentorsync-dev")
+                                   .WithParameter("emailServiceName", "es-mentorsync-dev")
+                                   .WithParameter(AzureBicepResource.KnownParameters.KeyVaultName);
+
+var smtpConnectionString = communicationService.GetSecretOutput("cs-connectionString");
+
+// migrations service
+builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
+    .WithReference(postgresDb)
+    .WaitFor(postgresDb);
+
 // API project
 builder.AddProject<Projects.MentorSync_API>("api")
     .WithExternalHttpEndpoints()
     .WithReference(postgresDb)
     .WaitFor(postgresDb)
     .WithReference(elasticsearch)
-    .WaitFor(elasticsearch);
-
-// migrations service
-builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
-    .WithReference(postgresDb)
-    .WaitFor(postgresDb);
+    .WaitFor(elasticsearch)
+    .WithEnvironment("ConnectionStrings__EmailService", smtpConnectionString);
 
 builder.Build().Run();

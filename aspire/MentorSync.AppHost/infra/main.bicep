@@ -15,6 +15,8 @@ param principalId string = ''
 @secure()
 param password string
 @secure()
+param password_es string
+@secure()
 param username string
 
 var tags = {
@@ -37,6 +39,17 @@ module resources 'resources.bicep' = {
   }
 }
 
+module communication_service 'communication-service/communication-service.module.bicep' = {
+  name: 'communication-service'
+  scope: rg
+  params: {
+    communicationServiceName: 'cs-mentorsync-dev'
+    emailServiceName: 'es-mentorsync-dev'
+    isProd: false
+    keyVaultName: resources.outputs.SERVICE_BINDING_KVA12EFD91_NAME
+    location: location
+  }
+}
 module postgres_db 'postgres-db/postgres-db.module.bicep' = {
   name: 'postgres-db'
   scope: rg
@@ -56,5 +69,9 @@ output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_
 output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_NAME
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
+output SERVICE_ELASTICSEARCH_VOLUME_ELASTICSEARCHDATA_NAME string = resources.outputs.SERVICE_ELASTICSEARCH_VOLUME_ELASTICSEARCHDATA_NAME
 output SERVICE_BINDING_KV41F5937F_ENDPOINT string = resources.outputs.SERVICE_BINDING_KV41F5937F_ENDPOINT
 output SERVICE_BINDING_KV41F5937F_NAME string = resources.outputs.SERVICE_BINDING_KV41F5937F_NAME
+output SERVICE_BINDING_KVA12EFD91_ENDPOINT string = resources.outputs.SERVICE_BINDING_KVA12EFD91_ENDPOINT
+output SERVICE_BINDING_KVA12EFD91_NAME string = resources.outputs.SERVICE_BINDING_KVA12EFD91_NAME
+output AZURE_VOLUMES_STORAGE_ACCOUNT string = resources.outputs.AZURE_VOLUMES_STORAGE_ACCOUNT

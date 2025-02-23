@@ -21,6 +21,11 @@ properties:
       - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
     secrets:
+      - name: connectionstrings--elasticsearch
+        value: http://elastic:{{ securedParameter "password_es" }}@elasticsearch.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}:80
+      - name: connectionstrings--emailservice
+        keyVaultUrl: '{{ .Env.SERVICE_BINDING_KVA12EFD91_ENDPOINT }}secrets/cs-connectionString'
+        identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
       - name: connectionstrings--mentorsyncdb
         keyVaultUrl: '{{ .Env.SERVICE_BINDING_KV41F5937F_ENDPOINT }}secrets/MentorSyncDb-connectionString'
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
@@ -41,6 +46,10 @@ properties:
             value: "true"
           - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
             value: in_memory
+          - name: ConnectionStrings__elasticsearch
+            secretRef: connectionstrings--elasticsearch
+          - name: ConnectionStrings__EmailService
+            secretRef: connectionstrings--emailservice
           - name: ConnectionStrings__MentorSyncDb
             secretRef: connectionstrings--mentorsyncdb
     scale:

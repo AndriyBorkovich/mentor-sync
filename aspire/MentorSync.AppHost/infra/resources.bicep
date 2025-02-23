@@ -45,6 +45,32 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10
   tags: tags
 }
 
+resource storageVolume 'Microsoft.Storage/storageAccounts@2022-05-01' = {
+  name: 'vol${resourceToken}'
+  location: location
+  kind: 'StorageV2'
+  sku: {
+    name: 'Standard_LRS'
+  }
+  properties: {
+    largeFileSharesState: 'Enabled'
+  }
+}
+
+resource storageVolumeFileService 'Microsoft.Storage/storageAccounts/fileServices@2022-05-01' = {
+  parent: storageVolume
+  name: 'default'
+}
+
+resource elasticsearchElasticsearchDataFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-05-01' = {
+  parent: storageVolumeFileService
+  name: take('${toLower('elasticsearch')}-${toLower('elasticsearchdata')}', 60)
+  properties: {
+    shareQuota: 1024
+    enabledProtocols: 'SMB'
+  }
+}
+
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-02-02-preview' = {
   name: 'cae-${resourceToken}'
   location: location
@@ -81,6 +107,19 @@ resource explicitContributorUserRoleAssignment 'Microsoft.Authorization/roleAssi
   }
 }
 
+resource elasticsearchElasticsearchDataStore 'Microsoft.App/managedEnvironments/storages@2023-05-01' = {
+  parent: containerAppEnvironment
+  name: take('${toLower('elasticsearch')}-${toLower('elasticsearchdata')}', 32)
+  properties: {
+    azureFile: {
+      shareName: elasticsearchElasticsearchDataFileShare.name
+      accountName: storageVolume.name
+      accountKey: storageVolume.listKeys().keys[0].value
+      accessMode: 'ReadWrite'
+    }
+  }
+}
+
 resource kv41f5937f 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: replace('kv41f5937f-${resourceToken}', '-', '')
   location: location
@@ -113,6 +152,38 @@ resource kv41f5937fUserReadRoleAssignment 'Microsoft.Authorization/roleAssignmen
   }
 }
 
+resource kva12efd91 'Microsoft.KeyVault/vaults@2023-07-01' = {
+  name: replace('kva12efd91-${resourceToken}', '-', '')
+  location: location
+  properties: {
+    sku: {
+      name: 'standard'
+      family: 'A'
+    }
+    tenantId: subscription().tenantId
+    enableRbacAuthorization: true
+  }
+}
+
+resource kva12efd91RoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(kva12efd91.id, managedIdentity.id, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483'))
+  scope: kva12efd91
+  properties: {
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId:  subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483')
+  }
+}
+
+resource kva12efd91UserReadRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(kva12efd91.id, principalId, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6'))
+  scope: kva12efd91
+  properties: {
+    principalId: principalId
+    roleDefinitionId:  subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
+  }
+}
+
 output MANAGED_IDENTITY_CLIENT_ID string = managedIdentity.properties.clientId
 output MANAGED_IDENTITY_NAME string = managedIdentity.name
 output MANAGED_IDENTITY_PRINCIPAL_ID string = managedIdentity.properties.principalId
@@ -124,5 +195,9 @@ output AZURE_CONTAINER_REGISTRY_NAME string = containerRegistry.name
 output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = containerAppEnvironment.name
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppEnvironment.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = containerAppEnvironment.properties.defaultDomain
+output SERVICE_ELASTICSEARCH_VOLUME_ELASTICSEARCHDATA_NAME string = elasticsearchElasticsearchDataStore.name
 output SERVICE_BINDING_KV41F5937F_ENDPOINT string = kv41f5937f.properties.vaultUri
 output SERVICE_BINDING_KV41F5937F_NAME string = kv41f5937f.name
+output SERVICE_BINDING_KVA12EFD91_ENDPOINT string = kva12efd91.properties.vaultUri
+output SERVICE_BINDING_KVA12EFD91_NAME string = kva12efd91.name
+output AZURE_VOLUMES_STORAGE_ACCOUNT string = storageVolume.name
