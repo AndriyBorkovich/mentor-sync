@@ -27,6 +27,8 @@ public sealed class GoogleTokenEndpoint : IEndpoint
 
             return Results.Ok(new { tokenResult?.AccessToken, tokenResult?.RefreshToken, tokenResult?.ExpiresIn });
         })
-        .WithTags(TagsConstants.Google);
+        .WithTags(TagsConstants.Google)
+        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status400BadRequest);
     }
 }
