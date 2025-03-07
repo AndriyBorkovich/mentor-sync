@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\Notifications\MentorSync.Notifications.Contracts\MentorSync.Notifications.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Migrations\" />

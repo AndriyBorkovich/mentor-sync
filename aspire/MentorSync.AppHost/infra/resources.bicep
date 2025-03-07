@@ -70,6 +70,14 @@ resource elasticsearchElasticsearchDataFileShare 'Microsoft.Storage/storageAccou
     enabledProtocols: 'SMB'
   }
 }
+resource mongoMongoDataFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-05-01' = {
+  parent: storageVolumeFileService
+  name: take('${toLower('mongo')}-${toLower('mongodata')}', 60)
+  properties: {
+    shareQuota: 1024
+    enabledProtocols: 'SMB'
+  }
+}
 
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-02-02-preview' = {
   name: 'cae-${resourceToken}'
@@ -113,6 +121,19 @@ resource elasticsearchElasticsearchDataStore 'Microsoft.App/managedEnvironments/
   properties: {
     azureFile: {
       shareName: elasticsearchElasticsearchDataFileShare.name
+      accountName: storageVolume.name
+      accountKey: storageVolume.listKeys().keys[0].value
+      accessMode: 'ReadWrite'
+    }
+  }
+}
+
+resource mongoMongoDataStore 'Microsoft.App/managedEnvironments/storages@2023-05-01' = {
+  parent: containerAppEnvironment
+  name: take('${toLower('mongo')}-${toLower('mongodata')}', 32)
+  properties: {
+    azureFile: {
+      shareName: mongoMongoDataFileShare.name
       accountName: storageVolume.name
       accountKey: storageVolume.listKeys().keys[0].value
       accessMode: 'ReadWrite'
@@ -196,6 +217,7 @@ output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = containerAppEnvironment.na
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppEnvironment.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = containerAppEnvironment.properties.defaultDomain
 output SERVICE_ELASTICSEARCH_VOLUME_ELASTICSEARCHDATA_NAME string = elasticsearchElasticsearchDataStore.name
+output SERVICE_MONGO_VOLUME_MONGODATA_NAME string = mongoMongoDataStore.name
 output SERVICE_BINDING_KV41F5937F_ENDPOINT string = kv41f5937f.properties.vaultUri
 output SERVICE_BINDING_KV41F5937F_NAME string = kv41f5937f.name
 output SERVICE_BINDING_KVA12EFD91_ENDPOINT string = kva12efd91.properties.vaultUri

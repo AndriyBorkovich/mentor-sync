@@ -1,11 +1,13 @@
 ﻿using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Interfaces;
+using MentorSync.SharedKernel.Services;
 using MentorSync.Users.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Data;
 
-public class UsersDbContext(DbContextOptions<UsersDbContext> options) : 
+public class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContextOptions<UsersDbContext> options) :
     IdentityDbContext<
         AppUser, AppRole, int,
         AppUserClaim, AppUserRole, AppUserLogin,
@@ -19,7 +21,7 @@ public class UsersDbContext(DbContextOptions<UsersDbContext> options) :
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.HasDefaultSchema(SchemaConstants.Users);
-        
+
         // reconfigure base Identity tables
         modelBuilder.Entity<AppUser>(b =>
         {
@@ -70,5 +72,20 @@ public class UsersDbContext(DbContextOptions<UsersDbContext> options) :
         modelBuilder.Entity<AppRoleClaim>().ToTable("RoleClaims");
         modelBuilder.Entity<AppUserClaim>().ToTable("UserClaims");
         modelBuilder.Entity<AppUserLogin>().ToTable("UserLogins");
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    {
+        var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+        // dispatch events only if save was successful
+        var entitiesWithEvents = ChangeTracker.Entries<IHaveDomainEvents>()
+            .Select(e => e.Entity)
+            .Where(e => e.DomainEvents.Any())
+            .ToArray();
+
+        await dispatcher.DispatchAndClearEvents(entitiesWithEvents);
+
+        return result;
     }
 }

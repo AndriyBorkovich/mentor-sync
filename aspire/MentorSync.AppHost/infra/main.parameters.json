@@ -5,14 +5,20 @@
       "principalId": {
         "value": "${AZURE_PRINCIPAL_ID}"
       },
-      "password": {
-        "value": "${AZURE_PASSWORD}"
+      "elastic_password": {
+        "value": "${AZURE_ELASTIC_PASSWORD}"
       },
-      "password_es": {
-        "value": "${AZURE_PASSWORD_ES}"
+      "mongo_password": {
+        "value": "${AZURE_MONGO_PASSWORD}"
       },
-      "username": {
-        "value": "${AZURE_USERNAME}"
+      "mongo_username": {
+        "value": "${AZURE_MONGO_USERNAME}"
+      },
+      "postgre_password": {
+        "value": "${AZURE_POSTGRE_PASSWORD}"
+      },
+      "postgre_username": {
+        "value": "${AZURE_POSTGRE_USERNAME}"
       },
       "environmentName": {
         "value": "${AZURE_ENV_NAME}"

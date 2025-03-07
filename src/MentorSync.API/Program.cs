@@ -1,8 +1,10 @@
 using System.Reflection;
 using MentorSync.API;
+using MentorSync.Notifications;
 using MentorSync.ServiceDefaults;
 using MentorSync.SharedKernel.Behaviours;
 using MentorSync.SharedKernel.Extensions;
+using MentorSync.SharedKernel.Services;
 using MentorSync.Users;
 using Serilog;
 
@@ -35,8 +37,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("All",
         policyConfig => policyConfig.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
-
+builder.Services.AddSingleton<IDomainEventsDispatcher, MediatorDomainEventsDispatcher>();
 builder.AddUsersModule();
+builder.AddNotificationsModule();
 
 var app = builder.Build();
 
