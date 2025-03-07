@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Modules\Notifications\MentorSync.Notifications\MentorSync.Notifications.csproj" />
     <ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
   </ItemGroup>
 </Project>

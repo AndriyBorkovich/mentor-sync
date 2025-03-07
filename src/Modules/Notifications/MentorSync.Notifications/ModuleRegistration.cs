@@ -1,0 +1,23 @@
+using MentorSync.Notifications.Data;
+using MentorSync.Notifications.Integrations;
+using MentorSync.Notifications.Processors;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace MentorSync.Notifications;
+
+public static class ModuleRegistration
+{
+    public static void AddNotificationsModule(this IHostApplicationBuilder builder)
+    {
+        builder.AddMongoDBClient("mongodb");
+        builder.Services.Configure<MongoSettings>(
+           builder.Configuration.GetSection(nameof(MongoSettings)));
+
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
+
+        builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
+        builder.Services.AddSingleton<IOutboxProcessor, MongoDbEmailOutboxProcessor>();
+        builder.Services.AddHostedService<EmailSendingJob>();
+    }
+}

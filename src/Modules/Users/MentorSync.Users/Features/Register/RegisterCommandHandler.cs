@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using MentorSync.Users.Data;
 using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.Events;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,6 +12,7 @@ namespace MentorSync.Users.Features.Register;
 public sealed class RegisterCommandHandler(
     UserManager<AppUser> userManager,
     RoleManager<AppRole> roleManager,
+    UsersDbContext usersDbContext,
     ILogger<RegisterCommandHandler> logger)
     : IRequestHandler<RegisterCommand, Result>
 {
@@ -19,7 +22,7 @@ public sealed class RegisterCommandHandler(
         if (existingUser is not null)
         {
             logger.LogWarning("Registration attempt with existing email: {Email}", command.Email);
-            
+
             return Result.Error("User with this email already exists");
         }
 
@@ -32,37 +35,52 @@ public sealed class RegisterCommandHandler(
         if (appRole is null)
         {
             logger.LogWarning("Registration attempt with role: {Role}", command.Role);
-            
+
             return Result.NotFound($"Role {command.Role} doesn't exist");
         }
-            
+
         var user = new AppUser
         {
             UserName = command.UserName,
             Email = command.Email,
-            EmailConfirmed = false,
         };
 
-        var createResult = await userManager.CreateAsync(user, command.Password);
-        if (!createResult.Succeeded)
+        var result = await usersDbContext.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
         {
-            var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
-            logger.LogError("Failed to create user: {Errors}", errors);
-            
-            return Result.Error(errors);
-        }
-        
-        var roleResult = await userManager.AddToRoleAsync(user, command.Role);
-        if (!roleResult.Succeeded)
-        {
-            var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
-            logger.LogError("Failed to add user to role: {Errors}", errors);
-            
-            return Result.Error(errors);
-        }
+            await using var transaction = await usersDbContext.Database.BeginTransactionAsync(cancellationToken);
 
-        logger.LogInformation("User registered successfully: {Email}", command.Email);
-        
-        return Result.Success();
+            try
+            {
+                // Perform operations
+                var createResult = await userManager.CreateAsync(user, command.Password);
+                if (!createResult.Succeeded)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    return Result.Error(string.Join(", ", createResult.Errors.Select(e => e.Description)));
+                }
+
+                var roleResult = await userManager.AddToRoleAsync(user, command.Role);
+                if (!roleResult.Succeeded)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    return Result.Error(string.Join(", ", roleResult.Errors.Select(e => e.Description)));
+                }
+
+                await transaction.CommitAsync(cancellationToken);
+
+                user.RaiseDomainEvent(new UserCreatedEvent(user.Id));
+
+                await usersDbContext.SaveChangesAsync(cancellationToken);
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                logger.LogError(ex, "Transaction failed");
+                return Result.CriticalError("Transaction failed");
+            }
+        });
+
+        return result;
     }
 }

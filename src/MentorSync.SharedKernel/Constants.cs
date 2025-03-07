@@ -5,6 +5,7 @@ public static class GeneralConstants
     public const string DatabaseName = "MentorSyncDb";
     public const string DefaultMigrationsTableName = "MigrationsHistory";
     public const string DefaultPassword = "qadbsfzYFJHS!";
+    public const string DefaultEmail = "donotreply@b434e76a-d5fa-4933-a565-aaeec6eee436.azurecomm.net";
 }
 
 public static class TagsConstants

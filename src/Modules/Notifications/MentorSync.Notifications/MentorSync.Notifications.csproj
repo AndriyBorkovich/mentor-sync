@@ -4,4 +4,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Aspire.MongoDB.Driver" Version="9.0.0" />
+    <PackageReference Include="Azure.Communication.Email" Version="1.1.0-beta.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MentorSync.Notifications.Contracts\MentorSync.Notifications.Contracts.csproj" />
+  </ItemGroup>
 </Project>

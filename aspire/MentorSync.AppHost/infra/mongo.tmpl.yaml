@@ -13,41 +13,38 @@ properties:
       dotnet:
         autoConfigureDataProtection: true
     ingress:
-      additionalPortMappings:
-        - targetPort: 9300
-          external: false
       external: false
-      targetPort: 9200
+      targetPort: 27017
       transport: tcp
       allowInsecure: false
     registries:
       - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
     secrets:
-      - name: elastic-password
-        value: '{{ securedParameter "elastic_password" }}'
+      - name: mongo-initdb-root-password
+        value: '{{ securedParameter "mongo_password" }}'
+      - name: mongo-initdb-root-username
+        value: '{{ securedParameter "mongo_username" }}'
   template:
     volumes:
-      - name: elasticsearch-elasticsearchdata
+      - name: mongo-mongodata
         storageType: AzureFile
-        storageName: {{ .Env.SERVICE_ELASTICSEARCH_VOLUME_ELASTICSEARCHDATA_NAME }} 
+        storageName: {{ .Env.SERVICE_MONGO_VOLUME_MONGODATA_NAME }} 
     containers:
       - image: {{ .Image }}
-        name: elasticsearch
+        name: mongo
         env:
           - name: AZURE_CLIENT_ID
             value: {{ .Env.MANAGED_IDENTITY_CLIENT_ID }}
-          - name: discovery.type
-            value: single-node
-          - name: xpack.security.enabled
-            value: "false"
-          - name: ELASTIC_PASSWORD
-            secretRef: elastic-password
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            secretRef: mongo-initdb-root-password
+          - name: MONGO_INITDB_ROOT_USERNAME
+            secretRef: mongo-initdb-root-username
         volumeMounts:
-          - volumeName: elasticsearch-elasticsearchdata
-            mountPath: /usr/share/elasticsearch/data
+          - volumeName: mongo-mongodata
+            mountPath: /data/db
     scale:
       minReplicas: 1
 tags:
-  azd-service-name: elasticsearch
-  aspire-resource-name: elasticsearch
+  azd-service-name: mongo
+  aspire-resource-name: mongo

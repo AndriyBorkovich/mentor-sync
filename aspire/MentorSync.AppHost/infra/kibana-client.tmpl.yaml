@@ -22,7 +22,7 @@ properties:
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
     secrets:
       - name: connectionstrings--elasticsearch
-        value: http://elastic:{{ securedParameter "password_es" }}@elasticsearch.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}:80
+        value: http://elastic:{{ securedParameter "elastic_password" }}@elasticsearch.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}:80
   template:
     containers:
       - image: {{ .Image }}

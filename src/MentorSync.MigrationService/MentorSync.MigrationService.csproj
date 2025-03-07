@@ -10,11 +10,12 @@
     <ItemGroup>
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.1.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2"/>
-        <PackageReference Include="OpenTelemetry.Api" Version="1.11.1" />
+        <PackageReference Include="OpenTelemetry.Api" Version="1.11.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\Modules\Notifications\MentorSync.Notifications\MentorSync.Notifications.csproj" />
       <ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
     </ItemGroup>
 </Project>
