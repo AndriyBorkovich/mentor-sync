@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MentorSync.Users.Domain.Enums;
+using MentorSync.Users.Domain.User;
 
-namespace MentorSync.Users.Domain;
+namespace MentorSync.Users.Domain.Mentor;
 
 public class MentorProfile
 {
@@ -13,7 +14,7 @@ public class MentorProfile
     public List<string> ProgrammingLanguages { get; set; }
     public int ExperienceYears { get; set; }
     public Availability Availability { get; set; }
-    
+
     public int MentorId { get; set; }
     public AppUser User { get; set; }
 }

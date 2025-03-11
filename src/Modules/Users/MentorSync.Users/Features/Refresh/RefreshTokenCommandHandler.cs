@@ -4,6 +4,7 @@ using System.Text;
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Infrastructure;
 using Microsoft.AspNetCore.Identity;

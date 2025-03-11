@@ -4,7 +4,7 @@ using MentorSync.SharedKernel.BaseEntities;
 using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
-namespace MentorSync.Users.Domain;
+namespace MentorSync.Users.Domain.User;
 
 public sealed class AppUser : IdentityUser<int>, IHaveDomainEvents
 {

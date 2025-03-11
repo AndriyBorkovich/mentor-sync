@@ -2,6 +2,10 @@
 using MentorSync.SharedKernel.Interfaces;
 using MentorSync.SharedKernel.Services;
 using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.Mentee;
+using MentorSync.Users.Domain.Mentor;
+using MentorSync.Users.Domain.Role;
+using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

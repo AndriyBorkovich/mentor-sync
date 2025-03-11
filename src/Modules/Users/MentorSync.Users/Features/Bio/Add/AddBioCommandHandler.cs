@@ -1,6 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.User;
 using MentorSync.Users.Services;
 using Microsoft.AspNetCore.Identity;
 

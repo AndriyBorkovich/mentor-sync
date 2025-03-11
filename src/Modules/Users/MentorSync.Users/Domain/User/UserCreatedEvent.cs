@@ -1,6 +1,6 @@
 ﻿using MentorSync.SharedKernel.BaseEntities;
 
-namespace MentorSync.Users.Domain.Events;
+namespace MentorSync.Users.Domain.User;
 
 public class UserCreatedEvent(int userId) : DomainEvent
 {

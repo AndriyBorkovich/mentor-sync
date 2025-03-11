@@ -2,7 +2,8 @@
 using MediatR;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain;
-using MentorSync.Users.Domain.Events;
+using MentorSync.Users.Domain.Role;
+using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
