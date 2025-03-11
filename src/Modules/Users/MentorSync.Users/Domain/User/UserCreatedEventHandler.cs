@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace MentorSync.Users.Domain.Events.Handlers;
+namespace MentorSync.Users.Domain.User;
 
 public class UserCreatedEventHandler(
     IServiceProvider serviceProvider,

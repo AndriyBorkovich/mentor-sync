@@ -2,7 +2,7 @@
 using MediatR;
 using MentorSync.Notifications.Contracts;
 using MentorSync.Notifications.Data;
-using MentorSync.Notifications.Domain.Entities;
+using MentorSync.Notifications.Domain;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;

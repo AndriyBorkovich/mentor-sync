@@ -1,4 +1,5 @@
 ﻿using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Bio.Search;
 
 namespace MentorSync.Users.MappingExtensions;

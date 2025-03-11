@@ -4,6 +4,8 @@ using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.Role;
+using MentorSync.Users.Domain.User;
 using MentorSync.Users.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;

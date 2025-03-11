@@ -2,6 +2,7 @@ using System.Diagnostics;
 using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.Role;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -72,7 +73,7 @@ public class Worker(
         await CreateRole(Roles.Admin);
         await CreateRole(Roles.Mentor);
         await CreateRole(Roles.Mentee);
-        
+
         return;
 
         async Task CreateRole(string roleName)

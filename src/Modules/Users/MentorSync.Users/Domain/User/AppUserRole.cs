@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MentorSync.Users.Domain.Role;
+using MentorSync.Users.Domain.User;
+using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.Users.Domain;
 

@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MentorSync.Users.Domain.Enums;
+using MentorSync.Users.Domain.User;
 
-namespace MentorSync.Users.Domain;
+namespace MentorSync.Users.Domain.Mentee;
 
 public sealed class MenteeProfile
 {
@@ -13,7 +14,7 @@ public sealed class MenteeProfile
     public Industry PreferredMentorIndustry { get; set; }
     [Length(1, 5)]
     public List<string> PreferredLanguages { get; set; }
-    
+
     public int MenteeId { get; set; }
     public AppUser User { get; set; }
 }

@@ -1,5 +1,6 @@
 using Elastic.Clients.Elasticsearch;
 using MentorSync.Users.Domain;
+using MentorSync.Users.Domain.User;
 
 namespace MentorSync.Users.Services;
 

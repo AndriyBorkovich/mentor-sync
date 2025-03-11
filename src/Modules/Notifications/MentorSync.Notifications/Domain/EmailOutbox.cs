@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MentorSync.Notifications.Domain.Entities;
+namespace MentorSync.Notifications.Domain;
 
 public sealed class EmailOutbox
 {

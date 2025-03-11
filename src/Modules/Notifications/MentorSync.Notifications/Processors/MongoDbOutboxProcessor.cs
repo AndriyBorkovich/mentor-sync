@@ -1,9 +1,9 @@
-using MentorSync.Notifications.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using MentorSync.Notifications.Data;
 using System.Diagnostics;
+using MentorSync.Notifications.Domain;
 using MentorSync.Notifications.Integrations;
 
 namespace MentorSync.Notifications.Processors;

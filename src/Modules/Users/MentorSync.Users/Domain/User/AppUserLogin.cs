@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace MentorSync.Users.Domain;
+namespace MentorSync.Users.Domain.User;
 
 public sealed class AppUserLogin : IdentityUserLogin<int>
 {
