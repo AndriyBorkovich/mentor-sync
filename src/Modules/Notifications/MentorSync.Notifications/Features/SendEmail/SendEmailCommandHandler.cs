@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace MentorSync.Notifications.Features.EmailSending;
+namespace MentorSync.Notifications.Features.SendEmail;
 
 public class SendEmailCommandHandler : IRequestHandler<SendEmailCommand, Result<string>>
 {
@@ -21,7 +21,6 @@ public class SendEmailCommandHandler : IRequestHandler<SendEmailCommand, Result<
 
     public async Task<Result<string>> Handle(SendEmailCommand request, CancellationToken ct)
     {
-        // we're just storing in the outbox and returning the generated id
         var id = ObjectId.GenerateNewId();
 
         var emailEntity = new EmailOutbox

@@ -1,4 +1,4 @@
-namespace MentorSync.Notifications.Processors;
+namespace MentorSync.Notifications.Features.SendEmail;
 
 public interface IOutboxProcessor
 {

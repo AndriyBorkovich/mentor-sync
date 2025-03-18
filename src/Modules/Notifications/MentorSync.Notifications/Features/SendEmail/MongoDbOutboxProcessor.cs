@@ -1,12 +1,11 @@
-using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
-using Microsoft.Extensions.Options;
-using MentorSync.Notifications.Data;
 using System.Diagnostics;
+using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Domain;
-using MentorSync.Notifications.Integrations;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
-namespace MentorSync.Notifications.Processors;
+namespace MentorSync.Notifications.Features.SendEmail;
 
 public class MongoDbEmailOutboxProcessor : IOutboxProcessor
 {
@@ -33,40 +32,43 @@ public class MongoDbEmailOutboxProcessor : IOutboxProcessor
     public async Task CheckForEmailsToSend()
     {
         var filter = Builders<EmailOutbox>.Filter.Eq(entity => entity.DateTimeUtcProcessed, null);
-        var unsentEmailEntity = await _emailEntityCollection.Find(filter).FirstOrDefaultAsync();
 
-        // TODO: Change this to a while loop so it processes more than 1 each time
-        if (unsentEmailEntity != null)
+        var unsentEmails = await _emailEntityCollection.Find(filter).ToListAsync();
+
+        if (unsentEmails.Count == 0)
+        {
+            _logger.LogInformation("No emails to send, sleeping...");
+            return;
+        }
+
+        foreach (var unsentEmailEntity in unsentEmails)
         {
             try
             {
                 _logger.LogInformation("Sending email {id}", unsentEmailEntity.Id);
 
-                await _emailSender.SendAsync(unsentEmailEntity.To,
-                  unsentEmailEntity.From,
-                  unsentEmailEntity.Subject,
-                  unsentEmailEntity.Body);
+                await _emailSender.SendAsync(
+                    unsentEmailEntity.To,
+                    unsentEmailEntity.From,
+                    unsentEmailEntity.Subject,
+                    unsentEmailEntity.Body
+                );
 
                 var stopwatch = Stopwatch.StartNew();
                 var updateFilter = Builders<EmailOutbox>.Filter.Eq(x => x.Id, unsentEmailEntity.Id);
-                var update = Builders<EmailOutbox>.Update.Set("DateTimeUtcProcessed", DateTime.UtcNow);
+                var update = Builders<EmailOutbox>.Update.Set(x => x.DateTimeUtcProcessed, DateTime.UtcNow);
                 var updateResult = await _emailEntityCollection.UpdateOneAsync(updateFilter, update);
-                var timeTaken = stopwatch.Elapsed;
                 stopwatch.Stop();
 
-                _logger.LogInformation("UpdateResult: {result} records modified in {time}ms",
-                  updateResult.ModifiedCount,
-                  timeTaken.TotalMilliseconds);
+                _logger.LogInformation("Email {id} processed. {result} record(s) updated in {time}ms",
+                    unsentEmailEntity.Id,
+                    updateResult.ModifiedCount,
+                    stopwatch.Elapsed.TotalMilliseconds);
             }
             catch (Exception ex)
             {
-                // TODO: Log more details
-                _logger.LogError("Failed to send email: {message}", ex.Message);
+                _logger.LogError(ex, "Failed to send email {id}: {message}", unsentEmailEntity.Id, ex.Message);
             }
-        }
-        else
-        {
-            _logger.LogInformation("No emails to send; sleeping...");
         }
     }
 }

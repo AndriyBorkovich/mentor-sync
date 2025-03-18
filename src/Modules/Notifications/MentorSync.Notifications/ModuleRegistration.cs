@@ -1,6 +1,5 @@
 using MentorSync.Notifications.Data;
-using MentorSync.Notifications.Integrations;
-using MentorSync.Notifications.Processors;
+using MentorSync.Notifications.Features.SendEmail;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

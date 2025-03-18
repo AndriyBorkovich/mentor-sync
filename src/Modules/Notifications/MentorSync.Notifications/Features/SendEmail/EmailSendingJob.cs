@@ -1,8 +1,7 @@
-using MentorSync.Notifications.Processors;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace MentorSync.Notifications;
+namespace MentorSync.Notifications.Features.SendEmail;
 
 public class EmailSendingJob(ILogger<EmailSendingJob> logger, IOutboxProcessor outboxProcessor) : BackgroundService
 {
