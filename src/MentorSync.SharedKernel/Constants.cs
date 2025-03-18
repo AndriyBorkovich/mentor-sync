@@ -11,7 +11,7 @@ public static class GeneralConstants
 public static class TagsConstants
 {
     public const string Users = nameof(Users);
-    public const string Google = "Google auth";
+    public const string Notifications = nameof(Notifications);
 }
 
 public static class SchemaConstants

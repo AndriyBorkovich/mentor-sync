@@ -13,7 +13,8 @@ if (!builder.ExecutionContext.IsPublishMode)
 {
     postgres = postgres.RunAsContainer(b =>
     {
-        b.WithPgAdmin(cb => cb.WithLifetime(ContainerLifetime.Persistent));
+        b.WithPgAdmin(cb =>
+            cb.WithImageTag("latest").WithLifetime(ContainerLifetime.Persistent));
         b.WithDataVolume(name: "postgres-data", isReadOnly: false);
         b.WithLifetime(ContainerLifetime.Persistent);
     });

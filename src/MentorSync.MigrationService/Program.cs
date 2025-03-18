@@ -4,7 +4,6 @@ using MentorSync.ServiceDefaults;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Services;
 using MentorSync.Users.Data;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;

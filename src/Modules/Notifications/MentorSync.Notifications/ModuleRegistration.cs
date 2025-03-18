@@ -13,7 +13,7 @@ public static class ModuleRegistration
         builder.AddMongoDBClient("mongodb");
         builder.Services.Configure<MongoSettings>(
            builder.Configuration.GetSection(nameof(MongoSettings)));
-        builder.Services.AddScoped<MongoDbContext>();
+        builder.Services.AddSingleton<MongoDbContext>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
         builder.Services.AddEndpoints(typeof(MongoDbContext).Assembly);

@@ -22,7 +22,6 @@ public static class ResultExtensions
                 extensions: new Dictionary<string, object?>
                 {
                     ["errors"] = result.ValidationErrors,
-                    ["validationErrors"] = result.ValidationErrors
                 }),
             ResultStatus.Unauthorized => CreateProblem(
                 statusCode: StatusCodes.Status401Unauthorized,
@@ -36,6 +35,9 @@ public static class ResultExtensions
                 statusCode: StatusCodes.Status400BadRequest,
                 title: "Operation Failed",
                 detail: string.Join("; ", result.Errors)),
+            ResultStatus.NoContent => CreateProblem(
+                statusCode: StatusCodes.Status204NoContent,
+                title: "No Content"),
             _ => CreateProblem(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: "Internal Server Error",
