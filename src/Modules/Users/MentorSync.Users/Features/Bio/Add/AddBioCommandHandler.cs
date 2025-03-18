@@ -1,13 +1,11 @@
 using Ardalis.Result;
 using MediatR;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.User;
-using MentorSync.Users.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.Users.Features.Bio.Add;
 
-public sealed class AddBioCommandHandler(UserManager<AppUser> userManager, IElasticSearchService elasticSearchService)
+public sealed class AddBioCommandHandler(UserManager<AppUser> userManager)
     : IRequestHandler<AddBioRequest, Result<string>>
 {
     public async Task<Result<string>> Handle(AddBioRequest request, CancellationToken cancellationToken)
@@ -20,13 +18,9 @@ public sealed class AddBioCommandHandler(UserManager<AppUser> userManager, IElas
 
         user.Bio = request.Bio;
         var updateResult = await userManager.UpdateAsync(user);
-        if (!updateResult.Succeeded)
-        {
-            return Result.Error(string.Join(',', updateResult.Errors.Select(e => e.Description)));
-        }
 
-        await elasticSearchService.IndexUserAsync(user);
-
-        return Result.Success("Bio added and user indexed successfully");
+        return !updateResult.Succeeded ?
+            Result.Error(string.Join(',', updateResult.Errors.Select(e => e.Description)))
+            : Result.Success("Bio added and user indexed successfully");
     }
 }

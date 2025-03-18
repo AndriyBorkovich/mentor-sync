@@ -30,22 +30,6 @@ var mongo = builder.AddMongoDB("mongo", userName: userNameMongo, password: mongo
                    .WithLifetime(ContainerLifetime.Persistent);
 var mongodb = mongo.AddDatabase("mongodb");
 
-// elasticsearch and kibana
-var passwordElastic = builder.AddParameter("elastic-password", secret: true);
-var elasticsearch = builder.AddElasticsearch(name: "elasticsearch", password: passwordElastic)
-    .WithDataVolume("elasticsearch-data")
-    .WithEnvironment("discovery.type", "single-node")
-    .WithEnvironment("xpack.security.enabled", "false")
-    .WithEndpoint(port: 9200, targetPort: 9200)
-    .WithLifetime(ContainerLifetime.Persistent);
-
-var kibana = builder
-    .AddContainer(name: "kibana-client", image: "kibana", tag: "8.15.3")
-    .WithReference(elasticsearch)
-    .WaitFor(elasticsearch)
-    .WithEndpoint(port: 5601, targetPort: 5601)
-    .WithLifetime(ContainerLifetime.Persistent);
-
 // Azure SMTP server
 var communicationService = builder.AddBicepTemplate(name: "communication-service", "../bicep-templates/communication-service.module.bicep")
                                   .WithParameter("isProd", false)
@@ -67,8 +51,6 @@ builder.AddProject<Projects.MentorSync_API>("api")
     .WithExternalHttpEndpoints()
     .WithReference(postgresDb)
     .WaitFor(postgresDb)
-    .WithReference(elasticsearch)
-    .WaitFor(elasticsearch)
     .WithReference(mongodb)
     .WaitFor(mongodb)
     .WithEnvironment("ConnectionStrings__EmailService", smtpConnectionString);

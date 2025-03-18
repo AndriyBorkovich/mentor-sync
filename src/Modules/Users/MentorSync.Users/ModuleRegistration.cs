@@ -3,7 +3,6 @@ using FluentValidation;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Infrastructure;
@@ -15,10 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MentorSync.Users.Services;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Authentication.Google;
-using MentorSync.Users.Services.Google;
 
 namespace MentorSync.Users;
 
@@ -34,8 +29,6 @@ public static class ModuleRegistration
                 opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Users));
             });
 
-        AddElasticSearch(builder);
-
         AddIdentity(builder.Services);
 
         AddCustomAuthorization(builder.Services, builder.Configuration);
@@ -49,20 +42,6 @@ public static class ModuleRegistration
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
-    }
-
-    private static void AddElasticSearch(IHostApplicationBuilder builder)
-    {
-        builder.AddElasticsearchClient("elasticsearch"/*, configureClientSettings: ConfigureClientSettings*/);
-        builder.Services.AddSingleton<IElasticSearchService, ElasticSearchService>();
-
-        // void ConfigureClientSettings(ElasticsearchClientSettings settings)
-        // {
-        //     settings.DefaultMappingFor<AppUser>(m =>
-        //     {
-        //         m.IndexName("users");
-        //     });
-        // }
     }
 
     private static void AddIdentity(IServiceCollection services)
@@ -152,7 +131,7 @@ public static class ModuleRegistration
                 };
             });
 
-        // TODO: implement google authentication of frontend
+        // TODO: implement google authentication on frontend
         // .AddGoogle(options =>
         // {
         //     options.ClientId = configuration["Authentication:Google:ClientId"]!;
@@ -180,6 +159,5 @@ public static class ModuleRegistration
         // });
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-        services.AddScoped<IGoogleOAuthService, GoogleOAuthService>();
     }
 }
