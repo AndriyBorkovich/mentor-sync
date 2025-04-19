@@ -17,8 +17,8 @@ Mentor Sync is an application designed to seamlessly connect mentors and mentees
 ## 🛠️ Installation & Setup  
 1. **Clone the repository:**  
    ```sh
-   git clone https://github.com/AndriyBorkovich/mentor-sync-be.git
-   cd mentor-sync-be
+   git clone https://github.com/AndriyBorkovich/mentor-sync.git
+   cd mentor-sync
    ```  
 2. **Go to Aspire host project directory:**  
    ```sh
