@@ -29,7 +29,7 @@ public class Worker(
 
             await EnsureDatabaseAsync(usersDbContext, cancellationToken);
             await RunMigrationAsync(usersDbContext, cancellationToken);
-            await SeedDataAsync(usersDbContext, cancellationToken);
+            await SeedDataAsync(cancellationToken);
             logger.LogInformation("Migrated database successfully.");
         }
         catch (Exception ex)
@@ -66,10 +66,11 @@ public class Worker(
         });
     }
 
-    private async Task SeedDataAsync(UsersDbContext usersDbContext, CancellationToken cancellationToken)
+    private async Task SeedDataAsync(CancellationToken cancellationToken)
     {
         using var scope = serviceProvider.CreateScope();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+
         await CreateRole(Roles.Admin);
         await CreateRole(Roles.Mentor);
         await CreateRole(Roles.Mentee);

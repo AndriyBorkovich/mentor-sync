@@ -3,11 +3,11 @@ using Aspire.Hosting.Azure;
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Azure postgres database
-var usernameDb = builder.AddParameter("postgre-username", secret: true);
-var passwordDb = builder.AddParameter("postgre-password", secret: true);
+var usernamePostgres = builder.AddParameter("postgre-username", secret: true);
+var passwordPostgres = builder.AddParameter("postgre-password", secret: true);
 
 var postgres = builder.AddAzurePostgresFlexibleServer("postgres-db")
-                      .WithPasswordAuthentication(usernameDb, passwordDb);
+                      .WithPasswordAuthentication(usernamePostgres, passwordPostgres);
 
 if (!builder.ExecutionContext.IsPublishMode)
 {

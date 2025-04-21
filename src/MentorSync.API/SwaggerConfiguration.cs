@@ -5,7 +5,7 @@ namespace MentorSync.API;
 
 public static class SwaggerConfiguration
 {
-    private static OpenApiSecurityScheme Scheme => new OpenApiSecurityScheme
+    private static OpenApiSecurityScheme Scheme => new()
     {
         In = ParameterLocation.Header,
         Description = "Please enter a valid token",

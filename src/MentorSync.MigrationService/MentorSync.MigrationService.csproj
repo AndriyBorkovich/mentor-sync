@@ -8,9 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
         <PackageReference Include="OpenTelemetry.Api" Version="1.11.2" />
+        <PackageReference Include="MongoDB.Driver" Version="3.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
