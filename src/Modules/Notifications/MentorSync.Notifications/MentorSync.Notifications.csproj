@@ -5,9 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Aspire.MongoDB.Driver" Version="9.2.0" />
+    <PackageReference Include="Aspire.MongoDB.Driver.v3" Version="9.2.0" />
     <PackageReference Include="Azure.Communication.Email" Version="1.1.0-beta.1" />
-    <PackageReference Include="MongoDB.Driver" Version="3.0.0"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MentorSync.Notifications.Contracts\MentorSync.Notifications.Contracts.csproj" />
