@@ -5,9 +5,6 @@
       "principalId": {
         "value": "${AZURE_PRINCIPAL_ID}"
       },
-      "elastic_password": {
-        "value": "${AZURE_ELASTIC_PASSWORD}"
-      },
       "mongo_password": {
         "value": "${AZURE_MONGO_PASSWORD}"
       },

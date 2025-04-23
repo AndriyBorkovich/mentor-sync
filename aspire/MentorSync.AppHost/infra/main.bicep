@@ -13,8 +13,6 @@ param location string
 param principalId string = ''
 
 @secure()
-param elastic_password string
-@secure()
 param mongo_password string
 @secure()
 param mongo_username string
@@ -32,7 +30,6 @@ resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: location
   tags: tags
 }
-
 module resources 'resources.bicep' = {
   scope: rg
   name: 'resources'
@@ -60,10 +57,28 @@ module postgres_db 'postgres-db/postgres-db.module.bicep' = {
   params: {
     administratorLogin: postgre_username
     administratorLoginPassword: postgre_password
-    keyVaultName: resources.outputs.SERVICE_BINDING_KV41F5937F_NAME
+    keyVaultName: postgres_db_kv.outputs.name
     location: location
   }
 }
+module postgres_db_kv 'postgres-db-kv/postgres-db-kv.module.bicep' = {
+  name: 'postgres-db-kv'
+  scope: rg
+  params: {
+    location: location
+  }
+}
+module postgres_db_kv_roles 'postgres-db-kv-roles/postgres-db-kv-roles.module.bicep' = {
+  name: 'postgres-db-kv-roles'
+  scope: rg
+  params: {
+    location: location
+    postgres_db_kv_outputs_name: postgres_db_kv.outputs.name
+    principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
+    principalType: 'ServicePrincipal'
+  }
+}
+
 output MANAGED_IDENTITY_CLIENT_ID string = resources.outputs.MANAGED_IDENTITY_CLIENT_ID
 output MANAGED_IDENTITY_NAME string = resources.outputs.MANAGED_IDENTITY_NAME
 output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = resources.outputs.AZURE_LOG_ANALYTICS_WORKSPACE_NAME
@@ -73,10 +88,8 @@ output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_
 output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_NAME
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
-output SERVICE_ELASTICSEARCH_VOLUME_ELASTICSEARCHDATA_NAME string = resources.outputs.SERVICE_ELASTICSEARCH_VOLUME_ELASTICSEARCHDATA_NAME
 output SERVICE_MONGO_VOLUME_MONGODATA_NAME string = resources.outputs.SERVICE_MONGO_VOLUME_MONGODATA_NAME
-output SERVICE_BINDING_KV41F5937F_ENDPOINT string = resources.outputs.SERVICE_BINDING_KV41F5937F_ENDPOINT
-output SERVICE_BINDING_KV41F5937F_NAME string = resources.outputs.SERVICE_BINDING_KV41F5937F_NAME
 output SERVICE_BINDING_KVA12EFD91_ENDPOINT string = resources.outputs.SERVICE_BINDING_KVA12EFD91_ENDPOINT
 output SERVICE_BINDING_KVA12EFD91_NAME string = resources.outputs.SERVICE_BINDING_KVA12EFD91_NAME
 output AZURE_VOLUMES_STORAGE_ACCOUNT string = resources.outputs.AZURE_VOLUMES_STORAGE_ACCOUNT
+output POSTGRES_DB_KV_VAULTURI string = postgres_db_kv.outputs.vaultUri

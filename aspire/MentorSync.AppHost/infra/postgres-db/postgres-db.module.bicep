@@ -59,7 +59,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
 }
 
 resource connectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: 'connectionString'
+  name: 'connectionstrings--postgres-db'
   properties: {
     value: 'Host=${postgres_db.properties.fullyQualifiedDomainName};Username=${administratorLogin};Password=${administratorLoginPassword}'
   }
@@ -67,9 +67,11 @@ resource connectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 }
 
 resource MentorSyncDb_connectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: 'MentorSyncDb-connectionString'
+  name: 'connectionstrings--MentorSyncDb'
   properties: {
     value: 'Host=${postgres_db.properties.fullyQualifiedDomainName};Username=${administratorLogin};Password=${administratorLoginPassword};Database=MentorSyncDb'
   }
   parent: keyVault
 }
+
+output name string = postgres_db.name
