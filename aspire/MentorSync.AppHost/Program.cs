@@ -1,4 +1,4 @@
-using Aspire.Hosting.Azure;
+using Microsoft.Extensions.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -32,13 +32,16 @@ var mongo = builder.AddMongoDB("mongo", userName: userNameMongo, password: mongo
 var mongodb = mongo.AddDatabase("mongodb");
 
 // Azure SMTP server
+var csKeyVault = builder.AddParameter("cs-keyvault", secret: true);
 var communicationService = builder.AddBicepTemplate(name: "communication-service", "../bicep-templates/communication-service.module.bicep")
                                   .WithParameter("isProd", false)
                                   .WithParameter("communicationServiceName", "cs-mentorsync-dev")
                                   .WithParameter("emailServiceName", "es-mentorsync-dev")
-                                  .WithParameter(AzureBicepResource.KnownParameters.KeyVaultName);
+                                  .WithParameter("keyVaultName", csKeyVault);
 
-var smtpConnectionString = communicationService.GetSecretOutput("cs-connectionString");
+var smtpConnectionString = builder.ExecutionContext.IsPublishMode
+       ? communicationService.GetSecretOutput("cs-connectionString")?.Value
+       : builder.Configuration.GetValue<string>("cs-connectionString");
 
 // migrations service
 builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")

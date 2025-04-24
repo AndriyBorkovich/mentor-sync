@@ -2,7 +2,7 @@ param isProd bool
 param communicationServiceName string
 param emailServiceName string
 param keyVaultName string
-param location string // need to pass to make the module work
+param location string = resourceGroup().location
 
 // Email Communication Service
 resource emailService 'Microsoft.Communication/emailServices@2023-03-31' = {

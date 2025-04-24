@@ -22,8 +22,4 @@
       <ProjectReference Include="..\..\src\MentorSync.MigrationService\MentorSync.MigrationService.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="infra\communication-service\" />
-    </ItemGroup>
-
 </Project>
