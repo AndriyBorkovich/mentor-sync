@@ -19,6 +19,11 @@ public static class SchemaConstants
     public const string Users = "users";
 }
 
+public static class PolicyConstants
+{
+    public const string ActiveUserOnly = nameof(ActiveUserOnly);
+}
+
 public static class Roles
 {
     public const string Admin = "Admin";

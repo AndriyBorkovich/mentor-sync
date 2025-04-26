@@ -4,5 +4,5 @@ namespace MentorSync.SharedKernel.BaseEntities;
 
 public class DomainEvent : INotification
 {
-    public DateTime DateOccurred { get; protected set; } = DateTime.UtcNow;
+    public DateTime DateOccurred { get; init; } = DateTime.UtcNow;
 }

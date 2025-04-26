@@ -52,7 +52,6 @@ public sealed class RegisterCommandHandler(
 
             try
             {
-                // Perform operations
                 var createResult = await userManager.CreateAsync(user, command.Password);
                 if (!createResult.Succeeded)
                 {
@@ -67,6 +66,7 @@ public sealed class RegisterCommandHandler(
                     return Result.Error(string.Join(", ", roleResult.Errors.Select(e => e.Description)));
                 }
 
+                user.IsActive = true;
                 await transaction.CommitAsync(cancellationToken);
 
                 user.RaiseDomainEvent(new UserCreatedEvent(user.Id));

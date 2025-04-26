@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Domain.User;
 
-public class UserCreatedEventHandler(
+public sealed class UserCreatedEventHandler(
     IServiceProvider serviceProvider,
     IMediator mediator,
     ILogger<UserCreatedEventHandler> logger) : INotificationHandler<UserCreatedEvent>
@@ -44,6 +44,6 @@ public class UserCreatedEventHandler(
 
         var result = await mediator.Send(emailCommand, cancellationToken);
 
-        logger.LogInformation("User {UserId} {Result} email", id, result.IsSuccess ? "received" : "not received");
+        logger.LogInformation("Welcome email was {Result} to user {UserId}", result.IsSuccess ? "sent" : "not sent", id);
     }
 }

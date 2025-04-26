@@ -16,6 +16,7 @@ public sealed class GetAllUsersEndpoint : IEndpoint
                         => await sender.Send(new GetAllUsersQuery(role, isActive)))
             .WithTags(TagsConstants.Users)
             .WithDescription("Get all users")
-            .Produces<List<UserShortResponse>>();
+            .Produces<List<UserShortResponse>>()
+            .RequireAuthorization(PolicyConstants.ActiveUserOnly);
     }
 }

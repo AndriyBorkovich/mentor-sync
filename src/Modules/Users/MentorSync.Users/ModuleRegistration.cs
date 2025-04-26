@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MentorSync.Users;
 
@@ -31,7 +32,7 @@ public static class ModuleRegistration
 
         AddIdentity(builder.Services);
 
-        AddCustomAuthorization(builder.Services, builder.Configuration);
+        AddCustomAuth(builder.Services, builder.Configuration);
 
         AddEndpoints(builder.Services);
 
@@ -80,10 +81,8 @@ public static class ModuleRegistration
         services.AddEndpoints(typeof(UsersDbContext).Assembly);
     }
 
-    private static void AddCustomAuthorization(IServiceCollection services, IConfiguration configuration)
+    private static void AddCustomAuth(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthorization();
-
         var jwtOptions = new JwtOptions();
         configuration.GetSection(JwtOptions.SectionName).Bind(jwtOptions);
 
@@ -104,7 +103,7 @@ public static class ModuleRegistration
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
+                    ValidateIssuerSigningKey = false,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(
@@ -120,10 +119,6 @@ public static class ModuleRegistration
                         if (string.IsNullOrEmpty(authorization))
                         {
                             context.NoResult();
-                        }
-                        else
-                        {
-                            context.Token = authorization.Replace("Bearer ", string.Empty);
                         }
 
                         return Task.CompletedTask;
@@ -158,6 +153,17 @@ public static class ModuleRegistration
         //     };
         // });
 
+
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        services.AddScoped<IAuthorizationHandler, ActiveUserAuthHandler>();
+
+        services.AddAuthorization(o =>
+        {
+            o.AddPolicy(PolicyConstants.ActiveUserOnly, p =>
+                p.AddRequirements(new ActiveUserRequirement())
+                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
+        });
+
     }
 }
