@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
 using MediatR;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;
 
@@ -18,12 +17,9 @@ public class ConfirmAccountCommandHandler(
             return Result.NotFound($"User with email {request.Email} not found");
         }
 
-        if (user.EmailConfirmed)
-        {
-            return Result.Conflict($"User with email {request.Email} already confirmed it");
-        }
+        var decodedToken = Uri.UnescapeDataString(request.Token);
 
-        var result = await userManager.ConfirmEmailAsync(user, request.Email);
+        var result = await userManager.ConfirmEmailAsync(user, decodedToken);
         if (result.Succeeded)
         {
             return Result.Success("Account confirmed");
