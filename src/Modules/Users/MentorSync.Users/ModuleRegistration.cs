@@ -93,7 +93,7 @@ public static class ModuleRegistration
             {
                 opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -161,8 +161,7 @@ public static class ModuleRegistration
         services.AddAuthorization(o =>
         {
             o.AddPolicy(PolicyConstants.ActiveUserOnly, p =>
-                p.AddRequirements(new ActiveUserRequirement())
-                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
+                p.AddRequirements(new ActiveUserRequirement()));
         });
 
     }
