@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.ResendConfirmation;
 
-public class ResendConfirmationEndpoint : IEndpoint
+public sealed class ResendConfirmationEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {

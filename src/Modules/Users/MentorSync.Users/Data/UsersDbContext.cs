@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Data;
 
-public class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContextOptions<UsersDbContext> options) :
+public sealed class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContextOptions<UsersDbContext> options) :
     IdentityDbContext<
         AppUser, AppRole, int,
         AppUserClaim, AppUserRole, AppUserLogin,
