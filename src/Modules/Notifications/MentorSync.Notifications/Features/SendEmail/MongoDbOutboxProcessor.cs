@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Domain;
+using MentorSync.Notifications.Infrastructure;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
@@ -24,7 +25,6 @@ public class MongoDbEmailOutboxProcessor(
 
         if (unsentEmails.Count == 0)
         {
-            logger.LogInformation("No emails to send, sleeping...");
             return;
         }
 

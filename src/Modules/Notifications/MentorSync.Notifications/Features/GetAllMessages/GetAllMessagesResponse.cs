@@ -5,5 +5,4 @@ public record GetAllMessagesResponse(
     string To,
     string From,
     string Subject,
-    string Body,
     DateTime? DateTimeUtcProcessed);

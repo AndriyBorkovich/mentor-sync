@@ -25,7 +25,7 @@ public class SendEmailCommandHandler : IRequestHandler<SendEmailCommand, Result<
 
         var emailEntity = new EmailOutbox
         {
-            Id = ObjectId.GenerateNewId(),
+            Id = id,
             To = request.To,
             From = request.From,
             Subject = request.Subject,

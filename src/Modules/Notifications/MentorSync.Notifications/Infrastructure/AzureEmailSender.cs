@@ -3,7 +3,7 @@ using Azure.Communication.Email;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace MentorSync.Notifications.Features.SendEmail;
+namespace MentorSync.Notifications.Infrastructure;
 
 public class AzureEmailSender(IConfiguration configuration, ILogger<AzureEmailSender> logger) : IEmailSender
 {

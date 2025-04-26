@@ -12,7 +12,6 @@ public static class DomainToDtoMapper
             emailOutbox.To,
             emailOutbox.From,
             emailOutbox.Subject,
-            emailOutbox.Body,
             emailOutbox.DateTimeUtcProcessed);
     }
 }

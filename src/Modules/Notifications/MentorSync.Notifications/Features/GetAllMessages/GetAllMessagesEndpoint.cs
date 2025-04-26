@@ -20,6 +20,7 @@ public class GetAllMessagesEndpoint : IEndpoint
             })
             .WithTags(TagsConstants.Notifications)
             .Produces<List<GetAllMessagesResponse>>()
-            .ProducesProblem(StatusCodes.Status204NoContent);
+            .Produces<Unit>(StatusCodes.Status204NoContent)
+            .RequireAuthorization();
     }
 }
