@@ -15,11 +15,11 @@ public class Worker(
     IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
 {
     public const string ActivitySourceName = "Migrations";
-    private static readonly ActivitySource ActivitySource = new(ActivitySourceName);
+    private static readonly ActivitySource _activitySource = new(ActivitySourceName);
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        using var activity = ActivitySource.StartActivity("Migrating database", ActivityKind.Client);
+        using var activity = _activitySource.StartActivity("Migrating database", ActivityKind.Client);
 
         try
         {
@@ -28,7 +28,7 @@ public class Worker(
 
             await EnsureDatabaseAsync(usersDbContext, cancellationToken);
             await RunMigrationAsync(usersDbContext, cancellationToken);
-            await SeedDataAsync(cancellationToken);
+            await SeedDataAsync();
             logger.LogInformation("Migrated database successfully.");
         }
         catch (Exception ex)
@@ -65,7 +65,7 @@ public class Worker(
         });
     }
 
-    private async Task SeedDataAsync(CancellationToken cancellationToken)
+    private async Task SeedDataAsync()
     {
         using var scope = serviceProvider.CreateScope();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
