@@ -1,5 +1,4 @@
 using MentorSync.MigrationService;
-using MentorSync.Notifications;
 using MentorSync.ServiceDefaults;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Services;
@@ -12,8 +11,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
-builder.Services.AddSingleton<IDomainEventsDispatcher, MediatorDomainEventsDispatcher>();
-builder.AddNotificationsModule();
+builder.Services.AddSingleton<IDomainEventsDispatcher, EmptyDomainEventsDispatcher>();
 builder.AddNpgsqlDbContext<UsersDbContext>(
     connectionName: GeneralConstants.DatabaseName,
     configureSettings: c => c.DisableTracing = true,

@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.Role;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

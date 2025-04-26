@@ -46,9 +46,7 @@ var smtpConnectionString = builder.ExecutionContext.IsPublishMode
 // migrations service
 builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
     .WithReference(postgresDb)
-    .WaitFor(postgresDb)
-    .WithReference(mongodb)
-    .WaitFor(mongodb);
+    .WaitFor(postgresDb);
 
 // API project
 builder.AddProject<Projects.MentorSync_API>("api")
