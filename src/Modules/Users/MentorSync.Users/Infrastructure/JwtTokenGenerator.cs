@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Notifications.Features.SendEmail;
 
-public class EmailSendingJob(ILogger<EmailSendingJob> logger, IOutboxProcessor outboxProcessor) : BackgroundService
+public sealed class EmailSendingJob(ILogger<EmailSendingJob> logger, IOutboxProcessor outboxProcessor) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.Confirm;
 
-public class ConfirmAccountEndpoint : IEndpoint
+public sealed class ConfirmAccountEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {

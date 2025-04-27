@@ -4,7 +4,7 @@ using MentorSync.Users.Domain.User;
 
 namespace MentorSync.Users.Domain.Mentor;
 
-public class MentorProfile
+public sealed class MentorProfile
 {
     public int Id { get; set; }
     public Industry Industries { get; set; }

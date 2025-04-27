@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.Users.Features.Confirm;
 
-public class ConfirmAccountCommandHandler(
+public sealed class ConfirmAccountCommandHandler(
     UserManager<AppUser> userManager)
     : IRequestHandler<ConfirmAccountCommand, Result<string>>
 {

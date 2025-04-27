@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Notifications.Features.GetAllMessages;
 
-public class GetAllMessagesEndpoint : IEndpoint
+public sealed class GetAllMessagesEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {

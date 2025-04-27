@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Notifications.Infrastructure;
 
-public class AzureEmailSender(IConfiguration configuration, ILogger<AzureEmailSender> logger) : IEmailSender
+public sealed class AzureEmailSender(IConfiguration configuration, ILogger<AzureEmailSender> logger) : IEmailSender
 {
     public async Task SendAsync(string to, string from, string subject, string body)
     {

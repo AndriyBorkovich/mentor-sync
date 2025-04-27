@@ -3,4 +3,4 @@ using MediatR;
 
 namespace MentorSync.Notifications.Features.GetAllMessages;
 
-public record GetAllMessagesQuery : IRequest<Result<List<GetAllMessagesResponse>>>;
+public sealed record GetAllMessagesQuery : IRequest<Result<List<GetAllMessagesResponse>>>;

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace MentorSync.Notifications.Contracts;
 
-public class SendEmailCommand : IRequest<Result<string>>
+public sealed class SendEmailCommand : IRequest<Result<string>>
 {
     public string To { get; set; } = string.Empty;
     public string From { get; set; } = string.Empty;

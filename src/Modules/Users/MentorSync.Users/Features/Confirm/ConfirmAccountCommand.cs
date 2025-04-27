@@ -3,4 +3,4 @@ using MediatR;
 
 namespace MentorSync.Users.Features.Confirm;
 
-public record ConfirmAccountCommand(string Email, string Token) : IRequest<Result<string>>;
+public sealed record ConfirmAccountCommand(string Email, string Token) : IRequest<Result<string>>;

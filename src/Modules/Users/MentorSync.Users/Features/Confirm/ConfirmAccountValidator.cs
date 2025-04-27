@@ -2,7 +2,7 @@
 
 namespace MentorSync.Users.Features.Confirm;
 
-public class ConfirmAccountValidator : AbstractValidator<ConfirmAccountCommand>
+public sealed class ConfirmAccountValidator : AbstractValidator<ConfirmAccountCommand>
 {
     public ConfirmAccountValidator()
     {

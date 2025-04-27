@@ -3,7 +3,7 @@ using MentorSync.SharedKernel.Interfaces;
 
 namespace MentorSync.SharedKernel.Services;
 
-public class MediatorDomainEventsDispatcher (IMediator mediator) : IDomainEventsDispatcher
+public sealed class MediatorDomainEventsDispatcher (IMediator mediator) : IDomainEventsDispatcher
 {
     public async Task DispatchAndClearEvents(IEnumerable<IHaveDomainEvents> entitiesWithEvents)
     {

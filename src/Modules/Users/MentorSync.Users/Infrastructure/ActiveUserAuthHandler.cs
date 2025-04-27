@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Infrastructure;
 
-public class ActiveUserRequirement : IAuthorizationRequirement;
+public sealed class ActiveUserRequirement : IAuthorizationRequirement;
 
-public class ActiveUserAuthHandler(UsersDbContext usersDbContext) : AuthorizationHandler<ActiveUserRequirement>
+public sealed class ActiveUserAuthHandler(UsersDbContext usersDbContext) : AuthorizationHandler<ActiveUserRequirement>
 {
     protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,

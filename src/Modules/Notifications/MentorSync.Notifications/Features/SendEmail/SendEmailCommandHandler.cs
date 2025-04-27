@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.SendEmail;
 
-public class SendEmailCommandHandler : IRequestHandler<SendEmailCommand, Result<string>>
+public sealed class SendEmailCommandHandler : IRequestHandler<SendEmailCommand, Result<string>>
 {
     private readonly IMongoCollection<EmailOutbox> _emailEntityCollection;
 

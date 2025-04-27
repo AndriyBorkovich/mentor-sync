@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MentorSync.MigrationService;
 
-public class Worker(
+public sealed class Worker(
     IServiceProvider serviceProvider,
     ILogger<Worker> logger,
     IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
