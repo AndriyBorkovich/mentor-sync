@@ -22,6 +22,9 @@ public static class SchemaConstants
 public static class PolicyConstants
 {
     public const string ActiveUserOnly = nameof(ActiveUserOnly);
+    public const string AdminOnly = nameof(AdminOnly);
+    public const string MentorOnly = nameof(MentorOnly);
+    public const string MenteeOnly = nameof(MenteeOnly);
 }
 
 public static class Roles

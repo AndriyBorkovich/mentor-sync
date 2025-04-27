@@ -17,6 +17,6 @@ public sealed class GetAllUsersEndpoint : IEndpoint
             .WithTags(TagsConstants.Users)
             .WithDescription("Get all users")
             .Produces<List<UserShortResponse>>()
-            .RequireAuthorization(PolicyConstants.ActiveUserOnly);
+            .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminOnly);
     }
 }

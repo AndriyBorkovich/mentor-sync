@@ -72,7 +72,10 @@ public static class ModuleRegistration
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
         });
-    }
+
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+            options.TokenLifespan = TimeSpan.FromHours(2));
+        }
 
     private static void AddEndpoints(IServiceCollection services)
     {
@@ -162,6 +165,15 @@ public static class ModuleRegistration
         {
             o.AddPolicy(PolicyConstants.ActiveUserOnly, p =>
                 p.AddRequirements(new ActiveUserRequirement()));
+
+            o.AddPolicy(PolicyConstants.AdminOnly, p =>
+                p.RequireRole(Roles.Admin));
+
+            o.AddPolicy(PolicyConstants.MentorOnly, p =>
+                p.RequireRole(Roles.Mentor));
+
+            o.AddPolicy(PolicyConstants.MenteeOnly, p =>
+                p.RequireRole(Roles.Mentee));
         });
 
     }
