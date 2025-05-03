@@ -28,7 +28,9 @@ var mongoPassword = builder.AddParameter("mongo-password", secret: true);
 
 var mongo = builder.AddMongoDB("mongo", userName: userNameMongo, password: mongoPassword)
                    .WithDataVolume("mongo-data")
-                   .WithLifetime(ContainerLifetime.Persistent);
+                   .WithLifetime(ContainerLifetime.Persistent)
+                   .WithMongoExpress(cb =>
+                        cb.WithImageTag("latest").WithLifetime(ContainerLifetime.Persistent));
 var mongodb = mongo.AddDatabase("mongodb");
 
 // Azure SMTP server
