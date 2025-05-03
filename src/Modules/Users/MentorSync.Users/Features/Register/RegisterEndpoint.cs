@@ -20,7 +20,8 @@ public sealed class RegisterEndpoint : IEndpoint
         })
         .AllowAnonymous()
         .WithTags(TagsConstants.Users)
-        .Produces(StatusCodes.Status200OK)
+        .WithDescription("Register new user")  
+        .Produces<string>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }

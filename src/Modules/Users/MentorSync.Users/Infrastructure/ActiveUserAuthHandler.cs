@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using MentorSync.Users.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;

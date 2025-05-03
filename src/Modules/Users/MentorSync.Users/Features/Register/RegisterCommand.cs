@@ -16,4 +16,4 @@ public sealed record RegisterCommand(
     string UserName,
     string Role,
     string Password,
-    string ConfirmPassword) : IRequest<Result>;
+    string ConfirmPassword) : IRequest<Result<string>>;

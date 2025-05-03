@@ -20,7 +20,7 @@ public sealed class ToggleActiveUserEndpoint : IEndpoint
         })
         .WithTags(TagsConstants.Users)
         .WithDescription("Activates/deactivates specified user")
-        .Produces<string>()
+        .Produces<string>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminOnly);
     }

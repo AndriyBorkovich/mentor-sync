@@ -24,6 +24,7 @@ public sealed class ResendConfirmationEndpoint : IEndpoint
             .WithDescription("Resend confirmation email to user")
             .AllowAnonymous()
             .Produces<string>()
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .RequireAuthorization(PolicyConstants.AdminOnly);
     }
 }

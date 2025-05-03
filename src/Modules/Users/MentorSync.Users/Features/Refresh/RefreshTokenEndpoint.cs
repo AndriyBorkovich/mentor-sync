@@ -23,7 +23,7 @@ public sealed class RefreshTokenEndpoint : IEndpoint
         })
         .WithTags(TagsConstants.Users)
         .AllowAnonymous()
-        .Produces<AuthResponse>()
+        .Produces<AuthResponse>(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
     }
 }

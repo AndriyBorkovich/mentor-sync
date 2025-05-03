@@ -15,9 +15,9 @@ public sealed class RegisterCommandHandler(
     RoleManager<AppRole> roleManager,
     UsersDbContext usersDbContext,
     ILogger<RegisterCommandHandler> logger)
-    : IRequestHandler<RegisterCommand, Result>
+    : IRequestHandler<RegisterCommand, Result<string>>
 {
-    public async Task<Result> Handle(RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         var existingUser = await userManager.FindByEmailAsync(command.Email);
         if (existingUser is not null)
@@ -67,12 +67,14 @@ public sealed class RegisterCommandHandler(
                 }
 
                 user.IsActive = true;
+
                 await transaction.CommitAsync(cancellationToken);
 
                 user.RaiseDomainEvent(new UserCreatedEvent(user.Id));
 
                 await usersDbContext.SaveChangesAsync(cancellationToken);
-                return Result.Success();
+
+                return Result.Success("User is registered successfully, welcome email is scheduled to send");
             }
             catch (Exception ex)
             {

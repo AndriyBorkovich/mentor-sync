@@ -20,6 +20,7 @@ public sealed class LoginEndpoint : IEndpoint
                 return result.DecideWhatToReturn();
             })
             .WithTags(TagsConstants.Users)
+            .WithDescription("Login user with its credentials")
             .AllowAnonymous()
             .Produces<AuthResponse>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);

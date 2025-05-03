@@ -12,11 +12,14 @@ public sealed class GetAllUsersEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("users", async ([FromQuery] string role, [FromQuery] bool? isActive, ISender sender)
-                        => await sender.Send(new GetAllUsersQuery(role, isActive)))
+        app.MapGet("users", async (
+            [FromQuery] string role,
+            [FromQuery] bool? isActive,
+            ISender sender)
+                => await sender.Send(new GetAllUsersQuery(role, isActive)))
             .WithTags(TagsConstants.Users)
             .WithDescription("Get all users")
-            .Produces<List<UserShortResponse>>()
+            .Produces<List<UserShortResponse>>(StatusCodes.Status200OK)
             .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminOnly);
     }
 }
