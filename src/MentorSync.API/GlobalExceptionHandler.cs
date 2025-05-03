@@ -8,11 +8,7 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        var problemDetails = new ProblemDetails
-        {
-            Instance = httpContext.Request.Path
-        };
-
+        var problemDetails = new ProblemDetails();
         if (exception is ValidationException fluentException)
         {
             problemDetails.Title = "one or more validation errors occurred.";
@@ -26,10 +22,11 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
             problemDetails.Title = exception.Message;
         }
 
-        logger.LogError("{ProblemDetailsTitle}", problemDetails.Title);
+        logger.LogError(exception, "{ProblemDetailsTitle}", problemDetails.Title);
 
         problemDetails.Status = httpContext.Response.StatusCode;
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken).ConfigureAwait(false);
+
         return true;
     }
 }

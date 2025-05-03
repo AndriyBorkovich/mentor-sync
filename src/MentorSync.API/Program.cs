@@ -1,8 +1,7 @@
-using MentorSync.API;
+using MentorSync.API.Extensions;
 using MentorSync.ServiceDefaults;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,15 +25,13 @@ app.UseCors(CorsPolicyNames.All);
 
 app.MapDefaultEndpoints();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseCustomSwagger();
 
-app.UseSerilogRequestLogging();
+app.UseCustomSerilog();
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuth();
 
 app.UseSession();
 

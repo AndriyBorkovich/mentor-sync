@@ -3,10 +3,12 @@ using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Behaviours;
 using MentorSync.SharedKernel.Services;
 using MentorSync.Users;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
-namespace MentorSync.API;
+namespace MentorSync.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -60,5 +62,35 @@ public static class ServiceCollectionExtensions
         builder.Services.AddSingleton<IDomainEventsDispatcher, MediatorDomainEventsDispatcher>();
         builder.AddUsersModule();
         builder.AddNotificationsModule();
+    }
+}
+
+static file class SwaggerConfiguration
+{
+    private static OpenApiSecurityScheme Scheme => new()
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer",
+        Reference = new OpenApiReference
+        {
+            Id = "Bearer",
+            Type = ReferenceType.SecurityScheme,
+        },
+    };
+
+    public static void Configure(SwaggerGenOptions option)
+    {
+        option.ResolveConflictingActions(apiDesc => apiDesc.First());
+        option.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+        option.AddSecurityDefinition(Scheme.Reference.Id, Scheme);
+        option.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            { Scheme, Array.Empty<string>() },
+        });
+        option.CustomSchemaIds(t => t.FullName?.Replace('+', '.'));
     }
 }
