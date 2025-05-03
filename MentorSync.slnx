@@ -1,0 +1,15 @@
+<Solution>
+  <Project Path="aspire/MentorSync.AppHost/MentorSync.AppHost.csproj" />
+  <Project Path="aspire/MentorSync.ServiceDefaults/MentorSync.ServiceDefaults.csproj" />
+  <Project Path="src/MentorSync.API/MentorSync.API.csproj" />
+  <Project Path="src/MentorSync.MigrationService/MentorSync.MigrationService.csproj" />
+  <Project Path="src/MentorSync.SharedKernel/MentorSync.SharedKernel.csproj" />
+  <Project Path="src/Modules/Notifications/MentorSync.Notifications.Contracts/MentorSync.Notifications.Contracts.csproj" />
+  <Project Path="src/Modules/Notifications/MentorSync.Notifications/MentorSync.Notifications.csproj" />
+  <Project Path="src/Modules/Ratings/MentorSync.Ratings/MentorSync.Ratings.csproj" />
+  <Project Path="src/Modules/Recommendations/MentorSync.Recommendations/MentorSync.Recommendations.csproj" />
+  <Project Path="src/Modules/Reporting/MentorSync.Reporting/MentorSync.Reporting.csproj" />
+  <Project Path="src/Modules/Scheduling/MentorSync.Scheduling/MentorSync.Scheduling.csproj" />
+  <Project Path="src/Modules/Users/MentorSync.Users.Contracts/MentorSync.Users.Contracts.csproj" />
+  <Project Path="src/Modules/Users/MentorSync.Users/MentorSync.Users.csproj" />
+</Solution>
