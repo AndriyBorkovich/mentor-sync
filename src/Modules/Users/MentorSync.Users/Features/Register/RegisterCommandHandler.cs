@@ -1,9 +1,9 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Data;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;
+using MentorSync.Users.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,12 +24,12 @@ public sealed class RegisterCommandHandler(
         {
             logger.LogWarning("Registration attempt with existing email: {Email}", command.Email);
 
-            return Result.Error("User with this email already exists");
+            return Result.Conflict("User with this email already exists");
         }
 
         if (await userManager.Users.AnyAsync(u => u.UserName == command.UserName, cancellationToken))
         {
-            return Result.Error("User with this name already exists");
+            return Result.Conflict("User with this name already exists");
         }
 
         var appRole = await roleManager.FindByNameAsync(command.Role);
@@ -56,14 +56,14 @@ public sealed class RegisterCommandHandler(
                 if (!createResult.Succeeded)
                 {
                     await transaction.RollbackAsync(cancellationToken);
-                    return Result.Error(string.Join(", ", createResult.Errors.Select(e => e.Description)));
+                    return Result.Error(createResult.GetErrorMessage());
                 }
 
                 var roleResult = await userManager.AddToRoleAsync(user, command.Role);
                 if (!roleResult.Succeeded)
                 {
                     await transaction.RollbackAsync(cancellationToken);
-                    return Result.Error(string.Join(", ", roleResult.Errors.Select(e => e.Description)));
+                    return Result.Error(createResult.GetErrorMessage());
                 }
 
                 user.IsActive = true;

@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Domain.User;
+using MentorSync.Users.Extensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.Users.Features.Confirm;
@@ -25,7 +26,6 @@ public sealed class ConfirmAccountCommandHandler(
             return Result.Success("Account confirmed");
         }
 
-        var errors = result.Errors.Select(e => e.Description);
-        return Result.Error($"Email confirmation failed: {string.Join(", ", errors)}");
+        return Result.Error($"Email confirmation failed: {result.GetErrorMessage()}");
     }
 }

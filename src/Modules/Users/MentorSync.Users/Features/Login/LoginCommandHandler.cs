@@ -22,7 +22,7 @@ public sealed class LoginCommandHandler(
         if (user is null)
         {
             logger.LogWarning("Login failed: User not found for email {Email}", command.Email);
-            return Result.Error("Invalid email or password");
+            return Result.NotFound("User not found");
         }
 
         var result = await signInManager.CheckPasswordSignInAsync(
@@ -35,11 +35,11 @@ public sealed class LoginCommandHandler(
             if (result.IsNotAllowed)
             {
                 logger.LogWarning("Login failed: User {Email} is not allowed to sign in", command.Email);
-                return Result.Error("Login is not allowed. Please verify your email");
+                return Result.Forbidden("Login is not allowed. Please verify your email");
             }
 
-            logger.LogWarning("Login failed: Invalid password for user {Email}", command.Email);
-            return Result.Error("Invalid email or password");
+            logger.LogWarning("Login failed: Invalid password or email for user {UserId}", user.Id);
+            return Result.Invalid(new ValidationError("Invalid email or password"));
         }
 
         var tokenResult = await jwtTokenGenerator.GenerateToken(user);

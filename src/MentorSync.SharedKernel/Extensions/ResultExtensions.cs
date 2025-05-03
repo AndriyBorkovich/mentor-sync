@@ -32,12 +32,16 @@ public static class ResultExtensions
                 title: "Forbidden",
                 detail: result.Errors.FirstOrDefault()),
             ResultStatus.Error => CreateProblem(
-                statusCode: StatusCodes.Status400BadRequest,
+                statusCode: StatusCodes.Status500InternalServerError,
                 title: "Operation Failed",
                 detail: string.Join("; ", result.Errors)),
             ResultStatus.NoContent => CreateProblem(
                 statusCode: StatusCodes.Status204NoContent,
                 title: "No Content"),
+            ResultStatus.Conflict => CreateProblem(
+                statusCode: StatusCodes.Status409Conflict,
+                title: "Conflict",
+                detail: result.Errors.FirstOrDefault()),
             _ => CreateProblem(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: "Internal Server Error",
@@ -60,7 +64,6 @@ public static class ResultExtensions
                 detail: "One or more validation errors occurred.",
                 extensions: new Dictionary<string, object?>
                 {
-                    ["errors"] = result.ValidationErrors,
                     ["validationErrors"] = result.ValidationErrors
                 }),
             ResultStatus.Unauthorized => CreateProblem(

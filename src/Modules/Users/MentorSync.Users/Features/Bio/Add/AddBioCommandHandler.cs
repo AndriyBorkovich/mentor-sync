@@ -1,6 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Domain.User;
+using MentorSync.Users.Extensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.Users.Features.Bio.Add;
@@ -20,7 +21,7 @@ public sealed class AddBioCommandHandler(UserManager<AppUser> userManager)
         var updateResult = await userManager.UpdateAsync(user);
 
         return !updateResult.Succeeded ?
-            Result.Error(string.Join(',', updateResult.Errors.Select(e => e.Description)))
-            : Result.Success("Bio added and user indexed successfully");
+            Result.Error(updateResult.GetErrorMessage())
+            : Result.Success("Bio added successfully");
     }
 }

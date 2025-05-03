@@ -30,7 +30,7 @@ public sealed class RefreshTokenCommandHandler(
         var principal = GetPrincipalFromExpiredToken(command.AccessToken);
         if (principal is null)
         {
-            return Result.Error("Invalid access token");
+            return Result.Conflict("Invalid access token");
         }
 
         var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -38,13 +38,13 @@ public sealed class RefreshTokenCommandHandler(
             
         if (user is null)
         {
-            return Result.Error("User not found");
+            return Result.NotFound("User not found");
         }
 
         if (user.RefreshToken != command.RefreshToken)
         {
             logger.LogWarning("Invalid refresh token for user {UserId}", userId);
-            return Result.Error("Invalid refresh token");
+            return Result.Conflict("Invalid refresh token");
         }
 
         if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)

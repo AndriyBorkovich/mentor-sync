@@ -22,6 +22,6 @@ public sealed class ConfirmAccountEndpoint : IEndpoint
         .WithTags(TagsConstants.Users)
         .AllowAnonymous()
         .Produces<string>()
-        .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+        .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 }
