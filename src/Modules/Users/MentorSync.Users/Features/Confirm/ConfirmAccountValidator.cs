@@ -6,7 +6,7 @@ public sealed class ConfirmAccountValidator : AbstractValidator<ConfirmAccountCo
 {
     public ConfirmAccountValidator()
     {
-        RuleFor(c => c.Email).NotEmpty().EmailAddress();
-        RuleFor(c => c.Token).NotEmpty();
+        RuleFor(c => c.Email).NotNull().NotEmpty().EmailAddress();
+        RuleFor(c => c.Token).NotNull().NotEmpty();
     }
 }

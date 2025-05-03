@@ -1,13 +1,28 @@
 ﻿using MentorSync.Notifications;
+using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Behaviours;
 using MentorSync.SharedKernel.Services;
 using MentorSync.Users;
+using Serilog;
 using System.Reflection;
 
 namespace MentorSync.API;
 
 public static class ServiceCollectionExtensions
 {
+    public static IServiceCollection AddEndpointsMetadata(this IServiceCollection services)
+    {
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(SwaggerConfiguration.Configure);
+
+        return services;
+    }
+    public static IServiceCollection AddCustomSerilog(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSerilog((_, lc) => lc.ReadFrom.Configuration(configuration));
+
+        return services;
+    }
     public static IServiceCollection AddExceptionHandling(this IServiceCollection services)
     {
         services.AddProblemDetails(options =>
@@ -27,7 +42,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddCors(options =>
         {
-            options.AddPolicy("All",
+            options.AddPolicy(CorsPolicyNames.All,
                 policyConfig => policyConfig.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
         });
 

@@ -8,6 +8,11 @@ public static class GeneralConstants
     public const string DefaultEmail = "donotreply@7e133b28-71cb-4851-8bf4-701df3a6ce78.azurecomm.net";
 }
 
+public static class CorsPolicyNames
+{
+    public const string All = nameof(All);
+}
+
 public static class TagsConstants
 {
     public const string Users = nameof(Users);
