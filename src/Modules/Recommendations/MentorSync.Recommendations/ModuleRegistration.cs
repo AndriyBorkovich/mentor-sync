@@ -23,6 +23,7 @@ public static class ModuleRegistration
         builder.Services.AddScoped<ICollaborativeTrainer, CollaborativeTrainer>();
         builder.Services.AddScoped<IHybridScorer, HybridScorer>();
 
-        builder.Services.AddHostedService<RecommendationPipelineService>();
+        // TODO: implement the recommendation pipeline service completely
+        //builder.Services.AddHostedService<RecommendationPipelineService>();
     }
 }

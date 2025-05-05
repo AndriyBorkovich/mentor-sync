@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using MentorSync.Ratings.Data;
+using MentorSync.Recommendations.Data;
 using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
@@ -24,11 +26,20 @@ public sealed class Worker(
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var usersDbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
 
+            var usersDbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
             await EnsureDatabaseAsync(usersDbContext, cancellationToken);
             await RunMigrationAsync(usersDbContext, cancellationToken);
-            await SeedDataAsync();
+            await SeedRolesAsync();
+
+            var ratingsDbContext = scope.ServiceProvider.GetRequiredService<RatingsDbContext>();
+            await EnsureDatabaseAsync(ratingsDbContext, cancellationToken);
+            await RunMigrationAsync(ratingsDbContext, cancellationToken);
+
+            var recommendationDbContext = scope.ServiceProvider.GetRequiredService<RecommendationDbContext>();
+            await EnsureDatabaseAsync(recommendationDbContext, cancellationToken);
+            await RunMigrationAsync(recommendationDbContext, cancellationToken);
+
             logger.LogInformation("Migrated database successfully.");
         }
         catch (Exception ex)
@@ -65,7 +76,7 @@ public sealed class Worker(
         });
     }
 
-    private async Task SeedDataAsync()
+    private async Task SeedRolesAsync()
     {
         using var scope = serviceProvider.CreateScope();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
