@@ -19,10 +19,10 @@ public static class ModuleRegistration
                 opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Recommendations));
             });
 
-        builder.Services.AddHostedService<RecommendationPipelineService>();
-
         builder.Services.AddScoped<IInteractionAggregator, InteractionAggregator>();
         builder.Services.AddScoped<ICollaborativeTrainer, CollaborativeTrainer>();
         builder.Services.AddScoped<IHybridScorer, HybridScorer>();
+
+        builder.Services.AddHostedService<RecommendationPipelineService>();
     }
 }

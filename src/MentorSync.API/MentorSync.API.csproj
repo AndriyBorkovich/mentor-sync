@@ -20,6 +20,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Modules\Notifications\MentorSync.Notifications\MentorSync.Notifications.csproj" />
+    <ProjectReference Include="..\Modules\Ratings\MentorSync.Ratings\MentorSync.Ratings.csproj" />
+    <ProjectReference Include="..\Modules\Recommendations\MentorSync.Recommendations\MentorSync.Recommendations.csproj" />
+    <ProjectReference Include="..\Modules\Reporting\MentorSync.Reporting\MentorSync.Reporting.csproj" />
+    <ProjectReference Include="..\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
     <ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
   </ItemGroup>
 </Project>
