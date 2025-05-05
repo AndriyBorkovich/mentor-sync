@@ -1,4 +1,4 @@
-﻿namespace MentorSync.Users.Domain.Enums;
+﻿namespace MentorSync.SharedKernel.CommonEntities;
 
 [Flags]
 public enum Industry

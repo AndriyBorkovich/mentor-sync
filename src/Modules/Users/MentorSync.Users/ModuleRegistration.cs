@@ -134,28 +134,7 @@ public static class ModuleRegistration
         // {
         //     options.ClientId = configuration["Authentication:Google:ClientId"]!;
         //     options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
-
-        //     options.Events = new OAuthEvents
-        //     {
-        //         OnRedirectToAuthorizationEndpoint = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         },
-        //         OnCreatingTicket = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         },
-        //         OnRemoteFailure = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         },
-        //         OnTicketReceived = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         }
-        //     };
         // });
-
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
