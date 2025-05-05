@@ -7,24 +7,17 @@ namespace MentorSync.Recommendations.Features.Pipeline;
 /// <summary>
 /// Automates the full hybrid (CF + CBF) recommendation pipeline
 /// </summary>
-public sealed class RecommendationPipelineService : BackgroundService
+public sealed class RecommendationPipelineService(
+    IServiceProvider serviceProvider, ILogger<RecommendationPipelineService> logger)
+    : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<RecommendationPipelineService> _logger;
-
-    public RecommendationPipelineService(IServiceProvider serviceProvider, ILogger<RecommendationPipelineService> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Recommendation pipeline started.");
+        logger.LogInformation("Recommendation pipeline started.");
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            using var scope = _serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateScope();
 
             try
             {
@@ -38,7 +31,7 @@ public sealed class RecommendationPipelineService : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Recommendation pipeline failed");
+                logger.LogError(ex, "Recommendation pipeline failed");
             }
 
             await Task.Delay(TimeSpan.FromHours(6), stoppingToken); // adjust frequency

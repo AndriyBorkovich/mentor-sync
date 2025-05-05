@@ -83,7 +83,7 @@ public class HybridScorer : IHybridScorer
         var prefLangs = pref.DesiredProgrammingLanguages;
         var mentorLangs = mentor.ProgrammingLanguages;
         score += prefLangs.Intersect(mentorLangs).Count() * 2;
-        if (pref.DesiredIndustries.Contains(mentor.Industry)) score += 3;
+        if (pref.DesiredIndustries.HasFlag(mentor.Industry)) score += 3;
         if (mentor.ExperienceYears >= pref.MinMentorExperienceYears) score += 1;
         if (mentor.CommunicationLanguage == pref.PreferredCommunicationLanguage) score += 1;
         return score;
