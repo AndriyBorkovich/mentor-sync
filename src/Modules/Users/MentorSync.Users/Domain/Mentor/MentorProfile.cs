@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MentorSync.SharedKernel.CommonEntities;
 using MentorSync.Users.Domain.Enums;
 using MentorSync.Users.Domain.User;
 

@@ -22,6 +22,9 @@ public static class TagsConstants
 public static class SchemaConstants
 {
     public const string Users = "users";
+    public const string Recommendations = "recommendations";
+    public const string Ratings = "ratings";
+    public const string Scheduling = "scheduling";
 }
 
 public static class PolicyConstants

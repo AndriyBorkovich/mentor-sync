@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
+using MentorSync.Users.Contracts.Services;
+using MentorSync.Users.Services;
 
 namespace MentorSync.Users;
 
@@ -43,6 +45,8 @@ public static class ModuleRegistration
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
+
+        builder.Services.AddScoped<IMentorProfileService, MentorProfileService>();
     }
 
     private static void AddIdentity(IServiceCollection services)
@@ -134,28 +138,7 @@ public static class ModuleRegistration
         // {
         //     options.ClientId = configuration["Authentication:Google:ClientId"]!;
         //     options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
-
-        //     options.Events = new OAuthEvents
-        //     {
-        //         OnRedirectToAuthorizationEndpoint = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         },
-        //         OnCreatingTicket = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         },
-        //         OnRemoteFailure = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         },
-        //         OnTicketReceived = context =>
-        //         {
-        //             return Task.CompletedTask;
-        //         }
-        //     };
         // });
-
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 

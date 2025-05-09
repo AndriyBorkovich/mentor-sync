@@ -1,4 +1,6 @@
 ﻿using MentorSync.Notifications;
+using MentorSync.Ratings;
+using MentorSync.Recommendations;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Behaviours;
 using MentorSync.SharedKernel.Services;
@@ -60,8 +62,11 @@ public static class ServiceCollectionExtensions
         });
 
         builder.Services.AddSingleton<IDomainEventsDispatcher, MediatorDomainEventsDispatcher>();
+
         builder.AddUsersModule();
         builder.AddNotificationsModule();
+        builder.AddRatingsModule();
+        builder.AddRecommendationsModule();
     }
 }
 
