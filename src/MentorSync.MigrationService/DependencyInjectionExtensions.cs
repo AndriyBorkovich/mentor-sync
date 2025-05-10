@@ -1,4 +1,5 @@
-﻿using MentorSync.Ratings.Data;
+﻿using MentorSync.Materials.Data;
+using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Services;
@@ -19,36 +20,28 @@ public static class DependencyInjectionExtensions
 
     public static void AddDbContexts(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<UsersDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Users));
-            });
-
+        AddDbContext<UsersDbContext>(SchemaConstants.Users);
         builder.Services.AddIdentity<AppUser, AppRole>()
             .AddEntityFrameworkStores<UsersDbContext>()
             .AddDefaultTokenProviders();
+        AddDbContext<MaterialsDbContext>(SchemaConstants.Materials);
+        AddDbContext<RatingsDbContext>(SchemaConstants.Ratings);
+        AddDbContext<RecommendationDbContext>(SchemaConstants.Recommendations);
 
-        builder.AddNpgsqlDbContext<RecommendationDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Recommendations));
-            });
-
-        builder.AddNpgsqlDbContext<RatingsDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Ratings));
-            });
+        void AddDbContext<T>(string schemaName)
+            where T: DbContext
+        {
+            builder.AddNpgsqlDbContext<T>(
+                connectionName: GeneralConstants.DatabaseName,
+                configureSettings: c => c.DisableTracing = true,
+                configureDbContextOptions: opt =>
+                {
+                    opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, schemaName));
+                });
+        }
     }
 
-    public static void AddMigrationWorker(this IServiceCollection services)
+    public static void AddMigrationsWorker(this IServiceCollection services)
     {
         services.AddHostedService<Worker>();
 

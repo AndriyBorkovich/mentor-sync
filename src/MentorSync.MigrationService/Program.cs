@@ -9,7 +9,7 @@ builder.Services.AddMockEventDispatcher();
 
 builder.AddDbContexts();
 
-builder.Services.AddMigrationWorker();
+builder.Services.AddMigrationsWorker();
 
 var host = builder.Build();
 host.Run();

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using MentorSync.Materials.Data;
 using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
 using MentorSync.SharedKernel;
@@ -27,18 +28,10 @@ public sealed class Worker(
         {
             using var scope = serviceProvider.CreateScope();
 
-            var usersDbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-            await EnsureDatabaseAsync(usersDbContext, cancellationToken);
-            await RunMigrationAsync(usersDbContext, cancellationToken);
-            await SeedRolesAsync();
-
-            var ratingsDbContext = scope.ServiceProvider.GetRequiredService<RatingsDbContext>();
-            await EnsureDatabaseAsync(ratingsDbContext, cancellationToken);
-            await RunMigrationAsync(ratingsDbContext, cancellationToken);
-
-            var recommendationDbContext = scope.ServiceProvider.GetRequiredService<RecommendationDbContext>();
-            await EnsureDatabaseAsync(recommendationDbContext, cancellationToken);
-            await RunMigrationAsync(recommendationDbContext, cancellationToken);
+            await MigrateAsync<UsersDbContext>(scope.ServiceProvider, cancellationToken, postMigrationStep: SeedRolesAsync);
+            await MigrateAsync<MaterialsDbContext>(scope.ServiceProvider, cancellationToken);
+            await MigrateAsync<RatingsDbContext>(scope.ServiceProvider, cancellationToken);
+            await MigrateAsync<RecommendationDbContext>(scope.ServiceProvider, cancellationToken);
 
             logger.LogInformation("Migrated database successfully.");
         }
@@ -49,6 +42,19 @@ public sealed class Worker(
         }
 
         hostApplicationLifetime.StopApplication();
+    }
+
+    private static async Task MigrateAsync<T>(
+        IServiceProvider sp,
+        CancellationToken cancellationToken,
+        Func<Task>? postMigrationStep = null)
+        where T : DbContext
+    {
+        var context = sp.GetRequiredService<T>();
+        await EnsureDatabaseAsync(context, cancellationToken);
+        await RunMigrationAsync(context, cancellationToken);
+        if (postMigrationStep is not null)
+            await postMigrationStep();
     }
 
     private static async Task EnsureDatabaseAsync<T>(T dbContext, CancellationToken cancellationToken)

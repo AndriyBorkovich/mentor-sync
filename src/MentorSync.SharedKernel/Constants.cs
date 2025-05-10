@@ -25,6 +25,7 @@ public static class SchemaConstants
     public const string Recommendations = "recommendations";
     public const string Ratings = "ratings";
     public const string Scheduling = "scheduling";
+    public const string Materials = "materials";
 }
 
 public static class PolicyConstants

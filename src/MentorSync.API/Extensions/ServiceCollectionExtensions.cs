@@ -1,4 +1,5 @@
-﻿using MentorSync.Notifications;
+﻿using MentorSync.Materials;
+using MentorSync.Notifications;
 using MentorSync.Ratings;
 using MentorSync.Recommendations;
 using MentorSync.SharedKernel;
@@ -65,6 +66,7 @@ public static class ServiceCollectionExtensions
 
         builder.AddUsersModule();
         builder.AddNotificationsModule();
+        builder.AddMaterialsModule();
         builder.AddRatingsModule();
         builder.AddRecommendationsModule();
     }
