@@ -38,17 +38,10 @@ public static class ModuleRegistration
 
         AddEndpoints(builder.Services);
 
-        builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSession(options =>
-        {
-            options.IdleTimeout = TimeSpan.FromMinutes(10);
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
-        });
+        AddSessionSupport(builder.Services);
 
-        builder.Services.AddScoped<IMentorProfileService, MentorProfileService>();
+        AddExternalServices(builder.Services);
     }
-
     private static void AddIdentity(IServiceCollection services)
     {
         services.AddIdentity<AppUser, AppRole>(options =>
@@ -158,6 +151,25 @@ public static class ModuleRegistration
             o.AddPolicy(PolicyConstants.MenteeOnly, p =>
                 p.RequireRole(Roles.Mentee));
         });
+    }
 
+    private static void AddSessionSupport(IServiceCollection services)
+    {
+        services.AddDistributedMemoryCache();
+        services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(10);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
+    }
+
+    /// <summary>
+    /// Services needed for other modules to work with data from users module
+    /// </summary>
+    /// <param name="services">extended param</param>
+    private static void AddExternalServices(IServiceCollection services)
+    {
+        services.AddScoped<IMentorProfileService, MentorProfileService>();
     }
 }
