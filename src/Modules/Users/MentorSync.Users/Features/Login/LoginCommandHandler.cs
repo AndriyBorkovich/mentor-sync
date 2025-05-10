@@ -1,11 +1,11 @@
 ﻿using Ardalis.Result;
 using MediatR;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MentorSync.Users.Features.Login;
 
@@ -13,6 +13,7 @@ public sealed class LoginCommandHandler(
     UserManager<AppUser> userManager,
     SignInManager<AppUser> signInManager,
     IJwtTokenGenerator jwtTokenGenerator,
+    IOptions<JwtOptions> jwtOptions,
     ILogger<LoginCommandHandler> logger)
     : IRequestHandler<LoginCommand, Result<AuthResponse>>
 {
@@ -45,7 +46,7 @@ public sealed class LoginCommandHandler(
         var tokenResult = await jwtTokenGenerator.GenerateToken(user);
 
         user.RefreshToken = tokenResult.RefreshToken;
-        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenExpirationInDays);
         await userManager.UpdateAsync(user);
 
         logger.LogInformation("User {Email} logged in successfully", command.Email);
