@@ -83,6 +83,8 @@ public static class ModuleRegistration
 
     private static void AddCustomAuth(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+
         var jwtOptions = new JwtOptions();
         configuration.GetSection(JwtOptions.SectionName).Bind(jwtOptions);
 

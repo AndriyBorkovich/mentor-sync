@@ -2,6 +2,18 @@ using Microsoft.Extensions.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+// Azure blob storage
+var azureStorage = builder.AddAzureStorage("mentor-sync-storage");
+
+//if (!builder.ExecutionContext.IsPublishMode)
+//{
+//    azureStorage.RunAsEmulator(azurite =>
+//        azurite.WithLifetime(ContainerLifetime.Persistent)
+//               .WithDataVolume(name: "emulator-local-storage"));
+//}
+
+var blobs = azureStorage.AddBlobs("files-blobs");
+
 // Azure postgres database
 var usernamePostgres = builder.AddParameter("postgre-username", secret: true);
 var passwordPostgres = builder.AddParameter("postgre-password", secret: true);
@@ -53,6 +65,8 @@ builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
 // API project
 var api = builder.AddProject<Projects.MentorSync_API>("api")
     .WithExternalHttpEndpoints()
+    .WithReference(blobs)
+    .WaitFor(blobs)
     .WithReference(postgresDb)
     .WaitFor(postgresDb)
     .WithReference(mongodb)

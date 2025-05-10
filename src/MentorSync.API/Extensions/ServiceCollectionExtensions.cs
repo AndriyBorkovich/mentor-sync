@@ -4,7 +4,6 @@ using MentorSync.Ratings;
 using MentorSync.Recommendations;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Behaviours;
-using MentorSync.SharedKernel.Services;
 using MentorSync.Users;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -62,8 +61,7 @@ public static class ServiceCollectionExtensions
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        builder.Services.AddSingleton<IDomainEventsDispatcher, MediatorDomainEventsDispatcher>();
-
+        builder.AddSharedServices();
         builder.AddUsersModule();
         builder.AddNotificationsModule();
         builder.AddMaterialsModule();
@@ -74,7 +72,7 @@ public static class ServiceCollectionExtensions
 
 static file class SwaggerConfiguration
 {
-    private static OpenApiSecurityScheme Scheme => new()
+    private static OpenApiSecurityScheme BearerScheme => new()
     {
         In = ParameterLocation.Header,
         Description = "Please enter a valid token",
@@ -86,17 +84,32 @@ static file class SwaggerConfiguration
         {
             Id = "Bearer",
             Type = ReferenceType.SecurityScheme,
-        },
+        }
+    };
+
+    private static OpenApiSecurityScheme AntiforgeryScheme => new()
+    {
+        In = ParameterLocation.Header,
+        Name = "X-XSRF-TOKEN",
+        Type = SecuritySchemeType.ApiKey,
+        Description = "Antiforgery token. Get it from /antiforgery/token endpoint and send it here.",
+        Reference = new OpenApiReference
+        {
+            Id = "XSRF-TOKEN",
+            Type = ReferenceType.SecurityScheme
+        }
     };
 
     public static void Configure(SwaggerGenOptions option)
     {
         option.ResolveConflictingActions(apiDesc => apiDesc.First());
-        option.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-        option.AddSecurityDefinition(Scheme.Reference.Id, Scheme);
+        option.SwaggerDoc("v1", new OpenApiInfo { Title = "MentorSync API", Version = "v1" });
+        option.AddSecurityDefinition(BearerScheme.Reference.Id, BearerScheme);
+        option.AddSecurityDefinition(AntiforgeryScheme.Reference.Id, AntiforgeryScheme);
         option.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
-            { Scheme, Array.Empty<string>() },
+            { BearerScheme, Array.Empty<string>() },
+            { AntiforgeryScheme, Array.Empty<string>() }
         });
         option.CustomSchemaIds(t => t.FullName?.Replace('+', '.'));
     }

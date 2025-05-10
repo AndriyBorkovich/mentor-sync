@@ -42,3 +42,11 @@ public static class Roles
     public const string Mentor = "Mentor";
     public const string Mentee = "Mentee";
 }
+
+/// <summary>
+/// Container names for Azure Blob Storage
+/// </summary>
+public static class ContainerNames
+{
+    public const string Avatars = "user-avatars";
+}
