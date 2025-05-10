@@ -24,6 +24,7 @@ public sealed class DeleteAvatarEndpoint : IEndpoint
         .WithDescription("Delete user profile image")
         .Produces<string>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .RequireAuthorization();
+        .RequireAuthorization()
+        .RequireAntiforgeryToken();
     }
 }

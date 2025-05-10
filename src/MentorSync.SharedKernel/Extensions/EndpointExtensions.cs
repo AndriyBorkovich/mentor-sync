@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using MentorSync.SharedKernel.Interfaces;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,6 @@ namespace MentorSync.SharedKernel.Extensions;
 
 public static class EndpointExtensions
 {
-
     public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
     {
         var serviceDescriptors = assembly
@@ -38,5 +38,14 @@ public static class EndpointExtensions
         return app;
     }
 
-    
+    /// <summary>
+    /// Marks this endpoint as requiring an antiforgery token.
+    /// </summary>
+    public static TBuilder RequireAntiforgeryToken<TBuilder>(this TBuilder builder)
+        where TBuilder : IEndpointConventionBuilder
+    {
+        // This attribute implements IAntiforgeryMetadata with RequiresValidation = true
+        builder.WithMetadata(new RequireAntiforgeryTokenAttribute());
+        return builder;
+    }
 }

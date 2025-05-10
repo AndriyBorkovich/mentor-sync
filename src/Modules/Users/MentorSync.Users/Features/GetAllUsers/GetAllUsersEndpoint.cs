@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,7 @@ public sealed class GetAllUsersEndpoint : IEndpoint
             .WithTags(TagsConstants.Users)
             .WithDescription("Get all users")
             .Produces<List<UserShortResponse>>(StatusCodes.Status200OK)
-            .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminOnly);
+            .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminOnly)
+            .RequireAntiforgeryToken();
     }
 }

@@ -33,6 +33,8 @@ app.UseHttpsRedirection();
 
 app.UseAuth();
 
+app.UseAntiforgery();
+
 app.UseSession();
 
 app.MapEndpoints();
