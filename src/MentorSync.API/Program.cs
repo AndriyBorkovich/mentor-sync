@@ -11,6 +11,8 @@ builder.Services.AddEndpointsMetadata();
 
 builder.Services.AddCustomSerilog(builder.Configuration);
 
+builder.Services.ConfigureJsonOptions();
+
 builder.Services.AddExceptionHandling();
 
 builder.Services.AddGlobalRateLimiting();

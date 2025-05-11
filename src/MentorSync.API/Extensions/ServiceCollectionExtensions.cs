@@ -9,7 +9,10 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MentorSync.API.Extensions;
 
@@ -101,6 +104,28 @@ public static class ServiceCollectionExtensions
             {
                 return httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
             }
+        });
+
+        return services;
+    }
+
+    public static IServiceCollection ConfigureJsonOptions(this IServiceCollection services)
+    {
+        services.ConfigureHttpJsonOptions(opts =>
+        {
+            var j = opts.SerializerOptions;
+            j.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            j.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+            j.WriteIndented = true;
+            j.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            j.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+        });
+
+        services.Configure<JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         });
 
         return services;
