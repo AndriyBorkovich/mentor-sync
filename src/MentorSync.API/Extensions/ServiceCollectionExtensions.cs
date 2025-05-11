@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Threading.RateLimiting;
 
 namespace MentorSync.API.Extensions;
 
@@ -48,6 +49,58 @@ public static class ServiceCollectionExtensions
         {
             options.AddPolicy(CorsPolicyNames.All,
                 policyConfig => policyConfig.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        });
+
+        return services;
+    }
+
+    public static IServiceCollection AddGlobalRateLimiting(this IServiceCollection services)
+    {
+        services.AddRateLimiter(options =>
+        {
+            options.GlobalLimiter = PartitionedRateLimiter.CreateChained(
+                PartitionedRateLimiter.Create<HttpContext, string>(
+                    httpContext => RateLimitPartition.GetConcurrencyLimiter(
+                        partitionKey: GetPartitionKey(httpContext),
+                        factory: _ => new ConcurrencyLimiterOptions
+                        {
+                            PermitLimit = 1,
+                            QueueLimit = 5,
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+                        })),
+                PartitionedRateLimiter.Create<HttpContext, string>(
+                    httpContext => RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: GetPartitionKey(httpContext),
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 100,
+                            Window = TimeSpan.FromMinutes(1)
+                        }))
+            );
+
+            options.OnRejected = async (context, cancellationToken) =>
+            {
+                if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+                {
+                    context.HttpContext.Response.Headers.RetryAfter = retryAfter.TotalSeconds.ToString();
+                }
+
+                context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+
+                context.Lease.TryGetMetadata(MetadataName.ReasonPhrase, out var reasonPhrase);
+                reasonPhrase ??= "Request limit was reached";
+
+                context.HttpContext.RequestServices.GetService<ILoggerFactory>()?
+                    .CreateLogger("Microsoft.AspNetCore.RateLimitingMiddleware")
+                    .LogWarning("Rejected request: {EndpointName}, reason: {ReasonPhrase}, retry after: {RetryInSeconds}s", context.HttpContext.Request.Path, reasonPhrase, retryAfter.TotalSeconds);
+
+                await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken);
+            };
+
+            static string GetPartitionKey(HttpContext httpContext)
+            {
+                return httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
+            }
         });
 
         return services;

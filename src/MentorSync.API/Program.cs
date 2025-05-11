@@ -13,6 +13,8 @@ builder.Services.AddCustomSerilog(builder.Configuration);
 
 builder.Services.AddExceptionHandling();
 
+builder.Services.AddGlobalRateLimiting();
+
 builder.Services.AddCustomCorsPolicy();
 
 builder.AddAplicationModules();
@@ -32,6 +34,8 @@ app.UseCustomSerilog();
 app.UseHttpsRedirection();
 
 app.UseAuth();
+
+app.UseRateLimiter();
 
 app.UseAntiforgery();
 
