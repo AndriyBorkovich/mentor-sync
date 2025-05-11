@@ -16,8 +16,6 @@ public sealed class AppUser : IdentityUser<int>, IHaveDomainEvents
     [StringLength(500)]
     public string ProfileImageUrl { get; set; }
     public bool IsActive { get; set; }
-    [StringLength(2000)]
-    public string Bio { get; set; }
     [Length(1, 5)]
     public List<string> CommunicationLanguages { get; set; }
     [StringLength(30)]
