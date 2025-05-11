@@ -42,22 +42,27 @@ public static class ModuleRegistration
 
         AddExternalServices(builder.Services);
     }
+
     private static void AddIdentity(IServiceCollection services)
     {
         services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
 
-                options.Password.RequiredLength = 8;
+                options.Password.RequiredLength = GeneralConstants.MinPasswordLength;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = true;
 
                 options.User.RequireUniqueEmail = true;
+                options.User.AllowedUserNameCharacters = GeneralConstants.AllowedUserNameCharacters;
 
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(GeneralConstants.DefaultLockoutTimeInMinutes);
+                options.Lockout.MaxFailedAccessAttempts = GeneralConstants.MaxFailedAccessAttempts;
+                options.Lockout.AllowedForNewUsers = true;
             })
             .AddSignInManager()
             .AddEntityFrameworkStores<UsersDbContext>()
@@ -65,14 +70,14 @@ public static class ModuleRegistration
 
         services.Configure<IdentityOptions>(options =>
         {
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(GeneralConstants.DefaultLockoutTimeInMinutes);
+            options.Lockout.MaxFailedAccessAttempts = GeneralConstants.MaxFailedAccessAttempts;
             options.Lockout.AllowedForNewUsers = true;
         });
 
         services.Configure<DataProtectionTokenProviderOptions>(options =>
-            options.TokenLifespan = TimeSpan.FromHours(2));
-        }
+            options.TokenLifespan = TimeSpan.FromHours(GeneralConstants.ProtectionTokenTimeInHours));
+    }
 
     private static void AddEndpoints(IServiceCollection services)
     {
@@ -83,7 +88,11 @@ public static class ModuleRegistration
 
     private static void AddCustomAuth(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+        services.AddAntiforgery(options =>
+        {
+            options.HeaderName = "X-XSRF-TOKEN";
+            options.Cookie.Name = "XSRF-TOKEN";
+        });
 
         var jwtOptions = new JwtOptions();
         configuration.GetSection(JwtOptions.SectionName).Bind(jwtOptions);
@@ -135,24 +144,19 @@ public static class ModuleRegistration
         //     options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
         // });
 
-        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
 
         services.AddScoped<IAuthorizationHandler, ActiveUserAuthHandler>();
 
-        services.AddAuthorization(o =>
-        {
-            o.AddPolicy(PolicyConstants.ActiveUserOnly, p =>
-                p.AddRequirements(new ActiveUserRequirement()));
-
-            o.AddPolicy(PolicyConstants.AdminOnly, p =>
-                p.RequireRole(Roles.Admin));
-
-            o.AddPolicy(PolicyConstants.MentorOnly, p =>
-                p.RequireRole(Roles.Mentor));
-
-            o.AddPolicy(PolicyConstants.MenteeOnly, p =>
+        services.AddAuthorizationBuilder()
+            .AddPolicy(PolicyConstants.ActiveUserOnly, p =>
+                p.AddRequirements(new ActiveUserRequirement()))
+            .AddPolicy(PolicyConstants.AdminOnly, p =>
+                p.RequireRole(Roles.Admin))
+            .AddPolicy(PolicyConstants.MentorOnly, p =>
+                p.RequireRole(Roles.Mentor))
+            .AddPolicy(PolicyConstants.MenteeOnly, p =>
                 p.RequireRole(Roles.Mentee));
-        });
     }
 
     private static void AddSessionSupport(IServiceCollection services)

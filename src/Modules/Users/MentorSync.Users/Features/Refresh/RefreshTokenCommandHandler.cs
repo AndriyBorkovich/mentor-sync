@@ -1,22 +1,18 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using System.Security.Claims;
 using Ardalis.Result;
 using MediatR;
-using MentorSync.Users.Domain;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace MentorSync.Users.Features.Refresh;
 
 public sealed class RefreshTokenCommandHandler(
     UserManager<AppUser> userManager,
-    IJwtTokenGenerator jwtTokenGenerator,
+    IJwtTokenService jwtTokenService,
     IOptions<JwtOptions> jwtOptions,
     ILogger<RefreshTokenCommandHandler> logger)
     : IRequestHandler<RefreshTokenCommand, Result<AuthResponse>>
@@ -27,7 +23,7 @@ public sealed class RefreshTokenCommandHandler(
         RefreshTokenCommand command,
         CancellationToken cancellationToken)
     {
-        var principal = GetPrincipalFromExpiredToken(command.AccessToken);
+        var principal = jwtTokenService.GetPrincipalFromExpiredToken(command.AccessToken);
         if (principal is null)
         {
             return Result.Conflict("Invalid access token");
@@ -50,53 +46,17 @@ public sealed class RefreshTokenCommandHandler(
         if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
             logger.LogWarning("Expired refresh token for user {UserId}", userId);
-            return Result.Error("Refresh token has expired");
+            return Result.Error("Refresh token has expired, please re-login");
         }
 
-        var tokenResult = await jwtTokenGenerator.GenerateToken(user);
+        var tokenResult = await jwtTokenService.GenerateToken(user);
 
         user.RefreshToken = tokenResult.RefreshToken;
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays);
         await userManager.UpdateAsync(user);
 
-        logger.LogInformation("Tokens refreshed for user {UserId}", userId);
+        logger.LogInformation("Tokens were refreshed for user {UserId}", userId);
 
         return Result.Success(new AuthResponse(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.Expiration));
-    }
-
-    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-    {
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = false, // Don't validate lifetime here
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = _jwtOptions.Issuer,
-            ValidAudience = _jwtOptions.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
-        };
-
-        try
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, 
-                tokenValidationParameters, 
-                out var securityToken);
-
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(
-                    SecurityAlgorithms.HmacSha256, 
-                    StringComparison.InvariantCultureIgnoreCase))
-            {
-                return null;
-            }
-
-            return principal;
-        }
-        catch
-        {
-            return null;
-        }
     }
 }

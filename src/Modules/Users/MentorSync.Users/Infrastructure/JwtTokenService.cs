@@ -9,10 +9,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MentorSync.Users.Infrastructure;
 
-public sealed class JwtTokenGenerator(
+public sealed class JwtTokenService(
     IOptions<JwtOptions> jwtOptions,
     UserManager<AppUser> userManager)
-    : IJwtTokenGenerator
+    : IJwtTokenService
 {
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
@@ -30,7 +30,43 @@ public sealed class JwtTokenGenerator(
             tokenOptions.ValidTo);
     }
 
-    private string GenerateRefreshToken()
+    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = false, // Don't validate lifetime here
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = _jwtOptions.Issuer,
+            ValidAudience = _jwtOptions.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
+        };
+
+        try
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token,
+                tokenValidationParameters,
+                out var securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(
+                    SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            return principal;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static string GenerateRefreshToken()
     {
         var randomNumber = new byte[64];
         using var rng = RandomNumberGenerator.Create();

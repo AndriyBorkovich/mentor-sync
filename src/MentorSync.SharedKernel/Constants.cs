@@ -6,6 +6,13 @@ public static class GeneralConstants
     public const string DefaultMigrationsTableName = "MigrationsHistory";
     public const string DefaultPassword = "qadbsfzYFJHS!";
     public const string DefaultEmail = "donotreply@7e133b28-71cb-4851-8bf4-701df3a6ce78.azurecomm.net";
+    public const int MinPasswordLength = 8;
+    public const int MaxEmailLength = 256;
+    public const int DefaultLockoutTimeInMinutes = 5;
+    public const int ProtectionTokenTimeInHours = 2;
+    public const int MaxFailedAccessAttempts = 5;
+    public const string AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 }
 
 public static class CorsPolicyNames

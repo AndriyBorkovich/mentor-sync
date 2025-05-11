@@ -1,9 +1,10 @@
-﻿using MentorSync.Users.Domain;
+﻿using System.Security.Claims;
 using MentorSync.Users.Domain.User;
 
 namespace MentorSync.Users.Infrastructure;
 
-public interface IJwtTokenGenerator
+public interface IJwtTokenService
 {
     Task<TokenResult> GenerateToken(AppUser user);
+    ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
 }

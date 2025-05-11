@@ -8,16 +8,19 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
     public RegisterCommandValidator()
     {
         RuleFor(x => x.Email)
+            .NotNull()
             .NotEmpty()
             .EmailAddress()
-            .MaximumLength(256);
+            .MaximumLength(GeneralConstants.MaxEmailLength);
 
         RuleFor(x => x.UserName)
+            .NotNull()
             .NotEmpty()
             .MinimumLength(4)
             .MaximumLength(50);
         
         RuleFor(x => x.Role)
+            .NotNull()
             .NotEmpty()
             .Must(x => x.Equals(Roles.Admin, StringComparison.InvariantCultureIgnoreCase)
                         || x.Equals(Roles.Mentor, StringComparison.InvariantCultureIgnoreCase)
@@ -25,15 +28,22 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             .WithMessage("Such role doesn't exist");
 
         RuleFor(x => x.Password)
+            .NotNull()
             .NotEmpty()
-            .MinimumLength(8)
-            .MaximumLength(100)
+            .MinimumLength(GeneralConstants.MinPasswordLength)
             .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter")
             .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
             .Matches("[0-9]").WithMessage("Password must contain at least one number")
             .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character");
 
         RuleFor(x => x.ConfirmPassword)
+            .NotNull()
+            .NotEmpty()
+            .MinimumLength(GeneralConstants.MinPasswordLength)
+            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter")
+            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
+            .Matches("[0-9]").WithMessage("Password must contain at least one number")
+            .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character")
             .Equal(x => x.Password)
             .WithMessage("Passwords do not match");
     }

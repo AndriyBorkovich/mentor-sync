@@ -12,7 +12,7 @@ namespace MentorSync.Users.Features.Login;
 public sealed class LoginCommandHandler(
     UserManager<AppUser> userManager,
     SignInManager<AppUser> signInManager,
-    IJwtTokenGenerator jwtTokenGenerator,
+    IJwtTokenService jwtTokenService,
     IOptions<JwtOptions> jwtOptions,
     ILogger<LoginCommandHandler> logger)
     : IRequestHandler<LoginCommand, Result<AuthResponse>>
@@ -43,7 +43,7 @@ public sealed class LoginCommandHandler(
             return Result.Invalid(new ValidationError("Invalid email or password"));
         }
 
-        var tokenResult = await jwtTokenGenerator.GenerateToken(user);
+        var tokenResult = await jwtTokenService.GenerateToken(user);
 
         user.RefreshToken = tokenResult.RefreshToken;
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenExpirationInDays);
