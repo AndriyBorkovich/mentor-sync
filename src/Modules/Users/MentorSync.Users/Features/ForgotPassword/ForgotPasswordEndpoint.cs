@@ -26,7 +26,7 @@ public sealed class ForgotPasswordEndpoint : IEndpoint
         })
         .AllowAnonymous()
         .WithTags(TagsConstants.Users)
-        .WithDescription("Initiate forgot password process for user")
+        .WithDescription("Initiate forgot password process for user (send email)")
         .Produces<string>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status409Conflict);

@@ -20,6 +20,7 @@ public sealed class ConfirmAccountEndpoint : IEndpoint
             return result.DecideWhatToReturn();
         })
         .WithTags(TagsConstants.Users)
+        .WithDescription("Confirm user account by sending email with token")
         .AllowAnonymous()
         .Produces<string>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest);

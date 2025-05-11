@@ -34,7 +34,7 @@ public sealed class ToggleActiveUserCommandHandler(
                 await usersDbContext.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
 
-                return Result.Success("User deactivated successfully");
+                return Result.Success($"User was {(user.IsActive ? "activated" : "deactivated")} successfully");
             }
             catch (Exception ex)
             {
