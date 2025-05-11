@@ -21,11 +21,12 @@ properties:
       - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
     secrets:
+      - name: connectionstrings--emailservice
+        value: endpoint=https://cs-mentorsync-dev.unitedstates.communication.azure.com/;accesskey=A6Uh5park7JXtTKo5MifjUgJkgbn2Mc1G9jDqShflfr10kjIkG4EJQQJ99BDACULyCpqbLGRAAAAAZCS0yGB
+      - name: connectionstrings--files-blobs
+        value: '{{ .Env.MENTOR_SYNC_STORAGE_BLOBENDPOINT }}'
       - name: connectionstrings--mongodb
         value: mongodb://{{ securedParameter "mongo_username" }}:{{ securedParameter "mongo_password" }}@mongo:27017/mongodb?authSource=admin&authMechanism=SCRAM-SHA-256
-      - name: connectionstrings--emailservice
-        keyVaultUrl: '{{ .Env.SERVICE_BINDING_KVA12EFD91_ENDPOINT }}secrets/cs-connectionString'
-        identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
       - name: connectionstrings--mentorsyncdb
         keyVaultUrl: '{{ .Env.POSTGRES_DB_KV_VAULTURI }}secrets/connectionstrings--MentorSyncDb'
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
@@ -46,10 +47,12 @@ properties:
             value: "true"
           - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
             value: in_memory
-          - name: ConnectionStrings__mongodb
-            secretRef: connectionstrings--mongodb
           - name: ConnectionStrings__EmailService
             secretRef: connectionstrings--emailservice
+          - name: ConnectionStrings__files-blobs
+            secretRef: connectionstrings--files-blobs
+          - name: ConnectionStrings__mongodb
+            secretRef: connectionstrings--mongodb
           - name: ConnectionStrings__MentorSyncDb
             secretRef: connectionstrings--mentorsyncdb
     scale:

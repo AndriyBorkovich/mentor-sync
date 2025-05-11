@@ -5,6 +5,9 @@
       "principalId": {
         "value": "${AZURE_PRINCIPAL_ID}"
       },
+      "cs_keyvault": {
+        "value": "${AZURE_CS_KEYVAULT}"
+      },
       "mongo_password": {
         "value": "${AZURE_MONGO_PASSWORD}"
       },

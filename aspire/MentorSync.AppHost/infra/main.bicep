@@ -13,6 +13,8 @@ param location string
 param principalId string = ''
 
 @secure()
+param cs_keyvault string
+@secure()
 param mongo_password string
 @secure()
 param mongo_username string
@@ -47,8 +49,25 @@ module communication_service 'communication-service/communication-service.module
     communicationServiceName: 'cs-mentorsync-dev'
     emailServiceName: 'es-mentorsync-dev'
     isProd: false
-    keyVaultName: resources.outputs.SERVICE_BINDING_KVA12EFD91_NAME
+    keyVaultName: cs_keyvault
     location: location
+  }
+}
+module mentor_sync_storage 'mentor-sync-storage/mentor-sync-storage.module.bicep' = {
+  name: 'mentor-sync-storage'
+  scope: rg
+  params: {
+    location: location
+  }
+}
+module mentor_sync_storage_roles 'mentor-sync-storage-roles/mentor-sync-storage-roles.module.bicep' = {
+  name: 'mentor-sync-storage-roles'
+  scope: rg
+  params: {
+    location: location
+    mentor_sync_storage_outputs_name: mentor_sync_storage.outputs.name
+    principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
+    principalType: 'ServicePrincipal'
   }
 }
 module postgres_db 'postgres-db/postgres-db.module.bicep' = {
@@ -89,7 +108,6 @@ output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = resources.outputs.AZURE_CO
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
 output SERVICE_MONGO_VOLUME_MONGODATA_NAME string = resources.outputs.SERVICE_MONGO_VOLUME_MONGODATA_NAME
-output SERVICE_BINDING_KVA12EFD91_ENDPOINT string = resources.outputs.SERVICE_BINDING_KVA12EFD91_ENDPOINT
-output SERVICE_BINDING_KVA12EFD91_NAME string = resources.outputs.SERVICE_BINDING_KVA12EFD91_NAME
 output AZURE_VOLUMES_STORAGE_ACCOUNT string = resources.outputs.AZURE_VOLUMES_STORAGE_ACCOUNT
+output MENTOR_SYNC_STORAGE_BLOBENDPOINT string = mentor_sync_storage.outputs.blobEndpoint
 output POSTGRES_DB_KV_VAULTURI string = postgres_db_kv.outputs.vaultUri

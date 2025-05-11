@@ -53,9 +53,7 @@ var communicationService = builder.AddBicepTemplate(name: "communication-service
                                   .WithParameter("emailServiceName", "es-mentorsync-dev")
                                   .WithParameter("keyVaultName", csKeyVault);
 
-var smtpConnectionString = builder.ExecutionContext.IsPublishMode
-       ? communicationService.GetSecretOutput("cs-connectionString")?.Value
-       : builder.Configuration.GetValue<string>("cs-connectionString");
+var smtpConnectionString = builder.Configuration.GetValue<string>("cs-connectionString");
 
 // migrations service
 builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")

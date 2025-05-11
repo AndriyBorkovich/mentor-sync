@@ -120,38 +120,6 @@ resource mongoMongoDataStore 'Microsoft.App/managedEnvironments/storages@2023-05
   }
 }
 
-resource kva12efd91 'Microsoft.KeyVault/vaults@2023-07-01' = {
-  name: replace('kva12efd91-${resourceToken}', '-', '')
-  location: location
-  properties: {
-    sku: {
-      name: 'standard'
-      family: 'A'
-    }
-    tenantId: subscription().tenantId
-    enableRbacAuthorization: true
-  }
-}
-
-resource kva12efd91RoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(kva12efd91.id, managedIdentity.id, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483'))
-  scope: kva12efd91
-  properties: {
-    principalId: managedIdentity.properties.principalId
-    principalType: 'ServicePrincipal'
-    roleDefinitionId:  subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483')
-  }
-}
-
-resource kva12efd91UserReadRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(kva12efd91.id, principalId, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6'))
-  scope: kva12efd91
-  properties: {
-    principalId: principalId
-    roleDefinitionId:  subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
-  }
-}
-
 output MANAGED_IDENTITY_CLIENT_ID string = managedIdentity.properties.clientId
 output MANAGED_IDENTITY_NAME string = managedIdentity.name
 output MANAGED_IDENTITY_PRINCIPAL_ID string = managedIdentity.properties.principalId
@@ -164,6 +132,4 @@ output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = containerAppEnvironment.na
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppEnvironment.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = containerAppEnvironment.properties.defaultDomain
 output SERVICE_MONGO_VOLUME_MONGODATA_NAME string = mongoMongoDataStore.name
-output SERVICE_BINDING_KVA12EFD91_ENDPOINT string = kva12efd91.properties.vaultUri
-output SERVICE_BINDING_KVA12EFD91_NAME string = kva12efd91.name
 output AZURE_VOLUMES_STORAGE_ACCOUNT string = storageVolume.name
