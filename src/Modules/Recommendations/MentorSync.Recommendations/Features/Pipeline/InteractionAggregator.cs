@@ -14,7 +14,7 @@ public interface IInteractionAggregator
 }
 
 public sealed class InteractionAggregator(
-    RecommendationDbContext db,
+    RecommendationsDbContext db,
     ILogger<InteractionAggregator> logger)
     : IInteractionAggregator
 {

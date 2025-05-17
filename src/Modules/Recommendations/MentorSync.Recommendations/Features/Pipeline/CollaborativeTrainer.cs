@@ -17,11 +17,11 @@ public interface ICollaborativeTrainer
 
 public class CollaborativeTrainer : ICollaborativeTrainer
 {
-    private readonly RecommendationDbContext _db;
+    private readonly RecommendationsDbContext _db;
     private readonly ILogger<CollaborativeTrainer> _logger;
     private readonly MLContext _mlContext = new();
 
-    public CollaborativeTrainer(RecommendationDbContext db, ILogger<CollaborativeTrainer> logger)
+    public CollaborativeTrainer(RecommendationsDbContext db, ILogger<CollaborativeTrainer> logger)
     {
         _db = db;
         _logger = logger;

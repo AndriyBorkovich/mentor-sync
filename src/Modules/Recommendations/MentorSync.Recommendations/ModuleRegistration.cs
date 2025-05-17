@@ -11,7 +11,7 @@ public static class ModuleRegistration
 {
     public static void AddRecommendationsModule(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<RecommendationDbContext>(
+        builder.AddNpgsqlDbContext<RecommendationsDbContext>(
             connectionName: GeneralConstants.DatabaseName,
             configureSettings: c => c.DisableTracing = true,
             configureDbContextOptions: opt =>

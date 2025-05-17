@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Data;
 
-public sealed class RecommendationDbContext(DbContextOptions<RecommendationDbContext> options)
+public sealed class RecommendationsDbContext(DbContextOptions<RecommendationsDbContext> options)
     : DbContext(options)
 {
     public DbSet<MentorMenteeInteraction> MenteeMentorInteractions { get; set; }

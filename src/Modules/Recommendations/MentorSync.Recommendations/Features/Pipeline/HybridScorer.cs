@@ -21,14 +21,14 @@ public interface IHybridScorer
 
 public class HybridScorer : IHybridScorer
 {
-    private readonly RecommendationDbContext _db;
+    private readonly RecommendationsDbContext _db;
     private readonly ILogger<HybridScorer> _logger;
     private readonly IMentorProfileService _mentorProfileService;
     private readonly MLContext _mlContext = new();
     private readonly ITransformer _model;
 
     public HybridScorer(
-        RecommendationDbContext db,
+        RecommendationsDbContext db,
         IMentorProfileService mentorProfileService,
         ILogger<HybridScorer> logger)
     {

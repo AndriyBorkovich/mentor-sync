@@ -28,7 +28,7 @@ public static class DependencyInjectionExtensions
         AddDbContext<SchedulingDbContext>(SchemaConstants.Scheduling);
         AddDbContext<MaterialsDbContext>(SchemaConstants.Materials);
         AddDbContext<RatingsDbContext>(SchemaConstants.Ratings);
-        AddDbContext<RecommendationDbContext>(SchemaConstants.Recommendations);
+        AddDbContext<RecommendationsDbContext>(SchemaConstants.Recommendations);
 
         void AddDbContext<T>(string schemaName)
             where T: DbContext

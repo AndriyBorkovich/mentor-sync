@@ -33,7 +33,7 @@ public sealed class Worker(
             await MigrateAsync<SchedulingDbContext>(scope.ServiceProvider, cancellationToken);
             await MigrateAsync<MaterialsDbContext>(scope.ServiceProvider, cancellationToken);
             await MigrateAsync<RatingsDbContext>(scope.ServiceProvider, cancellationToken);
-            await MigrateAsync<RecommendationDbContext>(scope.ServiceProvider, cancellationToken);
+            await MigrateAsync<RecommendationsDbContext>(scope.ServiceProvider, cancellationToken);
 
             logger.LogInformation("Migrated database successfully.");
         }
