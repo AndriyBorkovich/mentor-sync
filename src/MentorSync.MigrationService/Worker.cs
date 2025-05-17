@@ -2,6 +2,7 @@ using System.Diagnostics;
 using MentorSync.Materials.Data;
 using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
+using MentorSync.Scheduling.Data;
 using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
@@ -29,6 +30,7 @@ public sealed class Worker(
             using var scope = serviceProvider.CreateScope();
 
             await MigrateAsync<UsersDbContext>(scope.ServiceProvider, cancellationToken, postMigrationStep: SeedRolesAsync);
+            await MigrateAsync<SchedulingDbContext>(scope.ServiceProvider, cancellationToken);
             await MigrateAsync<MaterialsDbContext>(scope.ServiceProvider, cancellationToken);
             await MigrateAsync<RatingsDbContext>(scope.ServiceProvider, cancellationToken);
             await MigrateAsync<RecommendationDbContext>(scope.ServiceProvider, cancellationToken);

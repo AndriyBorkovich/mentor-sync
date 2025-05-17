@@ -13,6 +13,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
+using MentorSync.Scheduling;
 
 namespace MentorSync.API.Extensions;
 
@@ -142,6 +143,7 @@ public static class ServiceCollectionExtensions
         builder.AddSharedServices();
         builder.AddUsersModule();
         builder.AddNotificationsModule();
+        builder.AddSchedulingModule();
         builder.AddMaterialsModule();
         builder.AddRatingsModule();
         builder.AddRecommendationsModule();

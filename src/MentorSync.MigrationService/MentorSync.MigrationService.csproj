@@ -18,6 +18,7 @@
       <ProjectReference Include="..\Modules\Materials\MentorSync.Materials\MentorSync.Materials.csproj" />
       <ProjectReference Include="..\Modules\Ratings\MentorSync.Ratings\MentorSync.Ratings.csproj" />
       <ProjectReference Include="..\Modules\Recommendations\MentorSync.Recommendations\MentorSync.Recommendations.csproj" />
+      <ProjectReference Include="..\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
       <ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
     </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿using MentorSync.Materials.Data;
 using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
+using MentorSync.Scheduling.Data;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Services;
 using MentorSync.Users.Data;
@@ -24,6 +25,7 @@ public static class DependencyInjectionExtensions
         builder.Services.AddIdentity<AppUser, AppRole>()
             .AddEntityFrameworkStores<UsersDbContext>()
             .AddDefaultTokenProviders();
+        AddDbContext<SchedulingDbContext>(SchemaConstants.Scheduling);
         AddDbContext<MaterialsDbContext>(SchemaConstants.Materials);
         AddDbContext<RatingsDbContext>(SchemaConstants.Ratings);
         AddDbContext<RecommendationDbContext>(SchemaConstants.Recommendations);
