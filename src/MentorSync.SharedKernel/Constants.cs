@@ -20,12 +20,20 @@ public static class CorsPolicyNames
     public const string All = nameof(All);
 }
 
+/// <summary>
+/// Tags for API endpoints (used for Swagger documentation)
+/// </summary>
 public static class TagsConstants
 {
     public const string Users = nameof(Users);
+    public const string Mentors = nameof(Mentors);
+    public const string Mentees = nameof(Mentees);
     public const string Notifications = nameof(Notifications);
 }
 
+/// <summary>
+/// Schema names for the database
+/// </summary>
 public static class SchemaConstants
 {
     public const string Users = "users";
@@ -35,14 +43,22 @@ public static class SchemaConstants
     public const string Materials = "materials";
 }
 
+/// <summary>
+/// Policy names for authorization
+/// </summary>
 public static class PolicyConstants
 {
     public const string ActiveUserOnly = nameof(ActiveUserOnly);
     public const string AdminOnly = nameof(AdminOnly);
     public const string MentorOnly = nameof(MentorOnly);
     public const string MenteeOnly = nameof(MenteeOnly);
+
+    public const string AdminAndMentor = nameof(AdminAndMentor);
 }
 
+/// <summary>
+/// Roles for users in the system
+/// </summary>
 public static class Roles
 {
     public const string Admin = "Admin";

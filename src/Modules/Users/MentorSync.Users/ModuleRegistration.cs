@@ -156,7 +156,9 @@ public static class ModuleRegistration
             .AddPolicy(PolicyConstants.MentorOnly, p =>
                 p.RequireRole(Roles.Mentor))
             .AddPolicy(PolicyConstants.MenteeOnly, p =>
-                p.RequireRole(Roles.Mentee));
+                p.RequireRole(Roles.Mentee))
+            .AddPolicy(PolicyConstants.AdminAndMentor, p =>
+                p.RequireRole(Roles.Admin, Roles.Mentor));
     }
 
     private static void AddSessionSupport(IServiceCollection services)

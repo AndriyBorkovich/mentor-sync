@@ -1,4 +1,6 @@
-﻿using MentorSync.Users.Domain.User;
+﻿using MentorSync.Users.Domain.Mentor;
+using MentorSync.Users.Domain.User;
+using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Features.GetAllUsers;
 
 namespace MentorSync.Users.MappingExtensions;
@@ -15,5 +17,17 @@ public static class DomainToDtoMapper
             user.ProfileImageUrl,
             user.IsActive,
             user.EmailConfirmed);
+    }
+
+    public static MentorProfileResponse ToMentorProfileResponse(this MentorProfile profile)
+    {
+        return new MentorProfileResponse(
+            profile.Id,
+            profile.Industries,
+            profile.Skills,
+            profile.ProgrammingLanguages,
+            profile.ExperienceYears,
+            profile.Availability,
+            profile.MentorId);
     }
 }
