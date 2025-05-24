@@ -3,24 +3,36 @@ import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-secondary text-white py-12">
-            <div className="container mx-auto px-16">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <footer
+            className="py-16 mt-16"
+            style={{
+                backgroundColor: "var(--color-secondary)",
+                color: "white",
+            }}
+        >
+            <div className="container mx-auto px-8 md:px-16">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
                     <div className="md:col-span-1">
-                        <h3 className="font-bold text-xl mb-4">MentorSync</h3>
-                        <p className="text-gray-300 text-sm">
+                        <h3 className="font-bold text-2xl mb-6">MentorSync</h3>
+                        <p className="text-base" style={{ color: "#CBD5E1" }}>
                             Платформа для з'єднання менторів та менті у
                             технічній індустрії
                         </p>
-                    </div>
-
+                    </div>{" "}
                     <div className="md:col-span-1">
-                        <h4 className="font-bold mb-4">Про нас</h4>
-                        <ul className="space-y-2">
+                        <h4 className="font-bold text-xl mb-6">Про нас</h4>
+                        <ul className="space-y-4">
                             <li>
                                 <Link
                                     to="/about"
-                                    className="text-gray-300 hover:text-white"
+                                    className="transition-colors"
+                                    style={{ color: "#CBD5E1" }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = "white";
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = "#CBD5E1";
+                                    }}
                                 >
                                     Про платформу
                                 </Link>
@@ -28,7 +40,14 @@ const Footer: React.FC = () => {
                             <li>
                                 <Link
                                     to="/faq"
-                                    className="text-gray-300 hover:text-white"
+                                    className="transition-colors"
+                                    style={{ color: "#CBD5E1" }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = "white";
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = "#CBD5E1";
+                                    }}
                                 >
                                     Часті запитання
                                 </Link>
@@ -36,21 +55,34 @@ const Footer: React.FC = () => {
                             <li>
                                 <Link
                                     to="/contact"
-                                    className="text-gray-300 hover:text-white"
+                                    className="transition-colors"
+                                    style={{ color: "#CBD5E1" }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = "white";
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = "#CBD5E1";
+                                    }}
                                 >
                                     Контакти
                                 </Link>
                             </li>
                         </ul>
-                    </div>
-
+                    </div>{" "}
                     <div className="md:col-span-1">
                         <h4 className="font-bold mb-4">Для користувачів</h4>
                         <ul className="space-y-2">
                             <li>
                                 <Link
                                     to="/mentors"
-                                    className="text-gray-300 hover:text-white"
+                                    className="transition-colors"
+                                    style={{ color: "#CBD5E1" }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = "white";
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = "#CBD5E1";
+                                    }}
                                 >
                                     Знайти ментора
                                 </Link>
@@ -58,7 +90,14 @@ const Footer: React.FC = () => {
                             <li>
                                 <Link
                                     to="/become-mentor"
-                                    className="text-gray-300 hover:text-white"
+                                    className="transition-colors"
+                                    style={{ color: "#CBD5E1" }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = "white";
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = "#CBD5E1";
+                                    }}
                                 >
                                     Стати ментором
                                 </Link>
@@ -66,23 +105,36 @@ const Footer: React.FC = () => {
                             <li>
                                 <Link
                                     to="/resources"
-                                    className="text-gray-300 hover:text-white"
+                                    className="transition-colors"
+                                    style={{ color: "#CBD5E1" }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.color = "white";
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.color = "#CBD5E1";
+                                    }}
                                 >
                                     Ресурси
                                 </Link>
                             </li>
                         </ul>
-                    </div>
-
+                    </div>{" "}
                     <div className="md:col-span-1">
                         <h4 className="font-bold mb-4">Зв'яжіться з нами</h4>
-                        <p className="text-gray-300 mb-2">
+                        <p style={{ color: "#CBD5E1" }} className="mb-2">
                             info@mentorsync.com
                         </p>
                         <div className="flex space-x-4 mt-4">
                             <a
                                 href="#"
-                                className="text-gray-300 hover:text-white"
+                                className="transition-colors"
+                                style={{ color: "#CBD5E1" }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.color = "white";
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.color = "#CBD5E1";
+                                }}
                             >
                                 <svg
                                     className="w-5 h-5"
@@ -99,8 +151,16 @@ const Footer: React.FC = () => {
                             </a>
                             <a
                                 href="#"
-                                className="text-gray-300 hover:text-white"
+                                className="transition-colors"
+                                style={{ color: "#CBD5E1" }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.color = "white";
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.color = "#CBD5E1";
+                                }}
                             >
+                                {" "}
                                 <svg
                                     className="w-5 h-5"
                                     fill="currentColor"
@@ -116,8 +176,16 @@ const Footer: React.FC = () => {
                             </a>
                             <a
                                 href="#"
-                                className="text-gray-300 hover:text-white"
+                                className="transition-colors"
+                                style={{ color: "#CBD5E1" }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.color = "white";
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.color = "#CBD5E1";
+                                }}
                             >
+                                {" "}
                                 <svg
                                     className="w-5 h-5"
                                     fill="currentColor"
@@ -131,7 +199,15 @@ const Footer: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+                <div
+                    className="mt-12 pt-8 text-center text-sm"
+                    style={{
+                        borderTopWidth: "1px",
+                        borderTopStyle: "solid",
+                        borderTopColor: "#4B5563",
+                        color: "#9CA3AF",
+                    }}
+                >
                     <p>
                         &copy; {new Date().getFullYear()} MentorSync. Усі права
                         захищені.

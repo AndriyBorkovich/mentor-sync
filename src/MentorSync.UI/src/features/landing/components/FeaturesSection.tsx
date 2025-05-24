@@ -101,7 +101,16 @@ const FeaturesSection: React.FC = () => {
 
     return (
         <div className="py-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">
+                    Особливості платформи
+                </h2>
+                <p className="text-textGray text-lg max-w-2xl mx-auto">
+                    Наші інструменти допоможуть вам знайти ідеального наставника
+                    та спланувати ваш шлях до успіху
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {features.map((feature, index) => (
                     <FeatureCard
                         key={index}
