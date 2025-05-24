@@ -81,12 +81,8 @@ const HeroSection: React.FC = () => {
                         gap: "1rem",
                     }}
                 >
-                    <Button variant="primary" size="lg">
-                        Приєднуйтесь як менті
-                    </Button>
-                    <Button variant="outline" size="lg">
-                        Приєднуйтесь як ментор
-                    </Button>
+                    <Button variant="primary">Приєднуйтесь як менті</Button>
+                    <Button variant="outline">Приєднуйтесь як ментор</Button>
                 </div>
                 <div
                     style={{
