@@ -1,12 +1,14 @@
 # 🚀 Welcome to Mentor Sync App!  
 
-[![Build & test](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/build-and-test.yml)
+[![Backend - build & test](https://github.com/AndriyBorkovich/mentor-sync/actions/workflows/backend-build-and-test.yml/badge.svg)](https://github.com/AndriyBorkovich/mentor-sync/actions/workflows/backend-build-and-test.yml)
+
+[![UI - build & test](https://github.com/AndriyBorkovich/mentor-sync/actions/workflows/ui-build-and-test.yml/badge.svg)](https://github.com/AndriyBorkovich/mentor-sync/actions/workflows/ui-build-and-test.yml)
 
 [![Dependabot Updates](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/dependabot/dependabot-updates)
 
 [![Deploy to Azure](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/azure-dev.yml/badge.svg)](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/azure-dev.yml)  
 
-Mentor Sync is an application designed to seamlessly connect mentors and mentees for effective learning and guidance.  
+Mentor Sync is an application designed to connect mentors and mentees seamlessly for effective learning and guidance.  
 
 ## 📌 Features  
 - **Mentor-Mentee Matching** – Intelligent pairing based on skills and interests.  
