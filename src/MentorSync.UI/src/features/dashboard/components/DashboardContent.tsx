@@ -22,9 +22,9 @@ const Section: React.FC<SectionProps> = ({ title, children }) => {
 const DashboardContent: React.FC = () => {
     return (
         <div className="flex-1 p-6 overflow-y-auto">
-            <h1 className="text-xl font-bold text-[#1E293B] mb-6">
+            <p className="text-4xl font-bold text-[#1E293B] mb-6">
                 Рекомендовані ментори
-            </h1>
+            </p>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                 {recommendedMentors.map((mentor) => (

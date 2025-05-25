@@ -1,0 +1,28 @@
+/* Sidebar animations */
+.sidebar-transition {
+    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.content-transition {
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.menu-transition {
+    transition: all 0.3s ease-in-out;
+}
+
+/* SVG icon colors */
+.sidebar-link img {
+    filter: brightness(0) saturate(100%);
+}
+
+/* SVG icon colors for active state */
+.sidebar-active img {
+    filter: brightness(0) saturate(100%) hue-rotate(240deg) brightness(0.6)
+        saturate(4);
+}
+
+/* Fix for menu icon */
+.menu-icon img {
+    filter: none;
+}
