@@ -42,7 +42,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({
 }) => {
     const [data, setData] = useState<OnboardingData>(initialOnboardingData);
     const [currentStep, setCurrentStep] = useState<OnboardingStep>(1);
-    const [role, setRole] = useState<"mentor" | "mentee">(initialRole);
+    const [role] = useState<"mentor" | "mentee">(initialRole);
 
     const updateData = (newData: Partial<OnboardingData>) => {
         setData((prevData) => ({
