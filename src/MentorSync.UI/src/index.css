@@ -1,12 +1,9 @@
-@import "tailwindcss"; /* IT SHOULD BE THERE!!! DO NOT REMOVE IT!!! */
-
-/* how to ignore this talwind error */
-
-@tailwind preflight; /* base styles reset - do not touch!!!! */
-@tailwind utilities;
-
 /* Import Inter font from Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+@import "tailwindcss"; /* IT SHOULD BE THERE!!! DO NOT REMOVE IT!!! */
+@tailwind preflight; /* base styles reset - do not touch!!!! */
+@tailwind utilities;
 
 :root {
     /* Color Variables */

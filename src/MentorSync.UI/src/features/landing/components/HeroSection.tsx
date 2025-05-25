@@ -81,8 +81,22 @@ const HeroSection: React.FC = () => {
                         gap: "1rem",
                     }}
                 >
-                    <Button variant="primary">Приєднуйтесь як менті</Button>
-                    <Button variant="outline">Приєднуйтесь як ментор</Button>
+                    <Button
+                        variant="primary"
+                        onClick={() =>
+                            (window.location.href = "/register?role=mentee")
+                        }
+                    >
+                        Приєднуйтесь як менті
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() =>
+                            (window.location.href = "/register?role=mentor")
+                        }
+                    >
+                        Приєднуйтесь як ментор
+                    </Button>
                 </div>
                 <div
                     style={{

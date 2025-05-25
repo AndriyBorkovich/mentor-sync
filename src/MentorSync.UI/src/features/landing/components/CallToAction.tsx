@@ -49,6 +49,9 @@ const CallToAction: React.FC = () => {
                     <Button
                         className="shadow-md"
                         size="lg"
+                        onClick={() =>
+                            (window.location.href = "/register?role=mentee")
+                        }
                         style={{
                             backgroundColor: "white",
                             color: "var(--color-primary)",
@@ -70,6 +73,9 @@ const CallToAction: React.FC = () => {
                         variant="outline"
                         className="shadow-md"
                         size="lg"
+                        onClick={() =>
+                            (window.location.href = "/register?role=mentor")
+                        }
                         style={{
                             borderColor: "white",
                             color: "white",
