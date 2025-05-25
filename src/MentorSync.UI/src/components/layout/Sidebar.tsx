@@ -117,12 +117,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
                 active={activePage === "search"}
                 expanded={expanded}
                 to="/mentors"
-            />
+            />{" "}
             <SidebarLink
                 icon="sessions-icon"
                 label="Мої сесії"
                 active={activePage === "sessions"}
                 expanded={expanded}
+                to="/sessions"
             />
             <SidebarLink
                 icon="messages-icon"
