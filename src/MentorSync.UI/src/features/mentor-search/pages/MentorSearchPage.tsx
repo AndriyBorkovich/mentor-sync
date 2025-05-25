@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import Sidebar from "../../../components/layout/Sidebar";
 import Header from "../../../components/layout/Header";
-import DashboardContent from "../components/DashboardContent";
+import MentorSearchContent from "../components/MentorSearchContent";
 import "../../../components/layout/styles/logo.css";
 import "../../../components/layout/styles/sidebar.css";
 
-const DashboardPage: React.FC = () => {
-    // Auth context can be used later when needed
+const MentorSearchPage: React.FC = () => {
     const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
     const handleSidebarToggle = () => {
@@ -19,15 +18,14 @@ const DashboardPage: React.FC = () => {
                     sidebarExpanded ? "w-[240px]" : "w-[72px]"
                 }`}
             >
-                {" "}
-                <Sidebar onToggle={handleSidebarToggle} activePage="home" />
+                <Sidebar onToggle={handleSidebarToggle} activePage="search" />
             </div>
             <div className="flex flex-col flex-1">
                 <Header />
-                <DashboardContent />
+                <MentorSearchContent />
             </div>
         </div>
     );
 };
 
-export default DashboardPage;
+export default MentorSearchPage;

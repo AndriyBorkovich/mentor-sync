@@ -1,23 +1,22 @@
-import React, { useState } from "react";
-import { Mentor } from "../data/mentors";
+import React from "react";
+import { Mentor } from "../../dashboard/data/mentors";
 
-interface MentorCardProps {
+// Enhanced MentorCard component with save/bookmark functionality
+export interface MentorCardProps {
     mentor: Mentor;
+    isSaved: boolean;
+    onToggleSave: (mentorId: string) => void;
 }
-
-const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
-    const [isSaved, setIsSaved] = useState(false);
-
-    const toggleSave = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsSaved(!isSaved);
-    };
-
+export const EnhancedMentorCard: React.FC<MentorCardProps> = ({
+    mentor,
+    isSaved,
+    onToggleSave,
+}) => {
     return (
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6 relative">
             <div
                 className="absolute top-4 right-4 cursor-pointer"
-                onClick={toggleSave}
+                onClick={() => onToggleSave(mentor.id)}
             >
                 <span className="material-icons text-[#4318D1]">
                     {isSaved ? "bookmark" : "bookmark_border"}
@@ -71,5 +70,3 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
         </div>
     );
 };
-
-export default MentorCard;

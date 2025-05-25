@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { authService, LoginRequest } from "../services/authService";
@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
         useState<boolean>(false);
 
     // Check if user was redirected from registration
-    React.useEffect(() => {
+    useEffect(() => {
         if (location.state?.registrationSuccess) {
             setShowSuccessMessage(true);
         }
@@ -30,11 +30,9 @@ const LoginPage: React.FC = () => {
 
         try {
             const response = await authService.login(data);
-            console.log("Login response:", response);
-
-            if (response.success) {
+            if (response?.success) {
                 // Successful login - redirect to dashboard or home page
-                navigate("/dashboard");
+                navigate("/dashboard", undefined);
             } else {
                 setErrorMessage("Помилка входу. Невірний email або пароль.");
             }

@@ -4,6 +4,7 @@ import LandingPage from "./features/landing/pages/LandingPage";
 import RegisterPage from "./features/auth/pages/RegisterPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 import DashboardPage from "./features/dashboard/pages/DashboardPage";
+import MentorSearchPage from "./features/mentor-search/pages/MentorSearchPage";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
 import { RoleBasedRoute } from "./features/auth/components/RoleBasedRoute";
 import { UnauthorizedPage } from "./features/auth/components/UnauthorizedPage";
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard",
                 element: <DashboardPage />,
+            },
+            {
+                path: "/mentors",
+                element: <MentorSearchPage />,
             },
             // Routes that require specific roles
             {

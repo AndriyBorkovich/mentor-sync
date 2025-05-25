@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarLinkProps {
     icon: string;
@@ -6,6 +7,7 @@ interface SidebarLinkProps {
     active?: boolean;
     expanded?: boolean;
     onClick?: () => void;
+    to?: string;
 }
 
 const SidebarLink: React.FC<SidebarLinkProps> = ({
@@ -14,7 +16,19 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
     active = false,
     expanded = false,
     onClick,
+    to,
 }) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (onClick) {
+            onClick();
+        }
+        if (to) {
+            navigate(to);
+        }
+    };
+
     return (
         <div
             className={`sidebar-link h-12 rounded-lg flex items-center cursor-pointer mb-2 menu-transition 
@@ -25,7 +39,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
                         : "hover:bg-[#F8FAFC] hover:bg-opacity-60"
                 }
             `}
-            onClick={onClick}
+            onClick={handleClick}
         >
             <div className="flex items-center justify-center w-6 h-6 flex-shrink-0">
                 <img
@@ -55,9 +69,16 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
 
 interface SidebarProps {
     onToggle?: (expanded: boolean) => void;
+    activePage?:
+        | "home"
+        | "search"
+        | "sessions"
+        | "messages"
+        | "materials"
+        | "settings";
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onToggle }) => {
+const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
     const [expanded, setExpanded] = useState(false);
 
     const toggleSidebar = () => {
@@ -82,36 +103,43 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle }) => {
                     alt="menu"
                     className="w-6 h-6"
                 />
-            </div>
+            </div>{" "}
             <SidebarLink
                 icon="home-icon"
                 label="Головна"
-                active={true}
+                active={activePage === "home"}
                 expanded={expanded}
+                to="/dashboard"
             />
             <SidebarLink
                 icon="search-icon"
                 label="Пошук менторів"
+                active={activePage === "search"}
                 expanded={expanded}
+                to="/mentors"
             />
             <SidebarLink
                 icon="sessions-icon"
                 label="Мої сесії"
+                active={activePage === "sessions"}
                 expanded={expanded}
             />
             <SidebarLink
                 icon="messages-icon"
                 label="Повідомлення"
+                active={activePage === "messages"}
                 expanded={expanded}
             />
             <SidebarLink
                 icon="materials-icon"
                 label="Матеріали"
+                active={activePage === "materials"}
                 expanded={expanded}
             />
             <SidebarLink
                 icon="settings-icon"
                 label="Налаштування"
+                active={activePage === "settings"}
                 expanded={expanded}
             />
         </div>

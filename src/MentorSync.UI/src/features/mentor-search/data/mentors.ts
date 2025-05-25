@@ -1,18 +1,4 @@
-export interface Skill {
-    id: string;
-    name: string;
-}
-
-export interface Mentor {
-    id: string;
-    name: string;
-    title: string;
-    rating: number;
-    skills: Skill[];
-    profileImage: string;
-    yearsOfExperience?: number; // minimum years of experience
-    category?: string; // mentor direction
-}
+import { Mentor } from "../../dashboard/data/mentors";
 
 export const recommendedMentors: Mentor[] = [
     {
@@ -105,30 +91,5 @@ export const recommendedMentors: Mentor[] = [
         profileImage: "https://randomuser.me/api/portraits/men/91.jpg",
         yearsOfExperience: 9,
         category: "DevOps",
-    },
-];
-
-export const recentlyViewedMentors: Mentor[] = [
-    {
-        id: "4",
-        name: "Дмитро Кім",
-        title: "DevOps Engineer",
-        rating: 4.7,
-        skills: [
-            { id: "7", name: "Docker" },
-            { id: "8", name: "Kubernetes" },
-        ],
-        profileImage: "https://randomuser.me/api/portraits/men/22.jpg",
-    },
-    {
-        id: "5",
-        name: "Єлизавета Гучко",
-        title: "Frontend Lead",
-        rating: 4.8,
-        skills: [
-            { id: "9", name: "Vue.js" },
-            { id: "10", name: "CSS" },
-        ],
-        profileImage: "https://randomuser.me/api/portraits/women/28.jpg",
     },
 ];
