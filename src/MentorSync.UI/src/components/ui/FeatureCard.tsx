@@ -37,7 +37,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
                     backgroundColor: "var(--color-primary)",
                     width: "3.5rem",
                     height: "3.5rem",
-                    borderRadius: "9999px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
             </div>
             {/* Mobile menu button */}
             <button
-                className="md:hidden"
+                className="sm:hidden"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Toggle menu"
                 style={{
@@ -67,8 +67,8 @@ const Navbar: React.FC = () => {
                         />
                     )}
                 </svg>
-            </button>{" "}
-            {/* Desktop menu */}{" "}
+            </button>
+            {/* Desktop menu */}
             <div
                 className="hidden md:flex items-center space-x-6"
                 style={{

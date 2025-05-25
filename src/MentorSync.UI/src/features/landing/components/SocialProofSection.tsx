@@ -69,7 +69,7 @@ const SocialProofSection: React.FC = () => {
                         className="font-semibold text-2xl"
                         style={{ color: "var(--color-secondary)" }}
                     >
-                        Приєднуйтесь до 2 000+ членів
+                        Приєднуйтесь до 2 000+ користувачів
                     </p>
                     <p
                         className="mt-2"
