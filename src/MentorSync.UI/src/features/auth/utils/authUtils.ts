@@ -1,5 +1,5 @@
 import { getAuthTokens } from "../services/authStorage";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 /**
  * Interface for JWT payload structure
