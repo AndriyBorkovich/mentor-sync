@@ -13,7 +13,7 @@ interface Material {
     date: string;
 }
 
-const MaterialsTab: React.FC<MaterialsTabProps> = ({ mentor }) => {
+const MaterialsTab: React.FC<MaterialsTabProps> = () => {
     // Mock materials
     const materials: Material[] = [
         {

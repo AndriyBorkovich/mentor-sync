@@ -53,7 +53,7 @@ const SessionsContent: React.FC = () => {
         return nameMatches;
     });
 
-    const handleFilterChange = (newFilter: "upcoming" | "past" | "all") => {
+    const handleFilterChange = (newFilter: FilterType) => {
         setFilterType(newFilter);
         setShowFilterDropdown(false);
     };

@@ -14,7 +14,7 @@ interface Review {
     content: string;
 }
 
-const ReviewsTab: React.FC<ReviewsTabProps> = ({ mentor }) => {
+const ReviewsTab: React.FC<ReviewsTabProps> = () => {
     // Mock reviews data
     const reviews: Review[] = [
         {

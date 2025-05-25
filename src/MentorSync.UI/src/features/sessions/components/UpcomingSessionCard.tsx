@@ -18,14 +18,9 @@ const UpcomingSessionCard: React.FC<UpcomingSessionCardProps> = ({
                     {/* Mentor profile section */}
                     <div className="flex items-start mb-4 md:mb-0 md:mr-6">
                         <div className="w-12 h-12 bg-gray-200 rounded-full mr-4 flex-shrink-0"></div>
-                        <div>
-                            <h3 className="text-base font-medium text-[#000000]">
-                                {session.mentorName}
-                            </h3>
-                            <p className="text-sm text-[#64748B]">
-                                {session.title.split(" ")[0]}
-                            </p>
-                        </div>
+                        <h3 className="text-base font-medium text-[#000000]">
+                            {session.mentorName}
+                        </h3>
                     </div>
 
                     {/* Session title and details */}
