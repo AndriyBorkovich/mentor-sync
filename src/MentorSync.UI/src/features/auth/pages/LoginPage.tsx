@@ -10,11 +10,18 @@ const LoginPage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [showSuccessMessage, setShowSuccessMessage] =
         useState<boolean>(false);
+    const [redirectToOnboarding, setRedirectToOnboarding] =
+        useState<boolean>(false);
+    const [userRole, setUserRole] = useState<string>("");
 
     // Check if user was redirected from registration
     useEffect(() => {
         if (location.state?.registrationSuccess) {
             setShowSuccessMessage(true);
+        }
+        if (location.state?.redirectToOnboarding) {
+            setRedirectToOnboarding(true);
+            setUserRole(location.state.role);
         }
     }, [location.state]);
 
@@ -31,8 +38,12 @@ const LoginPage: React.FC = () => {
         try {
             const response = await authService.login(data);
             if (response?.success) {
-                // Successful login - redirect to dashboard or home page
-                navigate("/dashboard", undefined);
+                // Successful login - redirect to onboarding if coming from registration, otherwise to dashboard
+                if (redirectToOnboarding && userRole) {
+                    navigate(`/onboarding/${userRole}`, { replace: true });
+                } else {
+                    navigate("/dashboard", { replace: true });
+                }
             } else {
                 setErrorMessage("Помилка входу. Невірний email або пароль.");
             }

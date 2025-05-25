@@ -41,10 +41,15 @@ const RegisterPage: React.FC = () => {
         try {
             data.role = role;
             const response = await authService.register(data);
-
             if (response.success) {
-                // Registration successful, redirect to login or dashboard
-                navigate("/login", { state: { registrationSuccess: true } });
+                // Registration successful, redirect to login with auto-redirect to onboarding
+                navigate("/login", {
+                    state: {
+                        registrationSuccess: true,
+                        redirectToOnboarding: true,
+                        role: role,
+                    },
+                });
             } else {
                 setErrorMessage(
                     response.message || "Помилка реєстрації. Спробуйте ще раз."

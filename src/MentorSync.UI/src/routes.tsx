@@ -10,6 +10,7 @@ import SessionsPage from "./features/sessions/pages/SessionsPage";
 import MessagesPage from "./features/messages/pages/MessagesPage";
 import MaterialsPage from "./features/materials/pages/MaterialsPage";
 import MaterialViewPage from "./features/materials/pages/MaterialViewPage";
+import { OnboardingPage } from "./features/onboarding";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
 import { RoleBasedRoute } from "./features/auth/components/RoleBasedRoute";
 import { UnauthorizedPage } from "./features/auth/components/UnauthorizedPage";
@@ -110,8 +111,17 @@ const router = createBrowserRouter([
                 ],
             },
         ],
+    }, // Onboarding routes
+    {
+        path: "/onboarding/:role",
+        element: <ProtectedRoute />,
+        children: [
+            {
+                path: "",
+                element: <OnboardingPage />,
+            },
+        ],
     },
-    // Other public routes will be added here as needed
 ]);
 
 export default router;
