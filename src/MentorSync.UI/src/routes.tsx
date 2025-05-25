@@ -8,6 +8,8 @@ import MentorSearchPage from "./features/mentor-search/pages/MentorSearchPage";
 import MentorProfilePage from "./features/mentor-profile/pages/MentorProfilePage";
 import SessionsPage from "./features/sessions/pages/SessionsPage";
 import MessagesPage from "./features/messages/pages/MessagesPage";
+import MaterialsPage from "./features/materials/pages/MaterialsPage";
+import MaterialViewPage from "./features/materials/pages/MaterialViewPage";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
 import { RoleBasedRoute } from "./features/auth/components/RoleBasedRoute";
 import { UnauthorizedPage } from "./features/auth/components/UnauthorizedPage";
@@ -52,6 +54,14 @@ const router = createBrowserRouter([
             {
                 path: "/messages",
                 element: <MessagesPage />,
+            },
+            {
+                path: "/materials",
+                element: <MaterialsPage />,
+            },
+            {
+                path: "/materials/:materialId",
+                element: <MaterialViewPage />,
             },
             // Routes that require specific roles
             {
