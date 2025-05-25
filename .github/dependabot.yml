@@ -7,9 +7,9 @@ updates:
     # Check the NuGet registry for updates every day (weekdays)
     schedule:
       interval: "daily"
-      
-   # Enable version updates for npm (for UI)
-   - package-ecosystem: "npm"
+
+  # Enable version updates for npm (for UI)
+  - package-ecosystem: "npm"
     # Look for dependency info from the `root` directory
     directory: "/src/MentorSync.UI"
     # Check the NuGet registry for updates every day (weekdays)
