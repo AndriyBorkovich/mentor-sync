@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Mentor } from "../../dashboard/data/mentors";
 
 // Enhanced MentorCard component with save/bookmark functionality
@@ -63,10 +64,12 @@ export const EnhancedMentorCard: React.FC<MentorCardProps> = ({
                         ))}
                     </div>
                 </div>
-            </div>
-            <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
-                Переглянути профіль
-            </button>
+            </div>{" "}
+            <Link to={`/mentors/${mentor.id}`} className="block w-full">
+                <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
+                    Переглянути профіль
+                </button>
+            </Link>
         </div>
     );
 };

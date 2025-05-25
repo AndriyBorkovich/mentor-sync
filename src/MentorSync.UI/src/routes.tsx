@@ -5,6 +5,7 @@ import RegisterPage from "./features/auth/pages/RegisterPage";
 import LoginPage from "./features/auth/pages/LoginPage";
 import DashboardPage from "./features/dashboard/pages/DashboardPage";
 import MentorSearchPage from "./features/mentor-search/pages/MentorSearchPage";
+import MentorProfilePage from "./features/mentor-profile/pages/MentorProfilePage";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
 import { RoleBasedRoute } from "./features/auth/components/RoleBasedRoute";
 import { UnauthorizedPage } from "./features/auth/components/UnauthorizedPage";
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
             {
                 path: "/mentors",
                 element: <MentorSearchPage />,
+            },
+            {
+                path: "/mentors/:mentorId",
+                element: <MentorProfilePage />,
             },
             // Routes that require specific roles
             {

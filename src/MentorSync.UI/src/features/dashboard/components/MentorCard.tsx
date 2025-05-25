@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Mentor } from "../data/mentors";
+import { Link } from "react-router-dom";
 
 interface MentorCardProps {
     mentor: Mentor;
@@ -65,9 +66,11 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
                     </div>
                 </div>
             </div>
-            <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
-                Переглянути профіль
-            </button>
+            <Link to={`/mentors/${mentor.id}`} className="block w-full">
+                <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
+                    Переглянути профіль
+                </button>
+            </Link>
         </div>
     );
 };
