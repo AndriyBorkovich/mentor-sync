@@ -3,10 +3,10 @@ name: Backend - build & test
 on:
   push:
     branches: ["master"]
-    paths: ["!src/MentorSync.UI/**"]
+    paths-ignore: ["src/MentorSync.UI/**"]
   pull_request:
     branches: ["master"]
-    paths: ["!src/MentorSync.UI/**"]
+    paths-ignore: ["src/MentorSync.UI/**"]
 
 jobs:
   build:
