@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using MentorSync.SharedKernel;
+using Serilog;
 
 namespace MentorSync.API.Extensions;
 
@@ -33,6 +34,12 @@ public static class AppBuilderExtensions
                 diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
             };
         });
+        return app;
+    }
+
+    public static IApplicationBuilder UseCustomCorsPolicy(this IApplicationBuilder app)
+    {
+        app.UseCors(CorsPolicyNames.All);
         return app;
     }
 }

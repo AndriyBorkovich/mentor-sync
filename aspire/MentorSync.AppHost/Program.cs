@@ -5,12 +5,12 @@ var builder = DistributedApplication.CreateBuilder(args);
 // Azure blob storage
 var azureStorage = builder.AddAzureStorage("mentor-sync-storage");
 
-//if (!builder.ExecutionContext.IsPublishMode)
-//{
-//    azureStorage.RunAsEmulator(azurite =>
-//        azurite.WithLifetime(ContainerLifetime.Persistent)
-//               .WithDataVolume(name: "emulator-local-storage"));
-//}
+if (!builder.ExecutionContext.IsPublishMode)
+{
+    azureStorage.RunAsEmulator(azurite =>
+        azurite.WithLifetime(ContainerLifetime.Persistent)
+               .WithDataVolume(name: "emulator-local-storage"));
+}
 
 var blobs = azureStorage.AddBlobs("files-blobs");
 

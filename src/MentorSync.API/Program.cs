@@ -1,6 +1,5 @@
 using MentorSync.API.Extensions;
 using MentorSync.ServiceDefaults;
-using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +24,7 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 
-app.UseCors(CorsPolicyNames.All);
+app.UseCustomCorsPolicy();
 
 app.MapDefaultEndpoints();
 
