@@ -27,7 +27,20 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
                         || x.Equals(Roles.Mentee, StringComparison.InvariantCultureIgnoreCase))
             .WithMessage("Such role doesn't exist");
 
-        RuleFor(x => x.Password)
+        ApplyPasswordValidationRules(RuleFor(x => x.Password));
+
+        ApplyPasswordValidationRules(RuleFor(x => x.ConfirmPassword))
+            .Equal(x => x.Password)
+            .WithMessage("Passwords do not match");
+    }
+
+    /// <summary>
+    /// Applies common password validation rules to a rule builder
+    /// </summary>
+    private static IRuleBuilder<RegisterCommand, string> ApplyPasswordValidationRules(
+        IRuleBuilder<RegisterCommand, string> ruleBuilder)
+    {
+        return ruleBuilder
             .NotNull()
             .NotEmpty()
             .MinimumLength(GeneralConstants.MinPasswordLength)
@@ -35,16 +48,5 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
             .Matches("[0-9]").WithMessage("Password must contain at least one number")
             .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character");
-
-        RuleFor(x => x.ConfirmPassword)
-            .NotNull()
-            .NotEmpty()
-            .MinimumLength(GeneralConstants.MinPasswordLength)
-            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter")
-            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
-            .Matches("[0-9]").WithMessage("Password must contain at least one number")
-            .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character")
-            .Equal(x => x.Password)
-            .WithMessage("Passwords do not match");
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Data;
-using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +11,6 @@ namespace MentorSync.Users.Features.Register;
 
 public sealed class RegisterCommandHandler(
     UserManager<AppUser> userManager,
-    RoleManager<AppRole> roleManager,
     UsersDbContext usersDbContext,
     ILogger<RegisterCommandHandler> logger)
     : IRequestHandler<RegisterCommand, Result<string>>
@@ -30,14 +28,6 @@ public sealed class RegisterCommandHandler(
         if (await userManager.Users.AnyAsync(u => u.UserName == command.UserName, cancellationToken))
         {
             return Result.Conflict("User with this name already exists");
-        }
-
-        var appRole = await roleManager.FindByNameAsync(command.Role);
-        if (appRole is null)
-        {
-            logger.LogWarning("Registration attempt with role: {Role}", command.Role);
-
-            return Result.NotFound($"Role {command.Role} doesn't exist");
         }
 
         var user = new AppUser
@@ -80,7 +70,7 @@ public sealed class RegisterCommandHandler(
             {
                 await transaction.RollbackAsync(cancellationToken);
                 logger.LogError(ex, "Transaction failed");
-                return Result.CriticalError("Transaction failed");
+                return Result.CriticalError($"Transaction failed: {ex.Message}");
             }
         });
 
