@@ -14,13 +14,13 @@ public static class ModuleRegistration
         builder.AddMongoDBClient("mongodb");
         builder.Services.Configure<MongoSettings>(
            builder.Configuration.GetSection(nameof(MongoSettings)));
-        builder.Services.AddSingleton<MongoDbContext>();
+        builder.Services.AddSingleton<NotificationsDbContext>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
-        builder.Services.AddEndpoints(typeof(MongoDbContext).Assembly);
+        builder.Services.AddEndpoints(typeof(NotificationsDbContext).Assembly);
 
         builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
-        builder.Services.AddSingleton<IOutboxProcessor, MongoDbEmailOutboxProcessor>();
+        builder.Services.AddSingleton<IOutboxProcessor, EmailOutboxProcessor>();
         builder.Services.AddHostedService<EmailSendingJob>();
     }
 }

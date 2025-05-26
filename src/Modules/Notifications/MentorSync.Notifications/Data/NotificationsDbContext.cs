@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Data;
 
-public sealed class MongoDbContext(IMongoClient mongoClient, IOptions<MongoSettings> settings)
+public sealed class NotificationsDbContext(IMongoClient mongoClient, IOptions<MongoSettings> settings)
 {
     private readonly IMongoDatabase _database = mongoClient.GetDatabase(settings.Value.Database);
 

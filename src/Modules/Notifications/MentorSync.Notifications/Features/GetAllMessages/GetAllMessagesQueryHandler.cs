@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.GetAllMessages;
 
-public class GetAllMessagesQueryHandler(MongoDbContext dbContext)
+public class GetAllMessagesQueryHandler(NotificationsDbContext dbContext)
     : IRequestHandler<GetAllMessagesQuery, Result<List<GetAllMessagesResponse>>>
 {
     public async Task<Result<List<GetAllMessagesResponse>>> Handle(

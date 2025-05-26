@@ -7,10 +7,10 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.SendEmail;
 
-public sealed class MongoDbEmailOutboxProcessor(
-    MongoDbContext dbContext,
+public sealed class EmailOutboxProcessor(
+    NotificationsDbContext dbContext,
     IEmailSender emailSender,
-    ILogger<MongoDbEmailOutboxProcessor> logger)
+    ILogger<EmailOutboxProcessor> logger)
     : IOutboxProcessor
 {
     /// <summary>
