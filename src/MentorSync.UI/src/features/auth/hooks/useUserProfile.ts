@@ -2,12 +2,35 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 
+export interface MenteeProfileInfo {
+    id: number;
+    bio: string;
+    position: string;
+    company: string;
+    skills: string[];
+    programmingLanguages: string[];
+    learningGoals: string[];
+}
+
+export interface MentorProfileInfo {
+    id: number;
+    bio: string;
+    position: string;
+    company: string;
+    skills: string[];
+    programmingLanguages: string[];
+    experienceYears: number;
+}
+
 export interface UserProfile {
-    id: string;
+    id: number;
     userName: string;
     email: string;
     role: string;
-    // Add other user properties as needed
+    profileImageUrl?: string;
+    isActive: boolean;
+    menteeProfile?: MenteeProfileInfo;
+    mentorProfile?: MentorProfileInfo;
 }
 
 /**

@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
@@ -54,18 +55,20 @@ public sealed class LoginCommandHandler(
 
         logger.LogInformation("User {Email} logged in successfully", command.Email);
 
-        // add logic to check if user needs onboarding depending on its role
+        var userRoles = await userManager.GetRolesAsync(user);
+        var role = userRoles.FirstOrDefault() ?? Roles.Admin;
 
-        // Assuming MenteeProfiles and MentorProfiles are DbSets in UsersDbContext
-        // and that they contain MenteeId and MentorId respectively
-        // write code
-
-        var hasMenteeProfile = await usersDbContext.MenteeProfiles
-                                .AnyAsync(mp => mp.MenteeId == user.Id, cancellationToken);
-        var hasMentorProfile = await usersDbContext.MentorProfiles
-                                .AnyAsync(mp => mp.MentorId == user.Id, cancellationToken);
-
-        var needsOnboarding = !hasMenteeProfile | !hasMentorProfile;
+        var needsOnboarding = false;
+        if (role is Roles.Mentee)
+        {
+            needsOnboarding = !await usersDbContext.MenteeProfiles
+                .AnyAsync(mp => mp.MenteeId == user.Id, cancellationToken);
+        }
+        else if (role is Roles.Mentor)
+        {
+            needsOnboarding = !await usersDbContext.MentorProfiles
+                .AnyAsync(mp => mp.MentorId == user.Id, cancellationToken);
+        }
 
         return Result.Success(new AuthResponse(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.Expiration, needsOnboarding));
     }
