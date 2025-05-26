@@ -75,6 +75,20 @@ public sealed class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContext
         modelBuilder.Entity<AppRoleClaim>().ToTable("RoleClaims");
         modelBuilder.Entity<AppUserClaim>().ToTable("UserClaims");
         modelBuilder.Entity<AppUserLogin>().ToTable("UserLogins");
+
+        // Configure one-to-one relationship between MenteeProfile and AppUser
+        modelBuilder.Entity<MenteeProfile>()
+            .HasOne(mp => mp.User)
+            .WithOne()
+            .HasForeignKey<MenteeProfile>(mp => mp.MenteeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure one-to-one relationship between MentorProfile and AppUser
+        modelBuilder.Entity<MentorProfile>()
+            .HasOne(mp => mp.User)
+            .WithOne()
+            .HasForeignKey<MentorProfile>(mp => mp.MentorId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
