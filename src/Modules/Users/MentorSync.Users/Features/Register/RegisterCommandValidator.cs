@@ -3,8 +3,23 @@ using MentorSync.SharedKernel;
 
 namespace MentorSync.Users.Features.Register;
 
+/// <summary>
+/// Validates the user registration command to ensure all required fields are properly formatted.
+/// </summary>
+/// <remarks>
+/// This validator ensures: <br/>
+/// - Email is properly formatted and has valid length <br/>
+/// - Username meets minimum and maximum length requirements <br/>
+/// - Role is one of the predefined system roles <br/>
+/// - Password meets security requirements (length, character types) <br/>
+/// - Confirmation password matches the original password <br/>
+/// </remarks>
 public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegisterCommandValidator"/> class
+    /// and configures all validation rules for the user registration process.
+    /// </summary>
     public RegisterCommandValidator()
     {
         RuleFor(x => x.Email)
@@ -18,7 +33,7 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             .NotEmpty()
             .MinimumLength(4)
             .MaximumLength(50);
-        
+
         RuleFor(x => x.Role)
             .NotNull()
             .NotEmpty()
@@ -37,6 +52,8 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
     /// <summary>
     /// Applies common password validation rules to a rule builder
     /// </summary>
+    /// <param name="ruleBuilder">The rule builder to apply password validation rules to</param>
+    /// <returns>The modified rule builder with password validation rules applied</returns>
     private static IRuleBuilder<RegisterCommand, string> ApplyPasswordValidationRules(
         IRuleBuilder<RegisterCommand, string> ruleBuilder)
     {

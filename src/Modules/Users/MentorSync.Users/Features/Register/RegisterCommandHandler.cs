@@ -9,6 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Features.Register;
 
+/// <summary>
+/// Command handler for user registration.
+/// </summary>
+/// <param name="userManager">Handles user management operations like creation and role assignment</param>
+/// <param name="usersDbContext">Access to users in the database</param>
+/// <param name="logger">Logger for recording registration events and errors</param>
 public sealed class RegisterCommandHandler(
     UserManager<AppUser> userManager,
     UsersDbContext usersDbContext,

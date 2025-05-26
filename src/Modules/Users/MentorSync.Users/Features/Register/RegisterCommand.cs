@@ -4,7 +4,7 @@ using MediatR;
 namespace MentorSync.Users.Features.Register;
 
 /// <summary>
-/// Command containing user credentials
+/// Command containing user credentials and role for registration.
 /// </summary>
 /// <param name="Email"></param>
 /// <param name="UserName"></param>
