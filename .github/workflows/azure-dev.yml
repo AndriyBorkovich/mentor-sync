@@ -2,7 +2,7 @@ name: Deploy to Azure
 
 on:
   workflow_run:
-    workflows: ["Build & test"]
+    workflows: ["Backend - build & test", "UI - build & test"]
     types:
       - completed
 
@@ -66,7 +66,7 @@ jobs:
           SOLUTION_NAME=$(ls *.sln | sed 's/\.sln$//')
           echo "Solution Name: $SOLUTION_NAME"
           echo "SOLUTION_NAME=$SOLUTION_NAME" >> $GITHUB_ENV
-   
+
       - name: Check env variables
         run: |
           echo "AZD_INITIAL_ENVIRONMENT_CONFIG=$AZD_INITIAL_ENVIRONMENT_CONFIG"
