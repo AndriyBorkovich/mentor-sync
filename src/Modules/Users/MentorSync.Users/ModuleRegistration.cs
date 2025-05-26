@@ -157,8 +157,10 @@ public static class ModuleRegistration
                 p.RequireRole(Roles.Mentor))
             .AddPolicy(PolicyConstants.MenteeOnly, p =>
                 p.RequireRole(Roles.Mentee))
-            .AddPolicy(PolicyConstants.AdminAndMentor, p =>
-                p.RequireRole(Roles.Admin, Roles.Mentor));
+            .AddPolicy(PolicyConstants.AdminMentorMix, p =>
+                p.RequireRole(Roles.Admin, Roles.Mentor))
+            .AddPolicy(PolicyConstants.AdminMenteeMix, p =>
+                p.RequireRole(Roles.Admin, Roles.Mentee));
     }
 
     private static void AddSessionSupport(IServiceCollection services)

@@ -12,7 +12,7 @@ public class EditMentorProfileCommandHandler(UsersDbContext db)
 {
     public async Task<Result<MentorProfileResponse>> Handle(EditMentorProfileCommand request, CancellationToken cancellationToken)
     {
-        var entity = await db.MentorProfiles.FirstOrDefaultAsync(mp => mp.Id == request.Id);
+        var entity = await db.MentorProfiles.FirstOrDefaultAsync(mp => mp.Id == request.Id, cancellationToken: cancellationToken);
         if (entity == null)
             return Result.NotFound($"MentorProfile {request.Id} not found.");
 

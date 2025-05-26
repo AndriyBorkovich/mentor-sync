@@ -2,15 +2,25 @@ import React from "react";
 import { useOnboarding } from "../context/OnboardingContext";
 
 const OnboardingStepper: React.FC = () => {
-    const { currentStep, goToStep } = useOnboarding();
+    const { currentStep, goToStep, role } = useOnboarding();
 
-    const steps = [
+    const mentorSteps = [
         { label: "Основна інформація", step: 1 },
         { label: "Професійна інформація", step: 2 },
         { label: "Навички та експертиза", step: 3 },
         { label: "Доступність", step: 4 },
-        { label: "Завершення", step: 5 },
+        { label: "Спеціалізація", step: 5 },
     ];
+
+    const menteeSteps = [
+        { label: "Основна інформація", step: 1 },
+        { label: "Професійна інформація", step: 2 },
+        { label: "Навички та експертиза", step: 3 },
+        { label: "Цілі навчання", step: 4 },
+        { label: "Галузі інтересів", step: 5 },
+    ];
+
+    const steps = role === "mentor" ? mentorSteps : menteeSteps;
 
     const handleStepClick = (step: number) => {
         // Allow clicking only on completed steps

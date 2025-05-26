@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace MentorSync.Users.Features.Mentor.CreateProfile;
+namespace MentorSync.Users.Features.Mentee.CreateProfile;
 
-public sealed class CreateMentorProfileEndpoint : IEndpoint
+public sealed class CreateMenteeProfileEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/mentors/profile", async (
-            [FromBody] CreateMentorProfileCommand request,
+        app.MapPost("/mentees/profile", async (
+            [FromBody] CreateMenteeProfileCommand request,
             ISender sender,
             CancellationToken ct) =>
         {
@@ -23,10 +23,10 @@ public sealed class CreateMentorProfileEndpoint : IEndpoint
 
             return result.DecideWhatToReturn();
         })
-        .WithTags(TagsConstants.Mentors)
-        .WithDescription("Create new mentor profile")
-        .Produces<MentorProfileResponse>(StatusCodes.Status200OK)
+        .WithTags(TagsConstants.Mentees)
+        .WithDescription("Create new mentee profile")
+        .Produces<MenteeProfileResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status409Conflict)
-        .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMentorMix);
+        .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
     }
 }

@@ -12,7 +12,6 @@ const Step2ProfessionalInfo: React.FC = () => {
             <p className="text-[#64748B]">
                 Розкажіть про свій професійний досвід
             </p>
-
             <div>
                 <label
                     htmlFor="position"
@@ -29,7 +28,6 @@ const Step2ProfessionalInfo: React.FC = () => {
                     placeholder="Наприклад: Senior Frontend Developer"
                 />
             </div>
-
             <div>
                 <label
                     htmlFor="company"
@@ -45,34 +43,7 @@ const Step2ProfessionalInfo: React.FC = () => {
                     className="w-full p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
                     placeholder="Наприклад: Google"
                 />
-            </div>
-
-            <div>
-                <label
-                    htmlFor="yearsOfExperience"
-                    className="block text-sm font-medium text-[#1E293B] mb-2"
-                >
-                    Роки досвіду
-                </label>
-                <select
-                    id="yearsOfExperience"
-                    value={data.yearsOfExperience}
-                    onChange={(e) =>
-                        updateData({
-                            yearsOfExperience: parseInt(e.target.value),
-                        })
-                    }
-                    className="w-full p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                >
-                    <option value={0}>Менше 1 року</option>
-                    <option value={1}>1 рік</option>
-                    <option value={2}>2 роки</option>
-                    <option value={3}>3 роки</option>
-                    <option value={5}>3-5 років</option>
-                    <option value={8}>5-10 років</option>
-                    <option value={10}>10+ років</option>
-                </select>
-            </div>
+            </div>{" "}
         </div>
     );
 };

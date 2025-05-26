@@ -12,14 +12,7 @@ const Step1BasicInfo: React.FC = () => {
             <p className="text-[#64748B]">
                 Ця інформація буде видима у вашому профілі
             </p>
-
             <div>
-                <label
-                    htmlFor="bio"
-                    className="block text-sm font-medium text-[#1E293B] mb-2"
-                >
-                    Про себе
-                </label>
                 <textarea
                     id="bio"
                     value={data.bio}

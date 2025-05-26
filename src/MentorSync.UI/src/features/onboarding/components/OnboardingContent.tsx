@@ -11,9 +11,7 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
     userRole,
 }) => {
     const { currentStep, nextStep, prevStep, isFirstStep, isLastStep, data } =
-        useOnboarding();
-
-    // Check if all required fields for current step are filled
+        useOnboarding(); // Check if all required fields for current step are filled
     const validateCurrentStep = (): boolean => {
         switch (currentStep) {
             case 1:
@@ -26,15 +24,18 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
                     data.programmingLanguages.length > 0
                 );
             case 4:
-                // Validate that at least one availability option is selected
-                return data.availabilityFlag > 0;
+                if (userRole === "mentor") {
+                    // Mentor requires availability
+                    return data.availabilityFlag > 0;
+                } else {
+                    // Mentee requires learning goals
+                    return data.goals.length > 0;
+                }
             case 5:
                 if (userRole === "mentor") {
                     return data.industryFlag > 0 && data.yearsOfExperience > 0;
                 } else {
-                    return (
-                        data.goals.length > 0 && data.desiredSkills.length > 0
-                    );
+                    return data.industryFlag > 0; // Mentees also need to select industries
                 }
             default:
                 return false;
@@ -42,6 +43,7 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
     };
 
     const handleNextStep = () => {
+        console.log("Current step:", currentStep);
         if (validateCurrentStep()) {
             nextStep();
         } else {
@@ -53,20 +55,46 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
         if (!validateCurrentStep()) {
             alert("Будь ласка, заповніть всі обов'язкові поля");
             return;
+        } // Additional validation for API requirements
+        // Common validation for both roles
+        if (data.bio.trim() === "") {
+            alert("Будь ласка, заповніть поле 'Про себе'");
+            return;
+        }
+        if (data.position.trim() === "") {
+            alert("Будь ласка, вкажіть вашу посаду");
+            return;
+        }
+        if (data.company.trim() === "") {
+            alert("Будь ласка, вкажіть назву компанії");
+            return;
+        }
+        if (data.skills.length === 0) {
+            alert("Будь ласка, вкажіть ваші навички");
+            return;
+        }
+        if (data.programmingLanguages.length === 0) {
+            alert("Будь ласка, вкажіть мови програмування");
+            return;
+        }
+        if (data.industryFlag === 0) {
+            alert("Будь ласка, виберіть хоча б одну галузь");
+            return;
         }
 
-        // Additional validation for API requirements
+        // Role-specific validations
         if (userRole === "mentor") {
-            if (data.industryFlag === 0) {
-                alert("Будь ласка, виберіть хоча б одну галузь");
-                return;
-            }
-            if (data.programmingLanguages.length === 0) {
-                alert("Будь ласка, вкажіть мови програмування");
-                return;
-            }
             if (data.availabilityFlag === 0) {
                 alert("Будь ласка, виберіть доступний час");
+                return;
+            }
+            if (data.yearsOfExperience <= 0) {
+                alert("Будь ласка, вкажіть кількість років досвіду");
+                return;
+            }
+        } else {
+            if (data.goals.length === 0) {
+                alert("Будь ласка, вкажіть ваші цілі навчання");
                 return;
             }
         }
@@ -98,7 +126,6 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
             );
         }
     };
-
     const renderStep = () => {
         switch (currentStep) {
             case 1:
@@ -108,12 +135,17 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
             case 3:
                 return <Step3SkillsExpertise />;
             case 4:
-                return <Step4Availability />;
+                return userRole === "mentor" ? (
+                    <Step4Availability />
+                ) : (
+                    <Step5MenteeSpecific />
+                );
             case 5:
                 return userRole === "mentor" ? (
                     <Step5MentorSpecific />
                 ) : (
-                    <Step5MenteeSpecific />
+                    // For mentees, the last step is Industry selection
+                    <Step5MentorSpecific displayYearsExperience={false} />
                 );
             default:
                 return <Step1BasicInfo />;

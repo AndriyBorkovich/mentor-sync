@@ -69,7 +69,6 @@ export const initialOnboardingData: OnboardingData = {
 
     // Step 5: Specific to role
     goals: [],
-    desiredSkills: [],
     industryFlag: Industry.None,
 };
 

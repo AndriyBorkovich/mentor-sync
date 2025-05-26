@@ -1,4 +1,5 @@
-﻿using MentorSync.Users.Domain.Mentor;
+﻿using MentorSync.Users.Domain.Mentee;
+using MentorSync.Users.Domain.Mentor;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Features.GetAllUsers;
@@ -29,5 +30,19 @@ public static class DomainToDtoMapper
             profile.ExperienceYears,
             profile.Availability,
             profile.MentorId);
+    }
+
+    public static MenteeProfileResponse ToMenteeProfileResponse(this MenteeProfile profile)
+    {
+        return new MenteeProfileResponse(
+            profile.Id,
+            profile.Bio,
+            profile.Position,
+            profile.Company,
+            profile.Industries,
+            profile.Skills,
+            profile.ProgrammingLanguages,
+            profile.LearningGoals,
+            profile.MenteeId);
     }
 }

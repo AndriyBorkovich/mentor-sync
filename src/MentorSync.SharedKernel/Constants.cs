@@ -53,7 +53,8 @@ public static class PolicyConstants
     public const string MentorOnly = nameof(MentorOnly);
     public const string MenteeOnly = nameof(MenteeOnly);
 
-    public const string AdminAndMentor = nameof(AdminAndMentor);
+    public const string AdminMentorMix = nameof(AdminMentorMix);
+    public const string AdminMenteeMix = nameof(AdminMenteeMix);
 }
 
 /// <summary>

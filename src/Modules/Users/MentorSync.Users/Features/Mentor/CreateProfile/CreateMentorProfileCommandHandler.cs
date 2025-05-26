@@ -24,8 +24,6 @@ public sealed class CreateMentorProfileCommandHandler(UsersDbContext db)
         db.MentorProfiles.Add(entity);
         await db.SaveChangesAsync(cancellationToken);
 
-        var response = entity.ToMentorProfileResponse();
-
-        return Result.Success(response);
+        return Result.Success(entity.ToMentorProfileResponse());
     }
 }

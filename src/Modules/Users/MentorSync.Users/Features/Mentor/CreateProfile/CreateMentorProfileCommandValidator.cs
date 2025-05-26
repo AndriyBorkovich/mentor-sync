@@ -10,6 +10,18 @@ public sealed class CreateMentorProfileCommandValidator : AbstractValidator<Crea
             .NotNull()
             .GreaterThan(0);
 
+        RuleFor(x => x.Bio)
+          .NotEmpty()
+          .MaximumLength(2000);
+
+        RuleFor(x => x.Position)
+            .NotEmpty()
+            .MaximumLength(100);
+
+        RuleFor(x => x.Company)
+            .NotEmpty()
+            .MaximumLength(100);
+
         RuleFor(x => x.Skills)
             .NotNull()
             .Must(list => list.Count >= 1 && list.Count <= 20)

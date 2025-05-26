@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
@@ -8,24 +8,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace MentorSync.Users.Features.Mentor.EditProfile;
+namespace MentorSync.Users.Features.Mentee.EditProfile;
 
-public sealed class EditMentorProfileEndpoint : IEndpoint
+public sealed class EditMenteeProfileEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("/mentors/profile", async (
-                [FromBody] EditMentorProfileCommand command,
+        app.MapPut("/mentees/profile", async (
+                [FromBody] EditMenteeProfileCommand command,
                 ISender sender,
                 CancellationToken ct) =>
         {
             var result = await sender.Send(command, ct);
             return result.DecideWhatToReturn();
         })
-        .WithTags(TagsConstants.Mentors)
-        .WithDescription("Edit mentor profile")
-        .Produces<MentorProfileResponse>(StatusCodes.Status200OK)
+        .WithTags(TagsConstants.Mentees)
+        .WithDescription("Edit mentee profile")
+        .Produces<MenteeProfileResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMentorMix);
+        .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
     }
 }

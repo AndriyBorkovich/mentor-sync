@@ -8,6 +8,9 @@ namespace MentorSync.Users.Features.Mentor.EditProfile;
 
 public sealed record EditMentorProfileCommand(
     int Id,
+    string Bio,
+    string Position,
+    string Company,
     Industry Industries,
     List<string> Skills,
     List<string> ProgrammingLanguages,

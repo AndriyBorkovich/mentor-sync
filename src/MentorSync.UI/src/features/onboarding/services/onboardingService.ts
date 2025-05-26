@@ -10,6 +10,9 @@ export const onboardingService = {
     saveMentorProfile: async (data: OnboardingData) => {
         try {
             const mentorProfileData = {
+                bio: data.bio,
+                position: data.position,
+                company: data.company,
                 industries: data.industryFlag, // Industry enum flags
                 skills: data.skills,
                 programmingLanguages: data.programmingLanguages,
@@ -34,20 +37,21 @@ export const onboardingService = {
                 message: "Failed to save mentor profile",
             };
         }
-    },
-
+    }
     /**
      * Save onboarding data for a mentee
      * @param data The onboarding data
      * @returns Response with success status and message
-     */
+     */,
     saveMenteeProfile: async (data: OnboardingData) => {
         try {
             const menteeProfileData = {
                 bio: data.bio,
                 position: data.position,
                 company: data.company,
-                yearsOfExperience: data.yearsOfExperience,
+                industries: data.industryFlag, // Industry enum flags
+                skills: data.skills,
+                programmingLanguages: data.programmingLanguages,
                 learningGoals: data.goals,
                 menteeId: parseInt(localStorage.getItem("userId") || "0", 10), // Get the user ID from local storage as a number
             };

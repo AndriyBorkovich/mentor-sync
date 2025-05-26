@@ -2,7 +2,13 @@ import React from "react";
 import { useOnboarding } from "../context/OnboardingContext";
 import { Industry } from "../data/OnboardingTypes";
 
-const Step5MentorSpecific: React.FC = () => {
+interface Step5MentorSpecificProps {
+    displayYearsExperience?: boolean;
+}
+
+const Step5MentorSpecific: React.FC<Step5MentorSpecificProps> = ({
+    displayYearsExperience = true,
+}) => {
     const { data, updateData } = useOnboarding();
 
     const industries = [
@@ -44,36 +50,43 @@ const Step5MentorSpecific: React.FC = () => {
     const isIndustrySelected = (industryValue: Industry): boolean => {
         return (data.industryFlag & industryValue) !== 0;
     };
-
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#1E293B]">Спеціалізація</h2>
+            <h2 className="text-2xl font-bold text-[#1E293B]">
+                Галузі спеціалізації
+            </h2>
             <p className="text-[#64748B]">
-                Розкажіть про вашу досвідченість та галузі спеціалізації
+                {displayYearsExperience
+                    ? "Розкажіть про вашу досвідченість та галузі спеціалізації"
+                    : "Виберіть галузі, які вас цікавлять для навчання"}
             </p>
-
             <div className="space-y-6">
-                <div>
-                    <label
-                        htmlFor="years"
-                        className="block text-sm font-medium text-[#1E293B] mb-2"
-                    >
-                        Роки досвіду
-                    </label>
-                    <input
-                        type="number"
-                        id="years"
-                        min="1"
-                        value={data.yearsOfExperience}
-                        onChange={handleExperienceChange}
-                        className="w-full p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                        placeholder="Наприклад: 5"
-                    />
-                </div>
+                {displayYearsExperience && (
+                    <div>
+                        <label
+                            htmlFor="years"
+                            className="block text-sm font-medium text-[#1E293B] mb-2"
+                        >
+                            Роки досвіду
+                        </label>
+                        <input
+                            type="number"
+                            id="years"
+                            min="1"
+                            value={data.yearsOfExperience}
+                            onChange={handleExperienceChange}
+                            className="w-full p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
+                            placeholder="Наприклад: 5"
+                        />
+                    </div>
+                )}
 
                 <div>
+                    {" "}
                     <label className="block text-sm font-medium text-[#1E293B] mb-2">
-                        Галузі спеціалізації
+                        {displayYearsExperience
+                            ? "Галузі спеціалізації"
+                            : "Галузі інтересів"}
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {industries.map((industry) => (
