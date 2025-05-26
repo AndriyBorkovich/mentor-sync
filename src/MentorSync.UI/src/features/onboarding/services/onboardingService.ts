@@ -1,5 +1,21 @@
 import api from "../../auth/services/api";
 import { OnboardingData } from "../data/OnboardingTypes";
+import { getUserFromToken } from "../../auth/utils/authUtils";
+
+// Function to get the user ID from the JWT token or fallback to localStorage
+const getUserId = (): number => {
+    // First try to get the ID from the JWT token
+    const tokenPayload = getUserFromToken();
+    const nameIdentifier =
+        tokenPayload?.[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+    if (nameIdentifier) {
+        return parseInt(String(nameIdentifier), 10);
+    }
+
+    return parseInt(localStorage.getItem("userId") || "0", 10);
+};
 
 export const onboardingService = {
     /**
@@ -18,7 +34,7 @@ export const onboardingService = {
                 programmingLanguages: data.programmingLanguages,
                 experienceYears: data.yearsOfExperience,
                 availability: data.availabilityFlag, // Availability enum flags
-                mentorId: parseInt(localStorage.getItem("userId") || "0", 10), // Get the user ID from local storage as a number
+                mentorId: getUserId(), // Get the user ID from JWT token
             };
 
             // Make API call to save mentor profile
@@ -37,13 +53,12 @@ export const onboardingService = {
                 message: "Failed to save mentor profile",
             };
         }
-    }
+    },
     /**
      * Save onboarding data for a mentee
      * @param data The onboarding data
      * @returns Response with success status and message
-     */,
-    saveMenteeProfile: async (data: OnboardingData) => {
+     */ saveMenteeProfile: async (data: OnboardingData) => {
         try {
             const menteeProfileData = {
                 bio: data.bio,
@@ -53,7 +68,7 @@ export const onboardingService = {
                 skills: data.skills,
                 programmingLanguages: data.programmingLanguages,
                 learningGoals: data.goals,
-                menteeId: parseInt(localStorage.getItem("userId") || "0", 10), // Get the user ID from local storage as a number
+                menteeId: getUserId(), // Get the user ID from JWT token
             };
 
             // Make API call to save mentee profile
