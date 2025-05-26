@@ -17,6 +17,8 @@ export interface AuthTokens {
     token: string;
     refreshToken?: string;
     expiration?: string;
+    userId?: number;
+    needOnboarding?: boolean;
 }
 
 /**

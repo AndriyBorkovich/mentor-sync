@@ -1,59 +1,55 @@
-import React, { useState } from "react";
+import React from "react";
 import { useOnboarding } from "../context/OnboardingContext";
+import { Industry } from "../data/OnboardingTypes";
 
 const Step5MentorSpecific: React.FC = () => {
     const { data, updateData } = useOnboarding();
-    const [rateEnabled, setRateEnabled] = useState<boolean>(!!data.hourlyRate);
 
-    const mentorshipStyles = [
-        "Директивний",
-        "Недирективний",
-        "Коучинг",
-        "Наставництво",
-        "Консультування",
+    const industries = [
+        { value: Industry.WebDevelopment, label: "Веб-розробка" },
+        { value: Industry.DataScience, label: "Data Science" },
+        { value: Industry.CyberSecurity, label: "Кібербезпека" },
+        { value: Industry.CloudComputing, label: "Хмарні обчислення" },
+        { value: Industry.DevOps, label: "DevOps" },
+        { value: Industry.GameDevelopment, label: "Розробка ігор" },
+        { value: Industry.ItSupport, label: "ІТ-підтримка" },
+        { value: Industry.ArtificialIntelligence, label: "Штучний інтелект" },
+        { value: Industry.Blockchain, label: "Блокчейн" },
+        { value: Industry.Networking, label: "Мережі" },
+        { value: Industry.UxUiDesign, label: "UX/UI дизайн" },
+        { value: Industry.EmbeddedSystems, label: "Вбудовані системи" },
+        { value: Industry.ItConsulting, label: "ІТ-консалтинг" },
+        {
+            value: Industry.DatabaseAdministration,
+            label: "Адміністрування баз даних",
+        },
     ];
 
-    const experienceLevels = [
-        "Початківець",
-        "Середній",
-        "Досвідчений",
-        "Експерт",
-        "Будь-який рівень",
-    ];
-
-    const handleMentorshipStyleChange = (style: string) => {
-        updateData({ mentorshipStyle: style });
-    };
-
-    const handleMaxMenteesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleExperienceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value);
-        if (!isNaN(value) && value >= 1) {
-            updateData({ maxMentees: value });
+        if (!isNaN(value) && value >= 0) {
+            updateData({ yearsOfExperience: value });
         }
     };
 
-    const handleHourlyRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value);
-        updateData({ hourlyRate: isNaN(value) ? undefined : value });
+    const toggleIndustry = (industryValue: Industry) => {
+        const currentValue = data.industryFlag || 0;
+        const newValue =
+            currentValue & industryValue
+                ? currentValue & ~industryValue // Remove flag if already selected
+                : currentValue | industryValue; // Add flag if not selected
+        updateData({ industryFlag: newValue });
     };
 
-    const togglePreferredLevel = (level: string) => {
-        let updatedLevels = [...data.preferredMenteeLevel];
-        if (updatedLevels.includes(level)) {
-            updatedLevels = updatedLevels.filter((l) => l !== level);
-        } else {
-            updatedLevels.push(level);
-        }
-        updateData({ preferredMenteeLevel: updatedLevels });
+    const isIndustrySelected = (industryValue: Industry): boolean => {
+        return (data.industryFlag & industryValue) !== 0;
     };
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-[#1E293B]">
-                Менторські налаштування
-            </h2>
+            <h2 className="text-2xl font-bold text-[#1E293B]">Спеціалізація</h2>
             <p className="text-[#64748B]">
-                Розкажіть про свій стиль менторства та переваги
+                Розкажіть про вашу досвідченість та галузі спеціалізації
             </p>
 
             <div className="space-y-6">
@@ -69,12 +65,7 @@ const Step5MentorSpecific: React.FC = () => {
                         id="years"
                         min="1"
                         value={data.yearsOfExperience}
-                        onChange={(e) => {
-                            const value = parseInt(e.target.value);
-                            if (!isNaN(value) && value >= 0) {
-                                updateData({ yearsOfExperience: value });
-                            }
-                        }}
+                        onChange={handleExperienceChange}
                         className="w-full p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
                         placeholder="Наприклад: 5"
                     />
@@ -82,116 +73,30 @@ const Step5MentorSpecific: React.FC = () => {
 
                 <div>
                     <label className="block text-sm font-medium text-[#1E293B] mb-2">
-                        Стиль менторства
+                        Галузі спеціалізації
                     </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        {mentorshipStyles.map((style) => (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {industries.map((industry) => (
                             <div
-                                key={style}
+                                key={industry.value}
                                 className={`border rounded-lg p-3 cursor-pointer ${
-                                    data.mentorshipStyle === style
+                                    isIndustrySelected(industry.value)
                                         ? "border-[#6C5DD3] bg-[#6C5DD3]/10"
                                         : "border-[#E2E8F0]"
                                 }`}
-                                onClick={() =>
-                                    handleMentorshipStyleChange(style)
-                                }
-                            >
-                                <div className="flex items-center">
-                                    <input
-                                        type="radio"
-                                        checked={data.mentorshipStyle === style}
-                                        onChange={() => {}}
-                                        className="h-4 w-4 text-[#6C5DD3] rounded mr-3"
-                                    />
-                                    <span className="text-[#1E293B]">
-                                        {style}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <label
-                        htmlFor="maxMentees"
-                        className="block text-sm font-medium text-[#1E293B] mb-2"
-                    >
-                        Максимальна кількість менті
-                    </label>
-                    <input
-                        type="number"
-                        id="maxMentees"
-                        min="1"
-                        value={data.maxMentees}
-                        onChange={handleMaxMenteesChange}
-                        className="w-full p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                    />
-                </div>
-
-                <div>
-                    <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium text-[#1E293B]">
-                            Платне менторство
-                        </label>
-                        <label className="inline-flex items-center cursor-pointer">
-                            <input
-                                type="checkbox"
-                                className="sr-only peer"
-                                checked={rateEnabled}
-                                onChange={() => setRateEnabled(!rateEnabled)}
-                            />
-                            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6C5DD3]"></div>
-                        </label>
-                    </div>
-                    {rateEnabled && (
-                        <div className="mt-2">
-                            <div className="flex items-center">
-                                <span className="text-[#64748B] mr-2">$</span>
-                                <input
-                                    type="number"
-                                    value={data.hourlyRate || ""}
-                                    onChange={handleHourlyRateChange}
-                                    className="w-full p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                                    placeholder="Почасова ставка"
-                                    min="0"
-                                    step="1"
-                                />
-                                <span className="text-[#64748B] ml-2">
-                                    за годину
-                                </span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-2">
-                        Переважний рівень менті
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        {experienceLevels.map((level) => (
-                            <div
-                                key={level}
-                                className={`border rounded-lg p-3 cursor-pointer ${
-                                    data.preferredMenteeLevel.includes(level)
-                                        ? "border-[#6C5DD3] bg-[#6C5DD3]/10"
-                                        : "border-[#E2E8F0]"
-                                }`}
-                                onClick={() => togglePreferredLevel(level)}
+                                onClick={() => toggleIndustry(industry.value)}
                             >
                                 <div className="flex items-center">
                                     <input
                                         type="checkbox"
-                                        checked={data.preferredMenteeLevel.includes(
-                                            level
+                                        checked={isIndustrySelected(
+                                            industry.value
                                         )}
                                         onChange={() => {}}
                                         className="h-4 w-4 text-[#6C5DD3] rounded mr-3"
                                     />
                                     <span className="text-[#1E293B]">
-                                        {level}
+                                        {industry.label}
                                     </span>
                                 </div>
                             </div>

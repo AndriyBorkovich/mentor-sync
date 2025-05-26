@@ -15,23 +15,15 @@ public interface ICollaborativeTrainer
     Task TrainAsync(CancellationToken cancellationToken);
 }
 
-public class CollaborativeTrainer : ICollaborativeTrainer
+public class CollaborativeTrainer(RecommendationsDbContext db, ILogger<CollaborativeTrainer> logger) : ICollaborativeTrainer
 {
-    private readonly RecommendationsDbContext _db;
-    private readonly ILogger<CollaborativeTrainer> _logger;
     private readonly MLContext _mlContext = new();
-
-    public CollaborativeTrainer(RecommendationsDbContext db, ILogger<CollaborativeTrainer> logger)
-    {
-        _db = db;
-        _logger = logger;
-    }
 
     public async Task TrainAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Training collaborative model...");
+        logger.LogInformation("Training collaborative model...");
 
-        var data = await _db.MenteeMentorInteractions.ToListAsync(cancellationToken);
+        var data = await db.MenteeMentorInteractions.ToListAsync(cancellationToken);
 
         var mlData = _mlContext.Data.LoadFromEnumerable(data.Select(x => new MenteeMentorRatingData
         {
@@ -54,7 +46,7 @@ public class CollaborativeTrainer : ICollaborativeTrainer
 
         _mlContext.Model.Save(model, mlData.Schema, "model.zip");
 
-        _logger.LogInformation("Collaborative model trained and saved.");
+        logger.LogInformation("Collaborative model trained and saved.");
     }
 }
 

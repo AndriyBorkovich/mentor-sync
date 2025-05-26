@@ -3,4 +3,5 @@
 public sealed record AuthResponse(
     string Token,
     string RefreshToken,
-    DateTime Expiration);
+    DateTime Expiration,
+    bool? NeedOnboarding);

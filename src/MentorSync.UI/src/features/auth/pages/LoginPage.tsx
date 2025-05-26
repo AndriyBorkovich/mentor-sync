@@ -10,18 +10,19 @@ const LoginPage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [showSuccessMessage, setShowSuccessMessage] =
         useState<boolean>(false);
-    const [redirectToOnboarding, setRedirectToOnboarding] =
-        useState<boolean>(false);
-    const [userRole, setUserRole] = useState<string>("");
-
-    // Check if user was redirected from registration
+    const [userRole, setUserRole] = useState<string>(""); // Check if user was redirected from registration
     useEffect(() => {
         if (location.state?.registrationSuccess) {
             setShowSuccessMessage(true);
         }
-        if (location.state?.redirectToOnboarding) {
-            setRedirectToOnboarding(true);
+        if (location.state?.role) {
             setUserRole(location.state.role);
+            // Store role in localStorage for use after login
+            localStorage.setItem("userRole", location.state.role);
+        }
+        // If userId is passed from registration page, store it
+        if (location.state?.userId) {
+            localStorage.setItem("userId", location.state.userId.toString());
         }
     }, [location.state]);
 
@@ -38,10 +39,16 @@ const LoginPage: React.FC = () => {
         try {
             const response = await authService.login(data);
             if (response?.success) {
-                // Successful login - redirect to onboarding if coming from registration, otherwise to dashboard
-                if (redirectToOnboarding && userRole) {
-                    navigate(`/onboarding/${userRole}`, { replace: true });
+                // Check if user needs onboarding based on API response
+                if (response.needOnboarding) {
+                    // User needs onboarding - use the role from either registration state or from user's data
+                    const userRoleToUse =
+                        userRole ||
+                        localStorage.getItem("userRole") ||
+                        "mentee";
+                    navigate(`/onboarding/${userRoleToUse}`, { replace: true });
                 } else {
+                    // User doesn't need onboarding - redirect to dashboard
                     navigate("/dashboard", { replace: true });
                 }
             } else {
@@ -66,10 +73,6 @@ const LoginPage: React.FC = () => {
                         to="/"
                         className="flex items-center justify-center gap-2 mb-6"
                     >
-                        <div
-                            className="w-8 h-8 bg-cover bg-center"
-                            style={{ backgroundImage: "url('/logo.svg')" }}
-                        ></div>
                         <h1
                             className="text-2xl font-bold"
                             style={{ color: "var(--color-secondary)" }}
@@ -99,26 +102,14 @@ const LoginPage: React.FC = () => {
                     }}
                 >
                     {showSuccessMessage && (
-                        <div
-                            className="mb-6 p-3 rounded-lg text-center"
-                            style={{
-                                backgroundColor: "#DCFCE7",
-                                color: "#166534",
-                            }}
-                        >
-                            Реєстрація успішна! Будь ласка, підтвердіть акаунт
-                            на пошті і увійдіть до вашого акаунту.
+                        <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg">
+                            Реєстрація успішна! Тепер ви можете увійти в
+                            систему.
                         </div>
                     )}
 
                     {errorMessage && (
-                        <div
-                            className="mb-6 p-3 rounded-lg text-center"
-                            style={{
-                                backgroundColor: "#FEE2E2",
-                                color: "#B91C1C",
-                            }}
-                        >
+                        <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg">
                             {errorMessage}
                         </div>
                     )}
@@ -130,111 +121,44 @@ const LoginPage: React.FC = () => {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block mb-2 font-medium text-sm"
-                                style={{ color: "var(--color-text-gray)" }}
+                                className="block text-sm font-medium mb-1"
+                                style={{ color: "var(--color-text-dark)" }}
                             >
-                                Електронна пошта
+                                Email
                             </label>
                             <input
                                 id="email"
                                 type="email"
                                 {...register("email", {
-                                    required: "Електронна пошта обов'язкова",
+                                    required: "Email обов'язковий",
                                     pattern: {
                                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message:
-                                            "Неправильний формат електронної пошти",
+                                        message: "Невірний формат email",
                                     },
                                 })}
-                                className={`w-full p-3 border rounded-lg ${
-                                    errors.email ? "border-red-500" : ""
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                                    errors.email
+                                        ? "border-red-300 focus:ring-red-200"
+                                        : "border-gray-300 focus:ring-primary/20"
                                 }`}
-                                style={{
-                                    borderColor: errors.email
-                                        ? "#EF4444"
-                                        : "#E2E8F0",
-                                }}
-                                placeholder="Введіть вашу електронну пошту"
+                                style={{ borderColor: "var(--color-border)" }}
                             />
                             {errors.email && (
-                                <p className="mt-1 text-sm text-red-500">
+                                <p className="mt-1 text-sm text-red-600">
                                     {errors.email.message}
                                 </p>
                             )}
                         </div>
 
                         <div>
-                            <label
-                                htmlFor="password"
-                                className="block mb-2 font-medium text-sm"
-                                style={{ color: "var(--color-text-gray)" }}
-                            >
-                                Пароль
-                            </label>
-                            <div className="relative">
-                                <input
-                                    id="password"
-                                    type="password"
-                                    {...register("password", {
-                                        required: "Пароль обов'язковий",
-                                    })}
-                                    className={`w-full p-3 border rounded-lg ${
-                                        errors.password ? "border-red-500" : ""
-                                    }`}
-                                    style={{
-                                        borderColor: errors.password
-                                            ? "#EF4444"
-                                            : "#E2E8F0",
-                                    }}
-                                    placeholder="Введіть ваш пароль"
-                                />
-                                <button
-                                    type="button"
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                                    onClick={() => {
-                                        const passwordInput =
-                                            document.getElementById(
-                                                "password"
-                                            ) as HTMLInputElement;
-                                        if (passwordInput) {
-                                            passwordInput.type =
-                                                passwordInput.type ===
-                                                "password"
-                                                    ? "text"
-                                                    : "password";
-                                        }
-                                    }}
+                            <div className="flex justify-between">
+                                <label
+                                    htmlFor="password"
+                                    className="block text-sm font-medium mb-1"
+                                    style={{ color: "var(--color-text-dark)" }}
                                 >
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 20 20"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M2.5 10C2.5 10 5 5 10 5C15 5 17.5 10 17.5 10C17.5 10 15 15 10 15C5 15 2.5 10 2.5 10Z"
-                                            stroke="currentColor"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                        <path
-                                            d="M10 12.5C11.3807 12.5 12.5 11.3807 12.5 10C12.5 8.61929 11.3807 7.5 10 7.5C8.61929 7.5 7.5 8.61929 7.5 10C7.5 11.3807 8.61929 12.5 10 12.5Z"
-                                            stroke="currentColor"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                            {errors.password && (
-                                <p className="mt-1 text-sm text-red-500">
-                                    {errors.password.message}
-                                </p>
-                            )}
-                            <div className="flex justify-end mt-1">
+                                    Пароль
+                                </label>
                                 <Link
                                     to="/forgot-password"
                                     className="text-sm transition-colors"
@@ -243,84 +167,72 @@ const LoginPage: React.FC = () => {
                                     Забули пароль?
                                 </Link>
                             </div>
+
+                            <input
+                                id="password"
+                                type="password"
+                                {...register("password", {
+                                    required: "Пароль обов'язковий",
+                                    minLength: {
+                                        value: 6,
+                                        message:
+                                            "Пароль має бути не менше 6 символів",
+                                    },
+                                })}
+                                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                                    errors.password
+                                        ? "border-red-300 focus:ring-red-200"
+                                        : "border-gray-300 focus:ring-primary/20"
+                                }`}
+                                style={{ borderColor: "var(--color-border)" }}
+                            />
+                            {errors.password && (
+                                <p className="mt-1 text-sm text-red-600">
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
 
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full py-3 rounded-lg transition-colors font-medium text-white"
+                            className="w-full py-2 px-4 rounded-lg flex justify-center items-center transition-colors"
                             style={{
-                                backgroundColor: isSubmitting
-                                    ? "var(--color-primary-light)"
-                                    : "var(--color-primary)",
-                                cursor: isSubmitting
-                                    ? "not-allowed"
-                                    : "pointer",
+                                backgroundColor: "var(--color-primary)",
+                                color: "white",
                             }}
                         >
-                            {isSubmitting ? "Вхід..." : "Увійти"}
+                            {isSubmitting ? (
+                                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            ) : (
+                                "Увійти"
+                            )}
                         </button>
                     </form>
 
                     <div className="mt-8">
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <div
-                                    className="w-full border-t"
-                                    style={{ borderColor: "#E2E8F0" }}
-                                ></div>
-                            </div>
-                            <div className="relative flex justify-center">
-                                <span
-                                    className="px-4 text-sm bg-white"
-                                    style={{ color: "var(--color-text-gray)" }}
-                                >
-                                    Або продовжити з
-                                </span>
-                            </div>
-                        </div>{" "}
-                        <div className="mt-6 flex flex-col md:flex-row items-center justify-center gap-3">
+                        <p
+                            className="text-center text-sm"
+                            style={{ color: "var(--color-text-gray)" }}
+                        >
+                            Або увійти через
+                        </p>
+                        <div className="mt-3 grid grid-cols-1 gap-2">
                             <button
-                                className="flex items-center justify-center gap-2 w-full md:w-auto px-4 py-2 border rounded-lg transition-colors"
-                                style={{
-                                    borderColor: "#E2E8F0",
-                                    color: "var(--color-secondary)",
-                                }}
+                                type="button"
+                                className="flex items-center justify-center gap-2 w-full py-2 px-4 border rounded-lg transition-colors"
+                                style={{ borderColor: "var(--color-border)" }}
                             >
                                 <img
-                                    src="/google-logo.svg"
+                                    src="/google-icon.svg"
                                     alt="Google"
                                     className="w-5 h-5"
                                 />
-                                Google
-                            </button>
-                            <button
-                                className="flex items-center justify-center gap-2 w-full md:w-auto px-4 py-2 border rounded-lg transition-colors"
-                                style={{
-                                    borderColor: "#E2E8F0",
-                                    color: "var(--color-secondary)",
-                                }}
-                            >
-                                <img
-                                    src="/github-logo.svg"
-                                    alt="GitHub"
-                                    className="w-5 h-5"
-                                />
-                                GitHub
-                            </button>
-                            <button
-                                className="flex items-center justify-center gap-2 w-full md:w-auto px-4 py-2 border rounded-lg transition-colors"
-                                style={{
-                                    borderColor: "#E2E8F0",
-                                    color: "var(--color-secondary)",
-                                }}
-                            >
-                                <img
-                                    src="/linkedin-logo.svg"
-                                    alt="LinkedIn"
-                                    className="w-5 h-5"
-                                />
-                                LinkedIn
+                                <span
+                                    style={{ color: "var(--color-text-dark)" }}
+                                >
+                                    Google
+                                </span>
                             </button>
                         </div>
                     </div>

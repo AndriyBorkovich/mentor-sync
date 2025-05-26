@@ -73,26 +73,6 @@ const Step2ProfessionalInfo: React.FC = () => {
                     <option value={10}>10+ років</option>
                 </select>
             </div>
-
-            <div>
-                <label
-                    htmlFor="linkedin"
-                    className="block text-sm font-medium text-[#1E293B] mb-2"
-                >
-                    LinkedIn (опціонально)
-                </label>
-                <div className="flex items-center border border-[#E2E8F0] rounded-lg overflow-hidden">
-                    <span className="bg-[#F8FAFC] p-3 text-[#64748B] border-r border-[#E2E8F0]">
-                        <span className="material-icons">link</span>
-                    </span>
-                    <input
-                        type="text"
-                        id="linkedin"
-                        className="w-full p-3 focus:outline-none"
-                        placeholder="https://linkedin.com/in/yourprofile"
-                    />
-                </div>
-            </div>
         </div>
     );
 };

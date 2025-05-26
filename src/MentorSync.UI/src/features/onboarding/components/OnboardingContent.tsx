@@ -17,28 +17,23 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
     const validateCurrentStep = (): boolean => {
         switch (currentStep) {
             case 1:
-                return !!data.fullName && !!data.bio && !!data.location;
+                return !!data.bio;
             case 2:
                 return !!data.position && !!data.company;
             case 3:
-                return data.skills.length > 0 && data.expertiseAreas.length > 0;
-            case 4:
-                // Validate that at least one day has time slots
-                return Object.values(data.availabilityHours).some(
-                    (daySlots) => daySlots.length > 0
+                return (
+                    data.skills.length > 0 &&
+                    data.programmingLanguages.length > 0
                 );
+            case 4:
+                // Validate that at least one availability option is selected
+                return data.availabilityFlag > 0;
             case 5:
                 if (userRole === "mentor") {
-                    return (
-                        !!data.mentorshipStyle &&
-                        data.maxMentees > 0 &&
-                        data.yearsOfExperience > 0
-                    );
+                    return data.industryFlag > 0 && data.yearsOfExperience > 0;
                 } else {
                     return (
-                        data.goals.length > 0 &&
-                        data.desiredSkills.length > 0 &&
-                        !!data.expectedSessionFrequency
+                        data.goals.length > 0 && data.desiredSkills.length > 0
                     );
                 }
             default:
@@ -53,10 +48,27 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
             alert("Будь ласка, заповніть всі обов'язкові поля");
         }
     };
+
     const handleSubmit = async () => {
         if (!validateCurrentStep()) {
             alert("Будь ласка, заповніть всі обов'язкові поля");
             return;
+        }
+
+        // Additional validation for API requirements
+        if (userRole === "mentor") {
+            if (data.industryFlag === 0) {
+                alert("Будь ласка, виберіть хоча б одну галузь");
+                return;
+            }
+            if (data.programmingLanguages.length === 0) {
+                alert("Будь ласка, вкажіть мови програмування");
+                return;
+            }
+            if (data.availabilityFlag === 0) {
+                alert("Будь ласка, виберіть доступний час");
+                return;
+            }
         }
 
         try {
@@ -73,11 +85,17 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
                 // Redirect to dashboard after successful submission
                 window.location.href = "/dashboard";
             } else {
-                throw new Error(response.message);
+                throw new Error(
+                    response.message || "Помилка збереження профілю"
+                );
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error submitting onboarding data:", error);
-            alert("Виникла помилка при збереженні даних. Спробуйте ще раз.");
+            alert(
+                `Виникла помилка при збереженні даних: ${
+                    error.message || "Невідома помилка"
+                }. Спробуйте ще раз.`
+            );
         }
     };
 

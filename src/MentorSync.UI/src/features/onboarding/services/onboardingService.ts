@@ -9,22 +9,13 @@ export const onboardingService = {
      */
     saveMentorProfile: async (data: OnboardingData) => {
         try {
-            // Format data according to API expectations
             const mentorProfileData = {
-                fullName: data.fullName,
-                bio: data.bio,
-                location: data.location,
-                position: data.position,
-                company: data.company,
-                yearsOfExperience: data.yearsOfExperience,
+                industries: data.industryFlag, // Industry enum flags
                 skills: data.skills,
-                expertiseAreas: data.expertiseAreas,
-                availabilityHours: data.availabilityHours,
-                preferredMeetingFormat: data.preferredMeetingFormat,
-                mentorshipStyle: data.mentorshipStyle,
-                maxMentees: data.maxMentees,
-                hourlyRate: data.hourlyRate,
-                preferredMenteeLevel: data.preferredMenteeLevel,
+                programmingLanguages: data.programmingLanguages,
+                experienceYears: data.yearsOfExperience,
+                availability: data.availabilityFlag, // Availability enum flags
+                mentorId: parseInt(localStorage.getItem("userId") || "0", 10), // Get the user ID from local storage as a number
             };
 
             // Make API call to save mentor profile
@@ -52,21 +43,13 @@ export const onboardingService = {
      */
     saveMenteeProfile: async (data: OnboardingData) => {
         try {
-            // Format data according to API expectations
             const menteeProfileData = {
-                fullName: data.fullName,
                 bio: data.bio,
-                location: data.location,
                 position: data.position,
                 company: data.company,
                 yearsOfExperience: data.yearsOfExperience,
-                skills: data.skills,
-                expertiseAreas: data.expertiseAreas,
-                availabilityHours: data.availabilityHours,
-                preferredMeetingFormat: data.preferredMeetingFormat,
-                goals: data.goals,
-                desiredSkills: data.desiredSkills,
-                expectedSessionFrequency: data.expectedSessionFrequency,
+                learningGoals: data.goals,
+                menteeId: parseInt(localStorage.getItem("userId") || "0", 10), // Get the user ID from local storage as a number
             };
 
             // Make API call to save mentee profile

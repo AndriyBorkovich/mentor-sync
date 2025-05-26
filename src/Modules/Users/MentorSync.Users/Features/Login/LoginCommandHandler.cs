@@ -1,9 +1,11 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,6 +14,7 @@ namespace MentorSync.Users.Features.Login;
 public sealed class LoginCommandHandler(
     UserManager<AppUser> userManager,
     SignInManager<AppUser> signInManager,
+    UsersDbContext usersDbContext,
     IJwtTokenService jwtTokenService,
     IOptions<JwtOptions> jwtOptions,
     ILogger<LoginCommandHandler> logger)
@@ -22,7 +25,7 @@ public sealed class LoginCommandHandler(
         var user = await userManager.FindByEmailAsync(command.Email);
         if (user is null)
         {
-            logger.LogWarning("Login failed: User not found for email {Email}", command.Email);
+            logger.LogWarning("Login failed: user not found for email {Email}", command.Email);
             return Result.NotFound("User not found");
         }
 
@@ -51,6 +54,19 @@ public sealed class LoginCommandHandler(
 
         logger.LogInformation("User {Email} logged in successfully", command.Email);
 
-        return Result.Success(new AuthResponse(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.Expiration));
+        // add logic to check if user needs onboarding depending on its role
+
+        // Assuming MenteeProfiles and MentorProfiles are DbSets in UsersDbContext
+        // and that they contain MenteeId and MentorId respectively
+        // write code
+
+        var hasMenteeProfile = await usersDbContext.MenteeProfiles
+                                .AnyAsync(mp => mp.MenteeId == user.Id, cancellationToken);
+        var hasMentorProfile = await usersDbContext.MentorProfiles
+                                .AnyAsync(mp => mp.MentorId == user.Id, cancellationToken);
+
+        var needsOnboarding = !hasMenteeProfile | !hasMentorProfile;
+
+        return Result.Success(new AuthResponse(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.Expiration, needsOnboarding));
     }
 }

@@ -1,223 +1,74 @@
-import React, { useState } from "react";
+import React from "react";
 import { useOnboarding } from "../context/OnboardingContext";
-import { TimeSlot } from "../data/OnboardingTypes";
+import { Availability } from "../data/OnboardingTypes";
 
 const Step4Availability: React.FC = () => {
     const { data, updateData } = useOnboarding();
-    const [activeDay, setActiveDay] =
-        useState<keyof typeof data.availabilityHours>("monday");
-    const [startTime, setStartTime] = useState<string>("09:00");
-    const [endTime, setEndTime] = useState<string>("17:00");
 
-    const days = [
-        { id: "monday", label: "Понеділок" },
-        { id: "tuesday", label: "Вівторок" },
-        { id: "wednesday", label: "Середа" },
-        { id: "thursday", label: "Четвер" },
-        { id: "friday", label: "П'ятниця" },
-        { id: "saturday", label: "Субота" },
-        { id: "sunday", label: "Неділя" },
+    const timeOfDayOptions = [
+        { value: Availability.Morning, label: "Ранок", desc: "6:00-12:00" },
+        { value: Availability.Afternoon, label: "День", desc: "12:00-17:00" },
+        { value: Availability.Evening, label: "Вечір", desc: "17:00-22:00" },
+        { value: Availability.Night, label: "Ніч", desc: "22:00-6:00" },
     ];
 
-    const meetingFormats = [
-        { id: "online", label: "Онлайн" },
-        { id: "inPerson", label: "Особисто" },
-        { id: "both", label: "Обидва варіанти" },
-    ];
-
-    const handleAddTimeSlot = () => {
-        if (!startTime || !endTime) return;
-
-        const newSlot: TimeSlot = {
-            start: startTime,
-            end: endTime,
-        };
-
-        // Check if this time slot overlaps with existing ones
-        const hasOverlap = data.availabilityHours[activeDay].some((slot) => {
-            return (
-                (startTime >= slot.start && startTime < slot.end) ||
-                (endTime > slot.start && endTime <= slot.end) ||
-                (startTime <= slot.start && endTime >= slot.end)
-            );
-        });
-
-        if (hasOverlap) {
-            alert(
-                "Цей часовий проміжок перекривається з існуючими. Будь ласка, виберіть інший час."
-            );
-            return;
-        }
-
-        // Add the new time slot and sort them
-        const updatedSlots = [
-            ...data.availabilityHours[activeDay],
-            newSlot,
-        ].sort((a, b) => a.start.localeCompare(b.start));
-
-        // Update availabilityHours for the active day
-        updateData({
-            availabilityHours: {
-                ...data.availabilityHours,
-                [activeDay]: updatedSlots,
-            },
-        });
+    const toggleTimeOfDay = (value: Availability) => {
+        const currentValue = data.availabilityFlag || 0;
+        const newValue =
+            currentValue & value
+                ? currentValue & ~value // Remove flag if already selected
+                : currentValue | value; // Add flag if not selected
+        updateData({ availabilityFlag: newValue });
     };
 
-    const handleRemoveTimeSlot = (index: number) => {
-        const updatedSlots = [...data.availabilityHours[activeDay]];
-        updatedSlots.splice(index, 1);
-
-        updateData({
-            availabilityHours: {
-                ...data.availabilityHours,
-                [activeDay]: updatedSlots,
-            },
-        });
-    };
-
-    const handlePreferredFormatChange = (
-        format: "online" | "inPerson" | "both"
-    ) => {
-        updateData({ preferredMeetingFormat: format });
-    };
-
-    const formatTime = (time: string) => {
-        return time.length === 5 ? time : `${time}:00`;
+    const isTimeOfDaySelected = (value: Availability): boolean => {
+        return (data.availabilityFlag & value) !== 0;
     };
 
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-[#1E293B]">Доступність</h2>
             <p className="text-[#64748B]">
-                Вкажіть час, коли ви доступні для менторських сесій
+                Вкажіть коли ви доступні для менторських сесій
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
                 <div>
                     <label className="block text-sm font-medium text-[#1E293B] mb-2">
-                        Виберіть день
+                        Доступний час
                     </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2">
-                        {days.map((day) => (
-                            <button
-                                key={day.id}
-                                type="button"
-                                className={`px-2 py-1 rounded-lg border text-sm ${
-                                    activeDay === day.id
-                                        ? "border-[#6C5DD3] bg-[#6C5DD3]/10 text-[#6C5DD3]"
-                                        : "border-[#E2E8F0] text-[#64748B]"
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
+                        {timeOfDayOptions.map((option) => (
+                            <div
+                                key={option.value}
+                                className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                                    isTimeOfDaySelected(option.value)
+                                        ? "border-[#6C5DD3] bg-[#6C5DD3]/10"
+                                        : "border-[#E2E8F0] hover:border-[#6C5DD3]/50"
                                 }`}
-                                onClick={() =>
-                                    setActiveDay(
-                                        day.id as keyof typeof data.availabilityHours
-                                    )
-                                }
+                                onClick={() => toggleTimeOfDay(option.value)}
                             >
-                                {day.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-2">
-                        Часові проміжки для{" "}
-                        {days.find((d) => d.id === activeDay)?.label}
-                    </label>
-                    <div className="flex gap-2 mb-2">
-                        <div className="flex-1">
-                            <label className="text-xs text-[#64748B]">
-                                Початок
-                            </label>
-                            <input
-                                type="time"
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
-                                className="w-full p-2 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <label className="text-xs text-[#64748B]">
-                                Кінець
-                            </label>
-                            <input
-                                type="time"
-                                value={endTime}
-                                onChange={(e) => setEndTime(e.target.value)}
-                                className="w-full p-2 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                            />
-                        </div>
-                        <div className="flex items-end">
-                            <button
-                                type="button"
-                                onClick={handleAddTimeSlot}
-                                className="p-2 bg-[#6C5DD3] text-white rounded-lg hover:bg-[#5B4DC4]"
-                            >
-                                <span className="material-icons">add</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    {data.availabilityHours[activeDay].length > 0 ? (
-                        <div className="space-y-2 mt-4">
-                            {data.availabilityHours[activeDay].map(
-                                (slot, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center justify-between p-2 bg-[#F1F5F9] rounded-lg"
-                                    >
-                                        <span>
-                                            {formatTime(slot.start)} -{" "}
-                                            {formatTime(slot.end)}
-                                        </span>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                handleRemoveTimeSlot(index)
-                                            }
-                                            className="text-[#64748B] hover:text-[#EF4444]"
-                                        >
-                                            <span className="material-icons text-sm">
-                                                close
-                                            </span>
-                                        </button>
+                                <div className="flex items-center">
+                                    <div className="flex-shrink-0">
+                                        <input
+                                            type="checkbox"
+                                            checked={isTimeOfDaySelected(
+                                                option.value
+                                            )}
+                                            onChange={() => {}}
+                                            className="h-4 w-4 text-[#6C5DD3] rounded"
+                                        />
                                     </div>
-                                )
-                            )}
-                        </div>
-                    ) : (
-                        <div className="text-center py-4 text-[#64748B] bg-[#F1F5F9] rounded-lg mt-2">
-                            Немає доданих часових проміжків
-                        </div>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-2">
-                        Переважний формат зустрічей
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                        {meetingFormats.map((format) => (
-                            <button
-                                key={format.id}
-                                type="button"
-                                className={`px-3 py-2 rounded-lg border ${
-                                    data.preferredMeetingFormat === format.id
-                                        ? "border-[#6C5DD3] bg-[#6C5DD3]/10 text-[#6C5DD3]"
-                                        : "border-[#E2E8F0] text-[#64748B]"
-                                }`}
-                                onClick={() =>
-                                    handlePreferredFormatChange(
-                                        format.id as
-                                            | "online"
-                                            | "inPerson"
-                                            | "both"
-                                    )
-                                }
-                            >
-                                {format.label}
-                            </button>
+                                    <div className="ml-3">
+                                        <div className="text-[#1E293B] font-medium">
+                                            {option.label}
+                                        </div>
+                                        <div className="text-[#64748B] text-sm">
+                                            {option.desc}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>

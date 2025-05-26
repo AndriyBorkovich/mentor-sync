@@ -6,9 +6,9 @@ namespace MentorSync.Users.Domain.Base;
 public class BaseProfile
 {
     public int Id { get; set; }
-    [StringLength(2000)]
-    public string Bio { get; set; }
-    public Industry Industries { get; set; }
+    [StringLength(100)]
+    public string Company { get; set; }
+    public required Industry Industries { get; set; }
     [Length(1, 20)]
     public List<string> Skills { get; set; }
     [Length(1, 10)]

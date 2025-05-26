@@ -4,7 +4,6 @@ import { useOnboarding } from "../context/OnboardingContext";
 const Step5MenteeSpecific: React.FC = () => {
     const { data, updateData } = useOnboarding();
     const [goalInput, setGoalInput] = useState<string>("");
-    const [skillInput, setSkillInput] = useState<string>("");
 
     const handleAddGoal = () => {
         if (goalInput.trim() !== "" && !data.goals.includes(goalInput.trim())) {
@@ -17,22 +16,6 @@ const Step5MenteeSpecific: React.FC = () => {
     const handleRemoveGoal = (goal: string) => {
         const updatedGoals = data.goals.filter((g) => g !== goal);
         updateData({ goals: updatedGoals });
-    };
-
-    const handleAddDesiredSkill = () => {
-        if (
-            skillInput.trim() !== "" &&
-            !data.desiredSkills.includes(skillInput.trim())
-        ) {
-            const updatedSkills = [...data.desiredSkills, skillInput.trim()];
-            updateData({ desiredSkills: updatedSkills });
-            setSkillInput("");
-        }
-    };
-
-    const handleRemoveDesiredSkill = (skill: string) => {
-        const updatedSkills = data.desiredSkills.filter((s) => s !== skill);
-        updateData({ desiredSkills: updatedSkills });
     };
 
     return (
@@ -81,55 +64,6 @@ const Step5MenteeSpecific: React.FC = () => {
                                 <button
                                     type="button"
                                     onClick={() => handleRemoveGoal(goal)}
-                                    className="ml-2 focus:outline-none"
-                                >
-                                    <span className="material-icons text-sm">
-                                        close
-                                    </span>
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-[#1E293B] mb-2">
-                        Бажані навички
-                    </label>
-                    <p className="text-sm text-[#64748B] mb-2">
-                        Які навички ви хочете розвинути?
-                    </p>
-                    <div className="flex gap-2 items-center">
-                        <input
-                            type="text"
-                            value={skillInput}
-                            onChange={(e) => setSkillInput(e.target.value)}
-                            className="flex-1 p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                            placeholder="Наприклад: React.js"
-                            onKeyPress={(e) =>
-                                e.key === "Enter" && handleAddDesiredSkill()
-                            }
-                        />
-                        <button
-                            type="button"
-                            onClick={handleAddDesiredSkill}
-                            className="p-3 bg-[#6C5DD3] text-white rounded-lg hover:bg-[#5B4DC4]"
-                        >
-                            <span className="material-icons">add</span>
-                        </button>
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                        {data.desiredSkills.map((skill, index) => (
-                            <div
-                                key={index}
-                                className="flex items-center bg-[#F1F5F9] text-[#64748B] px-3 py-1 rounded-full"
-                            >
-                                <span>{skill}</span>
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        handleRemoveDesiredSkill(skill)
-                                    }
                                     className="ml-2 focus:outline-none"
                                 >
                                     <span className="material-icons text-sm">

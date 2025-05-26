@@ -7,7 +7,7 @@ namespace MentorSync.Users.Domain.Mentee;
 public sealed class MenteeProfile : BaseProfile
 {
     [StringLength(200)]
-    public string LearningGoals { get; set; }
+    public List<string> LearningGoals { get; set; }
 
     public int MenteeId { get; set; }
     public AppUser User { get; set; }

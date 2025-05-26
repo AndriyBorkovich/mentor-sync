@@ -12,6 +12,7 @@ import { authService } from "../services/authService";
 interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
+    needsOnboarding: boolean;
     logout: () => void;
     refreshAuthToken: () => Promise<boolean>;
     user: unknown | null; // Replace with your user type
@@ -20,6 +21,7 @@ interface AuthContextType {
 const defaultAuthContext: AuthContextType = {
     isAuthenticated: false,
     isLoading: true,
+    needsOnboarding: false,
     logout: () => {},
     refreshAuthToken: async () => false,
     user: null,
@@ -38,6 +40,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [needsOnboarding, setNeedsOnboarding] = useState<boolean>(false);
     const [user, setUser] = useState<unknown | null>(null);
 
     // Function to check if the token is valid and not expired
@@ -58,6 +61,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const result = await authService.refreshToken();
             if (result.success && result.token) {
                 setIsAuthenticated(true);
+                // Check if onboarding status is in the refresh response
+                if (result.needOnboarding !== undefined) {
+                    setNeedsOnboarding(result.needOnboarding);
+                }
                 return true;
             }
 
@@ -81,6 +88,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (tokens.expiration && isTokenValid(tokens.expiration)) {
                     // Token is valid and not expired
                     setIsAuthenticated(true);
+                    // Check if onboarding flag is stored in tokens
+                    if (tokens.needOnboarding !== undefined) {
+                        setNeedsOnboarding(tokens.needOnboarding);
+                    } else {
+                        // Otherwise check localStorage for a stored value
+                        const needsOnboardingStr =
+                            localStorage.getItem("needOnboarding");
+                        if (needsOnboardingStr !== null) {
+                            setNeedsOnboarding(needsOnboardingStr === "true");
+                        }
+                    }
                     // You could fetch user profile data here
                 } else if (tokens.refreshToken) {
                     // Token is expired but we have a refresh token
@@ -118,7 +136,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const logout = useCallback(() => {
         authService.logout();
+        localStorage.removeItem("needOnboarding");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userRole");
         setIsAuthenticated(false);
+        setNeedsOnboarding(false);
         setUser(null);
     }, []);
 
@@ -127,6 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             value={{
                 isAuthenticated,
                 isLoading,
+                needsOnboarding,
                 logout,
                 refreshAuthToken,
                 user,

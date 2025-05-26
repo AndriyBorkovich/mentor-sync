@@ -57,6 +57,6 @@ public sealed class RefreshTokenCommandHandler(
 
         logger.LogInformation("Tokens were refreshed for user {UserId}", userId);
 
-        return Result.Success(new AuthResponse(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.Expiration));
+        return Result.Success(new AuthResponse(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.Expiration, null));
     }
 }

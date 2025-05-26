@@ -3,6 +3,7 @@ using MediatR;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Extensions;
+using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -19,9 +20,9 @@ public sealed class RegisterCommandHandler(
     UserManager<AppUser> userManager,
     UsersDbContext usersDbContext,
     ILogger<RegisterCommandHandler> logger)
-    : IRequestHandler<RegisterCommand, Result<string>>
+    : IRequestHandler<RegisterCommand, Result<CreatedEntityResponse>>
 {
-    public async Task<Result<string>> Handle(RegisterCommand command, CancellationToken cancellationToken)
+    public async Task<Result<CreatedEntityResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken)
     {
         var existingUser = await userManager.FindByEmailAsync(command.Email);
         if (existingUser is not null)
@@ -70,7 +71,7 @@ public sealed class RegisterCommandHandler(
 
                 await usersDbContext.SaveChangesAsync(cancellationToken);
 
-                return Result.Success("User is registered successfully, welcome email is scheduled to send");
+                return Result.Success(new CreatedEntityResponse(user.Id));
             }
             catch (Exception ex)
             {

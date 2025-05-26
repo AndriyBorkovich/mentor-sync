@@ -24,8 +24,10 @@ export interface AuthResponse {
     token?: string;
     refreshToken?: string;
     expiration?: string;
+    needOnboarding?: boolean;
     success: boolean;
     message?: string;
+    userId?: number;
 }
 
 // Error type for better error handling
@@ -58,18 +60,25 @@ export const authService = {
             };
         }
     },
-
     login: async (data: LoginRequest): Promise<AuthResponse> => {
         try {
-            const response = await api.post("/users/login", data);
-
-            // If login was successful, save the tokens to localStorage
+            const response = await api.post("/users/login", data); // If login was successful, save the tokens to localStorage
             if (response.data.token) {
                 saveAuthTokens({
                     token: response.data.token,
                     refreshToken: response.data.refreshToken,
                     expiration: response.data.expiration,
+                    needOnboarding: response.data.needOnboarding,
+                    userId: response.data.userId,
                 });
+
+                // Save the needOnboarding flag to localStorage for easier access across components
+                if (response.data.needOnboarding !== undefined) {
+                    localStorage.setItem(
+                        "needOnboarding",
+                        response.data.needOnboarding.toString()
+                    );
+                }
             }
 
             return {
@@ -128,8 +137,10 @@ export const authService = {
             };
         }
     },
-
     logout: (): void => {
         removeAuthTokens();
+        localStorage.removeItem("needOnboarding");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userRole");
     },
 };

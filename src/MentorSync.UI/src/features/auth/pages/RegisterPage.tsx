@@ -48,6 +48,7 @@ const RegisterPage: React.FC = () => {
                         registrationSuccess: true,
                         redirectToOnboarding: true,
                         role: role,
+                        userId: response.userId, // Pass userId directly to login page
                     },
                 });
             } else {
