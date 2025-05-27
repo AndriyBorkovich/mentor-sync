@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using MentorSync.Ratings.Contracts;
 using MentorSync.Ratings.Data;
+using MentorSync.Ratings.Services;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,8 @@ public static class ModuleRegistration
             });
 
         AddEndpoints(builder.Services);
+
+        builder.Services.AddScoped<IMentorReviewService, MentorReviewService>();
     }
 
     private static void AddEndpoints(IServiceCollection services)

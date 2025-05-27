@@ -1,34 +1,23 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Scheduling.Data;
-using MentorSync.Scheduling.Domain.Enums;
+using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
 
-public class GetMentorUpcomingSessionsQueryHandler : IRequestHandler<GetMentorUpcomingSessionsQuery, Result<MentorUpcomingSessionsResponse>>
+public sealed class GetMentorUpcomingSessionsQueryHandler(
+    SchedulingDbContext dbContext, ILogger<GetMentorUpcomingSessionsQueryHandler> logger)
+    : IRequestHandler<GetMentorUpcomingSessionsQuery, Result<MentorUpcomingSessionsResponse>>
 {
-    private readonly SchedulingDbContext _dbContext;
-    private readonly ILogger<GetMentorUpcomingSessionsQueryHandler> _logger;
-
-    public GetMentorUpcomingSessionsQueryHandler(SchedulingDbContext dbContext, ILogger<GetMentorUpcomingSessionsQueryHandler> logger)
-    {
-        _dbContext = dbContext;
-        _logger = logger;
-    }
-
     public async Task<Result<MentorUpcomingSessionsResponse>> Handle(GetMentorUpcomingSessionsQuery request, CancellationToken cancellationToken)
     {
         try
         {
             var now = DateTimeOffset.UtcNow;
 
-            var sessions = await _dbContext.Bookings
+            var sessions = await dbContext.Bookings
                 .Where(b =>
                     b.MentorId == request.MentorId &&
                     b.Start > now &&
@@ -41,9 +30,8 @@ public class GetMentorUpcomingSessionsQueryHandler : IRequestHandler<GetMentorUp
                     Description = "Mentoring Session",
                     StartTime = booking.Start,
                     EndTime = booking.End,
-                    Status = booking.Status.ToString()
-                }
-                )
+                    Status = nameof(booking.Status),
+                })
                 .Take(5)
                 .ToListAsync(cancellationToken);
 
@@ -57,7 +45,7 @@ public class GetMentorUpcomingSessionsQueryHandler : IRequestHandler<GetMentorUp
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting upcoming sessions for MentorId: {MentorId}", request.MentorId);
+            logger.LogError(ex, "Error getting upcoming sessions for MentorId: {MentorId}", request.MentorId);
             return Result.Error($"An error occurred while getting upcoming sessions: {ex.Message}");
         }
     }

@@ -10,6 +10,7 @@
   <Project Path="src/Modules/Ratings/MentorSync.Ratings.Contracts/MentorSync.Ratings.Contracts.csproj" Id="a1c7c33e-13d0-46ee-b10a-3f060b9b3da5" />
   <Project Path="src/Modules/Ratings/MentorSync.Ratings/MentorSync.Ratings.csproj" />
   <Project Path="src/Modules/Recommendations/MentorSync.Recommendations/MentorSync.Recommendations.csproj" />
+  <Project Path="src/Modules/Scheduling/MentorSync.Scheduling.Contracts/MentorSync.Scheduling.Contracts.csproj" Id="261e281b-9317-46e6-bc61-e5a8f55d079e" />
   <Project Path="src/Modules/Scheduling/MentorSync.Scheduling/MentorSync.Scheduling.csproj" />
   <Project Path="src/Modules/Users/MentorSync.Users.Contracts/MentorSync.Users.Contracts.csproj" />
   <Project Path="src/Modules/Users/MentorSync.Users/MentorSync.Users.csproj" />

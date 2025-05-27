@@ -6,6 +6,9 @@ import {
     getMentorReviews,
     getMentorUpcomingSessions,
     getMentorMaterials,
+    recordMentorViewEvent,
+    toggleBookmark,
+    checkIfMentorIsBookmarked,
     MentorBasicInfo,
     MentorReviews,
     MentorUpcomingSessions,
@@ -14,6 +17,8 @@ import {
 import { MentorData } from "../types/mentorTypes";
 import { Mentor } from "../../dashboard/data/mentors";
 import { ensureStringId } from "../types/mentorTypes";
+import { hasRole } from "../../auth/utils/authUtils";
+import { toast } from "react-toastify";
 
 // Fallback mock mentor to display while loading or if error occurs
 const mockMentor: Mentor = {
@@ -32,6 +37,9 @@ const MentorProfileContainer: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<ProfileTabType>("about");
+    const [viewEventRecorded, setViewEventRecorded] = useState<boolean>(false);
+    const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+    const [bookmarkLoading, setBookmarkLoading] = useState<boolean>(false);
 
     // Track data from each endpoint
     const [basicInfo, setBasicInfo] = useState<MentorBasicInfo | null>(null);
@@ -45,6 +53,82 @@ const MentorProfileContainer: React.FC = () => {
     const [loadingReviews, setLoadingReviews] = useState<boolean>(false);
     const [loadingSessions, setLoadingSessions] = useState<boolean>(false);
     const [loadingMaterials, setLoadingMaterials] = useState<boolean>(false);
+
+    // Check if mentor is bookmarked when the component mounts
+    useEffect(() => {
+        const checkBookmarkStatus = async () => {
+            if (mentorId && hasRole("Mentee")) {
+                try {
+                    const mentorIdInt = parseInt(mentorId, 10);
+                    const bookmarked = await checkIfMentorIsBookmarked(
+                        mentorIdInt
+                    );
+                    setIsBookmarked(bookmarked);
+                } catch (err) {
+                    console.error("Failed to check bookmark status:", err);
+                }
+            }
+        };
+
+        checkBookmarkStatus();
+    }, [mentorId]); // Handle bookmark toggling
+    const handleToggleBookmark = async () => {
+        if (!mentorId || bookmarkLoading) return;
+
+        try {
+            setBookmarkLoading(true);
+            const mentorIdInt = parseInt(mentorId, 10);
+            const success = await toggleBookmark(mentorIdInt, isBookmarked);
+
+            if (success) {
+                const newBookmarkState = !isBookmarked;
+                setIsBookmarked(newBookmarkState);
+
+                // Show feedback to the user
+                if (newBookmarkState) {
+                    toast.success("Ментора додано до обраних");
+                } else {
+                    toast.info("Ментора видалено з обраних");
+                }
+            } else {
+                toast.error("Не вдалося оновити обрані");
+            }
+        } catch (err) {
+            console.error("Failed to toggle bookmark:", err);
+            toast.error("Виникла помилка. Спробуйте ще раз пізніше.");
+        } finally {
+            setBookmarkLoading(false);
+        }
+    };
+
+    // Record view event when mentor profile is loaded
+    useEffect(() => {
+        const recordViewEvent = async () => {
+            if (mentorId && !viewEventRecorded) {
+                try {
+                    // Only users with mentee role can trigger view events
+                    if (hasRole("Mentee")) {
+                        const mentorIdInt = parseInt(mentorId, 10);
+                        const success = await recordMentorViewEvent(
+                            mentorIdInt
+                        );
+                        if (success) {
+                            setViewEventRecorded(true);
+                            console.log(
+                                "Mentor view event recorded successfully"
+                            );
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to record mentor view event:", err);
+                }
+            }
+        };
+
+        if (!loading && mentor && mentor.id && !viewEventRecorded) {
+            recordViewEvent();
+        }
+    }, [mentorId, mentor, loading, viewEventRecorded]);
 
     // Fetch data based on the active tab
     useEffect(() => {
@@ -200,6 +284,9 @@ const MentorProfileContainer: React.FC = () => {
                 mentor={mentor}
                 activeTab={activeTab}
                 onTabChange={handleTabChange}
+                isBookmarked={isBookmarked}
+                onToggleBookmark={handleToggleBookmark}
+                bookmarkLoading={bookmarkLoading}
             />
         </div>
     );

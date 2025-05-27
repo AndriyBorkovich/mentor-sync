@@ -1,29 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Mentor } from "../data/mentors";
 import { Link } from "react-router-dom";
+import { hasRole } from "../../auth/utils/authUtils";
 
 interface MentorCardProps {
     mentor: Mentor;
 }
 
 const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
-    const [isSaved, setIsSaved] = useState(false);
-
-    const toggleSave = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsSaved(!isSaved);
-    };
+    const isMentee = hasRole("Mentee");
 
     return (
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6 relative">
-            <div
-                className="absolute top-4 right-4 cursor-pointer"
-                onClick={toggleSave}
-            >
-                <span className="material-icons text-[#4318D1]">
-                    {isSaved ? "bookmark" : "bookmark_border"}
-                </span>
-            </div>
             <div className="flex items-start">
                 <img
                     src={mentor.profileImage}
@@ -66,11 +54,18 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
                     </div>
                 </div>
             </div>
-            <Link to={`/mentors/${mentor.id}`} className="block w-full">
-                <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
-                    Переглянути профіль
-                </button>
-            </Link>
+            {isMentee && (
+                <Link to={`/mentors/${mentor.id}`} className="block w-full">
+                    <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
+                        Переглянути профіль
+                    </button>
+                </Link>
+            )}
+            {!isMentee && (
+                <div className="w-full mt-4 py-3 rounded-lg bg-gray-200 text-gray-500 text-center text-sm">
+                    Тільки для менті
+                </div>
+            )}
         </div>
     );
 };

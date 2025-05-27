@@ -1,4 +1,4 @@
-﻿using MentorSync.Scheduling.Domain.Enums;
+﻿using MentorSync.SharedKernel.CommonEntities;
 
 namespace MentorSync.Scheduling.Domain;
 

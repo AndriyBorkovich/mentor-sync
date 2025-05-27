@@ -88,7 +88,7 @@ const router = createBrowserRouter([
             {
                 element: (
                     <RoleBasedRoute
-                        allowedRoles={["Student"]}
+                        allowedRoles={["Mentee"]}
                         redirectTo="/unauthorized"
                     />
                 ),

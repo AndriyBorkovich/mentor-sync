@@ -29,6 +29,7 @@ public static class TagsConstants
     public const string Mentors = nameof(Mentors);
     public const string Mentees = nameof(Mentees);
     public const string Notifications = nameof(Notifications);
+    public const string Recommendations = nameof(Recommendations);
 }
 
 /// <summary>

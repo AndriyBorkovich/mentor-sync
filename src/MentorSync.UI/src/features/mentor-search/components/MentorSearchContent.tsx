@@ -25,7 +25,6 @@ const MentorSearchContent: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabType>("mentors");
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-    const [savedMentorIds, setSavedMentorIds] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(true);
     const [minExperience, setMinExperience] = useState<number>(1); // added slider state
     const [mentors, setMentors] = useState<Mentor[]>(recommendedMentors);
@@ -77,15 +76,6 @@ const MentorSearchContent: React.FC = () => {
         }
     };
 
-    // Toggle mentor saved status
-    const toggleSaveMentor = (mentorId: string) => {
-        if (savedMentorIds.includes(mentorId)) {
-            setSavedMentorIds(savedMentorIds.filter((id) => id !== mentorId));
-        } else {
-            setSavedMentorIds([...savedMentorIds, mentorId]);
-        }
-    };
-
     // Fetch mentors from API based on filters
     const fetchMentors = async () => {
         setLoading(true);
@@ -107,7 +97,6 @@ const MentorSearchContent: React.FC = () => {
             });
 
             if (response.success && response.data) {
-                console.log("Mentors fetched from API:", response.data);
                 setMentors(response.data);
             } else {
                 setError(response.error || "Failed to load mentors");
@@ -314,11 +303,11 @@ const MentorSearchContent: React.FC = () => {
                             >
                                 {" "}
                                 Мої рекомендації
-                                {savedMentorIds.length > 0 && (
+                                {/* {savedMentorIds.length > 0 && (
                                     <span className="ml-2 px-2 py-0.5 bg-[#4318D1] text-white text-xs rounded-full">
                                         {savedMentorIds.length}
                                     </span>
-                                )}
+                                )} */}
                             </button>
                         </div>
                     </div>
@@ -356,8 +345,6 @@ const MentorSearchContent: React.FC = () => {
                             <EnhancedMentorCard
                                 key={mentor.id}
                                 mentor={mentor}
-                                isSaved={savedMentorIds.includes(mentor.id)}
-                                onToggleSave={toggleSaveMentor}
                             />
                         ))}
                         {mentorsToDisplay.length === 0 && (

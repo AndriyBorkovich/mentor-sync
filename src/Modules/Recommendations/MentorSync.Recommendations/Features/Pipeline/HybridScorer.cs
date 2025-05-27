@@ -42,12 +42,12 @@ public class HybridScorer : IHybridScorer
     {
         _logger.LogInformation("Generating hybrid recommendations...");
 
-        var mentees = await _db.MenteePreferences.Select(x => x.MenteeId).ToListAsync(cancellationToken);
+        var menteesIds = await _db.MenteePreferences.Select(x => x.MenteeId).ToListAsync(cancellationToken);
         var mentors = await _mentorProfileService.GetAllMentorsAsync();
 
         var engine = _mlContext.Model.CreatePredictionEngine<MenteeMentorRatingData, MentorPrediction>(_model);
 
-        foreach (var menteeId in mentees)
+        foreach (var menteeId in menteesIds)
         {
             var preferences = await _db.MenteePreferences.FirstAsync(x => x.MenteeId == menteeId, cancellationToken);
             foreach (var mentor in mentors)

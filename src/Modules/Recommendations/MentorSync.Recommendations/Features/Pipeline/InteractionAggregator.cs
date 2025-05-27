@@ -1,5 +1,8 @@
-﻿using MentorSync.Recommendations.Data;
+﻿using MentorSync.Ratings.Contracts;
+using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Domain.Interaction;
+using MentorSync.Scheduling.Contracts;
+using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +18,8 @@ public interface IInteractionAggregator
 
 public sealed class InteractionAggregator(
     RecommendationsDbContext db,
+    IMentorReviewService mentorReviewService,
+    IBookingService bookingService,
     ILogger<InteractionAggregator> logger)
     : IInteractionAggregator
 {
@@ -24,6 +29,8 @@ public sealed class InteractionAggregator(
 
         var viewEvents = await db.MentorViewEvents.ToListAsync(cancellationToken);
         var bookmarks = await db.MentorBookmarks.ToListAsync(cancellationToken);
+        var mentorReviews = await mentorReviewService.GetAllReviewsAsync(cancellationToken);
+        var bookings = await bookingService.GetAllBookingsAsync(cancellationToken);
 
         var interactionScores = new Dictionary<(int menteeId, int mentorId), float>();
 
@@ -32,6 +39,25 @@ public sealed class InteractionAggregator(
 
         foreach (var bookmark in bookmarks)
             interactionScores[(bookmark.MenteeId, bookmark.MentorId)] += 3;
+
+        foreach (var review in mentorReviews)
+            interactionScores[(review.MenteeId, review.MentorId)] += review.Rating;
+
+        foreach (var booking in bookings)
+        {
+            if (booking.Status == BookingStatus.Completed)
+            {
+                interactionScores[(booking.MenteeId, booking.MentorId)] += 3;
+            }
+            else if (booking.Status == BookingStatus.Cancelled)
+            {
+                interactionScores[(booking.MenteeId, booking.MentorId)] -= 1;
+            }
+            else if (booking.Status == BookingStatus.NoShow)
+            {
+                interactionScores[(booking.MenteeId, booking.MentorId)] -= 2;
+            }
+        }
 
         foreach (var kvp in interactionScores)
         {

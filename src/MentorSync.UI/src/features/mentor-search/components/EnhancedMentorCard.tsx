@@ -1,28 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Mentor } from "../../dashboard/data/mentors";
+import { hasRole } from "../../auth/utils/authUtils";
 
-// Enhanced MentorCard component with save/bookmark functionality
+// Enhanced MentorCard component without save/bookmark functionality
 export interface MentorCardProps {
     mentor: Mentor;
-    isSaved: boolean;
-    onToggleSave: (mentorId: string) => void;
 }
-export const EnhancedMentorCard: React.FC<MentorCardProps> = ({
-    mentor,
-    isSaved,
-    onToggleSave,
-}) => {
+export const EnhancedMentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
+    const isMentee = hasRole("Mentee");
+
     return (
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6 relative">
-            <div
-                className="absolute top-4 right-4 cursor-pointer"
-                onClick={() => onToggleSave(mentor.id)}
-            >
-                <span className="material-icons text-[#4318D1]">
-                    {isSaved ? "bookmark" : "bookmark_border"}
-                </span>
-            </div>
             <div className="flex items-start">
                 <img
                     src={mentor.profileImage}
@@ -64,12 +53,19 @@ export const EnhancedMentorCard: React.FC<MentorCardProps> = ({
                         ))}
                     </div>
                 </div>
-            </div>{" "}
-            <Link to={`/mentors/${mentor.id}`} className="block w-full">
-                <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
-                    Переглянути профіль
-                </button>
-            </Link>
+            </div>
+            {isMentee && (
+                <Link to={`/mentors/${mentor.id}`} className="block w-full">
+                    <button className="w-full mt-4 py-3 rounded-lg bg-[#4318D1] text-white text-sm hover:bg-[#3712A5] transition-colors">
+                        Переглянути профіль
+                    </button>
+                </Link>
+            )}
+            {!isMentee && (
+                <div className="w-full mt-4 py-3 rounded-lg bg-gray-200 text-gray-500 text-center text-sm">
+                    Тільки для менті
+                </div>
+            )}
         </div>
     );
 };

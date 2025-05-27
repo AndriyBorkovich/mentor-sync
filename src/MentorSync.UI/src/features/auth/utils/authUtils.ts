@@ -73,10 +73,14 @@ export const getTokenTimeRemaining = (): number | null => {
 export const hasRole = (role: string | string[]): boolean => {
     try {
         const user = getUserFromToken();
-        if (!user || !user.role) return false;
+        const tokenRole =
+            user?.[
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            ];
+        if (!tokenRole) return false;
 
         const roles = Array.isArray(role) ? role : [role];
-        return roles.includes(user.role);
+        return typeof tokenRole === "string" && roles.includes(tokenRole);
     } catch (error) {
         console.error("Error checking user role:", error);
         return false;
