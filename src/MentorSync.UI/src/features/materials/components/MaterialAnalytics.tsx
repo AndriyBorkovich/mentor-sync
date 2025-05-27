@@ -2,7 +2,6 @@ import React from "react";
 
 interface MaterialAnalyticsProps {
     viewCount: number;
-    downloadCount?: number;
     ratingCount?: number;
     averageRating?: number;
     commentCount?: number;
@@ -10,7 +9,6 @@ interface MaterialAnalyticsProps {
 
 const MaterialAnalytics: React.FC<MaterialAnalyticsProps> = ({
     viewCount,
-    downloadCount = 0,
     ratingCount = 0,
     averageRating = 0,
     commentCount = 0,
@@ -21,12 +19,6 @@ const MaterialAnalytics: React.FC<MaterialAnalyticsProps> = ({
             value: viewCount,
             icon: "visibility",
             color: "text-blue-500",
-        },
-        {
-            label: "завантажень",
-            value: downloadCount,
-            icon: "download",
-            color: "text-green-500",
         },
         {
             label: "оцінок",

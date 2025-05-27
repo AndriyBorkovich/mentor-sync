@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace MentorSync.Materials.Features.GetMentorMaterials;
 
 public record MentorMaterialsResponse
@@ -18,7 +15,6 @@ public record MaterialInfo
     public string Url { get; init; }
     public DateTime CreatedOn { get; init; }
     public DateTime? UpdatedOn { get; init; }
-    public int DownloadCount { get; init; }
     public List<MaterialAttachmentInfo> Attachments { get; init; } = new();
     public List<string> Tags { get; init; } = new();
 }

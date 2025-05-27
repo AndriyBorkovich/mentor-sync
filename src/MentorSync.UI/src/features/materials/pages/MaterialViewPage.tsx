@@ -18,7 +18,6 @@ const MaterialViewPage: React.FC = () => {
     );
     const [viewCount, setViewCount] = useState<number>(0);
     const [analyticsData, setAnalyticsData] = useState({
-        downloadCount: 0,
         ratingCount: 0,
         averageRating: 0,
         commentCount: 0,
@@ -33,7 +32,6 @@ const MaterialViewPage: React.FC = () => {
             // Simulated analytics data
             setViewCount(Math.floor(Math.random() * 50) + 10);
             setAnalyticsData({
-                downloadCount: Math.floor(Math.random() * 20),
                 ratingCount: Math.floor(Math.random() * 15),
                 averageRating: 3.5 + Math.random() * 1.5,
                 commentCount: 2, // We have 2 mock comments
@@ -126,7 +124,6 @@ const MaterialViewPage: React.FC = () => {
 
                             <MaterialAnalytics
                                 viewCount={viewCount}
-                                downloadCount={analyticsData.downloadCount}
                                 ratingCount={analyticsData.ratingCount}
                                 averageRating={analyticsData.averageRating}
                                 commentCount={analyticsData.commentCount}
