@@ -32,7 +32,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                         {userName}
                     </h1>
                     <div className="mt-1 inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        {role}
+                        {role == "Mentor" ? "Ментор" : "Менті"}
                     </div>
                 </div>
                 <div className="flex-1 flex justify-end mt-4 md:mt-0">

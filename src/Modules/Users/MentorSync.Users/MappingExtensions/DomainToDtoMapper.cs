@@ -1,9 +1,9 @@
 ﻿using MentorSync.Users.Domain.Mentee;
 using MentorSync.Users.Domain.Mentor;
 using MentorSync.Users.Domain.User;
+using MentorSync.Users.Extensions;
 using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Features.GetAllUsers;
-using MentorSync.Users.Utility;
 
 namespace MentorSync.Users.MappingExtensions;
 
@@ -28,7 +28,7 @@ public static class DomainToDtoMapper
             profile.Skills,
             profile.ProgrammingLanguages,
             profile.ExperienceYears,
-            AvailabilityFormatter.ToReadableString(profile.Availability),
+            profile.Availability.ToReadableString(),
             profile.MentorId);
     }
 

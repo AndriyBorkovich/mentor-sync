@@ -20,7 +20,7 @@ public sealed class GetMentorBasicInfoEndpoint : IEndpoint
 
                 return result.DecideWhatToReturn();
             })
-            .WithTags(TagsConstants.Users)
+            .WithTags(TagsConstants.Mentors)
             .WithDescription("Gets basic profile information for a mentor")
             .Produces<MentorBasicInfoResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)

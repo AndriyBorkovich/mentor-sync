@@ -2,10 +2,9 @@ using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Enums;
-using MentorSync.Users.Utility;
+using MentorSync.Users.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Text;
 
 namespace MentorSync.Users.Features.GetMentorBasicInfo;
 
@@ -87,29 +86,30 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
         }
     }
 
-    private string GetCategoryFromIndustries(int industries)
+    private static string GetCategoryFromIndustries(int industries)
     {
         // This matches the CASE expression in your original SQL query
         return industries switch
         {
-            var i when (i & 1) == 1 => "Web Development",
-            var i when (i & 2) == 2 => "Data Science",
-            var i when (i & 4) == 4 => "Cybersecurity",
-            var i when (i & 8) == 8 => "Cloud Computing",
+            var i when (i & 1) == 1 => "Веб розробка",
+            var i when (i & 2) == 2 => "Наука даних",
+            var i when (i & 4) == 4 => "Кібербезпека",
+            var i when (i & 8) == 8 => "Хмарні обчислення",
             var i when (i & 16) == 16 => "DevOps",
-            var i when (i & 32) == 32 => "Game Development",
+            var i when (i & 32) == 32 => "Розробка ігор",
             var i when (i & 64) == 64 => "IT Support",
-            var i when (i & 128) == 128 => "Artificial Intelligence",
-            var i when (i & 256) == 256 => "Blockchain",
-            var i when (i & 512) == 512 => "Networking",
-            var i when (i & 1024) == 1024 => "UX/UI Design",
-            var i when (i & 2048) == 2048 => "Embedded Systems",
-            var i when (i & 4096) == 4096 => "IT Consulting",
-            var i when (i & 8192) == 8192 => "Database Administration",
+            var i when (i & 128) == 128 => "Штучний інтелект",
+            var i when (i & 256) == 256 => "Блокчейн",
+            var i when (i & 512) == 512 => "Мережі",
+            var i when (i & 1024) == 1024 => "UX/UI дизайн",
+            var i when (i & 2048) == 2048 => "Вбудовані системи",
+            var i when (i & 4096) == 4096 => "IT консалтинг",
+            var i when (i & 8192) == 8192 => "Адміністрування баз даних",
             _ => "Other"
         };
     }
-    private string GetReadableAvailability(Availability availability)
+
+    private static string GetReadableAvailability(Availability availability)
     {
         return AvailabilityFormatter.ToReadableString(availability);
     }

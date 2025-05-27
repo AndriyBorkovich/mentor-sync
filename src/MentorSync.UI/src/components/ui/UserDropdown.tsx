@@ -52,7 +52,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
                 </p>
                 {profile?.role && (
                     <span className="text-xs bg-[#4318D1]/10 text-[#4318D1] px-2 py-0.5 rounded-full">
-                        {profile.role}
+                        {profile.role === "Mentor" ? "Ментор" : "Менті"}
                     </span>
                 )}
             </div>
