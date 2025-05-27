@@ -1,5 +1,5 @@
 import React from "react";
-import { Mentor } from "../../dashboard/data/mentors";
+import { MentorData, isMentorProfile } from "../types/mentorTypes";
 import AboutTab from "./tabs/AboutTab";
 import ReviewsTab from "./tabs/ReviewsTab";
 import SessionsTab from "./tabs/SessionsTab";
@@ -9,7 +9,7 @@ import MaterialsTab from "./tabs/MaterialsTab";
 export type ProfileTabType = "about" | "reviews" | "sessions" | "materials";
 
 interface MentorProfileTabsProps {
-    mentor: Mentor;
+    mentor: MentorData;
     activeTab: ProfileTabType;
     onTabChange: (tab: ProfileTabType) => void;
 }
@@ -53,11 +53,11 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
                                             : "star_border"}
                                     </span>
                                 ))}
-                            </div>
+                            </div>{" "}
                             <span className="text-sm text-[#64748B]">
-                                (124 відгуки)
+                                {isMentorProfile(mentor) &&
+                                    `(${mentor.reviewCount} відгуки)`}
                             </span>
-
                             <div className="flex items-center ml-8">
                                 <span className="text-sm text-[#64748B]">
                                     {mentor.yearsOfExperience} років досвіду

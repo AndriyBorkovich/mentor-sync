@@ -1,9 +1,25 @@
-import React, { useState } from "react";
-import { recommendedMentors } from "../../dashboard/data/mentors";
+import React, { useState, useEffect } from "react";
+import { recommendedMentors, Mentor } from "../../dashboard/data/mentors";
 import { EnhancedMentorCard } from "./EnhancedMentorCard";
+import { mentorSearchService } from "../services/mentorSearchService";
+import { Industry } from "../../../shared/enums/industry";
 
 // Tabs for mentors and saved mentors
 type TabType = "mentors" | "recommendedMentors";
+
+// Helper function to map direction categories to Industry enum
+const mapDirectionToIndustry = (direction: string): Industry | undefined => {
+    const mapping: Record<string, Industry> = {
+        "Software Development": Industry.WebDevelopment,
+        "Data Science": Industry.DataScience,
+        "Cloud Computing": Industry.CloudComputing,
+        Cybersecurity: Industry.Cybersecurity,
+        "AI/ML": Industry.ArtificialIntelligence,
+        DevOps: Industry.DevOps,
+    };
+
+    return mapping[direction];
+};
 
 const MentorSearchContent: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabType>("mentors");
@@ -12,6 +28,9 @@ const MentorSearchContent: React.FC = () => {
     const [savedMentorIds, setSavedMentorIds] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(true);
     const [minExperience, setMinExperience] = useState<number>(1); // added slider state
+    const [mentors, setMentors] = useState<Mentor[]>(recommendedMentors);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     // Direction filters
     const [selectedDirections, setSelectedDirections] = useState<string[]>([]);
@@ -67,42 +86,55 @@ const MentorSearchContent: React.FC = () => {
         }
     };
 
-    // Filter mentors based on search term, selected skills, and directions
-    const filteredMentors = recommendedMentors.filter((mentor) => {
-        const matchesSearch =
-            searchTerm === "" ||
-            mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            mentor.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            mentor.skills.some((skill) =>
-                skill.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+    // Fetch mentors from API based on filters
+    const fetchMentors = async () => {
+        setLoading(true);
+        setError(null);
 
-        const matchesSkills =
-            selectedSkills.length === 0 ||
-            mentor.skills.some((skill) => selectedSkills.includes(skill.name));
+        try {
+            // Determine industry filter based on selected directions
+            let industryFilter: Industry | undefined;
+            if (selectedDirections.length === 1) {
+                industryFilter = mapDirectionToIndustry(selectedDirections[0]);
+            }
 
-        const matchesDirections =
-            selectedDirections.length === 0 ||
-            selectedDirections.includes(mentor.category ?? "");
-        const matchesExperience =
-            mentor.yearsOfExperience ?? 0 >= minExperience; // filter by experience
+            const response = await mentorSearchService.searchMentors({
+                searchTerm: searchTerm || undefined,
+                programmingLanguages:
+                    selectedSkills.length > 0 ? selectedSkills : undefined,
+                industry: industryFilter,
+                minExperienceYears: minExperience,
+            });
 
-        return (
-            matchesSearch &&
-            matchesSkills &&
-            matchesDirections &&
-            matchesExperience
-        );
-    });
+            if (response.success && response.data) {
+                console.log("Mentors fetched from API:", response.data);
+                setMentors(response.data);
+            } else {
+                setError(response.error || "Failed to load mentors");
+                // Fall back to mock data if API fails
+                setMentors(recommendedMentors);
+            }
+        } catch (err) {
+            console.error("Error fetching mentors:", err);
+            setError("An error occurred while fetching mentors");
+            // Fall back to mock data if API fails
+            setMentors(recommendedMentors);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Call the API when filters change
+    useEffect(() => {
+        // Use a debounce to avoid too many API calls while typing
+        const timeoutId = setTimeout(fetchMentors, 500);
+        return () => clearTimeout(timeoutId);
+    }, [searchTerm, selectedSkills, selectedDirections, minExperience]);
 
     // Get saved mentors
-    const savedMentors = recommendedMentors.filter((mentor) =>
-        savedMentorIds.includes(mentor.id)
-    );
-
+    const savedMentors: Mentor[] = [];
     // Determine which mentors to display based on active tab
-    const mentorsToDisplay =
-        activeTab === "mentors" ? filteredMentors : savedMentors;
+    const mentorsToDisplay = activeTab === "mentors" ? mentors : savedMentors;
 
     return (
         <div className="flex h-full bg-[#F8FAFC]">
@@ -140,7 +172,11 @@ const MentorSearchContent: React.FC = () => {
                             {directionCategories.map((direction) => (
                                 <div
                                     key={direction}
-                                    className="flex items-center cursor-pointer px-3 py-1 bg-[#F8FAFC] rounded-2xl text-[#1E293B] text-sm  hover:bg-gray-400"
+                                    className={`flex items-center cursor-pointer px-3 py-1 ${
+                                        selectedDirections.includes(direction)
+                                            ? "bg-[#4318D1] text-white"
+                                            : "bg-[#F8FAFC] text-[#1E293B]"
+                                    } rounded-2xl text-sm hover:bg-gray-400`}
                                     onClick={() => toggleDirection(direction)}
                                 >
                                     {direction}
@@ -158,7 +194,11 @@ const MentorSearchContent: React.FC = () => {
                             {programmingLanguages.map((language) => (
                                 <div
                                     key={language}
-                                    className="flex items-center cursor-pointer text-sm text-[#64748B] hover:text-[#1E293B]"
+                                    className={`flex items-center cursor-pointer text-sm ${
+                                        selectedSkills.includes(language)
+                                            ? "text-[#4318D1] font-medium"
+                                            : "text-[#64748B]"
+                                    } hover:text-[#1E293B]`}
                                     onClick={() => toggleSkill(language)}
                                 >
                                     {language}
@@ -187,25 +227,6 @@ const MentorSearchContent: React.FC = () => {
                             <span className="ml-2 text-sm text-[#1E293B]">
                                 {minExperience < 10 ? minExperience : "10+"}
                             </span>
-                        </div>
-                    </div>
-
-                    {/* Communication Method */}
-                    <div className="mb-5">
-                        <div className="font-medium text-[#1E293B] mb-2">
-                            Мова спілкування
-                        </div>
-                        <div className="relative w-full">
-                            <select className="block w-full p-2 text-sm border border-[#E2E8F0] rounded-md focus:ring-[#4318D1] focus:border-[#4318D1] appearance-none bg-white">
-                                <option value="">Будь-яка</option>
-                                <option value="uk">Українська</option>
-                                <option value="en">Англійська</option>
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                <span className="material-icons text-[#94A3B8] text-lg">
-                                    expand_more
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -302,27 +323,54 @@ const MentorSearchContent: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Grid of mentor cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {mentorsToDisplay.map((mentor) => (
-                        <EnhancedMentorCard
-                            key={mentor.id}
-                            mentor={mentor}
-                            isSaved={savedMentorIds.includes(mentor.id)}
-                            onToggleSave={toggleSaveMentor}
-                        />
-                    ))}
-                    {mentorsToDisplay.length === 0 && (
-                        <div className="col-span-3 text-center py-12">
-                            <p className="text-[#64748B] text-lg">
-                                {activeTab === "recommendedMentors"
-                                    ? "У вас ще немає рекомендованих менторів"
-                                    : "Не знайдено менторів за вашими критеріями пошуку"}
-                            </p>
+                {/* Loading state */}
+                {loading && (
+                    <div className="col-span-3 text-center py-12">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4318D1] mx-auto"></div>
+                        <p className="mt-4 text-[#64748B]">
+                            Завантаження менторів...
+                        </p>
+                    </div>
+                )}
+                {/* Error state */}
+                {!loading && error && (
+                    <div className="col-span-3 text-center py-12">
+                        <div className="text-red-500 mb-2">
+                            <span className="material-icons text-4xl">
+                                error_outline
+                            </span>
                         </div>
-                    )}
-                </div>
+                        <p className="text-red-500">{error}</p>{" "}
+                        <button
+                            className="mt-4 px-4 py-2 bg-[#4318D1] text-white rounded-md hover:bg-[#3a15b3]"
+                            onClick={fetchMentors}
+                        >
+                            Спробувати ще раз
+                        </button>
+                    </div>
+                )}{" "}
+                {/* Grid of mentor cards */}
+                {!loading && !error && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {mentorsToDisplay.map((mentor) => (
+                            <EnhancedMentorCard
+                                key={mentor.id}
+                                mentor={mentor}
+                                isSaved={savedMentorIds.includes(mentor.id)}
+                                onToggleSave={toggleSaveMentor}
+                            />
+                        ))}
+                        {mentorsToDisplay.length === 0 && (
+                            <div className="col-span-3 text-center py-12">
+                                <p className="text-[#64748B] text-lg">
+                                    {activeTab === "recommendedMentors"
+                                        ? "У вас ще немає рекомендованих менторів"
+                                        : "Не знайдено менторів за вашими критеріями пошуку"}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

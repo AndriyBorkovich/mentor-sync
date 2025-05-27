@@ -8,5 +8,5 @@ public sealed record MentorProfileResponse(int Id,
                                            List<string> Skills,
                                            List<string> ProgrammingLanguages,
                                            int ExperienceYears,
-                                           Availability Availability,
+                                           string Availability,
                                            int MentorId);

@@ -1,6 +1,9 @@
-﻿using MentorSync.Ratings.Data;
+﻿using FluentValidation;
+using MentorSync.Ratings.Data;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace MentorSync.Ratings;
@@ -16,5 +19,14 @@ public static class ModuleRegistration
             {
                 opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Ratings));
             });
+
+        AddEndpoints(builder.Services);
+    }
+
+    private static void AddEndpoints(IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
+        services.AddEndpoints(typeof(RatingsDbContext).Assembly);
     }
 }

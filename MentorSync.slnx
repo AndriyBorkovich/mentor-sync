@@ -7,6 +7,7 @@
   <Project Path="src/Modules/Materials/MentorSync.Materials/MentorSync.Materials.csproj" Id="dd6b7668-764f-40f9-b1fe-9cad0a883eea" />
   <Project Path="src/Modules/Notifications/MentorSync.Notifications.Contracts/MentorSync.Notifications.Contracts.csproj" />
   <Project Path="src/Modules/Notifications/MentorSync.Notifications/MentorSync.Notifications.csproj" />
+  <Project Path="src/Modules/Ratings/MentorSync.Ratings.Contracts/MentorSync.Ratings.Contracts.csproj" Id="a1c7c33e-13d0-46ee-b10a-3f060b9b3da5" />
   <Project Path="src/Modules/Ratings/MentorSync.Ratings/MentorSync.Ratings.csproj" />
   <Project Path="src/Modules/Recommendations/MentorSync.Recommendations/MentorSync.Recommendations.csproj" />
   <Project Path="src/Modules/Scheduling/MentorSync.Scheduling/MentorSync.Scheduling.csproj" />

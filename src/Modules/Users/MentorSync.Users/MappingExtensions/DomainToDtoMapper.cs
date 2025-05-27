@@ -3,6 +3,7 @@ using MentorSync.Users.Domain.Mentor;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
 using MentorSync.Users.Features.GetAllUsers;
+using MentorSync.Users.Utility;
 
 namespace MentorSync.Users.MappingExtensions;
 
@@ -19,7 +20,6 @@ public static class DomainToDtoMapper
             user.IsActive,
             user.EmailConfirmed);
     }
-
     public static MentorProfileResponse ToMentorProfileResponse(this MentorProfile profile)
     {
         return new MentorProfileResponse(
@@ -28,7 +28,7 @@ public static class DomainToDtoMapper
             profile.Skills,
             profile.ProgrammingLanguages,
             profile.ExperienceYears,
-            profile.Availability,
+            AvailabilityFormatter.ToReadableString(profile.Availability),
             profile.MentorId);
     }
 

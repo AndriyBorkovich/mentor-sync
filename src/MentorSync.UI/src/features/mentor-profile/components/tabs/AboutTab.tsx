@@ -1,16 +1,23 @@
 import React from "react";
-import { Mentor } from "../../../dashboard/data/mentors";
+import { MentorData, isMentorProfile } from "../../types/mentorTypes";
 
 interface AboutTabProps {
-    mentor: Mentor;
+    mentor: MentorData;
 }
 
 const AboutTab: React.FC<AboutTabProps> = ({ mentor }) => {
-    // Mock languages data since it's not in the mentor model
-    const languages = [
-        { id: "1", flag: "🇺🇦", name: "Українська" },
-        { id: "2", flag: "🇺🇸", name: "English" },
-    ];
+    // Get bio content from API data or use default text
+    const getBioContent = () => {
+        if (isMentorProfile(mentor) && mentor.bio) {
+            return mentor.bio;
+        }
+
+        return `Старший архітектор програмного забезпечення з ${mentor.yearsOfExperience}-річним досвідом розподілених
+        систем та хмарної архітектури. Пристрасно допомагаю іншим
+        зростати у своїй технічній кар'єрі. Спеціалізуюсь на
+        проектуванні системи, архітектурі мікросервісів та хмарних
+        програмах.`;
+    };
 
     return (
         <div className="flex">
@@ -18,16 +25,7 @@ const AboutTab: React.FC<AboutTabProps> = ({ mentor }) => {
                 <h2 className="text-lg font-medium text-[#1E293B] mb-3">
                     Інформація
                 </h2>
-
-                <p className="text-[#64748B] mb-6">
-                    Старший архітектор програмного забезпечення з{" "}
-                    {mentor.yearsOfExperience}-річним досвідом розподілених
-                    систем та хмарної архітектури. Пристрасно допомагаю іншим
-                    зростати у своїй технічній кар'єрі. Спеціалізуюсь на
-                    проектуванні системи, архітектурі мікросервісів та хмарних
-                    програмах.
-                </p>
-
+                <p className="text-[#64748B] mb-6">{getBioContent()}</p>
                 <h2 className="text-lg font-medium text-[#1E293B] mb-3 mt-6">
                     Навички
                 </h2>
@@ -42,36 +40,22 @@ const AboutTab: React.FC<AboutTabProps> = ({ mentor }) => {
                             </span>
                         </div>
                     ))}
-                    <div className="px-3 py-1 bg-[#F8FAFC] rounded-2xl">
-                        <span className="text-xs text-[#1E293B]">Docker</span>
-                    </div>
-                    <div className="px-3 py-1 bg-[#F8FAFC] rounded-2xl">
-                        <span className="text-xs text-[#1E293B]">
-                            Kubernetes
-                        </span>
-                    </div>
-                    <div className="px-3 py-1 bg-[#F8FAFC] rounded-2xl">
-                        <span className="text-xs text-[#1E293B]">AWS</span>
-                    </div>
                 </div>
             </div>
-
             <div className="w-1/3 bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-medium text-[#1E293B] mb-3">
-                    Мови
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                    {languages.map((lang) => (
-                        <div
-                            key={lang.id}
-                            className="px-3 py-1 bg-[#F8FAFC] rounded-2xl"
-                        >
-                            <span className="text-xs text-[#1E293B]">
-                                {lang.flag} {lang.name}
-                            </span>
+                {/* Availability section */}
+                {isMentorProfile(mentor) && mentor.availability && (
+                    <>
+                        <h2 className="text-lg font-medium text-[#1E293B] mb-3">
+                            Доступність
+                        </h2>
+                        <div className="p-3 bg-[#F8FAFC] rounded-lg mb-4">
+                            <p className="text-sm text-[#64748B]">
+                                {mentor.availability}
+                            </p>
                         </div>
-                    ))}
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );
