@@ -1,17 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
-import { upcomingSessions } from "../../dashboard/data/sessions";
-import { pastSessions } from "../data/pastSessions";
-import UpcomingSessionCard from "./UpcomingSessionCard";
-import PastSessionCard from "./PastSessionCard";
-import DatePickerInput from "./DatePickerInput";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { hasRole } from "../../auth/utils/authUtils";
+import {
+    getMenteeBookings,
+    getMentorBookings,
+    cancelBooking,
+    BookingSession,
+} from "../../scheduling/services/schedulingService";
+import BookingCard from "../../bookings/components/BookingCard";
 
-type FilterType = "upcoming" | "past" | "all";
+type FilterType = "pending" | "confirmed" | "past" | "all";
+
 const SessionsContent: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState("");
+    const [bookings, setBookings] = useState<BookingSession[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const [filterType, setFilterType] = useState<FilterType>("all");
-    const [startDate, setStartDate] = useState<string | null>(null);
-    const [endDate, setEndDate] = useState<string | null>(null);
     const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+    const [cancellingId, setCancellingId] = useState<number | null>(null);
     const filterDropdownRef = useRef<HTMLDivElement>(null);
 
     // Close dropdown when clicking outside
@@ -31,177 +37,271 @@ const SessionsContent: React.FC = () => {
         };
     }, []);
 
-    // Filter sessions based on search term (mentor name) and date range
-    const filteredUpcomingSessions = upcomingSessions.filter((session) => {
-        const nameMatches = session.mentorName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
+    useEffect(() => {
+        const fetchBookings = async () => {
+            setLoading(true);
+            try {
+                let bookingsData: BookingSession[] = [];
 
-        // Additional date filtering would be implemented here if we had actual date objects
-        // For demo purposes, we'll just filter by name
+                if (hasRole("Mentee")) {
+                    bookingsData = await getMenteeBookings();
+                } else if (hasRole("Mentor")) {
+                    bookingsData = await getMentorBookings();
+                }
 
-        return nameMatches;
-    });
+                setBookings(bookingsData);
+            } catch (error) {
+                console.error("Failed to fetch bookings:", error);
+                toast.error("Не вдалося завантажити ваші сесії");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const filteredPastSessions = pastSessions.filter((session) => {
-        const nameMatches = session.mentorName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
+        fetchBookings();
+    }, []);
 
-        // Additional date filtering would be implemented here
-
-        return nameMatches;
-    });
+    const handleCancelBooking = async (bookingId: number) => {
+        if (window.confirm("Ви впевнені, що хочете скасувати цю сесію?")) {
+            setCancellingId(bookingId);
+            try {
+                await cancelBooking(bookingId);
+                setBookings(
+                    bookings.map((booking) =>
+                        booking.id === bookingId
+                            ? { ...booking, status: "Cancelled" }
+                            : booking
+                    )
+                );
+                toast.success("Сесію успішно скасовано");
+            } catch (error) {
+                console.error("Failed to cancel booking:", error);
+                toast.error("Не вдалося скасувати сесію");
+            } finally {
+                setCancellingId(null);
+            }
+        }
+    };
 
     const handleFilterChange = (newFilter: FilterType) => {
         setFilterType(newFilter);
         setShowFilterDropdown(false);
     };
 
+    // Filter bookings based on status and date
+    const filteredBookings = bookings.filter((booking) => {
+        if (filterType === "all") return true;
+        if (filterType === "pending") return booking.status === "Pending";
+        if (filterType === "confirmed") return booking.status === "Confirmed";
+        if (filterType === "past") {
+            // Consider completed, cancelled, and other non-active statuses as past
+            return (
+                booking.status !== "Pending" && booking.status !== "Confirmed"
+            );
+        }
+        return true;
+    });
+
+    // Group bookings by status for display
+    const pendingBookings = filteredBookings.filter(
+        (b) => b.status === "Pending"
+    );
+    const confirmedBookings = filteredBookings.filter(
+        (b) => b.status === "Confirmed"
+    );
+    const pastBookings = filteredBookings.filter(
+        (b) => b.status !== "Pending" && b.status !== "Confirmed"
+    );
+
+    // Determine if we need to show a group based on filter
+    const showPending = filterType === "all" || filterType === "pending";
+    const showConfirmed = filterType === "all" || filterType === "confirmed";
+    const showPast = filterType === "all" || filterType === "past";
+
     return (
-        <div className="flex-1 p-6 overflow-y-auto bg-[#F9FAFB]">
-            <h1 className="text-2xl font-bold text-[#1E293B] mb-6">
-                Мої сесії
-            </h1>
+        <div className="flex-1 p-6 bg-[#F8FAFC] overflow-y-auto">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-2xl font-semibold text-[#1E293B]">
+                    Мої сесії
+                </h1>
 
-            {/* Filters panel */}
-            <div className="bg-white rounded-lg p-4 mb-8 border border-[#E2E8F0]">
-                <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-1 md:max-w-xs">
-                        <DatePickerInput
-                            label="Від"
-                            value={startDate}
-                            onChange={(date) => setStartDate(date)}
-                        />
-                    </div>
-                    <div className="flex-1 md:max-w-xs">
-                        <DatePickerInput
-                            label="До"
-                            value={endDate}
-                            onChange={(date) => setEndDate(date)}
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                placeholder="Шукати по імені ментора..."
-                                className="w-full p-3 border border-[#E2E8F0] rounded-lg"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                    <div
-                        ref={filterDropdownRef}
-                        className="relative w-full md:w-auto"
-                    >
-                        <button
-                            className="w-full md:w-auto px-6 py-3 border border-[#E2E8F0] rounded-lg flex items-center justify-between bg-white"
-                            onClick={() =>
-                                setShowFilterDropdown(!showFilterDropdown)
-                            }
+                <div className="flex space-x-4">
+                    {hasRole("Mentor") && (
+                        <Link
+                            to="/mentor/availability"
+                            className="bg-[#4318D1] hover:bg-[#3712A5] text-white py-2 px-4 rounded-md transition-colors flex items-center"
                         >
-                            <span className="text-[#000000]">
-                                {filterType === "upcoming"
-                                    ? "Майбутні"
-                                    : filterType === "past"
-                                    ? "Минулі"
-                                    : "Всі"}
+                            <span className="material-icons mr-2 text-sm">
+                                calendar_today
                             </span>
-                            <span className="material-icons text-[#000000] ml-2">
-                                {showFilterDropdown
-                                    ? "expand_less"
-                                    : "expand_more"}
-                            </span>
-                        </button>
-
-                        {/* Dropdown menu */}
-                        {showFilterDropdown && (
-                            <div className="absolute z-10 mt-1 w-full bg-white border border-[#E2E8F0] rounded-lg shadow-lg">
-                                <div
-                                    className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
-                                    onClick={() =>
-                                        handleFilterChange("upcoming")
-                                    }
-                                >
-                                    Майбутні
-                                </div>
-                                <div
-                                    className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
-                                    onClick={() => handleFilterChange("past")}
-                                >
-                                    Минулі
-                                </div>
-                                <div
-                                    className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
-                                    onClick={() => handleFilterChange("all")}
-                                >
-                                    Всі
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                            Керувати доступністю
+                        </Link>
+                    )}
                 </div>
             </div>
 
-            {/* Upcoming sessions */}
-            {(filterType === "upcoming" || filterType === "all") && (
-                <>
-                    <div className="flex items-center mb-4">
-                        <h2 className="text-lg font-semibold text-[#1E293B]">
-                            Майбутні сесії
-                        </h2>
-                        {filteredUpcomingSessions.length > 0 && (
-                            <div className="ml-2 flex items-center justify-center bg-[#6C5DD3] rounded-full w-6 h-6">
-                                <span className="text-xs font-semibold text-white">
-                                    {filteredUpcomingSessions.length}
-                                </span>
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center">
+                    <h2 className="text-lg font-semibold text-[#1E293B]">
+                        Мої сесії
+                    </h2>
+                </div>
+
+                <div
+                    ref={filterDropdownRef}
+                    className="relative w-full md:w-auto"
+                >
+                    <button
+                        className="w-full md:w-auto px-6 py-3 border border-[#E2E8F0] rounded-lg flex items-center justify-between bg-white"
+                        onClick={() =>
+                            setShowFilterDropdown(!showFilterDropdown)
+                        }
+                    >
+                        <span className="text-[#000000]">
+                            {filterType === "pending"
+                                ? "Очікують підтвердження"
+                                : filterType === "confirmed"
+                                ? "Підтверджені"
+                                : filterType === "past"
+                                ? "Історія"
+                                : "Всі сесії"}
+                        </span>
+                        <span className="material-icons text-[#000000] ml-2">
+                            {showFilterDropdown ? "expand_less" : "expand_more"}
+                        </span>
+                    </button>
+
+                    {/* Dropdown menu */}
+                    {showFilterDropdown && (
+                        <div className="absolute z-10 mt-1 w-full bg-white border border-[#E2E8F0] rounded-lg shadow-lg">
+                            <div
+                                className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
+                                onClick={() => handleFilterChange("all")}
+                            >
+                                Всі сесії
                             </div>
-                        )}
-                    </div>
-
-                    {filteredUpcomingSessions.length > 0 ? (
-                        filteredUpcomingSessions.map((session) => (
-                            <UpcomingSessionCard
-                                key={session.id}
-                                session={session}
-                            />
-                        ))
-                    ) : (
-                        <div className="bg-white rounded-lg p-6 mb-6 text-center">
-                            <p className="text-[#64748B]">
-                                Немає майбутніх сесій
-                            </p>
+                            <div
+                                className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
+                                onClick={() => handleFilterChange("pending")}
+                            >
+                                Очікують підтвердження
+                            </div>
+                            <div
+                                className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
+                                onClick={() => handleFilterChange("confirmed")}
+                            >
+                                Підтверджені
+                            </div>
+                            <div
+                                className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
+                                onClick={() => handleFilterChange("past")}
+                            >
+                                Історія
+                            </div>
                         </div>
                     )}
-                </>
-            )}
+                </div>
+            </div>
 
-            {/* Past sessions */}
-            {(filterType === "past" || filterType === "all") && (
-                <>
-                    <div className="flex items-center mt-8 mb-4">
-                        <h2 className="text-lg font-semibold text-[#1E293B]">
-                            Минулі сесії
-                        </h2>
-                    </div>
-
-                    {filteredPastSessions.length > 0 ? (
-                        filteredPastSessions.map((session) => (
-                            <PastSessionCard
-                                key={session.id}
-                                session={session}
-                            />
-                        ))
-                    ) : (
-                        <div className="bg-white rounded-lg p-6 mb-6 text-center">
-                            <p className="text-[#64748B]">
-                                Немає минулих сесій
-                            </p>
+            {loading ? (
+                <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#4318D1] mx-auto"></div>
+                    <p className="mt-4 text-[#64748B]">Завантаження сесій...</p>
+                </div>
+            ) : bookings.length === 0 ? (
+                <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <p className="text-[#64748B]">
+                        У вас ще немає ніяких сесій
+                    </p>
+                    {hasRole("Mentee") && (
+                        <button
+                            onClick={() => (window.location.href = "/mentors")}
+                            className="mt-4 px-4 py-2 bg-[#4318D1] text-white rounded-md hover:bg-[#3712A5] transition-colors"
+                        >
+                            Знайти ментора
+                        </button>
+                    )}
+                </div>
+            ) : (
+                <div className="space-y-8">
+                    {/* Pending sessions */}
+                    {showPending && pendingBookings.length > 0 && (
+                        <div>
+                            <h2 className="text-xl font-medium text-[#1E293B] mb-4">
+                                Очікують підтвердження
+                            </h2>
+                            <div className="space-y-4">
+                                {pendingBookings.map((booking) => (
+                                    <BookingCard
+                                        key={booking.id}
+                                        booking={booking}
+                                        onCancel={() =>
+                                            handleCancelBooking(booking.id)
+                                        }
+                                        isCancelling={
+                                            cancellingId === booking.id
+                                        }
+                                        userRole={
+                                            hasRole("Mentee")
+                                                ? "mentee"
+                                                : "mentor"
+                                        }
+                                    />
+                                ))}
+                            </div>
                         </div>
                     )}
-                </>
+
+                    {/* Confirmed sessions */}
+                    {showConfirmed && confirmedBookings.length > 0 && (
+                        <div>
+                            <h2 className="text-xl font-medium text-[#1E293B] mb-4">
+                                Підтверджені
+                            </h2>
+                            <div className="space-y-4">
+                                {confirmedBookings.map((booking) => (
+                                    <BookingCard
+                                        key={booking.id}
+                                        booking={booking}
+                                        onCancel={() =>
+                                            handleCancelBooking(booking.id)
+                                        }
+                                        isCancelling={
+                                            cancellingId === booking.id
+                                        }
+                                        userRole={
+                                            hasRole("Mentee")
+                                                ? "mentee"
+                                                : "mentor"
+                                        }
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Past sessions */}
+                    {showPast && pastBookings.length > 0 && (
+                        <div>
+                            <h2 className="text-xl font-medium text-[#1E293B] mb-4">
+                                Історія сесій
+                            </h2>
+                            <div className="space-y-4">
+                                {pastBookings.map((booking) => (
+                                    <BookingCard
+                                        key={booking.id}
+                                        booking={booking}
+                                        userRole={
+                                            hasRole("Mentee")
+                                                ? "mentee"
+                                                : "mentor"
+                                        }
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
             )}
         </div>
     );

@@ -181,5 +181,6 @@ public static class ModuleRegistration
     private static void AddExternalServices(IServiceCollection services)
     {
         services.AddScoped<IMentorProfileService, MentorProfileService>();
+        services.AddScoped<IMenteeProfileService, MenteeProfileService>();
     }
 }

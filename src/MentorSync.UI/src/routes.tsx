@@ -6,15 +6,18 @@ import LoginPage from "./features/auth/pages/LoginPage";
 import DashboardPage from "./features/dashboard/pages/DashboardPage";
 import MentorSearchPage from "./features/mentor-search/pages/MentorSearchPage";
 import MentorProfilePage from "./features/mentor-profile/pages/MentorProfilePage";
+import MyAvailabilityPage from "./features/mentor-profile/pages/MyAvailabilityPage";
 import SessionsPage from "./features/sessions/pages/SessionsPage";
 import MessagesPage from "./features/messages/pages/MessagesPage";
 import MaterialsPage from "./features/materials/pages/MaterialsPage";
 import MaterialViewPage from "./features/materials/pages/MaterialViewPage";
 import ProfilePage from "./features/profile/pages/ProfilePage";
+import MentorBookingsPage from "./features/bookings/pages/MentorBookingsPage";
 import { OnboardingPage } from "./features/onboarding";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
 import { RoleBasedRoute } from "./features/auth/components/RoleBasedRoute";
 import { UnauthorizedPage } from "./features/auth/components/UnauthorizedPage";
+import { Navigate } from "react-router-dom";
 
 const router = createBrowserRouter([
     {
@@ -69,6 +72,14 @@ const router = createBrowserRouter([
                 path: "/profile",
                 element: <ProfilePage />,
             },
+            {
+                path: "/bookings",
+                element: <Navigate to="/sessions" replace />,
+            },
+            {
+                path: "/mentor/bookings",
+                element: <MentorBookingsPage />,
+            },
             // Routes that require specific roles
             {
                 element: (
@@ -78,11 +89,15 @@ const router = createBrowserRouter([
                     />
                 ),
                 children: [
-                    // Add mentor-specific routes here
-                    // {
-                    //     path: "/mentor/schedule",
-                    //     element: <MentorSchedulePage />,
-                    // },
+                    // Mentor-specific routes
+                    {
+                        path: "/mentor/availability",
+                        element: <MyAvailabilityPage />,
+                    },
+                    {
+                        path: "/mentor/bookings",
+                        element: <MentorBookingsPage />,
+                    },
                 ],
             },
             {
@@ -93,11 +108,11 @@ const router = createBrowserRouter([
                     />
                 ),
                 children: [
-                    // Add student-specific routes here
-                    // {
-                    //     path: "/student/mentors",
-                    //     element: <BrowseMentorsPage />,
-                    // },
+                    // Mentee-specific routes
+                    {
+                        path: "/mentee/bookings",
+                        element: <Navigate to="/sessions" replace />,
+                    },
                 ],
             },
             {

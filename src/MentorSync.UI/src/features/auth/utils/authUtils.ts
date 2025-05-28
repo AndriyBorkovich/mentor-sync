@@ -48,6 +48,20 @@ export const getUserFromToken = (): JwtPayload | null => {
     }
 };
 
+export const getUserId = (): number => {
+    // First try to get the ID from the JWT token
+    const tokenPayload = getUserFromToken();
+    const nameIdentifier =
+        tokenPayload?.[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+        ];
+    if (nameIdentifier) {
+        return parseInt(String(nameIdentifier), 10);
+    }
+
+    return parseInt(localStorage.getItem("userId") || "0", 10);
+};
+
 /**
  * Get the remaining time in seconds before the token expires
  */

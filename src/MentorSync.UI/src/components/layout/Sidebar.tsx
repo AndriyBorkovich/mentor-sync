@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { hasRole } from "../../features/auth/utils/authUtils";
 
 interface SidebarLinkProps {
     icon: string;
@@ -75,7 +76,10 @@ interface SidebarProps {
         | "sessions"
         | "messages"
         | "materials"
-        | "settings";
+        | "settings"
+        | "availability"
+        | "mentorBookings"
+        | "menteeBookings";
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
@@ -138,13 +142,22 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
                 active={activePage === "materials"}
                 expanded={expanded}
                 to="/materials"
-            />
+            />{" "}
             <SidebarLink
                 icon="settings-icon"
                 label="Налаштування"
                 active={activePage === "settings"}
                 expanded={expanded}
             />
+            {hasRole("Mentor") && (
+                <SidebarLink
+                    icon="calendar-icon"
+                    label="Мої доступні слоти"
+                    active={activePage === "availability"}
+                    expanded={expanded}
+                    to="/mentor/availability"
+                />
+            )}
         </div>
     );
 };

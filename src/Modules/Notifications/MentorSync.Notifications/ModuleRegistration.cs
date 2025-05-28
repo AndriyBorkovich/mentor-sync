@@ -22,5 +22,7 @@ public static class ModuleRegistration
         builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
         builder.Services.AddSingleton<IOutboxProcessor, EmailOutboxProcessor>();
         builder.Services.AddHostedService<EmailSendingJob>();
+
+        builder.Services.AddSignalR();
     }
 }

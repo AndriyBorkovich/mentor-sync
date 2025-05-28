@@ -25,6 +25,7 @@ public static class ModuleRegistration
         AddEndpoints(builder.Services);
 
         builder.Services.AddScoped<IBookingService, BookingService>();
+        builder.Services.AddScoped<INotificationService, NotificationService>();
     }
 
     private static void AddEndpoints(IServiceCollection services)

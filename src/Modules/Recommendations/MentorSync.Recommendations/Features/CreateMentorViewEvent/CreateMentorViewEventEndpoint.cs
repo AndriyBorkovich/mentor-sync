@@ -30,8 +30,8 @@ public sealed class CreateMentorViewEventEndpoint : IEndpoint
         })
         .WithTags(TagsConstants.Recommendations)
         .WithDescription("Record a mentor view event for the current user.")
-        .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status400BadRequest)
+        .Produces<Unit>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
         .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
     }
 }

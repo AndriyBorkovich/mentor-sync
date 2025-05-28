@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-signalr": "^0.2.24"
+  }
+}

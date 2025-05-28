@@ -1,50 +1,114 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MentorData, isMentorProfile } from "../../types/mentorTypes";
+import {
+    getMentorAvailability,
+    createBooking,
+    MentorAvailabilitySlot,
+} from "../../../scheduling/services/schedulingService";
+import { toast } from "react-toastify";
+import { hasRole } from "../../../auth/utils/authUtils";
 
 interface SessionsTabProps {
     mentor: MentorData;
 }
 
-// Mock session time slots
-interface TimeSlot {
-    id: string;
-    time: string;
-}
-
-// Date formatter
-const formatDate = (date: Date): string => {
-    return date.toLocaleDateString("uk-UA", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    });
-};
-
 const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
+    const mentorId =
+        typeof mentor.id === "string" ? parseInt(mentor.id, 10) : mentor.id;
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(
-        null
-    );
+    const [availabilitySlots, setAvailabilitySlots] = useState<
+        MentorAvailabilitySlot[]
+    >([]);
+    const [selectedTimeSlot, setSelectedTimeSlot] =
+        useState<MentorAvailabilitySlot | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isBooking, setIsBooking] = useState<boolean>(false);
+    const isMentee = hasRole("Mentee");
 
-    // Generate time slots for the selected day
-    const timeSlots: TimeSlot[] = [
-        { id: "1", time: "10:00 AM" },
-        { id: "2", time: "2:00 PM" },
-        { id: "3", time: "4:00 PM" },
-    ];
+    // Fetch availability when the date changes
+    useEffect(() => {
+        const fetchAvailability = async () => {
+            if (typeof mentor.id === "undefined") return;
 
-    // Handle booking
-    const handleBookSession = () => {
+            setIsLoading(true);
+            try {
+                // Set end date to the same day as the selected date
+                const startDate = new Date(selectedDate);
+                const endDate = new Date(selectedDate);
+
+                const availabilityResponse = await getMentorAvailability(
+                    mentorId,
+                    startDate,
+                    endDate
+                );
+
+                setAvailabilitySlots(availabilityResponse.slots);
+            } catch (error) {
+                console.error("Failed to fetch mentor availability:", error);
+                toast.error("Не вдалося завантажити доступний час");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchAvailability();
+    }, [mentor.id, selectedDate, mentorId]);
+
+    // Format time for display
+    const formatTimeSlot = (slot: MentorAvailabilitySlot): string => {
+        const start = new Date(slot.start);
+        const end = new Date(slot.end);
+
+        return `${start.toLocaleTimeString("uk-UA", {
+            hour: "2-digit",
+            minute: "2-digit",
+        })} - ${end.toLocaleTimeString("uk-UA", {
+            hour: "2-digit",
+            minute: "2-digit",
+        })}`;
+    }; // Handle booking
+    const handleBookSession = async () => {
         if (!selectedTimeSlot) {
-            alert("Будь ласка, виберіть час для сесії");
+            toast.warning("Будь ласка, виберіть час для сесії");
             return;
         }
 
-        alert(
-            `Сесію заброньовано з ${mentor.name} на ${formatDate(
-                selectedDate
-            )} o ${selectedTimeSlot}`
-        );
+        if (!isMentee) {
+            toast.warning("Тільки менті можуть бронювати сесії");
+            return;
+        }
+
+        setIsBooking(true);
+
+        try {
+            await createBooking({
+                mentorId: mentorId,
+                availabilitySlotId: selectedTimeSlot.id,
+                start: selectedTimeSlot.start,
+                end: selectedTimeSlot.end,
+            });
+
+            toast.success("Сесію успішно заброньовано!");
+
+            // Reset selection
+            setSelectedTimeSlot(null);
+
+            // Refresh availability slots (the booked slot should no longer be available)
+            const startDate = new Date(selectedDate);
+            const endDate = new Date(selectedDate);
+            const availabilityResponse = await getMentorAvailability(
+                mentorId,
+                startDate,
+                endDate
+            );
+
+            setAvailabilitySlots(availabilityResponse.slots);
+        } catch (error) {
+            console.error("Failed to book session:", error);
+            toast.error("Не вдалося забронювати сесію. Спробуйте ще раз.");
+        } finally {
+            setIsBooking(false);
+        }
     };
 
     // Format session time from ISO string
@@ -188,7 +252,6 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
         }
         return null;
     };
-
     return (
         <div className="flex flex-col">
             {renderAvailability()}
@@ -211,6 +274,9 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
                                     setSelectedDate(new Date(e.target.value))
                                 }
                                 min={new Date().toISOString().split("T")[0]}
+                                defaultValue={
+                                    new Date().toISOString().split("T")[0]
+                                }
                             />
                         </div>
                     </div>
@@ -219,32 +285,54 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
                         <h3 className="text-sm font-medium text-[#1E293B] mb-2">
                             Доступний час
                         </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {timeSlots.map((slot) => (
-                                <div
-                                    key={slot.id}
-                                    className={`border border-[#E2E8F0] p-3 rounded-lg text-center cursor-pointer
-                                        ${
-                                            selectedTimeSlot === slot.time
-                                                ? "bg-[#4318D1] text-white"
-                                                : "hover:border-[#4318D1]"
-                                        }`}
-                                    onClick={() =>
-                                        setSelectedTimeSlot(slot.time)
-                                    }
-                                >
-                                    {slot.time}
-                                </div>
-                            ))}
-                        </div>
+                        {isLoading ? (
+                            <div className="text-center py-4">
+                                Завантаження доступних часових слотів...
+                            </div>
+                        ) : availabilitySlots &&
+                          availabilitySlots.length === 0 ? (
+                            <div className="text-center py-4 text-[#64748B]">
+                                На цю дату відсутні доступні слоти часу
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                {availabilitySlots?.map((slot) => (
+                                    <div
+                                        key={slot.id}
+                                        className={`border border-[#E2E8F0] p-3 rounded-lg text-center cursor-pointer
+                                            ${
+                                                selectedTimeSlot?.id === slot.id
+                                                    ? "bg-[#4318D1] text-white"
+                                                    : "hover:border-[#4318D1]"
+                                            }`}
+                                        onClick={() =>
+                                            setSelectedTimeSlot(slot)
+                                        }
+                                    >
+                                        {formatTimeSlot(slot)}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <button
-                        className="w-full py-3 bg-[#4318D1] text-white rounded-lg hover:bg-[#3712A5] transition-colors"
+                        className={`w-full py-3 rounded-lg ${
+                            isMentee
+                                ? "bg-[#4318D1] text-white hover:bg-[#3712A5] transition-colors"
+                                : "bg-gray-300 text-gray-700 cursor-not-allowed"
+                        }`}
                         onClick={handleBookSession}
+                        disabled={isBooking || !isMentee || !selectedTimeSlot}
                     >
-                        Забронювати зараз
+                        {isBooking ? "Бронювання..." : "Забронювати зараз"}
                     </button>
+
+                    {!isMentee && (
+                        <p className="text-sm text-red-500 mt-2 text-center">
+                            Тільки менті можуть бронювати сесії
+                        </p>
+                    )}
                 </div>
 
                 <div className="md:w-1/3 bg-[#F8FAFC] p-4 rounded-lg">

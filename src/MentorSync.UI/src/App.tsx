@@ -4,8 +4,10 @@ import "./App.css";
 import { AuthProvider } from "./features/auth/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSignalRNotifications } from "./features/notifications/useSignalRNotifications";
 
 function App() {
+    useSignalRNotifications();
     return (
         <AuthProvider>
             <RouterProvider router={router} />

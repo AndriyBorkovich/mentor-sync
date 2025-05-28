@@ -30,7 +30,7 @@ public sealed class CheckBookmarkEndpoint : IEndpoint
         .WithTags(TagsConstants.Recommendations)
         .WithDescription("Checks if a mentor is bookmarked by the current mentee.")
         .Produces<CheckBookmarkResult>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status400BadRequest)
         .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
     }
 }

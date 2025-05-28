@@ -1,8 +1,16 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { useSignalRNotifications } from "../../features/notifications/useSignalRNotifications";
 
 interface NotificationDropdownProps {
     isOpen: boolean;
     onClose: () => void;
+}
+
+interface Notification {
+    id: string;
+    title?: string;
+    message: string;
+    time?: string;
 }
 
 export const NotificationsDropdown: React.FC<NotificationDropdownProps> = ({
@@ -10,6 +18,22 @@ export const NotificationsDropdown: React.FC<NotificationDropdownProps> = ({
     onClose,
 }) => {
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+
+    useSignalRNotifications((data) => {
+        setNotifications((prev) => [
+            {
+                id: crypto.randomUUID(),
+                title: data?.Title,
+                message: data?.Message || "Booking status updated",
+                time: new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                }),
+            },
+            ...prev,
+        ]);
+    });
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -32,19 +56,6 @@ export const NotificationsDropdown: React.FC<NotificationDropdownProps> = ({
 
     if (!isOpen) return null;
 
-    const mockNotifications = [
-        {
-            id: 1,
-            message: "Нове повідомлення від Оксани Лень",
-            time: "5 хвилин тому",
-        },
-        {
-            id: 2,
-            message: "Нагадування майбутнього сеансу",
-            time: "1 годину тому",
-        },
-    ];
-
     return (
         <div
             ref={dropdownRef}
@@ -56,19 +67,30 @@ export const NotificationsDropdown: React.FC<NotificationDropdownProps> = ({
                 </h3>
             </div>
             <div className="p-4">
-                {mockNotifications.map((notification) => (
-                    <div
-                        key={notification.id}
-                        className="py-2 px-3 mb-2 bg-[#F8FAFC] rounded-lg cursor-pointer hover:bg-[#E2E8F0]"
-                    >
-                        <p className="text-sm text-[#1E293B]">
-                            {notification.message}
-                        </p>
-                        <p className="text-xs text-[#64748B]">
-                            {notification.time}
-                        </p>
+                {notifications.length === 0 ? (
+                    <div className="text-sm text-[#64748B]">
+                        Немає нових сповіщень
                     </div>
-                ))}
+                ) : (
+                    notifications.map((notification) => (
+                        <div
+                            key={notification.id}
+                            className="py-2 px-3 mb-2 bg-[#F8FAFC] rounded-lg cursor-pointer hover:bg-[#E2E8F0]"
+                        >
+                            <p className="text-sm text-[#1E293B] font-semibold">
+                                {notification.title
+                                    ? `${notification.title}: `
+                                    : ""}
+                                <span className="font-normal">
+                                    {notification.message}
+                                </span>
+                            </p>
+                            <p className="text-xs text-[#64748B]">
+                                {notification.time}
+                            </p>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );

@@ -30,6 +30,8 @@ public static class TagsConstants
     public const string Mentees = nameof(Mentees);
     public const string Notifications = nameof(Notifications);
     public const string Recommendations = nameof(Recommendations);
+    public const string Ratings = nameof(Ratings);
+    public const string Scheduling = nameof(Scheduling);
 }
 
 /// <summary>

@@ -9,13 +9,19 @@ import React, {
 import { getAuthTokens } from "../services/authStorage";
 import { authService } from "../services/authService";
 
+// Define User interface
+export interface User {
+    id: string | number;
+    // Add any other user properties that your application uses
+}
+
 interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     needsOnboarding: boolean;
     logout: () => void;
     refreshAuthToken: () => Promise<boolean>;
-    user: unknown | null; // Replace with your user type
+    user: User | null; // Updated to use the User interface
 }
 
 const defaultAuthContext: AuthContextType = {
@@ -41,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [needsOnboarding, setNeedsOnboarding] = useState<boolean>(false);
-    const [user, setUser] = useState<unknown | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
     // Function to check if the token is valid and not expired
     const isTokenValid = useCallback((expiration?: string): boolean => {
