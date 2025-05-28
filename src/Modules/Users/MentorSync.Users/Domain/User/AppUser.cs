@@ -16,8 +16,6 @@ public sealed class AppUser : IdentityUser<int>, IHaveDomainEvents
     [StringLength(500)]
     public string ProfileImageUrl { get; set; }
     public bool IsActive { get; set; }
-    [Length(1, 5)]
-    public List<string> CommunicationLanguages { get; set; }
     [StringLength(30)]
     public string Country { get; set; }
     [NotMapped]
@@ -29,6 +27,5 @@ public sealed class AppUser : IdentityUser<int>, IHaveDomainEvents
     public ICollection<AppUserRole> UserRoles { get; set; }
 
     public void ClearDomainEvents() => _domainEvents.Clear();
-
     public void RaiseDomainEvent(DomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 }

@@ -12,7 +12,5 @@ public sealed class MenteePreference
     public Industry DesiredIndustries { get; set; } = default!;
     public List<string> DesiredProgrammingLanguages { get; set; } = default!;
     public int? MinMentorExperienceYears { get; set; }
-    public string PreferredCommunicationLanguage { get; set; } = default!;
-
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
