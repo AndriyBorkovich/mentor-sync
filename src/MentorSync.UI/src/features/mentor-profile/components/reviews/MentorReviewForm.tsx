@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import {
@@ -47,30 +47,49 @@ const MentorReviewForm: React.FC<MentorReviewFormProps> = ({
 
     const watchRating = watch("rating");
 
-    // Memoize the checkExistingReview function to prevent recreating it on every render
-    const checkExistingReview = useCallback(async () => {
-        if (!mentorId || !isMentee || isLoading) return;
-
-        setIsLoading(true);
-        try {
-            const result = await checkMentorReview(mentorId);
-            setExistingReview(result);
-
-            if (result.hasReviewed && result.rating && result.reviewText) {
-                setValue("rating", result.rating);
-                setValue("reviewText", result.reviewText);
-            }
-        } catch (error) {
-            console.error("Error checking existing review:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [mentorId, isMentee, setValue]);
-
-    // Check if the user has already reviewed this mentor only once when component mounts
+    // Check if the user has already reviewed this mentor
     useEffect(() => {
+        // Prevent multiple API calls when component rerenders
+        let isMounted = true;
+
+        const checkExistingReview = async () => {
+            if (!mentorId || !isMentee || isLoading) return;
+
+            setIsLoading(true);
+            try {
+                const result = await checkMentorReview(mentorId);
+
+                // Only update state if component is still mounted
+                if (isMounted) {
+                    setExistingReview(result);
+
+                    if (
+                        result.hasReviewed &&
+                        result.rating &&
+                        result.reviewText
+                    ) {
+                        setValue("rating", result.rating);
+                        setValue("reviewText", result.reviewText);
+                    }
+                }
+            } catch (error) {
+                console.error("Error checking existing review:", error);
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
         checkExistingReview();
-    }, [checkExistingReview]);
+
+        // Cleanup function to prevent state updates after unmount
+        return () => {
+            isMounted = false;
+        };
+        // Only run once on component mount - not on every rerender
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mentorId]);
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -164,6 +183,16 @@ const MentorReviewForm: React.FC<MentorReviewFormProps> = ({
 
     if (!isMentee) {
         return null;
+    }
+
+    // Show loading state
+    if (isLoading) {
+        return (
+            <div className="bg-[#F8FAFC] p-4 rounded-lg mb-6 text-center">
+                <span className="inline-block w-6 h-6 border-2 border-[#4318D1] border-t-transparent rounded-full animate-spin mr-2"></span>
+                Завантаження...
+            </div>
+        );
     }
 
     if (existingReview?.hasReviewed && !isEditing) {

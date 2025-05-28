@@ -1,7 +1,7 @@
 import React from "react";
 import { MentorData, isMentorProfile } from "../types/mentorTypes";
 import AboutTab from "./tabs/AboutTab";
-import ReviewsTabOptimized from "./tabs/ReviewsTabOptimized";
+import ReviewsTabOptimized from "./tabs/ReviewsTab";
 import SessionsTab from "./tabs/SessionsTab";
 import MaterialsTab from "./tabs/MaterialsTab";
 import { hasRole } from "../../auth/utils/authUtils";
