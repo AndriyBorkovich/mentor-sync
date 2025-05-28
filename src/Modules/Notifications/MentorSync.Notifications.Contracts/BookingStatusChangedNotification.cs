@@ -13,9 +13,9 @@ public record BookingStatusChangedNotification(
     string Title,
     DateTime StartTime,
     DateTime EndTime,
-    string? MentorName,
-    string? StudentName,
-    string? Message)
+    string MentorName,
+    string StudentName,
+    string Message)
 {
     public static readonly string NotificationTypeName = nameof(BookingStatusChangedNotification);
 }

@@ -280,3 +280,99 @@ export const checkIfMentorIsBookmarked = async (
         return false;
     }
 };
+
+/**
+ * Create a new review for a mentor
+ * @param mentorId The ID of the mentor to review
+ * @param rating The rating to give (1-5)
+ * @param reviewText The review text
+ * @returns A promise that resolves to true if the review was successfully created
+ */
+export const createMentorReview = async (
+    mentorId: number,
+    rating: number,
+    reviewText: string
+): Promise<boolean> => {
+    try {
+        await api.post("ratings/reviews/mentor", {
+            mentorId,
+            rating,
+            reviewText,
+        });
+        return true;
+    } catch (error) {
+        console.error(`Failed to create review for mentor ${mentorId}:`, error);
+        return false;
+    }
+};
+
+/**
+ * Update an existing review for a mentor
+ * @param reviewId The ID of the review to update
+ * @param rating The new rating (1-5)
+ * @param reviewText The new review text
+ * @returns A promise that resolves to true if the review was successfully updated
+ */
+export const updateMentorReview = async (
+    reviewId: number,
+    rating: number,
+    reviewText: string
+): Promise<boolean> => {
+    try {
+        await api.put("ratings/reviews/mentor", {
+            reviewId,
+            rating,
+            reviewText,
+        });
+        return true;
+    } catch (error) {
+        console.error(`Failed to update review ${reviewId}:`, error);
+        return false;
+    }
+};
+
+/**
+ * Delete a review
+ * @param reviewId The ID of the review to delete
+ * @returns A promise that resolves to true if the review was successfully deleted
+ */
+export const deleteMentorReview = async (
+    reviewId: number
+): Promise<boolean> => {
+    try {
+        await api.delete(`ratings/reviews/mentor/${reviewId}`);
+        return true;
+    } catch (error) {
+        console.error(`Failed to delete review ${reviewId}:`, error);
+        return false;
+    }
+};
+
+/**
+ * Check if the current user has already reviewed a mentor
+ * @param mentorId The ID of the mentor to check
+ * @returns A promise that resolves to an object containing information about the existing review, if any
+ */
+export interface CheckReviewResult {
+    hasReviewed: boolean;
+    reviewId?: number;
+    rating?: number;
+    reviewText?: string;
+}
+
+export const checkMentorReview = async (
+    mentorId: number
+): Promise<CheckReviewResult> => {
+    try {
+        const response = await api.get<CheckReviewResult>(
+            `ratings/reviews/mentor/${mentorId}/check`
+        );
+        return response.data;
+    } catch (error) {
+        console.error(
+            `Failed to check review status for mentor ${mentorId}:`,
+            error
+        );
+        return { hasReviewed: false };
+    }
+};

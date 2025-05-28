@@ -7,30 +7,21 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Notifications.Features.SendNotification;
 
-public class BookingStatusChangedEventHandler : INotificationHandler<BookingStatusChangedEvent>
+public class BookingStatusChangedEventHandler(
+    IHubContext<NotificationHub> hubContext,
+    ILogger<BookingStatusChangedEventHandler> logger) : INotificationHandler<BookingStatusChangedEvent>
 {
-    private readonly IHubContext<NotificationHub> _hubContext;
-    private readonly ILogger<BookingStatusChangedEventHandler> _logger;
-
-    public BookingStatusChangedEventHandler(
-        IHubContext<NotificationHub> hubContext,
-        ILogger<BookingStatusChangedEventHandler> logger)
-    {
-        _hubContext = hubContext;
-        _logger = logger;
-    }
-
     public async Task Handle(BookingStatusChangedEvent notification, CancellationToken cancellationToken)
     {
         try
         {
             var json = JsonSerializer.Serialize(notification.Notification);
-            await _hubContext.Clients.User(notification.RecipientId)
+            await hubContext.Clients.User(notification.RecipientId)
                 .SendAsync("BookingStatusChanged", json, cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to send booking status changed notification via SignalR");
+            logger.LogError(ex, "Failed to send booking status changed notification via SignalR");
         }
     }
 }

@@ -8,18 +8,11 @@ interface MaterialAnalyticsProps {
 }
 
 const MaterialAnalytics: React.FC<MaterialAnalyticsProps> = ({
-    viewCount,
     ratingCount = 0,
     averageRating = 0,
     commentCount = 0,
 }) => {
     const analyticsItems = [
-        {
-            label: "переглядів",
-            value: viewCount,
-            icon: "visibility",
-            color: "text-blue-500",
-        },
         {
             label: "оцінок",
             value: ratingCount,

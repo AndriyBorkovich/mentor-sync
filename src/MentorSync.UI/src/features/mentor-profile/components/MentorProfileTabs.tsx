@@ -1,7 +1,7 @@
 import React from "react";
 import { MentorData, isMentorProfile } from "../types/mentorTypes";
 import AboutTab from "./tabs/AboutTab";
-import ReviewsTab from "./tabs/ReviewsTab";
+import ReviewsTabOptimized from "./tabs/ReviewsTabOptimized";
 import SessionsTab from "./tabs/SessionsTab";
 import MaterialsTab from "./tabs/MaterialsTab";
 import { hasRole } from "../../auth/utils/authUtils";
@@ -163,7 +163,9 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
             {/* Tab content */}
             <div className="p-6">
                 {activeTab === "about" && <AboutTab mentor={mentor} />}
-                {activeTab === "reviews" && <ReviewsTab mentor={mentor} />}
+                {activeTab === "reviews" && (
+                    <ReviewsTabOptimized mentor={mentor} />
+                )}
                 {activeTab === "sessions" && <SessionsTab mentor={mentor} />}
                 {activeTab === "materials" && <MaterialsTab mentor={mentor} />}
             </div>

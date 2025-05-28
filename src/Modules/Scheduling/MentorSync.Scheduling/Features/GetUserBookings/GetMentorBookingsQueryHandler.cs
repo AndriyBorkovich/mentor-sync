@@ -24,7 +24,7 @@ public sealed class GetMentorBookingsQueryHandler(
             // Create response
             var response = new UserBookingsResponse
             {
-                Bookings = bookings.Select(booking => new BookingDto
+                Bookings = [.. bookings.Select(booking => new BookingDto
                 {
                     Id = booking.Id,
                     MentorId = booking.MentorId,
@@ -36,7 +36,7 @@ public sealed class GetMentorBookingsQueryHandler(
                     Status = booking.Status,
                     CreatedAt = booking.CreatedAt,
                     UpdatedAt = booking.UpdatedAt
-                }).ToList()
+                })]
             };
 
             return Result.Success(response);

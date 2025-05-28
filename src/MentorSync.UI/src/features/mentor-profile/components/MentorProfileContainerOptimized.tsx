@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import MentorProfileTabs, { ProfileTabType } from "./MentorProfileTabs";
 import {
@@ -31,7 +31,7 @@ const mockMentor: Mentor = {
     skills: [],
 };
 
-const MentorProfileContainer: React.FC = () => {
+const MentorProfileContainerOptimized: React.FC = () => {
     const { mentorId } = useParams<{ mentorId: string }>();
     const [mentor, setMentor] = useState<MentorData>(mockMentor);
     const [loading, setLoading] = useState<boolean>(true);
@@ -54,6 +54,14 @@ const MentorProfileContainer: React.FC = () => {
     const [loadingSessions, setLoadingSessions] = useState<boolean>(false);
     const [loadingMaterials, setLoadingMaterials] = useState<boolean>(false);
 
+    // Use refs to track if data has been loaded for a specific tab
+    const reviewsLoadedRef = useRef<boolean>(false);
+    const sessionsLoadedRef = useRef<boolean>(false);
+    const materialsLoadedRef = useRef<boolean>(false);
+
+    // Use ref for active tab to prevent unnecessary rerenders
+    const activeTabRef = useRef<ProfileTabType>("about");
+
     // Check if mentor is bookmarked when the component mounts
     useEffect(() => {
         const checkBookmarkStatus = async () => {
@@ -71,7 +79,9 @@ const MentorProfileContainer: React.FC = () => {
         };
 
         checkBookmarkStatus();
-    }, [mentorId]); // Handle bookmark toggling
+    }, [mentorId]);
+
+    // Handle bookmark toggling
     const handleToggleBookmark = async () => {
         if (!mentorId || bookmarkLoading) return;
 
@@ -130,122 +140,135 @@ const MentorProfileContainer: React.FC = () => {
         }
     }, [mentorId, mentor, loading, viewEventRecorded]);
 
-    // Fetch data based on the active tab
+    // Fetch basic info once on mount
     useEffect(() => {
-        const fetchMentorData = async () => {
-            if (!mentorId) {
-                setError("Mentor ID is required");
-                setLoading(false);
-                return;
-            }
-
-            const mentorIdInt = parseInt(mentorId, 10);
+        const fetchBasicInfo = async () => {
+            if (!mentorId || basicInfo || loadingBasicInfo) return;
 
             try {
-                setLoading(true);
+                setLoadingBasicInfo(true);
+                const mentorIdInt = parseInt(mentorId, 10);
+                const basicInfoData = await getMentorBasicInfo(mentorIdInt);
 
-                // Always load basic info
-                if (!basicInfo && !loadingBasicInfo) {
-                    setLoadingBasicInfo(true);
-                    try {
-                        const basicInfoData = await getMentorBasicInfo(
-                            mentorIdInt
-                        );
+                // Transform skill IDs to string
+                const updatedBasicInfo = {
+                    ...basicInfoData,
+                    skills: basicInfoData.skills.map((skill) => ({
+                        ...skill,
+                        id: ensureStringId(skill.id),
+                    })),
+                };
 
-                        // Transform skill IDs to string
-                        const updatedBasicInfo = {
-                            ...basicInfoData,
-                            skills: basicInfoData.skills.map((skill) => ({
-                                ...skill,
-                                id: ensureStringId(skill.id),
-                            })),
-                        };
-
-                        setBasicInfo(updatedBasicInfo);
-                    } catch (err) {
-                        console.error("Failed to fetch basic info:", err);
-                    } finally {
-                        setLoadingBasicInfo(false);
-                    }
-                }
-
-                // Load tab-specific data based on active tab
-                if (activeTab === "about" && basicInfo) {
-                    // Already have basic info, nothing more to load
-                } else if (activeTab === "reviews" && !loadingReviews) {
-                    setLoadingReviews(true);
-                    try {
-                        const reviewsData = await getMentorReviews(mentorIdInt);
-                        setReviews(reviewsData);
-                    } catch (err) {
-                        console.error("Failed to fetch reviews:", err);
-                    } finally {
-                        setLoadingReviews(false);
-                    }
-                } else if (activeTab === "sessions" && !loadingSessions) {
-                    setLoadingSessions(true);
-                    try {
-                        const sessionsData = await getMentorUpcomingSessions(
-                            mentorIdInt
-                        );
-                        setUpcomingSessions(sessionsData);
-                    } catch (err) {
-                        console.error("Failed to fetch sessions:", err);
-                    } finally {
-                        setLoadingSessions(false);
-                    }
-                } else if (activeTab === "materials" && !loadingMaterials) {
-                    setLoadingMaterials(true);
-                    try {
-                        const materialsData = await getMentorMaterials(
-                            mentorIdInt
-                        );
-                        setMaterials(materialsData);
-                    } catch (err) {
-                        console.error("Failed to fetch materials:", err);
-                    } finally {
-                        setLoadingMaterials(false);
-                    }
-                }
-
-                // Combine all data into a mentor profile object
-                if (basicInfo) {
-                    try {
-                        const mentorProfile = {
-                            ...basicInfo,
-                            reviewCount: reviews?.reviewCount || 0,
-                            recentReviews: reviews?.reviews || [],
-                            upcomingSessions: sessions?.upcomingSessions || [],
-                            materials: materials?.materials || [],
-                        };
-
-                        setMentor(mentorProfile);
-                        setError(null);
-                    } catch (err) {
-                        setError(
-                            "Failed to load mentor profile. Please try again later."
-                        );
-                    }
-                }
+                setBasicInfo(updatedBasicInfo);
+                setLoading(false);
+                setError(null);
             } catch (err) {
-                console.error("Failed to fetch mentor data:", err);
+                console.error("Failed to fetch basic info:", err);
                 setError(
                     "Failed to load mentor profile. Please try again later."
                 );
-            } finally {
                 setLoading(false);
+            } finally {
+                setLoadingBasicInfo(false);
             }
         };
 
-        fetchMentorData();
+        fetchBasicInfo();
+    }, [mentorId, basicInfo, loadingBasicInfo]);
+
+    // Load tab-specific data only when the tab changes
+    useEffect(() => {
+        const fetchTabData = async () => {
+            if (!mentorId || !basicInfo) return;
+
+            // Update ref to track current active tab
+            activeTabRef.current = activeTab;
+            const mentorIdInt = parseInt(mentorId, 10);
+
+            if (
+                activeTab === "reviews" &&
+                !reviewsLoadedRef.current &&
+                !loadingReviews
+            ) {
+                setLoadingReviews(true);
+                try {
+                    const reviewsData = await getMentorReviews(mentorIdInt);
+
+                    // Only update state if this is still the active tab
+                    if (activeTabRef.current === "reviews") {
+                        setReviews(reviewsData);
+                        reviewsLoadedRef.current = true;
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch reviews:", err);
+                } finally {
+                    setLoadingReviews(false);
+                }
+            } else if (
+                activeTab === "sessions" &&
+                !sessionsLoadedRef.current &&
+                !loadingSessions
+            ) {
+                setLoadingSessions(true);
+                try {
+                    const sessionsData = await getMentorUpcomingSessions(
+                        mentorIdInt
+                    );
+
+                    // Only update state if this is still the active tab
+                    if (activeTabRef.current === "sessions") {
+                        setUpcomingSessions(sessionsData);
+                        sessionsLoadedRef.current = true;
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch sessions:", err);
+                } finally {
+                    setLoadingSessions(false);
+                }
+            } else if (
+                activeTab === "materials" &&
+                !materialsLoadedRef.current &&
+                !loadingMaterials
+            ) {
+                setLoadingMaterials(true);
+                try {
+                    const materialsData = await getMentorMaterials(mentorIdInt);
+
+                    // Only update state if this is still the active tab
+                    if (activeTabRef.current === "materials") {
+                        setMaterials(materialsData);
+                        materialsLoadedRef.current = true;
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch materials:", err);
+                } finally {
+                    setLoadingMaterials(false);
+                }
+            }
+
+            // Combine all data into a mentor profile object
+            if (basicInfo) {
+                try {
+                    const mentorProfile = {
+                        ...basicInfo,
+                        reviewCount: reviews?.reviewCount || 0,
+                        recentReviews: reviews?.reviews || [],
+                        upcomingSessions: sessions?.upcomingSessions || [],
+                        materials: materials?.materials || [],
+                    };
+
+                    setMentor(mentorProfile);
+                } catch (err) {
+                    console.error("Error updating mentor profile:", err);
+                }
+            }
+        };
+
+        fetchTabData();
     }, [
         mentorId,
         activeTab,
         basicInfo,
-        reviews,
-        sessions,
-        materials,
-        loadingBasicInfo,
         loadingReviews,
         loadingSessions,
         loadingMaterials,
@@ -255,7 +278,7 @@ const MentorProfileContainer: React.FC = () => {
         setActiveTab(tab);
     };
 
-    if (loading) {
+    if (loading && !basicInfo) {
         return <div className="p-6 text-center">Loading mentor profile...</div>;
     }
 
@@ -277,4 +300,4 @@ const MentorProfileContainer: React.FC = () => {
     );
 };
 
-export default MentorProfileContainer;
+export default MentorProfileContainerOptimized;

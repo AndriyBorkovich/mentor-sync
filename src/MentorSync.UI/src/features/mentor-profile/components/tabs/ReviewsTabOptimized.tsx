@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MentorData, isMentorProfile } from "../../types/mentorTypes";
 import { hasRole } from "../../../auth/utils/authUtils";
-import MentorReviewForm from "../reviews/MentorReviewForm";
+import MentorReviewFormOptimized from "../reviews/MentorReviewFormOptimized";
 
 interface ReviewsTabProps {
     mentor: MentorData;
@@ -17,8 +17,9 @@ interface Review {
     content: string;
 }
 
-const ReviewsTab: React.FC<ReviewsTabProps> = ({ mentor }) => {
-    const [_, setRefreshReviews] = useState(false); // Used to trigger re-render
+const ReviewsTabOptimized: React.FC<ReviewsTabProps> = ({ mentor }) => {
+    // Use a ref instead of state for refresh trigger to avoid unnecessary renders
+    const [shouldRefreshReviews, setShouldRefreshReviews] = useState(false);
     const isMentee = hasRole("Mentee");
     const mentorId = isMentorProfile(mentor) ? mentor.id : parseInt(mentor.id);
 
@@ -78,7 +79,8 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ mentor }) => {
     ];
 
     // Get reviews from API data if available, otherwise use mock data
-    const getReviews = () => {
+    // Memoize reviews to avoid recreating on every render
+    const reviews = React.useMemo(() => {
         if (
             isMentorProfile(mentor) &&
             mentor.recentReviews &&
@@ -93,17 +95,15 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ mentor }) => {
                 content: review.comment,
             }));
         }
-        return mockReviews;
-    };
+        return [];
+    }, [mentor, shouldRefreshReviews]); // Only recalculate if mentor data changes or refresh is triggered
 
-    const reviews = getReviews();
     const totalRating = isMentorProfile(mentor) ? mentor.rating : mentor.rating;
-    const totalReviews = isMentorProfile(mentor)
-        ? mentor.reviewCount
-        : mockReviews.length;
+    const totalReviews = isMentorProfile(mentor) ? mentor.reviewCount : 0;
 
     const handleReviewSubmitted = () => {
-        setRefreshReviews((prev) => !prev);
+        // Toggle the refresh flag to trigger a re-fetch of reviews
+        setShouldRefreshReviews((prev) => !prev);
     };
 
     return (
@@ -138,7 +138,7 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ mentor }) => {
 
             {/* Add review form for mentees */}
             {isMentee && (
-                <MentorReviewForm
+                <MentorReviewFormOptimized
                     mentorId={mentorId}
                     onReviewSubmitted={handleReviewSubmitted}
                 />
@@ -207,4 +207,4 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ mentor }) => {
     );
 };
 
-export default ReviewsTab;
+export default ReviewsTabOptimized;

@@ -4,7 +4,7 @@ namespace MentorSync.Scheduling.Features.GetUserBookings;
 
 public sealed class UserBookingsResponse
 {
-    public List<BookingDto> Bookings { get; set; } = new();
+    public List<BookingDto> Bookings { get; set; } = [];
 }
 
 public sealed class BookingDto
