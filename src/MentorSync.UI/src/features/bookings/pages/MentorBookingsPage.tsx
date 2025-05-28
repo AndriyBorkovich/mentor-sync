@@ -39,7 +39,7 @@ const MentorBookingsPage: React.FC = () => {
                 setBookings(
                     bookings.map((booking) =>
                         booking.id === bookingId
-                            ? { ...booking, status: "Cancelled" }
+                            ? { ...booking, status: "cancelled" }
                             : booking
                     )
                 );
@@ -60,7 +60,7 @@ const MentorBookingsPage: React.FC = () => {
             setBookings(
                 bookings.map((booking) =>
                     booking.id === bookingId
-                        ? { ...booking, status: "Confirmed" }
+                        ? { ...booking, status: "confirmed" }
                         : booking
                 )
             );
@@ -74,10 +74,10 @@ const MentorBookingsPage: React.FC = () => {
     };
 
     // Group bookings by status
-    const pendingBookings = bookings.filter((b) => b.status === "Pending");
-    const confirmedBookings = bookings.filter((b) => b.status === "Confirmed");
+    const pendingBookings = bookings.filter((b) => b.status === "pending");
+    const confirmedBookings = bookings.filter((b) => b.status === "confirmed");
     const otherBookings = bookings.filter(
-        (b) => b.status !== "Pending" && b.status !== "Confirmed"
+        (b) => b.status !== "pending" && b.status !== "confirmed"
     );
 
     return (

@@ -44,9 +44,10 @@ public class NotificationService(IMediator mediator,
             );
 
             // Use direct SignalR invocation
-            await _mediator.Publish(new BookingStatusChangedEvent(
-                notification,
-                recipientId.ToString()
+            await _mediator.Publish(
+                new BookingStatusChangedEvent(
+                    notification,
+                    recipientId.ToString()
             ));
         }
         catch (Exception ex)

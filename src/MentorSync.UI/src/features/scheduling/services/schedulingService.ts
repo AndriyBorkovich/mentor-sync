@@ -5,6 +5,7 @@ export interface MentorAvailabilitySlot {
     mentorId: number;
     start: string; // ISO date string
     end: string; // ISO date string
+    isBooked: boolean;
 }
 
 export interface MentorAvailabilityResponse {

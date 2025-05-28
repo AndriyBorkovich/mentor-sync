@@ -115,13 +115,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
                 expanded={expanded}
                 to="/dashboard"
             />
-            <SidebarLink
-                icon="search-icon"
-                label="Пошук менторів"
-                active={activePage === "search"}
-                expanded={expanded}
-                to="/mentors"
-            />{" "}
+            {hasRole("Mentee") && (
+                <SidebarLink
+                    icon="search-icon"
+                    label="Пошук менторів"
+                    active={activePage === "search"}
+                    expanded={expanded}
+                    to="/mentors"
+                />
+            )}{" "}
             <SidebarLink
                 icon="sessions-icon"
                 label="Мої сесії"
@@ -149,15 +151,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
                 active={activePage === "settings"}
                 expanded={expanded}
             />
-            {hasRole("Mentor") && (
-                <SidebarLink
-                    icon="calendar-icon"
-                    label="Мої доступні слоти"
-                    active={activePage === "availability"}
-                    expanded={expanded}
-                    to="/mentor/availability"
-                />
-            )}
         </div>
     );
 };

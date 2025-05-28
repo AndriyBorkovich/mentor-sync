@@ -36,7 +36,7 @@ public sealed class GetMentorAvailabilityQueryHandler(
                 a.Start,
                 a.End,
                 // Check if this slot is booked (overlapping with any booking)
-                bookings.Any(b => b.Start < a.End && b.End > a.Start)))
+                bookings.Any(b => b.Start <= a.End && b.End >= a.Start)))
             .ToList();
 
         return new MentorAvailabilityResult(request.MentorId, slots);

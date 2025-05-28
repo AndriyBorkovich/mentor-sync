@@ -69,7 +69,7 @@ const SessionsContent: React.FC = () => {
                 setBookings(
                     bookings.map((booking) =>
                         booking.id === bookingId
-                            ? { ...booking, status: "Cancelled" }
+                            ? { ...booking, status: "cancelled" }
                             : booking
                     )
                 );
@@ -91,12 +91,12 @@ const SessionsContent: React.FC = () => {
     // Filter bookings based on status and date
     const filteredBookings = bookings.filter((booking) => {
         if (filterType === "all") return true;
-        if (filterType === "pending") return booking.status === "Pending";
-        if (filterType === "confirmed") return booking.status === "Confirmed";
+        if (filterType === "pending") return booking.status === "pending";
+        if (filterType === "confirmed") return booking.status === "confirmed";
         if (filterType === "past") {
             // Consider completed, cancelled, and other non-active statuses as past
             return (
-                booking.status !== "Pending" && booking.status !== "Confirmed"
+                booking.status !== "pending" && booking.status !== "confirmed"
             );
         }
         return true;
@@ -104,13 +104,13 @@ const SessionsContent: React.FC = () => {
 
     // Group bookings by status for display
     const pendingBookings = filteredBookings.filter(
-        (b) => b.status === "Pending"
+        (b) => b.status === "pending"
     );
     const confirmedBookings = filteredBookings.filter(
-        (b) => b.status === "Confirmed"
+        (b) => b.status === "confirmed"
     );
     const pastBookings = filteredBookings.filter(
-        (b) => b.status !== "Pending" && b.status !== "Confirmed"
+        (b) => b.status !== "pending" && b.status !== "confirmed"
     );
 
     // Determine if we need to show a group based on filter
@@ -129,7 +129,7 @@ const SessionsContent: React.FC = () => {
                     {hasRole("Mentor") && (
                         <Link
                             to="/mentor/availability"
-                            className="bg-[#4318D1] hover:bg-[#3712A5] text-white py-2 px-4 rounded-md transition-colors flex items-center"
+                            className="py-2 px-4 rounded-md flex items-center"
                         >
                             <span className="material-icons mr-2 text-sm">
                                 calendar_today
@@ -141,12 +141,6 @@ const SessionsContent: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center">
-                    <h2 className="text-lg font-semibold text-[#1E293B]">
-                        Мої сесії
-                    </h2>
-                </div>
-
                 <div
                     ref={filterDropdownRef}
                     className="relative w-full md:w-auto"
@@ -163,7 +157,7 @@ const SessionsContent: React.FC = () => {
                                 : filterType === "confirmed"
                                 ? "Підтверджені"
                                 : filterType === "past"
-                                ? "Історія"
+                                ? "Минулі сесії"
                                 : "Всі сесії"}
                         </span>
                         <span className="material-icons text-[#000000] ml-2">
@@ -196,7 +190,7 @@ const SessionsContent: React.FC = () => {
                                 className="py-2 px-4 hover:bg-[#F8FAFC] cursor-pointer"
                                 onClick={() => handleFilterChange("past")}
                             >
-                                Історія
+                                Минулі сесії
                             </div>
                         </div>
                     )}

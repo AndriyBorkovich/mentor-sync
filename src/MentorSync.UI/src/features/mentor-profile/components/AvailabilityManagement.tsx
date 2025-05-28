@@ -283,8 +283,16 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                                         {formatTime(slot.end)}
                                     </div>
                                 </div>
-                                <div className="bg-green-100 text-green-800 text-xs py-1 px-2 rounded">
-                                    Доступний
+                                <div
+                                    className={
+                                        slot.isBooked
+                                            ? "bg-red-100 text-red-800 text-xs py-1 px-2 rounded"
+                                            : "bg-green-100 text-green-800 text-xs py-1 px-2 rounded"
+                                    }
+                                >
+                                    {slot.isBooked
+                                        ? "Заброньований"
+                                        : "Доступний"}
                                 </div>
                             </div>
                         </div>

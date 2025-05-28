@@ -35,12 +35,13 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
     // Translate booking status to Ukrainian
     const translateBookingStatus = (status: string): string => {
+        console.log("Translating booking status:", status);
         const statusMap: Record<string, string> = {
-            Pending: "Очікується",
-            Confirmed: "Підтверджено",
-            Completed: "Завершено",
-            Cancelled: "Скасовано",
-            NoShow: "Не відбулось",
+            pending: "Очікується",
+            confirmed: "Підтверджено",
+            completed: "Завершено",
+            cancelled: "Скасовано",
+            noShow: "Не відбулось",
         };
 
         return statusMap[status] || status;
@@ -49,15 +50,15 @@ const BookingCard: React.FC<BookingCardProps> = ({
     // Get status badge color
     const getStatusBadgeColor = (status: string): string => {
         switch (status) {
-            case "Pending":
+            case "pending":
                 return "bg-blue-100 text-blue-800";
-            case "Confirmed":
+            case "confirmed":
                 return "bg-green-100 text-green-800";
-            case "Completed":
+            case "completed":
                 return "bg-purple-100 text-purple-800";
-            case "Cancelled":
+            case "cancelled":
                 return "bg-red-100 text-red-800";
-            case "NoShow":
+            case "noShow":
                 return "bg-gray-100 text-gray-800";
             default:
                 return "bg-gray-100 text-gray-800";
@@ -84,8 +85,9 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
     // Determine if actions should be shown
     const showActions =
-        (booking.status === "Pending" || booking.status === "Confirmed") &&
+        (booking.status == "pending" || booking.status == "confirmed") &&
         (onCancel || onConfirm);
+    console.log("Show actions:", showActions);
 
     const partnerName =
         userRole === "mentee"
@@ -142,7 +144,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
             {showActions && (
                 <div className="mt-6 flex justify-end space-x-4">
-                    {onCancel && booking.status !== "Cancelled" && (
+                    {onCancel && booking.status != "cancelled" && (
                         <button
                             onClick={onCancel}
                             disabled={isCancelling}
@@ -153,7 +155,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
                     )}
 
                     {onConfirm &&
-                        booking.status === "Pending" &&
+                        booking.status === "pending" &&
                         userRole === "mentor" && (
                             <button
                                 onClick={onConfirm}
