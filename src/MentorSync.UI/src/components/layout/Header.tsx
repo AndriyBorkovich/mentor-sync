@@ -41,7 +41,10 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true }) => {
                             )
                         }
                     >
-                        <span className="material-icons">notifications</span>
+                        <img
+                            src={`/icons/notification-icon.svg`}
+                            alt={"notifications"}
+                        />
                     </div>
                 )}
                 <div
