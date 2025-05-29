@@ -49,13 +49,20 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCustomCorsPolicy(this IServiceCollection services)
     {
+        // get allowed origins from configuration
+        //var allowedOrigins = services.BuildServiceProvider()
+        //    .GetRequiredService<IConfiguration>()
+        //    .GetSection("AllowedHosts")
+        //    .Get<string>();
         services.AddCors(options =>
         {
             options.AddPolicy(CorsPolicyNames.All,
                 policyConfig => policyConfig
-                                .AllowAnyOrigin()
+                                //.WithOrigins(allowedOrigins?.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) ?? Array.Empty<string>())
+                                .SetIsOriginAllowed(_ => true)
                                 .AllowAnyHeader()
-                                .AllowAnyMethod());
+                                .AllowAnyMethod()
+                                .AllowCredentials());
         });
 
         return services;

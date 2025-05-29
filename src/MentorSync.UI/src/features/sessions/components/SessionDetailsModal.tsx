@@ -43,7 +43,6 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
         // Simulate joining the session
         return new Promise<void>((resolve) => {
             setTimeout(() => {
-                console.log("Joining session:", session.id);
                 // Here you would implement logic to join the session
                 resolve();
             }, 500);

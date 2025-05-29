@@ -52,9 +52,7 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
         };
 
         fetchAvailability();
-    }, [mentor.id, selectedDate, mentorId]);
-
-    // Format time for display
+    }, [mentor.id, selectedDate, mentorId]); // Format time for display in 24-hour format
     const formatTimeSlot = (slot: MentorAvailabilitySlot): string => {
         const start = new Date(slot.start);
         const end = new Date(slot.end);
@@ -62,9 +60,11 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
         return `${start.toLocaleTimeString("uk-UA", {
             hour: "2-digit",
             minute: "2-digit",
+            hour12: false,
         })} - ${end.toLocaleTimeString("uk-UA", {
             hour: "2-digit",
             minute: "2-digit",
+            hour12: false,
         })}`;
     }; // Handle booking
     const handleBookSession = async () => {
@@ -109,14 +109,13 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
         } finally {
             setIsBooking(false);
         }
-    };
-
-    // Format session time from ISO string
+    }; // Format session time from ISO string in 24-hour format
     const formatSessionTime = (dateString: string): string => {
         const date = new Date(dateString);
         return date.toLocaleTimeString("uk-UA", {
             hour: "2-digit",
             minute: "2-digit",
+            hour12: false,
         });
     };
 

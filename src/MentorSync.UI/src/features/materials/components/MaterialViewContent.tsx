@@ -172,7 +172,10 @@ const MaterialViewContent: React.FC<MaterialViewContentProps> = ({
                 author: "You",
                 authorAvatar: "/placeholder-avatar.jpg",
                 content,
-                timestamp: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+                timestamp: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString(
+                    [],
+                    { hour: "2-digit", minute: "2-digit", hour12: false }
+                )}`,
             };
 
             setComments([...comments, newComment]);

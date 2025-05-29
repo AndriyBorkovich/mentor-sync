@@ -25,17 +25,16 @@ const BookingCard: React.FC<BookingCardProps> = ({
             year: "numeric",
         });
     };
-
     const formatTime = (date: string): string => {
         return new Date(date).toLocaleTimeString("uk-UA", {
             hour: "2-digit",
             minute: "2-digit",
+            hour12: false,
         });
     };
 
     // Translate booking status to Ukrainian
     const translateBookingStatus = (status: string): string => {
-        console.log("Translating booking status:", status);
         const statusMap: Record<string, string> = {
             pending: "Очікується",
             confirmed: "Підтверджено",
@@ -87,7 +86,6 @@ const BookingCard: React.FC<BookingCardProps> = ({
     const showActions =
         (booking.status == "pending" || booking.status == "confirmed") &&
         (onCancel || onConfirm);
-    console.log("Show actions:", showActions);
 
     const partnerName =
         userRole === "mentee"

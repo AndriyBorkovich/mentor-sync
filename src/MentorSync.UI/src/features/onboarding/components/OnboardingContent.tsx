@@ -43,7 +43,6 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
     };
 
     const handleNextStep = () => {
-        console.log("Current step:", currentStep);
         if (validateCurrentStep()) {
             nextStep();
         } else {

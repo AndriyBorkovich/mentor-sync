@@ -43,7 +43,6 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                     today,
                     thirtyDaysLater
                 );
-                console.log("Fetched availability slots:", response);
                 setAvailabilitySlots(response.slots);
             } catch (error) {
                 console.error("Failed to fetch availability slots:", error);
@@ -66,12 +65,32 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
         });
     };
 
-    // Format time for display
+    // Ensure time is in 24-hour format
+    const ensureTimeFormat = (time: string): string => {
+        // If the time is already in 24-hour format, return it
+        if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
+            return time;
+        }
+
+        try {
+            // Try to parse the time and convert to 24-hour format
+            const [hours, minutes] = time.split(":").map(Number);
+            return `${hours.toString().padStart(2, "0")}:${minutes
+                .toString()
+                .padStart(2, "0")}`;
+        } catch (e) {
+            console.error("Failed to parse time:", e);
+            return time;
+        }
+    };
+
+    // Format time for display in 24-hour format
     const formatTime = (dateString: string): string => {
         const date = new Date(dateString);
         return date.toLocaleTimeString("uk-UA", {
             hour: "2-digit",
             minute: "2-digit",
+            hour12: false,
         });
     };
 
@@ -97,11 +116,15 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
         try {
             // Create date objects with the selected date and time
             const startDateTime = new Date(startDate);
-            const [startHours, startMinutes] = startTime.split(":").map(Number);
+            const [startHours, startMinutes] = ensureTimeFormat(startTime)
+                .split(":")
+                .map(Number);
             startDateTime.setHours(startHours, startMinutes, 0, 0);
 
             const endDateTime = new Date(endDate);
-            const [endHours, endMinutes] = endTime.split(":").map(Number);
+            const [endHours, endMinutes] = ensureTimeFormat(endTime)
+                .split(":")
+                .map(Number);
             endDateTime.setHours(endHours, endMinutes, 0, 0);
 
             // Validate dates are in the future
@@ -136,9 +159,7 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                 today,
                 thirtyDaysLater
             );
-            setAvailabilitySlots(response.slots);
-
-            // Reset form
+            setAvailabilitySlots(response.slots); // Reset form
             setStartDate(new Date());
             setEndDate(new Date());
             setStartTime("09:00");
@@ -205,14 +226,22 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                     <div>
                         <label className="block text-sm font-medium text-[#64748B] mb-1">
                             Час початку
-                        </label>
+                        </label>{" "}
                         <input
                             type="time"
                             className="w-full border border-[#E2E8F0] p-2 rounded-md"
                             value={startTime}
-                            onChange={(e) => setStartTime(e.target.value)}
+                            onChange={(e) =>
+                                setStartTime(ensureTimeFormat(e.target.value))
+                            }
                             required
+                            min="00:00"
+                            max="23:59"
+                            step="900"
                         />
+                        <p className="text-xs text-gray-500 mt-1">
+                            Формат: 24г (наприклад, 14:30)
+                        </p>
                     </div>
 
                     <div>
@@ -234,14 +263,22 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                     <div>
                         <label className="block text-sm font-medium text-[#64748B] mb-1">
                             Час закінчення
-                        </label>
+                        </label>{" "}
                         <input
                             type="time"
                             className="w-full border border-[#E2E8F0] p-2 rounded-md"
                             value={endTime}
-                            onChange={(e) => setEndTime(e.target.value)}
+                            onChange={(e) =>
+                                setEndTime(ensureTimeFormat(e.target.value))
+                            }
+                            min="00:00"
+                            max="23:59"
+                            step="900"
                             required
                         />
+                        <p className="text-xs text-gray-500 mt-1">
+                            Формат: 24г (наприклад, 16:00)
+                        </p>
                     </div>
                 </div>
 
@@ -277,7 +314,7 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                                 <div>
                                     <div className="font-medium">
                                         {formatDate(slot.start)}
-                                    </div>
+                                    </div>{" "}
                                     <div className="text-sm text-[#64748B]">
                                         {formatTime(slot.start)} -{" "}
                                         {formatTime(slot.end)}

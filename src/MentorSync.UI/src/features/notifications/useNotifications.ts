@@ -15,7 +15,7 @@ export function useNotifications(onBookingStatusChanged?: (data: any) => void) {
         const connection = new HubConnectionBuilder()
             .withUrl(SIGNALR_URL)
             .withAutomaticReconnect()
-            .configureLogging(LogLevel.Information)
+            .configureLogging(LogLevel.Warning)
             .build();
 
         connection.on("BookingStatusChanged", (json: string) => {

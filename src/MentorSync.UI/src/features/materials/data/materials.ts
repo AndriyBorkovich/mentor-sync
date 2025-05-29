@@ -84,7 +84,7 @@ class Clock extends React.Component {
     return (
       <div>
         <h1>Привіт, світ!</h1>
-        <h2>Зараз {this.state.date.toLocaleTimeString()}.</h2>
+        <h2>Зараз {this.state.date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false})}.</h2>
       </div>
     );
   }
