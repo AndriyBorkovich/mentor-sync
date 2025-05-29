@@ -17,7 +17,7 @@ const OnboardingStepper: React.FC = () => {
         { label: "Професійна інформація", step: 2 },
         { label: "Навички та експертиза", step: 3 },
         { label: "Цілі навчання", step: 4 },
-        { label: "Галузі інтересів", step: 5 },
+        { label: "Напрямки інтересів", step: 5 },
     ];
 
     const steps = role === "mentor" ? mentorSteps : menteeSteps;

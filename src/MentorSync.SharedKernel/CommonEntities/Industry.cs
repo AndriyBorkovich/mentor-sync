@@ -17,5 +17,10 @@ public enum Industry
     UxUiDesign = 1 << 10,          // 1024
     EmbeddedSystems = 1 << 11,     // 2048
     ItConsulting = 1 << 12,        // 4096
-    DatabaseAdministration = 1 << 13 // 8192
+    DatabaseAdministration = 1 << 13, // 8192
+    ProjectManagement = 1 << 14, // 16384
+    MobileDevelopment = 1 << 15, // 32768
+    LowCodeNoCode = 1 << 16, // 65536
+    QualityControlAssurance = 1 << 17, // 131072
+    MachineLearning = 1 << 18, // 262144
 }

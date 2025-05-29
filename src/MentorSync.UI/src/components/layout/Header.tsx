@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { UserDropdown } from "../ui/UserDropdown";
 import { NotificationsDropdown } from "../ui/NotificationsDropdown";
+import { useUserProfile } from "../../features/auth/hooks/useUserProfile";
 
 interface HeaderProps {
     showNotifications?: boolean;
@@ -9,6 +10,16 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true }) => {
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const [notificationsDropdownOpen, setNotificationsDropdownOpen] =
         useState(false);
+    const { profile, loading } = useUserProfile();
+
+    // Use profile.profileImage if available, otherwise fallback to avatar URL
+    const profileImage = profile?.profileImageUrl
+        ? profile.profileImageUrl
+        : profile?.userName
+        ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              profile.userName
+          )}&background=F3F4F6&color=1E293B&size=64`
+        : "https://ui-avatars.com/api/?name=User&background=F3F4F6&color=1E293B&size=64";
 
     return (
         <div className="w-full h-16 border-b border-[#E2E8F0] flex items-center justify-between px-6 relative">
@@ -38,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true }) => {
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 >
                     <img
-                        src="https://randomuser.me/api/portraits/women/44.jpg"
+                        src={profileImage}
                         alt="User"
                         className="w-8 h-8 rounded-full"
                     />
@@ -50,6 +61,8 @@ const Header: React.FC<HeaderProps> = ({ showNotifications = true }) => {
             <UserDropdown
                 isOpen={userDropdownOpen}
                 onClose={() => setUserDropdownOpen(false)}
+                profile={profile}
+                loading={loading}
             />
             <NotificationsDropdown
                 isOpen={notificationsDropdownOpen}

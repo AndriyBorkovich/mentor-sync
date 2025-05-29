@@ -1,16 +1,12 @@
 import React from "react";
 import { useOnboarding } from "../context/OnboardingContext";
-import { Availability } from "../data/OnboardingTypes";
+import {
+    Availability,
+    timeOfDayOptions,
+} from "../../../shared/enums/availability";
 
 const Step4Availability: React.FC = () => {
     const { data, updateData } = useOnboarding();
-
-    const timeOfDayOptions = [
-        { value: Availability.Morning, label: "Ранок", desc: "6:00-12:00" },
-        { value: Availability.Afternoon, label: "День", desc: "12:00-17:00" },
-        { value: Availability.Evening, label: "Вечір", desc: "17:00-22:00" },
-        { value: Availability.Night, label: "Ніч", desc: "22:00-6:00" },
-    ];
 
     const toggleTimeOfDay = (value: Availability) => {
         const currentValue = data.availabilityFlag || 0;

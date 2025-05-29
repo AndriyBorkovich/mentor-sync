@@ -45,18 +45,13 @@ public sealed class InteractionAggregator(
 
         foreach (var booking in bookings)
         {
-            if (booking.Status == BookingStatus.Completed)
+            interactionScores[(booking.MenteeId, booking.MentorId)] += booking.Status switch
             {
-                interactionScores[(booking.MenteeId, booking.MentorId)] += 3;
-            }
-            else if (booking.Status == BookingStatus.Cancelled)
-            {
-                interactionScores[(booking.MenteeId, booking.MentorId)] -= 1;
-            }
-            else if (booking.Status == BookingStatus.NoShow)
-            {
-                interactionScores[(booking.MenteeId, booking.MentorId)] -= 2;
-            }
+                BookingStatus.Completed => 3,
+                BookingStatus.Cancelled => -1,
+                BookingStatus.NoShow => -2,
+                _ => 0
+            };
         }
 
         foreach (var kvp in interactionScores)

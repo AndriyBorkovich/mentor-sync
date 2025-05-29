@@ -1,19 +1,21 @@
 import React, { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../features/auth/context/AuthContext";
-import { useUserProfile } from "../../features/auth/hooks/useUserProfile";
 
 interface UserDropdownProps {
     isOpen: boolean;
     onClose: () => void;
+    profile: any; // Use the correct UserProfile type if available
+    loading: boolean;
 }
 export const UserDropdown: React.FC<UserDropdownProps> = ({
     isOpen,
     onClose,
+    profile,
+    loading,
 }) => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const { logout } = useAuth();
-    const { profile, loading } = useUserProfile();
     const navigate = useNavigate();
 
     useEffect(() => {

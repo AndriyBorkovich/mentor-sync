@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useOnboarding } from "../context/OnboardingContext";
 import { onboardingService } from "../services/onboardingService";
 import Step1BasicInfo from "./Step1BasicInfo";
@@ -6,12 +7,14 @@ import Step3SkillsExpertise from "./Step3SkillsExpertise";
 import Step4Availability from "./Step4Availability";
 import Step5MenteeSpecific from "./Step5MenteeSpecific";
 import Step5MentorSpecific from "./Step5MentorSpecific";
+import { useNavigate } from "react-router-dom";
 
 export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
     userRole,
 }) => {
     const { currentStep, nextStep, prevStep, isFirstStep, isLastStep, data } =
         useOnboarding(); // Check if all required fields for current step are filled
+    const navigate = useNavigate();
     const validateCurrentStep = (): boolean => {
         switch (currentStep) {
             case 1:
@@ -109,9 +112,11 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
             }
 
             if (response.success) {
-                alert("Профіль успішно створено!");
+                toast.success("Профіль успішно створено!");
                 // Redirect to dashboard after successful submission
-                window.location.href = "/dashboard";
+                userRole == "mentee"
+                    ? navigate("/dashboard")
+                    : navigate("/sessions");
             } else {
                 throw new Error(
                     response.message || "Помилка збереження профілю"

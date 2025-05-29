@@ -52,7 +52,10 @@ public static class ServiceCollectionExtensions
         services.AddCors(options =>
         {
             options.AddPolicy(CorsPolicyNames.All,
-                policyConfig => policyConfig.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+                policyConfig => policyConfig
+                                .AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod());
         });
 
         return services;

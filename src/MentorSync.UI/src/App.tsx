@@ -4,15 +4,13 @@ import "./App.css";
 import { AuthProvider } from "./features/auth/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNotifications } from "./features/notifications/useNotifications";
 
 function App() {
-    useNotifications();
     return (
         <AuthProvider>
             <RouterProvider router={router} />
             <ToastContainer
-                position="top-right"
+                position="bottom-right"
                 autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={true}

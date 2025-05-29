@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useOnboarding } from "../context/OnboardingContext";
+import { programmingLanguages } from "../../../shared/constants/programmingLanguages";
 
 const Step3SkillsExpertise: React.FC = () => {
     const { data, updateData } = useOnboarding();
@@ -7,20 +8,7 @@ const Step3SkillsExpertise: React.FC = () => {
     const [languageInput, setLanguageInput] = useState("");
 
     // Common programming languages for suggestions
-    const commonLanguages = [
-        "JavaScript",
-        "TypeScript",
-        "Python",
-        "Java",
-        "C#",
-        "C++",
-        "PHP",
-        "Ruby",
-        "Swift",
-        "Kotlin",
-        "Go",
-        "Rust",
-    ];
+    const commonLanguages = programmingLanguages;
 
     const handleAddSkill = () => {
         if (

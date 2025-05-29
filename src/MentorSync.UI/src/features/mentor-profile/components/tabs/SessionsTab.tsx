@@ -334,17 +334,6 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
                         </p>
                     )}
                 </div>
-
-                <div className="md:w-1/3 bg-[#F8FAFC] p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-[#1E293B] mb-2">
-                        Деталі сесії
-                    </h3>
-                    <ul className="space-y-2 text-sm text-[#64748B]">
-                        <li>Час: 60 хвилин</li>
-                        <li>Формат: Відеоконференція</li>
-                        <li>Скасування: можливе за 24 години до сесії</li>
-                    </ul>
-                </div>
             </div>
 
             {getUpcomingSessions()}

@@ -40,6 +40,8 @@ const MentorProfileContainer: React.FC = () => {
     const [viewEventRecorded, setViewEventRecorded] = useState<boolean>(false);
     const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
     const [bookmarkLoading, setBookmarkLoading] = useState<boolean>(false);
+    const [reviewsRefreshTrigger, setReviewsRefreshTrigger] =
+        useState<number>(0);
 
     // Track data from each endpoint
     const [basicInfo, setBasicInfo] = useState<MentorBasicInfo | null>(null);
@@ -174,9 +176,7 @@ const MentorProfileContainer: React.FC = () => {
         };
 
         fetchBasicInfo();
-    }, [mentorId, basicInfo, loadingBasicInfo]);
-
-    // Load tab-specific data only when the tab changes
+    }, [mentorId, basicInfo, loadingBasicInfo]); // Load tab-specific data only when the tab changes
     useEffect(() => {
         const fetchTabData = async () => {
             if (!mentorId || !basicInfo) return;
@@ -184,10 +184,9 @@ const MentorProfileContainer: React.FC = () => {
             // Update ref to track current active tab
             activeTabRef.current = activeTab;
             const mentorIdInt = parseInt(mentorId, 10);
-
             if (
                 activeTab === "reviews" &&
-                !reviewsLoadedRef.current &&
+                (!reviewsLoadedRef.current || reviewsRefreshTrigger > 0) &&
                 !loadingReviews
             ) {
                 setLoadingReviews(true);
@@ -198,6 +197,10 @@ const MentorProfileContainer: React.FC = () => {
                     if (activeTabRef.current === "reviews") {
                         setReviews(reviewsData);
                         reviewsLoadedRef.current = true;
+                        // Reset the refresh trigger after successfully loading data
+                        if (reviewsRefreshTrigger > 0) {
+                            setReviewsRefreshTrigger(0);
+                        }
                     }
                 } catch (err) {
                     console.error("Failed to fetch reviews:", err);
@@ -272,10 +275,20 @@ const MentorProfileContainer: React.FC = () => {
         loadingReviews,
         loadingSessions,
         loadingMaterials,
+        reviewsRefreshTrigger,
     ]);
 
     const handleTabChange = (tab: ProfileTabType) => {
         setActiveTab(tab);
+    }; // Method to refresh reviews data
+    const handleRefreshReviews = () => {
+        // Only refresh if we're not already loading
+        if (!loadingReviews && reviewsRefreshTrigger === 0) {
+            // Reset review loaded state to force reload
+            reviewsLoadedRef.current = false;
+            // Set the refresh trigger to 1 to indicate a refresh is needed
+            setReviewsRefreshTrigger(1);
+        }
     };
 
     if (loading && !basicInfo) {
@@ -295,6 +308,7 @@ const MentorProfileContainer: React.FC = () => {
                 isBookmarked={isBookmarked}
                 onToggleBookmark={handleToggleBookmark}
                 bookmarkLoading={bookmarkLoading}
+                onRefreshReviews={handleRefreshReviews}
             />
         </div>
     );

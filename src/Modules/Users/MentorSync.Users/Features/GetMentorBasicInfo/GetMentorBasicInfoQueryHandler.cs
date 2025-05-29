@@ -46,7 +46,6 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
                 return Result.NotFound($"Mentor with ID {request.MentorId} not found.");
             }
 
-            // Get average rating from MentorReviews
             var averageRating = await _dbContext.Database.SqlQuery<AverateRating>// Assuming MentorReviews are in a different context
                 ($@"
                     SELECT COALESCE(AVG(""Rating""), 0) AS ""Value""
@@ -54,10 +53,8 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
                     WHERE ""MentorId"" = {request.MentorId}"
                 ).FirstOrDefaultAsync(cancellationToken);
 
-            // Map industry enum to category string
             var category = GetCategoryFromIndustries((int)mentorInfo.Industries);
 
-            // Create response
             var response = new MentorBasicInfoResponse
             {
                 Id = mentorInfo.Id,
@@ -97,7 +94,7 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
             var i when (i & 8) == 8 => "Хмарні обчислення",
             var i when (i & 16) == 16 => "DevOps",
             var i when (i & 32) == 32 => "Розробка ігор",
-            var i when (i & 64) == 64 => "IT Support",
+            var i when (i & 64) == 64 => "IT підтримка",
             var i when (i & 128) == 128 => "Штучний інтелект",
             var i when (i & 256) == 256 => "Блокчейн",
             var i when (i & 512) == 512 => "Мережі",
@@ -105,7 +102,12 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
             var i when (i & 2048) == 2048 => "Вбудовані системи",
             var i when (i & 4096) == 4096 => "IT консалтинг",
             var i when (i & 8192) == 8192 => "Адміністрування баз даних",
-            _ => "Other"
+            var i when (i & 16384) == 16384 => "Проєктний менеджемент",
+            var i when (i & 32768) == 32768 => "Мобільна розробка",
+            var i when (i & 65536) == 65536 => "Low/No кодування",
+            var i when (i & 131072) == 131072 => "QA/QC",
+            var i when (i & 262144) == 262144 => "Машинне навчання",
+            _ => "Інше"
         };
     }
 

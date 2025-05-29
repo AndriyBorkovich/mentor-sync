@@ -34,7 +34,7 @@ public sealed class RecommendationPipeline(
                 logger.LogError(ex, "Recommendation pipeline failed");
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); // adjust frequency
+            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
         }
     }
 }

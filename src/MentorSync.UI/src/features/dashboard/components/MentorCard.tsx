@@ -14,7 +14,13 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6 relative">
             <div className="flex items-start">
                 <img
-                    src={mentor.profileImage}
+                    src={
+                        mentor.profileImage
+                            ? mentor.profileImage
+                            : "https://ui-avatars.com/api/?name=" +
+                              encodeURIComponent(mentor.name) +
+                              "&background=F3F4F6&color=1E293B&size=64"
+                    }
                     alt={mentor.name}
                     className="w-16 h-16 rounded-full mr-4"
                 />
@@ -39,7 +45,11 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
                                 </span>
                             ))}
                         </div>
+                        <span className="text-[#64748B] text-sm mt-2">
+                            {mentor.category}
+                        </span>
                     </div>
+
                     <div className="flex flex-wrap gap-2 mt-4">
                         {mentor.skills.map((skill) => (
                             <div
@@ -60,11 +70,6 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
                         Переглянути профіль
                     </button>
                 </Link>
-            )}
-            {!isMentee && (
-                <div className="w-full mt-4 py-3 rounded-lg bg-gray-200 text-gray-500 text-center text-sm">
-                    Тільки для менті
-                </div>
             )}
         </div>
     );

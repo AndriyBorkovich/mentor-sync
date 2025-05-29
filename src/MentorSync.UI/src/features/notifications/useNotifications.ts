@@ -35,7 +35,7 @@ export function useNotifications(onBookingStatusChanged?: (data: any) => void) {
             if (onBookingStatusChanged) onBookingStatusChanged(data);
         });
 
-        connection.start().catch((err) => {
+        connection.start().catch((err: unknown) => {
             // eslint-disable-next-line no-console
             console.error("SignalR connection error:", err);
         });

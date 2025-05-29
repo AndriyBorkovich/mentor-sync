@@ -2,24 +2,11 @@ import React, { useState, useEffect } from "react";
 import { recommendedMentors, Mentor } from "../../dashboard/data/mentors";
 import { EnhancedMentorCard } from "./EnhancedMentorCard";
 import { mentorSearchService } from "../services/mentorSearchService";
-import { Industry } from "../../../shared/enums/industry";
+import { Industry, industriesMapping } from "../../../shared/enums/industry";
+import { programmingLanguages } from "../../../shared/constants/programmingLanguages";
 
 // Tabs for mentors and saved mentors
 type TabType = "mentors" | "recommendedMentors";
-
-// Helper function to map direction categories to Industry enum
-const mapDirectionToIndustry = (direction: string): Industry | undefined => {
-    const mapping: Record<string, Industry> = {
-        "Software Development": Industry.WebDevelopment,
-        "Data Science": Industry.DataScience,
-        "Cloud Computing": Industry.CloudComputing,
-        Cybersecurity: Industry.Cybersecurity,
-        "AI/ML": Industry.ArtificialIntelligence,
-        DevOps: Industry.DevOps,
-    };
-
-    return mapping[direction];
-};
 
 const MentorSearchContent: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabType>("mentors");
@@ -31,30 +18,20 @@ const MentorSearchContent: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Direction filters
-    const [selectedDirections, setSelectedDirections] = useState<string[]>([]);
+    // Direction filters - store Industry enum values instead of strings
+    const [selectedDirections, setSelectedDirections] = useState<Industry[]>(
+        []
+    );
 
-    // Direction categories based on design
-    const directionCategories = [
-        "Software Development",
-        "Data Science",
-        "Cloud Computing",
-        "Cybersecurity",
-        "AI/ML",
-        "DevOps",
-    ];
+    const directionCategories = Object.values(Industry)
+        .filter((v) => typeof v === "number")
+        .slice(1) as Industry[];
 
-    // Programming languages based on design
-    const programmingLanguages = [
-        "JavaScript",
-        "Python",
-        "C++",
-        "Ruby",
-        "Go",
-        "Java",
-        "TypeScript",
-        "R",
-    ];
+    // Show more/less state for directions and programming languages
+    const [showAllDirections, setShowAllDirections] = useState(false);
+    const [showAllLanguages, setShowAllLanguages] = useState(false);
+    const DIRECTIONS_PREVIEW_COUNT = 5;
+    const LANGUAGES_PREVIEW_COUNT = 5;
 
     // Helper function to toggle skill selection
     const toggleSkill = (skill: string) => {
@@ -66,7 +43,7 @@ const MentorSearchContent: React.FC = () => {
     };
 
     // Helper function to toggle direction selection
-    const toggleDirection = (direction: string) => {
+    const toggleDirection = (direction: Industry) => {
         if (selectedDirections.includes(direction)) {
             setSelectedDirections(
                 selectedDirections.filter((d) => d !== direction)
@@ -74,6 +51,12 @@ const MentorSearchContent: React.FC = () => {
         } else {
             setSelectedDirections([...selectedDirections, direction]);
         }
+    };
+
+    // Helper function to get label for an Industry enum value
+    const getIndustryLabel = (industry: Industry): string => {
+        const found = industriesMapping.find((item) => item.value === industry);
+        return found ? found.label : "Unknown";
     };
 
     // Fetch mentors from API based on filters
@@ -85,7 +68,7 @@ const MentorSearchContent: React.FC = () => {
             // Determine industry filter based on selected directions
             let industryFilter: Industry | undefined;
             if (selectedDirections.length === 1) {
-                industryFilter = mapDirectionToIndustry(selectedDirections[0]);
+                industryFilter = selectedDirections[0];
             }
 
             const response = await mentorSearchService.searchMentors({
@@ -158,7 +141,13 @@ const MentorSearchContent: React.FC = () => {
                             Напрями
                         </div>
                         <div className="space-y-2">
-                            {directionCategories.map((direction) => (
+                            {(showAllDirections
+                                ? directionCategories
+                                : directionCategories.slice(
+                                      0,
+                                      DIRECTIONS_PREVIEW_COUNT
+                                  )
+                            ).map((direction) => (
                                 <div
                                     key={direction}
                                     className={`flex items-center cursor-pointer px-3 py-1 ${
@@ -168,9 +157,22 @@ const MentorSearchContent: React.FC = () => {
                                     } rounded-2xl text-sm hover:bg-gray-400`}
                                     onClick={() => toggleDirection(direction)}
                                 >
-                                    {direction}
+                                    {getIndustryLabel(direction)}
                                 </div>
                             ))}
+                            {directionCategories.length >
+                                DIRECTIONS_PREVIEW_COUNT && (
+                                <button
+                                    className="text-xs text-[#4318D1] mt-1 focus:outline-none"
+                                    onClick={() =>
+                                        setShowAllDirections((v) => !v)
+                                    }
+                                >
+                                    {showAllDirections
+                                        ? "Показати менше"
+                                        : "Показати більше"}
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -180,7 +182,13 @@ const MentorSearchContent: React.FC = () => {
                             Мови програмування
                         </div>
                         <div className="space-y-2">
-                            {programmingLanguages.map((language) => (
+                            {(showAllLanguages
+                                ? programmingLanguages
+                                : programmingLanguages.slice(
+                                      0,
+                                      LANGUAGES_PREVIEW_COUNT
+                                  )
+                            ).map((language) => (
                                 <div
                                     key={language}
                                     className={`flex items-center cursor-pointer text-sm ${
@@ -193,6 +201,19 @@ const MentorSearchContent: React.FC = () => {
                                     {language}
                                 </div>
                             ))}
+                            {programmingLanguages.length >
+                                LANGUAGES_PREVIEW_COUNT && (
+                                <button
+                                    className="text-xs text-[#4318D1] mt-1 focus:outline-none"
+                                    onClick={() =>
+                                        setShowAllLanguages((v) => !v)
+                                    }
+                                >
+                                    {showAllLanguages
+                                        ? "Показати менше"
+                                        : "Показати більше"}
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -264,7 +285,7 @@ const MentorSearchContent: React.FC = () => {
                                     key={`selected-dir-${direction}`}
                                     className="px-3 py-1 bg-[#4318D1] text-white rounded-2xl text-sm flex items-center"
                                 >
-                                    {direction}
+                                    {getIndustryLabel(direction)}
                                     <span
                                         className="material-icons text-white ml-1 text-sm cursor-pointer"
                                         onClick={() =>

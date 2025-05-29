@@ -1,6 +1,6 @@
 import React from "react";
 import { useOnboarding } from "../context/OnboardingContext";
-import { Industry } from "../data/OnboardingTypes";
+import { Industry, industriesMapping } from "../../../shared/enums/industry";
 
 interface Step5MentorSpecificProps {
     displayYearsExperience?: boolean;
@@ -10,26 +10,6 @@ const Step5MentorSpecific: React.FC<Step5MentorSpecificProps> = ({
     displayYearsExperience = true,
 }) => {
     const { data, updateData } = useOnboarding();
-
-    const industries = [
-        { value: Industry.WebDevelopment, label: "Веб-розробка" },
-        { value: Industry.DataScience, label: "Data Science" },
-        { value: Industry.CyberSecurity, label: "Кібербезпека" },
-        { value: Industry.CloudComputing, label: "Хмарні обчислення" },
-        { value: Industry.DevOps, label: "DevOps" },
-        { value: Industry.GameDevelopment, label: "Розробка ігор" },
-        { value: Industry.ItSupport, label: "ІТ-підтримка" },
-        { value: Industry.ArtificialIntelligence, label: "Штучний інтелект" },
-        { value: Industry.Blockchain, label: "Блокчейн" },
-        { value: Industry.Networking, label: "Мережі" },
-        { value: Industry.UxUiDesign, label: "UX/UI дизайн" },
-        { value: Industry.EmbeddedSystems, label: "Вбудовані системи" },
-        { value: Industry.ItConsulting, label: "ІТ-консалтинг" },
-        {
-            value: Industry.DatabaseAdministration,
-            label: "Адміністрування баз даних",
-        },
-    ];
 
     const handleExperienceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value);
@@ -53,7 +33,7 @@ const Step5MentorSpecific: React.FC<Step5MentorSpecificProps> = ({
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-[#1E293B]">
-                Галузі спеціалізації
+                Напрямки спеціалізації
             </h2>
             <p className="text-[#64748B]">
                 {displayYearsExperience
@@ -85,11 +65,11 @@ const Step5MentorSpecific: React.FC<Step5MentorSpecificProps> = ({
                     {" "}
                     <label className="block text-sm font-medium text-[#1E293B] mb-2">
                         {displayYearsExperience
-                            ? "Галузі спеціалізації"
-                            : "Галузі інтересів"}
+                            ? "Напрямки спеціалізації"
+                            : "Сфери інтересів"}
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {industries.map((industry) => (
+                        {industriesMapping.map((industry) => (
                             <div
                                 key={industry.value}
                                 className={`border rounded-lg p-3 cursor-pointer ${

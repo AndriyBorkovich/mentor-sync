@@ -21,7 +21,7 @@ export const onboardingService = {
                 programmingLanguages: data.programmingLanguages,
                 experienceYears: data.yearsOfExperience,
                 availability: data.availabilityFlag, // Availability enum flags
-                mentorId: getUserId(), // Get the user ID from JWT token
+                mentorId: getUserId(),
             };
 
             // Make API call to save mentor profile
@@ -55,7 +55,7 @@ export const onboardingService = {
                 skills: data.skills,
                 programmingLanguages: data.programmingLanguages,
                 learningGoals: data.goals,
-                menteeId: getUserId(), // Get the user ID from JWT token
+                menteeId: getUserId(),
             };
 
             // Make API call to save mentee profile

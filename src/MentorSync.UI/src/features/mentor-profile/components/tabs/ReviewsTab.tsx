@@ -1,16 +1,23 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { MentorData, isMentorProfile } from "../../types/mentorTypes";
 import { hasRole } from "../../../auth/utils/authUtils";
-import MentorReviewFormOptimized from "../reviews/MentorReviewForm";
+import MentorReviewForm from "../reviews/MentorReviewForm";
 
 interface ReviewsTabProps {
     mentor: MentorData;
+    onRefreshReviews?: () => void;
 }
-const ReviewsTabOptimized: React.FC<ReviewsTabProps> = ({ mentor }) => {
-    // Use a ref instead of state for refresh trigger to avoid unnecessary renders
-    const [shouldRefreshReviews, setShouldRefreshReviews] = useState(false);
+
+const ReviewsTab: React.FC<ReviewsTabProps> = ({
+    mentor,
+    onRefreshReviews,
+}) => {
     const isMentee = hasRole("Mentee");
     const mentorId = isMentorProfile(mentor) ? mentor.id : parseInt(mentor.id);
+
+    // Calculated values
+    const totalRating = mentor.rating;
+    const totalReviews = isMentorProfile(mentor) ? mentor.reviewCount : 0;
 
     // Format the date from ISO string with time since
     const formatReviewDate = (dateString: string): string => {
@@ -30,9 +37,7 @@ const ReviewsTabOptimized: React.FC<ReviewsTabProps> = ({ mentor }) => {
             month: "long",
             year: "numeric",
         });
-    };
-
-    // Get reviews from API data if available, otherwise use mock data
+    }; // Get reviews from API data if available, otherwise use mock data
     // Memoize reviews to avoid recreating on every render
     const reviews = useMemo(() => {
         if (
@@ -50,14 +55,12 @@ const ReviewsTabOptimized: React.FC<ReviewsTabProps> = ({ mentor }) => {
             }));
         }
         return [];
-    }, [mentor, shouldRefreshReviews]); // Only recalculate if mentor data changes or refresh is triggered
-
-    const totalRating = isMentorProfile(mentor) ? mentor.rating : mentor.rating;
-    const totalReviews = isMentorProfile(mentor) ? mentor.reviewCount : 0;
+    }, [mentor, formatReviewDate]); // Only recalculate if mentor data changes
 
     const handleReviewSubmitted = () => {
-        // Toggle the refresh flag to trigger a re-fetch of reviews
-        setShouldRefreshReviews((prev) => !prev);
+        if (onRefreshReviews) {
+            onRefreshReviews();
+        }
     };
 
     return (
@@ -88,20 +91,17 @@ const ReviewsTabOptimized: React.FC<ReviewsTabProps> = ({ mentor }) => {
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </div>{" "}
             {/* Add review form for mentees */}
             {isMentee && (
-                <MentorReviewFormOptimized
+                <MentorReviewForm
                     mentorId={mentorId}
                     onReviewSubmitted={handleReviewSubmitted}
                 />
             )}
-
             <h3 className="text-lg font-medium text-[#1E293B] mb-4">
                 Останні відгуки
             </h3>
-
             <div className="space-y-6">
                 {reviews && reviews.length > 0 ? (
                     reviews.map((review) => (
@@ -161,4 +161,4 @@ const ReviewsTabOptimized: React.FC<ReviewsTabProps> = ({ mentor }) => {
     );
 };
 
-export default ReviewsTabOptimized;
+export default ReviewsTab;

@@ -11,6 +11,11 @@ public static class ModuleRegistration
 {
     public static void AddNotificationsModule(this IHostApplicationBuilder builder)
     {
+        builder.Services.AddSignalR(c =>
+        {
+            c.EnableDetailedErrors = true;
+        });
+
         builder.AddMongoDBClient("mongodb");
         builder.Services.Configure<MongoSettings>(
            builder.Configuration.GetSection(nameof(MongoSettings)));
@@ -22,7 +27,5 @@ public static class ModuleRegistration
         builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
         builder.Services.AddSingleton<IOutboxProcessor, EmailOutboxProcessor>();
         builder.Services.AddHostedService<EmailSendingJob>();
-
-        builder.Services.AddSignalR();
     }
 }

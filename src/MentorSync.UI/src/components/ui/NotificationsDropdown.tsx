@@ -21,6 +21,7 @@ export const NotificationsDropdown: React.FC<NotificationDropdownProps> = ({
     const [notifications, setNotifications] = useState<Notification[]>([]);
 
     useNotifications((data) => {
+        console.log("Notification received:", data);
         setNotifications((prev) => [
             {
                 id: crypto.randomUUID(),
