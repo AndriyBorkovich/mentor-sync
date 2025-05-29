@@ -27,7 +27,7 @@ public static class ModuleRegistration
         builder.Services.AddScoped<ICollaborativeTrainer, CollaborativeTrainer>();
         builder.Services.AddScoped<IHybridScorer, HybridScorer>();
 
-        builder.Services.AddHostedService<RecommendationPipelineService>();
+        builder.Services.AddHostedService<RecommendationPipeline>();
     }
 
     private static void AddEndpoints(IServiceCollection services)

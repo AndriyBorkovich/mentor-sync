@@ -7,8 +7,8 @@ namespace MentorSync.Recommendations.Features.Pipeline;
 /// <summary>
 /// Automates the full hybrid (CF + CBF) recommendation pipeline
 /// </summary>
-public sealed class RecommendationPipelineService(
-    IServiceProvider serviceProvider, ILogger<RecommendationPipelineService> logger)
+public sealed class RecommendationPipeline(
+    IServiceProvider serviceProvider, ILogger<RecommendationPipeline> logger)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
