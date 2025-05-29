@@ -24,9 +24,12 @@ public sealed class CreateBookmarkEndpoint : IEndpoint
             {
                 return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
             }
+
             var result = await sender.Send(new CreateBookmarkCommand(menteeId, mentorId));
+
             return result.DecideWhatToReturn();
         })
+        .WithTags(TagsConstants.Recommendations)
         .WithDescription("This endpoint allows a mentee to bookmark a mentor for future reference.")
         .Produces<Unit>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status400BadRequest)

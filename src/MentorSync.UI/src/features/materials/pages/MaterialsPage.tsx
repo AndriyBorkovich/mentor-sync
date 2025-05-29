@@ -1,27 +1,136 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../../../components/layout/Sidebar";
 import Header from "../../../components/layout/Header";
 import MaterialsContent from "../components/MaterialsContent";
 import MaterialUploadModal from "../components/MaterialUploadModal";
-import { Material, materials } from "../data/materials";
+import {
+    getMaterials,
+    createMaterial,
+    uploadAttachment,
+    mapMaterialType,
+    mapToApiMaterialType,
+} from "../services/materialService";
 import "../../../components/layout/styles/logo.css";
 import "../../../components/layout/styles/sidebar.css";
+import { toast } from "react-toastify";
+import { hasRole } from "../../auth";
+import { Material } from "../../../shared/types";
 
 const MaterialsPage: React.FC = () => {
     const [sidebarExpanded, setSidebarExpanded] = useState(false);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-    const [localMaterials, setLocalMaterials] = useState<Material[]>(materials);
+    const [materials, setMaterials] = useState<Material[]>([]);
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [filters, setFilters] = useState({
+        search: "",
+        types: [] as string[],
+        tags: [] as string[],
+        sortBy: "newest",
+        pageNumber: 1,
+        pageSize: 12,
+    });
+
+    const isMentor = hasRole("Mentor");
+
+    // Fetch materials when component mounts or filters change
+    useEffect(() => {
+        const fetchMaterials = async () => {
+            setIsLoading(true);
+            try {
+                const response = await getMaterials({
+                    search: filters.search,
+                    types: filters.types,
+                    tags: filters.tags,
+                    sortBy: filters.sortBy,
+                    pageNumber: filters.pageNumber,
+                    pageSize: filters.pageSize,
+                });
+
+                // Map API materials to UI format
+                const uiMaterials = response.items.map((item) => ({
+                    id: item.id.toString(),
+                    title: item.title,
+                    description: item.description,
+                    type: mapMaterialType(item.type),
+                    mentorName: item.mentorName || "Unknown Mentor",
+                    createdAt: new Date(item.createdAt).toLocaleDateString(
+                        "uk-UA",
+                        {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                        }
+                    ),
+                    tags: item.tags?.map((tag) => tag.name) || [],
+                    content: item.contentMarkdown,
+                    fileSize:
+                        item.attachments && item.attachments.length > 0
+                            ? `${(
+                                  item.attachments[0].fileSize /
+                                  (1024 * 1024)
+                              ).toFixed(1)} MB`
+                            : undefined,
+                    url:
+                        item.attachments && item.attachments.length > 0
+                            ? item.attachments[0].fileUrl
+                            : undefined,
+                }));
+                setMaterials(uiMaterials);
+                setTotalCount(response.totalCount || uiMaterials.length);
+                setError(null);
+            } catch (err) {
+                console.error("Error fetching materials:", err);
+                setError("Failed to load materials. Please try again later.");
+                toast.error("Не вдалося завантажити матеріали");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchMaterials();
+    }, [filters]);
 
     const handleSidebarToggle = (expanded: boolean) => {
         setSidebarExpanded(expanded);
     };
 
-    const handleMaterialUpload = (newMaterial: Material) => {
-        // In a real app, this would send data to an API
-        // For now, we just update local state
-        setLocalMaterials([newMaterial, ...localMaterials]);
+    const handleMaterialUpload = async (materialData: any) => {
+        try {
+            // Create the material first
+            const newMaterial = await createMaterial({
+                title: materialData.title,
+                description: materialData.description,
+                type: materialData.type,
+                contentMarkdown: materialData.contentMarkdown,
+                mentorId: materialData.mentorId || 1, // Default to ID 1 for testing
+                tags: materialData.tags,
+            });
+
+            // If there's a file, upload it as an attachment
+            if (materialData.file) {
+                await uploadAttachment(newMaterial.id, materialData.file);
+            }
+
+            // Refresh the materials list
+            const updatedFilters = { ...filters, pageNumber: 1 };
+            setFilters(updatedFilters);
+
+            toast.success("Матеріал успішно створено");
+        } catch (err) {
+            console.error("Error uploading material:", err);
+            toast.error("Не вдалося створити матеріал");
+        }
     };
 
+    const handleFilterChange = (newFilters: any) => {
+        setFilters({
+            ...filters,
+            ...newFilters,
+            pageNumber: 1, // Reset to first page when filters change
+        });
+    };
     return (
         <div className="min-h-screen flex bg-[#FFFFFF] overflow-hidden">
             <div
@@ -37,24 +146,60 @@ const MaterialsPage: React.FC = () => {
             <div className="flex flex-col flex-1 overflow-hidden">
                 <Header />
                 <div className="flex-1 overflow-y-auto bg-[#F8FAFC]">
-                    <div className="container mx-auto px-4 py-4 flex justify-end">
-                        <button
-                            onClick={() => setIsUploadModalOpen(true)}
-                            className="px-4 py-2 bg-[#6C5DD3] text-white rounded-lg hover:bg-[#5B4DC4] flex items-center"
-                        >
-                            <span className="material-icons mr-2">add</span>
-                            Додати матеріал
-                        </button>
+                    {error && (
+                        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <span className="material-icons text-red-400">
+                                        error
+                                    </span>
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm text-red-700">
+                                        {error}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                        <h1 className="text-2xl font-semibold text-[#1E293B]">
+                            Навчальні матеріали
+                        </h1>
+                        {isMentor && (
+                            <button
+                                onClick={() => setIsUploadModalOpen(true)}
+                                className="px-4 py-2 bg-[#6C5DD3] text-white rounded-lg hover:bg-[#5B4DC4] flex items-center"
+                            >
+                                <span className="material-icons mr-2">add</span>
+                                Додати матеріал
+                            </button>
+                        )}
                     </div>
-                    <MaterialsContent materials={localMaterials} />
+
+                    {isLoading ? (
+                        <div className="flex justify-center items-center h-64">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6C5DD3]"></div>
+                        </div>
+                    ) : (
+                        <MaterialsContent
+                            materials={materials}
+                            onFilterChange={handleFilterChange}
+                            currentFilters={filters}
+                            totalCount={totalCount}
+                        />
+                    )}
                 </div>
             </div>
 
-            <MaterialUploadModal
-                isOpen={isUploadModalOpen}
-                onClose={() => setIsUploadModalOpen(false)}
-                onUpload={handleMaterialUpload}
-            />
+            {isMentor && (
+                <MaterialUploadModal
+                    isOpen={isUploadModalOpen}
+                    onClose={() => setIsUploadModalOpen(false)}
+                    onUpload={handleMaterialUpload}
+                />
+            )}
         </div>
     );
 };

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Material } from "../data/materials";
 import { marked } from "marked";
 import { CommentForm, CommentsList, Comment } from "./Comments";
 import MaterialRating from "./MaterialRating";
 import ShareMaterial from "./ShareMaterial";
+import { Material, MaterialAttachment } from "../../../shared/types";
 
 interface DocumentViewProps {
     material: Material;
@@ -129,6 +129,84 @@ const PresentationView: React.FC<DocumentViewProps> = ({ material }) => {
     );
 };
 
+const AttachmentsList: React.FC<{
+    attachments: MaterialAttachment[];
+}> = ({ attachments }) => {
+    console.log("Rendering attachments list", attachments);
+    if (!attachments?.length) return null;
+
+    const getFileIcon = (contentType: string): string => {
+        if (contentType.startsWith("image/")) return "image";
+        if (contentType === "application/pdf") return "picture_as_pdf";
+        if (contentType.includes("word")) return "description";
+        if (
+            contentType.includes("excel") ||
+            contentType.includes("spreadsheet")
+        )
+            return "table_view";
+        if (
+            contentType.includes("powerpoint") ||
+            contentType.includes("presentation")
+        )
+            return "slideshow";
+        return "attach_file";
+    };
+
+    const formatFileSize = (bytes: number): string => {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+    };
+
+    return (
+        <div className="mt-8 bg-white rounded-lg p-6 shadow-sm">
+            <h3 className="text-lg font-medium text-[#1E293B] mb-4">
+                Додаткові вкладення
+            </h3>
+            <div className="space-y-3">
+                {attachments.map((attachment) => (
+                    <div
+                        key={attachment.id}
+                        className="flex items-center justify-between p-3 bg-[#F8FAFC] rounded-lg hover:bg-[#F1F5F9] transition-colors"
+                    >
+                        <div className="flex items-center flex-1 min-w-0">
+                            <span className="material-icons text-[#64748B] mr-3">
+                                {getFileIcon(attachment.contentType)}
+                            </span>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-[#1E293B] font-medium truncate">
+                                    {attachment.fileName}
+                                </p>
+                                <div className="flex text-sm text-[#64748B] gap-2">
+                                    <span>
+                                        {formatFileSize(attachment.fileSize)}
+                                    </span>
+                                    <span>•</span>
+                                    <span>
+                                        {new Date(
+                                            attachment.uploadedAt
+                                        ).toLocaleDateString()}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <a
+                            href={attachment.fileUrl}
+                            download={attachment.fileName}
+                            className="ml-4 p-2 text-[#6C5DD3] hover:bg-[#F1F5F9] rounded-lg transition-colors"
+                            title="Завантажити файл"
+                        >
+                            <span className="material-icons">download</span>
+                        </a>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 // Mock comments data
 const mockComments: Comment[] = [
     {
@@ -186,13 +264,42 @@ const MaterialViewContent: React.FC<MaterialViewContentProps> = ({
     const renderMaterialContent = () => {
         switch (material.type) {
             case "document":
-                return <DocumentView material={material} />;
+                console.log("Rendering document view", material);
+                return (
+                    <>
+                        <DocumentView material={material} />
+                        <AttachmentsList
+                            attachments={material.attachments ?? []}
+                        />
+                    </>
+                );
             case "video":
-                return <VideoView material={material} />;
+                return (
+                    <>
+                        <VideoView material={material} />
+                        <AttachmentsList
+                            attachments={material.attachments ?? []}
+                        />
+                    </>
+                );
             case "link":
-                return <LinkView material={material} />;
+                return (
+                    <>
+                        <LinkView material={material} />
+                        <AttachmentsList
+                            attachments={material.attachments ?? []}
+                        />
+                    </>
+                );
             case "presentation":
-                return <PresentationView material={material} />;
+                return (
+                    <>
+                        <PresentationView material={material} />
+                        <AttachmentsList
+                            attachments={material.attachments ?? []}
+                        />
+                    </>
+                );
             default:
                 return <div>Unsupported material type</div>;
         }

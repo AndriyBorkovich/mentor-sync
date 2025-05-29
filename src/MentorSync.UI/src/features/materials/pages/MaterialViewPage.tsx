@@ -4,17 +4,19 @@ import Sidebar from "../../../components/layout/Sidebar";
 import Header from "../../../components/layout/Header";
 import MaterialViewContent from "../components/MaterialViewContent";
 import MaterialAnalytics from "../components/MaterialAnalytics";
-import { materials, Material } from "../data/materials";
+import { getMaterialById } from "../services/materialService";
+import { toast } from "react-toastify";
 import "../../../components/layout/styles/logo.css";
 import "../../../components/layout/styles/sidebar.css";
+import { Material } from "../../../shared/types";
 
 const MaterialViewPage: React.FC = () => {
     const { materialId } = useParams<{ materialId: string }>();
     const navigate = useNavigate();
     const [sidebarExpanded, setSidebarExpanded] = useState(false);
-    const [material, setMaterial] = useState<Material | undefined>(
-        materials.find((m) => m.id === materialId)
-    );
+    const [material, setMaterial] = useState<Material | undefined>();
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [viewCount, setViewCount] = useState<number>(0);
     const [analyticsData, setAnalyticsData] = useState({
         ratingCount: 0,
@@ -23,29 +25,108 @@ const MaterialViewPage: React.FC = () => {
     });
 
     useEffect(() => {
-        // Update material when URL param changes
-        const foundMaterial = materials.find((m) => m.id === materialId);
-        setMaterial(foundMaterial);
+        const fetchMaterial = async () => {
+            if (!materialId) {
+                navigate("/materials");
+                return;
+            }
 
-        if (foundMaterial) {
-            // Simulated analytics data
-            setViewCount(Math.floor(Math.random() * 50) + 10);
-            setAnalyticsData({
-                ratingCount: Math.floor(Math.random() * 15),
-                averageRating: 3.5 + Math.random() * 1.5,
-                commentCount: 2, // We have 2 mock comments
-            });
+            setIsLoading(true);
+            setError(null);
 
-            // Set document title
-            document.title = `${foundMaterial.title} | MentorSync Materials`;
-        } else {
-            // Material not found, redirect to materials page
-            navigate("/materials");
-        }
+            try {
+                const response = await getMaterialById(
+                    parseInt(materialId, 10)
+                );
 
-        // Scroll to top when material changes
+                if (!response) {
+                    navigate("/materials");
+                    return;
+                }
+
+                // Map API response to UI Material type
+                const uiMaterial: Material = {
+                    id: response.id.toString(),
+                    title: response.title,
+                    description: response.description,
+                    type: mapTypeToUiFormat(response.type) as Material["type"],
+                    mentorName: response.mentorName || "Unknown Mentor",
+                    createdAt: new Date(response.createdAt).toLocaleDateString(
+                        "uk-UA",
+                        {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                        }
+                    ),
+                    tags: response.tags?.map((t) => t.name) || [],
+                    content: response.contentMarkdown,
+                    url: response.attachments?.[0]?.fileUrl,
+                    fileSize: response.attachments?.[0]
+                        ? `${(
+                              response.attachments[0].fileSize /
+                              (1024 * 1024)
+                          ).toFixed(1)} MB`
+                        : undefined,
+                    attachments:
+                        response.attachments?.map((att) => ({
+                            id: att.id,
+                            fileName: att.fileName,
+                            fileUrl: att.fileUrl,
+                            fileSize: att.fileSize,
+                            contentType: att.contentType,
+                            uploadedAt: att.uploadedAt, // keep as string
+                        })) || [],
+                };
+
+                setMaterial(uiMaterial);
+
+                // Set analytics data - for now we'll use mocked values since the API doesn't provide these yet
+                const mockAnalytics = {
+                    viewCount: 24,
+                    ratingCount: 8,
+                    averageRating: 4.5,
+                    commentCount: 3,
+                };
+                setViewCount(mockAnalytics.viewCount);
+                setAnalyticsData({
+                    ratingCount: mockAnalytics.ratingCount,
+                    averageRating: mockAnalytics.averageRating,
+                    commentCount: mockAnalytics.commentCount,
+                });
+
+                // Set document title
+                document.title = `${uiMaterial.title} | MentorSync Materials`;
+            } catch (err) {
+                setError("Failed to load material. Please try again later.");
+                toast.error("Failed to load material");
+                console.error("Error fetching material:", err);
+                navigate("/materials");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchMaterial();
         window.scrollTo(0, 0);
     }, [materialId, navigate]);
+
+    // Helper function to map API material type to UI format
+    const mapTypeToUiFormat = (type: string): string => {
+        switch (type.toLowerCase()) {
+            case "article":
+            case "document":
+                return "document";
+            case "video":
+                return "video";
+            case "link":
+                return "link";
+            case "presentation":
+                return "presentation";
+            default:
+                return "document";
+        }
+    };
 
     const handleSidebarToggle = (expanded: boolean) => {
         setSidebarExpanded(expanded);

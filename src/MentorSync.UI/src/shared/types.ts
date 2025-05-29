@@ -104,3 +104,28 @@ export interface MentorProfile {
     upcomingSessions: MentorProfileSession[];
     materials: MentorProfileMaterial[];
 }
+
+export interface Material {
+    id: string;
+    title: string;
+    description: string;
+    type: "document" | "video" | "link" | "presentation";
+    sessionId?: string;
+    mentorName: string;
+    createdAt: string;
+    tags: string[];
+    thumbnail?: string;
+    content?: string;
+    url?: string;
+    fileSize?: string;
+    attachments?: MaterialAttachment[];
+}
+
+export interface MaterialAttachment {
+    id: number;
+    fileName: string;
+    fileUrl: string;
+    fileSize: number;
+    contentType: string;
+    uploadedAt: string;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Material } from "../data/materials";
+import { Material } from "../../../shared/types";
 
 interface ShareMaterialProps {
     material: Material;

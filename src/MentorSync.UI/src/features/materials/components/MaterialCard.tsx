@@ -1,6 +1,6 @@
 import React from "react";
-import { Material } from "../data/materials";
 import { useNavigate } from "react-router-dom";
+import { Material } from "../../../shared/types";
 
 interface MaterialCardProps {
     material: Material;

@@ -16,6 +16,7 @@ public sealed class MaterialAttachment
     /// </summary>
     public string BlobUri { get; set; } = default!;
     public string ContentType { get; set; }
+    public long Size { get; set; }
     public DateTime UploadedAt { get; set; }
 
     public LearningMaterial Material { get; set; } = default!;

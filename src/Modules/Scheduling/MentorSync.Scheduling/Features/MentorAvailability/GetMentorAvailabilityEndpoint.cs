@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using MediatR;
+using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -30,11 +30,13 @@ public sealed class GetMentorAvailabilityEndpoint : IEndpoint
 
             var query = new GetMentorAvailabilityQuery(mentorId, start, end);
             var result = await sender.Send(query);
+
             return result.DecideWhatToReturn();
         })
+        .WithTags(TagsConstants.Scheduling)
         .WithDescription("Gets availability slots for a mentor within a date range")
         .Produces<MentorAvailabilityResult>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
-        .RequireAuthorization();
+        .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorMenteeMix);
     }
 }

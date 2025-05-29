@@ -20,7 +20,6 @@ public sealed class CreateMentorAvailabilityEndpoint : IEndpoint
             ISender sender,
             HttpContext httpContext) =>
         {
-            // Validate that the current user is the mentor or an admin
             var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
             {
@@ -33,8 +32,10 @@ public sealed class CreateMentorAvailabilityEndpoint : IEndpoint
                 request.End);
 
             var result = await sender.Send(command);
+
             return result.DecideWhatToReturn();
         })
+        .WithTags(TagsConstants.Scheduling)
         .WithDescription("Creates a new availability slot for a mentor")
         .Produces<CreateMentorAvailabilityResult>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status400BadRequest)

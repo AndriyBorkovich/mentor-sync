@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { getUserId, hasRole } from "../../auth";
+import { mapToApiMaterialType } from "../services/materialService";
 
 interface MaterialUploadModalProps {
     isOpen: boolean;
@@ -21,44 +23,45 @@ const MaterialUploadModal: React.FC<MaterialUploadModalProps> = ({
     const [url, setUrl] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+
+        if (!hasRole("Mentor")) {
+            alert("Тільки ментори можуть створювати матеріали");
+            setIsSubmitting(false);
+            return;
+        }
 
         const tagsArray = tags
             .split(",")
             .map((tag) => tag.trim())
             .filter((tag) => tag);
 
-        // Create new material object
+        // Create new material object for API
         const newMaterial = {
-            id: `new-${Date.now()}`,
             title,
             description,
-            type: materialType,
-            mentorName: "You", // In a real app, this would be the current user's name
-            createdAt: new Date().toLocaleDateString("uk-UA", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-            }),
+            type: mapToApiMaterialType(materialType),
+            contentMarkdown: content,
+            url,
+            file,
             tags: tagsArray,
-            ...(materialType === "document" && { content }),
-            ...(materialType === "link" && { url }),
-            ...(materialType === "video" && { url }),
-            ...(file && {
-                fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-            }),
+            // In a real app, we'd get mentor ID from auth context
+            mentorId: getUserId(),
         };
 
-        // Simulate API call delay
-        setTimeout(() => {
+        try {
+            // Call the parent component's upload handler (which makes the API call)
             onUpload(newMaterial);
-            setIsSubmitting(false);
             resetForm();
             onClose();
-        }, 1000);
+        } catch (error) {
+            console.error("Error uploading material:", error);
+            alert("Помилка при створенні матеріалу");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const resetForm = () => {

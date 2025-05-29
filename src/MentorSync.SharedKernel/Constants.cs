@@ -32,6 +32,7 @@ public static class TagsConstants
     public const string Recommendations = nameof(Recommendations);
     public const string Ratings = nameof(Ratings);
     public const string Scheduling = nameof(Scheduling);
+    public const string Materials = nameof(Materials);
 }
 
 /// <summary>
@@ -58,6 +59,7 @@ public static class PolicyConstants
 
     public const string AdminMentorMix = nameof(AdminMentorMix);
     public const string AdminMenteeMix = nameof(AdminMenteeMix);
+    public const string MentorMenteeMix = nameof(MentorMenteeMix);
 }
 
 /// <summary>
@@ -76,4 +78,5 @@ public static class Roles
 public static class ContainerNames
 {
     public const string Avatars = "user-avatars";
+    public const string MaterialsAttachments = "material-attachments";
 }

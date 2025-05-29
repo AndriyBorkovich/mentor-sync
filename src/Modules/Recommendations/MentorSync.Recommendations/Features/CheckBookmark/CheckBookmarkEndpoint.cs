@@ -24,7 +24,9 @@ public sealed class CheckBookmarkEndpoint : IEndpoint
             {
                 return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
             }
+
             var result = await sender.Send(new CheckBookmarkQuery(menteeId, mentorId));
+
             return result.DecideWhatToReturn();
         })
         .WithTags(TagsConstants.Recommendations)

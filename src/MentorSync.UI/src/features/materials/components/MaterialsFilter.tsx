@@ -2,22 +2,40 @@ import React, { useState } from "react";
 
 interface MaterialsFilterProps {
     onFilterChange: (filters: {
+        search?: string;
+        types?: string[];
+        tags?: string[];
+        sortBy?: string;
+        pageSize?: number;
+        pageNumber?: number;
+    }) => void;
+    availableTags: string[];
+    currentFilters?: {
         search: string;
         types: string[];
         tags: string[];
         sortBy: string;
-    }) => void;
-    availableTags: string[];
+        pageNumber: number;
+        pageSize: number;
+    };
 }
 
 const MaterialsFilter: React.FC<MaterialsFilterProps> = ({
     onFilterChange,
     availableTags,
+    currentFilters = {
+        search: "",
+        types: [],
+        tags: [],
+        sortBy: "newest",
+        pageNumber: 1,
+        pageSize: 12,
+    },
 }) => {
-    const [search, setSearch] = useState("");
-    const [types, setTypes] = useState<string[]>([]);
-    const [tags, setTags] = useState<string[]>([]);
-    const [sortBy, setSortBy] = useState("newest");
+    const [search, setSearch] = useState(currentFilters.search || "");
+    const [types, setTypes] = useState<string[]>(currentFilters.types || []);
+    const [tags, setTags] = useState<string[]>(currentFilters.tags || []);
+    const [sortBy, setSortBy] = useState(currentFilters.sortBy || "newest");
     const [showFilters, setShowFilters] = useState(false);
 
     // Material types
@@ -48,19 +66,17 @@ const MaterialsFilter: React.FC<MaterialsFilterProps> = ({
                 return [...prevTags, tag];
             }
         });
-    };
-
-    // Apply filters
+    }; // Apply filters
     const applyFilters = () => {
         onFilterChange({
             search,
             types,
             tags,
             sortBy,
+            pageSize: currentFilters.pageSize,
+            pageNumber: currentFilters.pageNumber,
         });
-    };
-
-    // Clear all filters
+    }; // Clear all filters
     const clearFilters = () => {
         setSearch("");
         setTypes([]);
@@ -71,16 +87,14 @@ const MaterialsFilter: React.FC<MaterialsFilterProps> = ({
             types: [],
             tags: [],
             sortBy: "newest",
+            pageSize: currentFilters.pageSize,
+            pageNumber: 1,
         });
     };
 
     return (
         <div className="mb-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                <h1 className="text-2xl font-bold text-[#1E293B] mb-4 md:mb-0">
-                    Матеріали
-                </h1>
-
                 <div className="flex space-x-2">
                     <button
                         onClick={() => setShowFilters(!showFilters)}
@@ -104,6 +118,27 @@ const MaterialsFilter: React.FC<MaterialsFilterProps> = ({
                             <option value="oldest">Найстаріші</option>
                             <option value="az">А-Я</option>
                             <option value="za">Я-А</option>
+                        </select>
+                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-[#64748B]">
+                            <span className="material-icons">expand_more</span>
+                        </span>
+                    </div>
+                    <div className="relative">
+                        <select
+                            value={currentFilters.pageSize}
+                            onChange={(e) => {
+                                onFilterChange({
+                                    ...currentFilters,
+                                    pageSize: parseInt(e.target.value),
+                                    pageNumber: 1,
+                                });
+                            }}
+                            className="appearance-none px-4 py-2 border border-[#E2E8F0] rounded-lg text-[#64748B] pr-8"
+                        >
+                            <option value="12">12 на сторінці</option>
+                            <option value="24">24 на сторінці</option>
+                            <option value="48">48 на сторінці</option>
+                            <option value="96">96 на сторінці</option>
                         </select>
                         <span className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-[#64748B]">
                             <span className="material-icons">expand_more</span>
