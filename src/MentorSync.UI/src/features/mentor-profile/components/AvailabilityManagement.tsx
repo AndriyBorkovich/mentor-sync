@@ -6,6 +6,7 @@ import {
 } from "../../scheduling/services/schedulingService";
 import { toast } from "react-toastify";
 import { hasRole } from "../../auth";
+import CalendarView from "./CalendarView";
 
 interface AvailabilityManagementProps {
     mentorId: number;
@@ -17,12 +18,16 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
     const [availabilitySlots, setAvailabilitySlots] = useState<
         MentorAvailabilitySlot[]
     >([]);
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [endDate, setEndDate] = useState<Date>(new Date());
     const [startTime, setStartTime] = useState<string>("09:00");
     const [endTime, setEndTime] = useState<string>("10:00");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [filteredSlots, setFilteredSlots] = useState<
+        MentorAvailabilitySlot[]
+    >([]);
 
     const isMentor = hasRole("Mentor");
 
@@ -44,6 +49,7 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                     thirtyDaysLater
                 );
                 setAvailabilitySlots(response.slots);
+                setFilteredSlots(response.slots); // Initialize filtered slots
             } catch (error) {
                 console.error("Failed to fetch availability slots:", error);
                 toast.error("Не вдалося завантажити доступні слоти часу");
@@ -53,9 +59,7 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
         };
 
         fetchAvailability();
-    }, [mentorId]);
-
-    // Format date for display
+    }, [mentorId]); // Format date for display
     const formatDate = (dateString: string): string => {
         const date = new Date(dateString);
         return date.toLocaleDateString("uk-UA", {
@@ -64,6 +68,16 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
             year: "numeric",
         });
     };
+
+    // Format date for input fields (YYYY-MM-DD)
+    const formatDateForInput = (date: Date): string => {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+            2,
+            "0"
+        )}-${String(date.getDate()).padStart(2, "0")}`;
+    };
+
+    // Format date for input fi
 
     // Ensure time is in 24-hour format
     const ensureTimeFormat = (time: string): string => {
@@ -112,16 +126,33 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
         }
 
         setIsSubmitting(true);
-
         try {
             // Create date objects with the selected date and time
-            const startDateTime = new Date(startDate);
+            // Starting with noon (12:00) as the base time and then setting the actual time
+            // This helps avoid timezone issues by ensuring we're firmly in the middle of the day
+            const startDateTime = new Date(
+                startDate.getFullYear(),
+                startDate.getMonth(),
+                startDate.getDate(),
+                12,
+                0,
+                0,
+                0
+            );
             const [startHours, startMinutes] = ensureTimeFormat(startTime)
                 .split(":")
                 .map(Number);
             startDateTime.setHours(startHours, startMinutes, 0, 0);
 
-            const endDateTime = new Date(endDate);
+            const endDateTime = new Date(
+                endDate.getFullYear(),
+                endDate.getMonth(),
+                endDate.getDate(),
+                12,
+                0,
+                0,
+                0
+            );
             const [endHours, endMinutes] = ensureTimeFormat(endTime)
                 .split(":")
                 .map(Number);
@@ -170,7 +201,40 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
         } finally {
             setIsSubmitting(false);
         }
-    };
+    }; // Filter slots by selected date
+
+    useEffect(() => {
+        if (selectedDate) {
+            // Filter slots for the selected date
+            const filtered = availabilitySlots.filter((slot) => {
+                const slotDate = new Date(slot.start);
+                return (
+                    slotDate.getFullYear() === selectedDate.getFullYear() &&
+                    slotDate.getMonth() === selectedDate.getMonth() &&
+                    slotDate.getDate() === selectedDate.getDate()
+                );
+            });
+            setFilteredSlots(filtered);
+
+            // Create a new date object with the selected date at noon
+            // Setting to noon (12:00) ensures we're safely in the middle of the day,
+            // avoiding any timezone boundary issues that can cause date shifting
+            const localDate = new Date(
+                selectedDate.getFullYear(),
+                selectedDate.getMonth(),
+                selectedDate.getDate(),
+                12,
+                0,
+                0,
+                0
+            );
+
+            setStartDate(localDate);
+            setEndDate(localDate);
+        } else {
+            setFilteredSlots(availabilitySlots);
+        }
+    }, [selectedDate, availabilitySlots]);
 
     if (!isMentor) {
         return (
@@ -195,34 +259,105 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
     return (
         <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-[#1E293B] mb-6">
-                Управління доступними слотами часу
-            </h2>
+                Управління слотами часу
+            </h2>{" "}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                    <h3 className="text-md font-medium text-[#1E293B] mb-2">
+                        Календар доступності
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-4">
+                        Виберіть дату для перегляду або створення слотів
+                    </p>
+                    <CalendarView
+                        selectedDate={selectedDate}
+                        onDateSelect={setSelectedDate}
+                        availabilitySlots={availabilitySlots}
+                    />
+                </div>
 
+                <div className="bg-white rounded-lg shadow-sm p-4">
+                    <h3 className="text-md font-medium text-[#1E293B] mb-2">
+                        Слоти на{" "}
+                        {selectedDate.toLocaleDateString("uk-UA", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                        })}
+                    </h3>
+
+                    {isLoading ? (
+                        <div className="text-center py-4">
+                            Завантаження слотів...
+                        </div>
+                    ) : filteredSlots?.length === 0 ? (
+                        <div className="text-center py-4 text-[#64748B]">
+                            На вибрану дату немає доступних слотів
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {filteredSlots?.map((slot) => (
+                                <div
+                                    key={slot.id}
+                                    className="border border-[#E2E8F0] rounded-md p-3"
+                                >
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <div className="text-sm text-[#64748B]">
+                                                {formatTime(slot.start)} -{" "}
+                                                {formatTime(slot.end)}
+                                            </div>
+                                        </div>
+                                        <div
+                                            className={
+                                                slot.isBooked
+                                                    ? "bg-red-100 text-red-800 text-xs py-1 px-2 rounded"
+                                                    : "bg-green-100 text-green-800 text-xs py-1 px-2 rounded"
+                                            }
+                                        >
+                                            {slot.isBooked
+                                                ? "Заброньований"
+                                                : "Доступний"}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>{" "}
             <form
                 onSubmit={handleCreateSlot}
-                className="mb-8 bg-[#F8FAFC] p-4 rounded-lg"
+                className="mb-8 bg-white shadow-sm p-6 rounded-lg"
             >
                 <h3 className="text-md font-medium text-[#1E293B] mb-4">
-                    Створити новий доступний слот
+                    Створити новий слот
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-[#64748B] mb-1">
                             Дата початку
-                        </label>
+                        </label>{" "}
                         <input
                             type="date"
                             className="w-full border border-[#E2E8F0] p-2 rounded-md"
-                            value={startDate.toISOString().split("T")[0]}
-                            onChange={(e) =>
-                                setStartDate(new Date(e.target.value))
-                            }
-                            min={new Date().toISOString().split("T")[0]}
+                            value={formatDateForInput(startDate)}
+                            onChange={(e) => {
+                                const date = new Date(e.target.value);
+                                setStartDate(
+                                    new Date(
+                                        date.getFullYear(),
+                                        date.getMonth(),
+                                        date.getDate(),
+                                        12 // Set to noon to avoid any timezone issues
+                                    )
+                                );
+                            }}
+                            min={formatDateForInput(new Date())}
                             required
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm font-medium text-[#64748B] mb-1">
                             Час початку
@@ -239,27 +374,30 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                             max="23:59"
                             step="900"
                         />
-                        <p className="text-xs text-gray-500 mt-1">
-                            Формат: 24г (наприклад, 14:30)
-                        </p>
-                    </div>
-
+                    </div>{" "}
                     <div>
                         <label className="block text-sm font-medium text-[#64748B] mb-1">
                             Дата закінчення
-                        </label>
+                        </label>{" "}
                         <input
                             type="date"
                             className="w-full border border-[#E2E8F0] p-2 rounded-md"
-                            value={endDate.toISOString().split("T")[0]}
-                            onChange={(e) =>
-                                setEndDate(new Date(e.target.value))
-                            }
-                            min={startDate.toISOString().split("T")[0]}
+                            value={formatDateForInput(endDate)}
+                            onChange={(e) => {
+                                const date = new Date(e.target.value);
+                                setEndDate(
+                                    new Date(
+                                        date.getFullYear(),
+                                        date.getMonth(),
+                                        date.getDate(),
+                                        12 // Set to noon to avoid any timezone issues
+                                    )
+                                );
+                            }}
+                            min={formatDateForInput(startDate)}
                             required
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm font-medium text-[#64748B] mb-1">
                             Час закінчення
@@ -276,9 +414,6 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                             step="900"
                             required
                         />
-                        <p className="text-xs text-gray-500 mt-1">
-                            Формат: 24г (наприклад, 16:00)
-                        </p>
                     </div>
                 </div>
 
@@ -289,53 +424,7 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                 >
                     {isSubmitting ? "Створення..." : "Створити доступний слот"}
                 </button>
-            </form>
-
-            <h3 className="text-md font-medium text-[#1E293B] mb-4">
-                Ваші доступні слоти часу
-            </h3>
-
-            {isLoading ? (
-                <div className="text-center py-4">
-                    Завантаження доступних слотів часу...
-                </div>
-            ) : availabilitySlots?.length === 0 ? (
-                <div className="text-center py-4 text-[#64748B]">
-                    У вас немає доступних слотів часу. Створіть новий слот вище.
-                </div>
-            ) : (
-                <div className="space-y-3">
-                    {availabilitySlots?.map((slot) => (
-                        <div
-                            key={slot.id}
-                            className="border border-[#E2E8F0] rounded-md p-3"
-                        >
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <div className="font-medium">
-                                        {formatDate(slot.start)}
-                                    </div>{" "}
-                                    <div className="text-sm text-[#64748B]">
-                                        {formatTime(slot.start)} -{" "}
-                                        {formatTime(slot.end)}
-                                    </div>
-                                </div>
-                                <div
-                                    className={
-                                        slot.isBooked
-                                            ? "bg-red-100 text-red-800 text-xs py-1 px-2 rounded"
-                                            : "bg-green-100 text-green-800 text-xs py-1 px-2 rounded"
-                                    }
-                                >
-                                    {slot.isBooked
-                                        ? "Заброньований"
-                                        : "Доступний"}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+            </form>{" "}
         </div>
     );
 };

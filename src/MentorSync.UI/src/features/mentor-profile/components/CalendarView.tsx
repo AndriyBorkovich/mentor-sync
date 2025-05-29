@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { MentorAvailabilitySlot } from "../../scheduling/services/schedulingService";
 
 interface CalendarViewProps {
     selectedDate: Date;
     onDateSelect: (date: Date) => void;
+    availabilitySlots?: MentorAvailabilitySlot[];
 }
 
 const CalendarView: React.FC<CalendarViewProps> = ({
     selectedDate,
     onDateSelect,
+    availabilitySlots = [],
 }) => {
     const [currentMonth, setCurrentMonth] = useState<Date>(
         new Date(selectedDate)
@@ -90,6 +93,21 @@ const CalendarView: React.FC<CalendarViewProps> = ({
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return date < today;
+    };
+
+    // Check if a date has available slots
+    const hasAvailableSlots = (date: Date): boolean => {
+        if (!availabilitySlots || availabilitySlots.length === 0) return false;
+
+        return availabilitySlots.some((slot) => {
+            const slotDate = new Date(slot.start);
+            return (
+                slotDate.getDate() === date.getDate() &&
+                slotDate.getMonth() === date.getMonth() &&
+                slotDate.getFullYear() === date.getFullYear() &&
+                !slot.isBooked
+            );
+        });
     };
 
     // Format date as Ukrainian month and year
@@ -178,12 +196,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               `}
                             >
                                 {day.getDate()}
-                            </div>
-
-                            {/* Add a dot indicator for days that have available slots (this is a mockup) */}
+                            </div>{" "}
+                            {/* Add a dot indicator for days that have available slots */}
                             {isAvailableDay &&
                                 !isPastDate(day) &&
-                                day.getDate() % 3 === 1 && (
+                                hasAvailableSlots(day) && (
                                     <div className="absolute bottom-0.5 w-full flex justify-center">
                                         <div
                                             className={`w-1 h-1 rounded-full ${

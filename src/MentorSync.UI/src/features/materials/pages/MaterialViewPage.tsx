@@ -3,7 +3,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import Sidebar from "../../../components/layout/Sidebar";
 import Header from "../../../components/layout/Header";
 import MaterialViewContent from "../components/MaterialViewContent";
-import RelatedMaterials from "../components/RelatedMaterials";
 import MaterialAnalytics from "../components/MaterialAnalytics";
 import { materials, Material } from "../data/materials";
 import "../../../components/layout/styles/logo.css";
@@ -130,14 +129,6 @@ const MaterialViewPage: React.FC = () => {
                             />
 
                             <MaterialViewContent material={material} />
-                        </div>
-                        <div className="md:w-80 flex-shrink-0">
-                            <div className="sticky top-0 pt-6 px-4">
-                                <RelatedMaterials
-                                    currentMaterial={material}
-                                    materials={materials}
-                                />
-                            </div>
                         </div>
                     </div>
                 </div>
