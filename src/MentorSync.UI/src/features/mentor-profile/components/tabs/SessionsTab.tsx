@@ -7,6 +7,9 @@ import {
 } from "../../../scheduling/services/schedulingService";
 import { toast } from "react-toastify";
 import { hasRole } from "../../../auth/utils/authUtils";
+import CalendarView from "../../components/CalendarView";
+import TimeSlots from "../../components/TimeSlots";
+import SessionDetails from "../../components/SessionDetails";
 
 interface SessionsTabProps {
     mentor: MentorData;
@@ -52,21 +55,9 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
         };
 
         fetchAvailability();
-    }, [mentor.id, selectedDate, mentorId]); // Format time for display in 24-hour format
-    const formatTimeSlot = (slot: MentorAvailabilitySlot): string => {
-        const start = new Date(slot.start);
-        const end = new Date(slot.end);
+    }, [mentor.id, selectedDate, mentorId]);
 
-        return `${start.toLocaleTimeString("uk-UA", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-        })} - ${end.toLocaleTimeString("uk-UA", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-        })}`;
-    }; // Handle booking
+    // Handle booking
     const handleBookSession = async () => {
         if (!selectedTimeSlot) {
             toast.warning("Будь ласка, виберіть час для сесії");
@@ -122,11 +113,11 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
     // Translate booking status to Ukrainian
     const translateBookingStatus = (status: string): string => {
         const statusMap: Record<string, string> = {
-            Pending: "Очікується",
-            Confirmed: "Підтверджено",
-            Completed: "Завершено",
-            Cancelled: "Скасовано",
-            Scheduled: "Заплановано",
+            pending: "Очікується",
+            ponfirmed: "Підтверджено",
+            pompleted: "Завершено",
+            cancelled: "Скасовано",
+            scheduled: "Заплановано",
         };
 
         return statusMap[status] || status;
@@ -253,88 +244,53 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
     };
     return (
         <div className="flex flex-col">
-            {renderAvailability()}
-
-            <div className="flex flex-col md:flex-row gap-6">
-                <div className="md:w-2/3">
-                    <h2 className="text-lg font-medium text-[#1E293B] mb-4">
-                        Забронюйте сеанс
-                    </h2>
-
-                    <div className="mb-6">
-                        <h3 className="text-sm font-medium text-[#1E293B] mb-2">
-                            Виберіть дату
-                        </h3>
-                        <div className="border border-[#E2E8F0] p-4 rounded-lg">
-                            <input
-                                type="date"
-                                className="w-full border border-[#E2E8F0] p-2 rounded-md"
-                                onChange={(e) =>
-                                    setSelectedDate(new Date(e.target.value))
-                                }
-                                min={new Date().toISOString().split("T")[0]}
-                                defaultValue={
-                                    new Date().toISOString().split("T")[0]
-                                }
-                            />
-                        </div>
+            {renderAvailability()}{" "}
+            <h2 className="text-lg font-medium text-[#1E293B] mb-4">
+                Забронюйте сеанс
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left column - Calendar */}
+                <div className="lg:col-span-5 space-y-4">
+                    <div className="bg-white rounded-lg shadow-sm p-4">
+                        <CalendarView
+                            selectedDate={selectedDate}
+                            onDateSelect={(date) => setSelectedDate(date)}
+                        />
                     </div>
 
-                    <div className="mb-6">
-                        <h3 className="text-sm font-medium text-[#1E293B] mb-2">
-                            Доступний час
+                    <SessionDetails
+                        selectedDate={selectedDate}
+                        selectedTimeSlot={selectedTimeSlot}
+                        mentor={mentor}
+                        isBooking={isBooking}
+                        isMentee={isMentee}
+                        onBookSession={handleBookSession}
+                    />
+                </div>
+
+                {/* Right column - Time slots */}
+                <div className="lg:col-span-7">
+                    <div className="bg-white rounded-lg shadow-sm p-4">
+                        <h3 className="text-md font-medium text-[#1E293B] mb-4">
+                            {selectedDate.toLocaleDateString("uk-UA", {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                            })}
                         </h3>
-                        {isLoading ? (
-                            <div className="text-center py-4">
-                                Завантаження доступних часових слотів...
-                            </div>
-                        ) : availabilitySlots &&
-                          availabilitySlots.length === 0 ? (
-                            <div className="text-center py-4 text-[#64748B]">
-                                На цю дату відсутні доступні слоти часу
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                {availabilitySlots?.map((slot) => (
-                                    <div
-                                        key={slot.id}
-                                        className={`border border-[#E2E8F0] p-3 rounded-lg text-center cursor-pointer
-                                            ${
-                                                selectedTimeSlot?.id === slot.id
-                                                    ? "bg-[#4318D1] text-white"
-                                                    : "hover:border-[#4318D1]"
-                                            }`}
-                                        onClick={() =>
-                                            setSelectedTimeSlot(slot)
-                                        }
-                                    >
-                                        {formatTimeSlot(slot)}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+
+                        <TimeSlots
+                            availabilitySlots={availabilitySlots.filter(
+                                (s) => !s.isBooked
+                            )}
+                            selectedTimeSlot={selectedTimeSlot}
+                            isLoading={isLoading}
+                            onSelectTimeSlot={setSelectedTimeSlot}
+                        />
                     </div>
-
-                    <button
-                        className={`w-full py-3 rounded-lg ${
-                            isMentee
-                                ? "bg-[#4318D1] text-white hover:bg-[#3712A5] transition-colors"
-                                : "bg-gray-300 text-gray-700 cursor-not-allowed"
-                        }`}
-                        onClick={handleBookSession}
-                        disabled={isBooking || !isMentee || !selectedTimeSlot}
-                    >
-                        {isBooking ? "Бронювання..." : "Забронювати зараз"}
-                    </button>
-
-                    {!isMentee && (
-                        <p className="text-sm text-red-500 mt-2 text-center">
-                            Тільки менті можуть бронювати сесії
-                        </p>
-                    )}
                 </div>
             </div>
-
             {getUpcomingSessions()}
         </div>
     );

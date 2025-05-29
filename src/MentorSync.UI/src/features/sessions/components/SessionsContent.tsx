@@ -5,6 +5,7 @@ import { hasRole } from "../../auth/utils/authUtils";
 import {
     getMenteeBookings,
     getMentorBookings,
+    confirmBooking,
     cancelBooking,
     BookingSession,
 } from "../../scheduling/services/schedulingService";
@@ -17,6 +18,7 @@ const SessionsContent: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [filterType, setFilterType] = useState<FilterType>("all");
     const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+    const [confirmingId, setConfirmingId] = useState<number | null>(null);
     const [cancellingId, setCancellingId] = useState<number | null>(null);
     const filterDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -60,6 +62,26 @@ const SessionsContent: React.FC = () => {
 
         fetchBookings();
     }, []);
+
+    const handleConfirmBooking = async (bookingId: number) => {
+        setConfirmingId(bookingId);
+        try {
+            await confirmBooking(bookingId);
+            setBookings(
+                bookings.map((booking) =>
+                    booking.id === bookingId
+                        ? { ...booking, status: "confirmed" }
+                        : booking
+                )
+            );
+            toast.success("Бронювання успішно підтверджено");
+        } catch (error) {
+            console.error("Failed to confirm booking:", error);
+            toast.error("Не вдалося підтвердити бронювання");
+        } finally {
+            setConfirmingId(null);
+        }
+    };
 
     const handleCancelBooking = async (bookingId: number) => {
         if (window.confirm("Ви впевнені, що хочете скасувати цю сесію?")) {
@@ -229,8 +251,14 @@ const SessionsContent: React.FC = () => {
                                     <BookingCard
                                         key={booking.id}
                                         booking={booking}
+                                        onConfirm={() =>
+                                            handleConfirmBooking(booking.id)
+                                        }
                                         onCancel={() =>
                                             handleCancelBooking(booking.id)
+                                        }
+                                        isConfirming={
+                                            confirmingId === booking.id
                                         }
                                         isCancelling={
                                             cancellingId === booking.id

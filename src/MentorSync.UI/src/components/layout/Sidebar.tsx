@@ -108,13 +108,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
                     className="w-6 h-6"
                 />
             </div>{" "}
-            <SidebarLink
-                icon="home-icon"
-                label="Головна"
-                active={activePage === "home"}
-                expanded={expanded}
-                to="/dashboard"
-            />
+            {hasRole("Mentee") && (
+                <SidebarLink
+                    icon="home-icon"
+                    label="Головна"
+                    active={activePage === "home"}
+                    expanded={expanded}
+                    to="/dashboard"
+                />
+            )}
             {hasRole("Mentee") && (
                 <SidebarLink
                     icon="search-icon"

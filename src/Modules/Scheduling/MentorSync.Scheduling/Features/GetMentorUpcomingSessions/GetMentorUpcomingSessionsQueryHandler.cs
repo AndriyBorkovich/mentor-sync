@@ -30,7 +30,7 @@ public sealed class GetMentorUpcomingSessionsQueryHandler(
                     Description = "Mentoring Session",
                     StartTime = booking.Start,
                     EndTime = booking.End,
-                    Status = nameof(booking.Status),
+                    Status = booking.Status.ToString(),
                 })
                 .Take(5)
                 .ToListAsync(cancellationToken);

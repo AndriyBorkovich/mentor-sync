@@ -12,7 +12,6 @@ import MessagesPage from "./features/messages/pages/MessagesPage";
 import MaterialsPage from "./features/materials/pages/MaterialsPage";
 import MaterialViewPage from "./features/materials/pages/MaterialViewPage";
 import ProfilePage from "./features/profile/pages/ProfilePage";
-import MentorBookingsPage from "./features/bookings/pages/MentorBookingsPage";
 import { OnboardingPage } from "./features/onboarding";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
 import { RoleBasedRoute } from "./features/auth/components/RoleBasedRoute";
@@ -76,10 +75,6 @@ const router = createBrowserRouter([
                 path: "/bookings",
                 element: <Navigate to="/sessions" replace />,
             },
-            {
-                path: "/mentor/bookings",
-                element: <MentorBookingsPage />,
-            },
             // Routes that require specific roles
             {
                 element: (
@@ -93,10 +88,6 @@ const router = createBrowserRouter([
                     {
                         path: "/mentor/availability",
                         element: <MyAvailabilityPage />,
-                    },
-                    {
-                        path: "/mentor/bookings",
-                        element: <MentorBookingsPage />,
                     },
                 ],
             },
