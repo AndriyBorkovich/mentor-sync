@@ -1,4 +1,4 @@
-namespace MentorSync.Notifications.Infrastructure;
+namespace MentorSync.Notifications.Infrastructure.Emails;
 
 public interface IEmailSender
 {

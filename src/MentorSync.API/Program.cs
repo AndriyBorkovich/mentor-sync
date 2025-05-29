@@ -44,6 +44,6 @@ app.UseSession();
 
 app.MapEndpoints();
 
-app.MapSignalRHubs();
+app.MapHubs();
 
 app.Run();

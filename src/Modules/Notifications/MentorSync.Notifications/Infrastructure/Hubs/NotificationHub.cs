@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace MentorSync.Notifications.Hubs;
+namespace MentorSync.Notifications.Infrastructure.Hubs;
 
 public class NotificationHub : Hub
 {

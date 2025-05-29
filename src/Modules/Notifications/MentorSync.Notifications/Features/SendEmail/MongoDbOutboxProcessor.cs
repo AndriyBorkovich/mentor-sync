@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Domain;
-using MentorSync.Notifications.Infrastructure;
+using MentorSync.Notifications.Infrastructure.Emails;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 

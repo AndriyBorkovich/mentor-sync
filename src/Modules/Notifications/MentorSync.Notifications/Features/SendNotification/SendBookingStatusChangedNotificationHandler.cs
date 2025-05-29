@@ -1,7 +1,7 @@
 using System.Text.Json;
 using MediatR;
 using MentorSync.Notifications.Contracts;
-using MentorSync.Notifications.Hubs;
+using MentorSync.Notifications.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
