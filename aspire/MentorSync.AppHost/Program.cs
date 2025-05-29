@@ -60,6 +60,8 @@ builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
     .WithReference(postgresDb)
     .WaitFor(postgresDb);
 
+const int uiPort = 51392;
+
 // API project
 var api = builder.AddProject<Projects.MentorSync_API>("api")
     .WithExternalHttpEndpoints()
@@ -69,7 +71,8 @@ var api = builder.AddProject<Projects.MentorSync_API>("api")
     .WaitFor(postgresDb)
     .WithReference(mongodb)
     .WaitFor(mongodb)
-    .WithEnvironment("ConnectionStrings__EmailService", smtpConnectionString);
+    .WithEnvironment("ConnectionStrings__EmailService", smtpConnectionString)
+    .WithEnvironment(name: "UI_PORT", value: uiPort.ToString());
 
 // React + vite UI project
 builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scriptName: "dev")
@@ -77,7 +80,7 @@ builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scrip
     .WaitFor(api)
     .WithEnvironment("BROWSER", "none")
     .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
-    .WithHttpEndpoint(env: "VITE_PORT")
+    .WithHttpEndpoint(env: "VITE_PORT", port: uiPort)
     .WithExternalHttpEndpoints()
     .WithNpmPackageInstallation()
     .PublishAsDockerFile();
