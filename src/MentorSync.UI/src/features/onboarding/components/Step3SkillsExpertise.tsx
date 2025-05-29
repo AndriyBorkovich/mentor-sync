@@ -72,7 +72,7 @@ const Step3SkillsExpertise: React.FC = () => {
                             value={skillInput}
                             onChange={(e) => setSkillInput(e.target.value)}
                             className="flex-1 p-3 border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6C5DD3] focus:border-[#6C5DD3]"
-                            placeholder="Наприклад: React.js"
+                            placeholder="Наприклад: робота в команді"
                             onKeyDown={(e) =>
                                 e.key === "Enter" && handleAddSkill()
                             }

@@ -20,12 +20,9 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
             case 1:
                 return !!data.bio;
             case 2:
-                return !!data.position && !!data.company;
+                return !!data.position;
             case 3:
-                return (
-                    data.skills.length > 0 &&
-                    data.programmingLanguages.length > 0
-                );
+                return data.skills.length > 0;
             case 4:
                 if (userRole === "mentor") {
                     // Mentor requires availability
@@ -68,18 +65,11 @@ export const OnboardingContent: React.FC<{ userRole: "mentor" | "mentee" }> = ({
             alert("Будь ласка, вкажіть вашу посаду");
             return;
         }
-        if (data.company.trim() === "") {
-            alert("Будь ласка, вкажіть назву компанії");
-            return;
-        }
         if (data.skills.length === 0) {
             alert("Будь ласка, вкажіть ваші навички");
             return;
         }
-        if (data.programmingLanguages.length === 0) {
-            alert("Будь ласка, вкажіть мови програмування");
-            return;
-        }
+
         if (data.industryFlag === 0) {
             alert("Будь ласка, виберіть хоча б одну галузь");
             return;

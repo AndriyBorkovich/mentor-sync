@@ -1,7 +1,7 @@
 import React from "react";
-import { Mentor } from "../data/mentors";
 import { Link } from "react-router-dom";
 import { hasRole } from "../../auth/utils/authUtils";
+import { Mentor } from "../../../shared/types";
 
 interface MentorCardProps {
     mentor: Mentor;

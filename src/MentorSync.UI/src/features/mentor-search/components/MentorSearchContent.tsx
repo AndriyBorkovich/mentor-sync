@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { recommendedMentors, Mentor } from "../../dashboard/data/mentors";
 import { EnhancedMentorCard } from "./EnhancedMentorCard";
 import { mentorSearchService } from "../services/mentorSearchService";
 import { Industry, industriesMapping } from "../../../shared/enums/industry";
 import { programmingLanguages } from "../../../shared/constants/programmingLanguages";
+import { Mentor } from "../../../shared/types";
 
 // Tabs for mentors and saved mentors
 type TabType = "mentors" | "recommendedMentors";
@@ -14,7 +14,7 @@ const MentorSearchContent: React.FC = () => {
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(true);
     const [minExperience, setMinExperience] = useState<number>(1); // added slider state
-    const [mentors, setMentors] = useState<Mentor[]>(recommendedMentors);
+    const [mentors, setMentors] = useState<Mentor[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -83,14 +83,10 @@ const MentorSearchContent: React.FC = () => {
                 setMentors(response.data);
             } else {
                 setError(response.error || "Failed to load mentors");
-                // Fall back to mock data if API fails
-                setMentors(recommendedMentors);
             }
         } catch (err) {
             console.error("Error fetching mentors:", err);
             setError("An error occurred while fetching mentors");
-            // Fall back to mock data if API fails
-            setMentors(recommendedMentors);
         } finally {
             setLoading(false);
         }

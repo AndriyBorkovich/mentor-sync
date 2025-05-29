@@ -30,6 +30,38 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
 }) => {
     const isMentee = hasRole("Mentee");
 
+    function getReviewWord(count: number): string {
+        const n = Math.abs(count) % 100;
+        const lastDigit = n % 10;
+
+        if (n > 10 && n < 20) {
+            return "відгуків";
+        }
+        if (lastDigit === 1) {
+            return "відгук";
+        }
+        if (lastDigit >= 2 && lastDigit <= 4) {
+            return "відгуки";
+        }
+        return "відгуків";
+    }
+
+    function getYearsWord(count: number): string {
+        const n = Math.abs(count) % 100;
+        const lastDigit = n % 10;
+
+        if (n > 10 && n < 20) {
+            return "років";
+        }
+        if (lastDigit === 1) {
+            return "рік";
+        }
+        if (lastDigit >= 2 && lastDigit <= 4) {
+            return "роки";
+        }
+        return "років";
+    }
+
     return (
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
             {/* Mentor header information */}
@@ -37,7 +69,13 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
                 <div className="flex items-start justify-between">
                     <div className="flex items-start">
                         <img
-                            src={mentor.profileImage}
+                            src={
+                                mentor.profileImage
+                                    ? mentor.profileImage
+                                    : "https://ui-avatars.com/api/?name=" +
+                                      encodeURIComponent(mentor.name) +
+                                      "&background=F3F4F6&color=1E293B&size=64"
+                            }
                             alt={mentor.name}
                             className="w-[120px] h-[120px] rounded-full mr-6 border border-[#E2E8F0]"
                         />
@@ -68,11 +106,17 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
                                 </div>{" "}
                                 <span className="text-sm text-[#64748B]">
                                     {isMentorProfile(mentor) &&
-                                        `(${mentor.reviewCount} відгуки)`}
+                                        `(${mentor.reviewCount} ${getReviewWord(
+                                            mentor.reviewCount
+                                        )})`}
                                 </span>
                                 <div className="flex items-center ml-8">
                                     <span className="text-sm text-[#64748B]">
-                                        {mentor.yearsOfExperience} років досвіду
+                                        {mentor.yearsOfExperience ?? 0}{" "}
+                                        {getYearsWord(
+                                            mentor.yearsOfExperience ?? 0
+                                        )}{" "}
+                                        досвіду
                                     </span>
                                 </div>
                             </div>

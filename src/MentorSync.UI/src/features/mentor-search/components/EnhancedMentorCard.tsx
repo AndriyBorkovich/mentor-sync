@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Mentor } from "../../dashboard/data/mentors";
 import { hasRole } from "../../auth/utils/authUtils";
+import { Mentor } from "../../../shared/types";
 
 // Enhanced MentorCard component without save/bookmark functionality
 export interface MentorCardProps {

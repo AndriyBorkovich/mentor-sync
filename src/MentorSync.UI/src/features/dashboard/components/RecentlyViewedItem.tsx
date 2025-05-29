@@ -1,5 +1,5 @@
 import React from "react";
-import { Mentor } from "../data/mentors";
+import { Mentor } from "../../../shared/types";
 
 interface RecentlyViewedItemProps {
     mentor: Mentor;

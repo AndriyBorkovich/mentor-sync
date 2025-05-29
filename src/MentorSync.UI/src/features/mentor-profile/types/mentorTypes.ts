@@ -1,5 +1,4 @@
-import { Mentor } from "../../dashboard/data/mentors";
-import { MentorProfile } from "../services/mentorProfileService";
+import { Mentor, MentorProfile } from "../../../shared/types";
 
 // Union type that accepts either the old Mentor type or the new MentorProfile type
 export type MentorData = Mentor | MentorProfile;

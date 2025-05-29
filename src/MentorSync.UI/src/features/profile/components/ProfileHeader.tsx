@@ -3,13 +3,11 @@ import React from "react";
 interface ProfileHeaderProps {
     userName: string;
     profileImageUrl?: string;
-    role: string;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     userName,
     profileImageUrl,
-    role,
 }) => {
     return (
         <div className="bg-white rounded-lg shadow p-6">
@@ -31,9 +29,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     <h1 className="text-2xl font-bold text-gray-800">
                         {userName}
                     </h1>
-                    <div className="mt-1 inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
-                        {role == "Mentor" ? "Ментор" : "Менті"}
-                    </div>
                 </div>
                 <div className="flex-1 flex justify-end mt-4 md:mt-0">
                     <button className="bg-white border border-primary text-primary hover:bg-primary hover:text-white transition-colors px-4 py-2 rounded-lg">

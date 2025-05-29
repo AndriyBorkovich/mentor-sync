@@ -1,18 +1,4 @@
-export interface Skill {
-    id: string;
-    name: string;
-}
-
-export interface Mentor {
-    id: string;
-    name: string;
-    title: string;
-    rating: number;
-    skills: Skill[];
-    profileImage: string;
-    yearsOfExperience?: number; // minimum years of experience
-    category?: string; // mentor direction
-}
+import { Mentor } from "../../../shared/types";
 
 export const recommendedMentors: Mentor[] = [
     {

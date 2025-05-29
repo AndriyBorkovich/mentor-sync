@@ -9,16 +9,18 @@ import {
     recordMentorViewEvent,
     toggleBookmark,
     checkIfMentorIsBookmarked,
-    MentorBasicInfo,
-    MentorReviews,
-    MentorUpcomingSessions,
-    MentorMaterials,
 } from "../services/mentorProfileService";
 import { MentorData } from "../types/mentorTypes";
-import { Mentor } from "../../dashboard/data/mentors";
 import { ensureStringId } from "../types/mentorTypes";
 import { hasRole } from "../../auth/utils/authUtils";
 import { toast } from "react-toastify";
+import {
+    Mentor,
+    MentorBasicInfo,
+    MentorMaterials,
+    MentorReviews,
+    MentorUpcomingSessions,
+} from "../../../shared/types";
 
 // Fallback mock mentor to display while loading or if error occurs
 const mockMentor: Mentor = {

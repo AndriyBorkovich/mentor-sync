@@ -9,7 +9,7 @@ const OnboardingStepper: React.FC = () => {
         { label: "Професійна інформація", step: 2 },
         { label: "Навички та експертиза", step: 3 },
         { label: "Доступність", step: 4 },
-        { label: "Спеціалізація", step: 5 },
+        { label: "Напрям", step: 5 },
     ];
 
     const menteeSteps = [

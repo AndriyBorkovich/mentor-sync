@@ -1,6 +1,6 @@
 import api from "../../auth/services/api";
 import { Industry } from "../../../shared/enums/industry";
-import { Mentor } from "../../dashboard/data/mentors";
+import { Mentor } from "../../../shared/types";
 
 interface SearchMentorsParams {
     searchTerm?: string;

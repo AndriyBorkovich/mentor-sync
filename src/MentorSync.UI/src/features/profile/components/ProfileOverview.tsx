@@ -11,8 +11,8 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
     isLoading,
 }) => {
     // Determine which profile to display
-    const isMentee = profile?.role === "Менті";
-    const isMentor = profile?.role === "Ментор";
+    const isMentee = profile?.role === "Mentee";
+    const isMentor = profile?.role === "Mentor";
     const menteeProfile = profile?.menteeProfile;
     const mentorProfile = profile?.mentorProfile;
 
