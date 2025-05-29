@@ -8,9 +8,7 @@ import { toast } from "react-toastify";
 
 const SIGNALR_URL = `${import.meta.env.VITE_API_URL}/notificationHub`;
 
-export function useSignalRNotifications(
-    onBookingStatusChanged?: (data: any) => void
-) {
+export function useNotifications(onBookingStatusChanged?: (data: any) => void) {
     const connectionRef = useRef<HubConnection | null>(null);
 
     useEffect(() => {
@@ -38,7 +36,6 @@ export function useSignalRNotifications(
         });
 
         connection.start().catch((err) => {
-            // Optionally handle connection errors
             // eslint-disable-next-line no-console
             console.error("SignalR connection error:", err);
         });

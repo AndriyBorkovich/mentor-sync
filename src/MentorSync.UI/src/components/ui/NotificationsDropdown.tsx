@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useSignalRNotifications } from "../../features/notifications/useSignalRNotifications";
+import { useNotifications } from "../../features/notifications/useNotifications";
 
 interface NotificationDropdownProps {
     isOpen: boolean;
@@ -20,7 +20,7 @@ export const NotificationsDropdown: React.FC<NotificationDropdownProps> = ({
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [notifications, setNotifications] = useState<Notification[]>([]);
 
-    useSignalRNotifications((data) => {
+    useNotifications((data) => {
         setNotifications((prev) => [
             {
                 id: crypto.randomUUID(),
