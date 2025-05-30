@@ -11,7 +11,9 @@ internal sealed class BookingService(SchedulingDbContext schedulingDbContext) : 
     public async Task<List<BookingModel>> GetAllBookingsAsync(CancellationToken cancellationToken = default)
     {
         var result = await schedulingDbContext.Bookings
-            .Where(b => b.Status == BookingStatus.NoShow || b.Status == BookingStatus.Completed || b.Status == BookingStatus.Cancelled)
+            .Where(b => b.Status == BookingStatus.NoShow
+                || b.Status == BookingStatus.Completed
+                || b.Status == BookingStatus.Cancelled)
             .Select(booking => new BookingModel
             {
                 MentorId = booking.MentorId,

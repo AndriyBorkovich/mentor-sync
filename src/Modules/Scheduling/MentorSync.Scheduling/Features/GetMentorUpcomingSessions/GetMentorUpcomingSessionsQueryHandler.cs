@@ -13,40 +13,32 @@ public sealed class GetMentorUpcomingSessionsQueryHandler(
 {
     public async Task<Result<MentorUpcomingSessionsResponse>> Handle(GetMentorUpcomingSessionsQuery request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var now = DateTimeOffset.UtcNow;
+        var now = DateTimeOffset.UtcNow;
 
-            var sessions = await dbContext.Bookings
-                .Where(b =>
-                    b.MentorId == request.MentorId &&
-                    b.Start > now &&
-                    b.Status == BookingStatus.Pending)
-                .OrderBy(b => b.Start)
-                .Select(booking => new SessionInfo
-                {
-                    Id = booking.Id,
-                    Title = $"Session with",
-                    Description = "Mentoring Session",
-                    StartTime = booking.Start,
-                    EndTime = booking.End,
-                    Status = booking.Status.ToString(),
-                })
-                .Take(5)
-                .ToListAsync(cancellationToken);
-
-            // Create response
-            var response = new MentorUpcomingSessionsResponse
+        var sessions = await dbContext.Bookings
+            .Where(b =>
+                b.MentorId == request.MentorId &&
+                b.Start > now &&
+                b.Status == BookingStatus.Pending)
+            .OrderBy(b => b.Start)
+            .Select(booking => new SessionInfo
             {
-                UpcomingSessions = sessions
-            };
+                Id = booking.Id,
+                Title = $"Session with",
+                Description = "Mentoring Session",
+                StartTime = booking.Start,
+                EndTime = booking.End,
+                Status = booking.Status.ToString(),
+            })
+            .Take(5)
+            .ToListAsync(cancellationToken);
 
-            return Result.Success(response);
-        }
-        catch (Exception ex)
+        // Create response
+        var response = new MentorUpcomingSessionsResponse
         {
-            logger.LogError(ex, "Error getting upcoming sessions for MentorId: {MentorId}", request.MentorId);
-            return Result.Error($"An error occurred while getting upcoming sessions: {ex.Message}");
-        }
+            UpcomingSessions = sessions
+        };
+
+        return Result.Success(response);
     }
 }

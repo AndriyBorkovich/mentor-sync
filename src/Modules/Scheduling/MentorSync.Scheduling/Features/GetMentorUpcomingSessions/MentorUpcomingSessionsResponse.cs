@@ -5,7 +5,7 @@ namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
 
 public record MentorUpcomingSessionsResponse
 {
-    public List<SessionInfo> UpcomingSessions { get; init; } = new();
+    public List<SessionInfo> UpcomingSessions { get; init; } = [];
 }
 
 public record SessionInfo
