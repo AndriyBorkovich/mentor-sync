@@ -14,8 +14,6 @@ const MaterialViewPage: React.FC = () => {
     const navigate = useNavigate();
     const [sidebarExpanded, setSidebarExpanded] = useState(false);
     const [material, setMaterial] = useState<Material | undefined>();
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchMaterial = async () => {
@@ -23,9 +21,6 @@ const MaterialViewPage: React.FC = () => {
                 navigate("/materials");
                 return;
             }
-
-            setIsLoading(true);
-            setError(null);
 
             try {
                 const response = await getMaterialById(
@@ -77,12 +72,9 @@ const MaterialViewPage: React.FC = () => {
                 // Set document title
                 document.title = `${uiMaterial.title} | MentorSync Materials`;
             } catch (err) {
-                setError("Failed to load material. Please try again later.");
                 toast.error("Failed to load material");
                 console.error("Error fetching material:", err);
                 navigate("/materials");
-            } finally {
-                setIsLoading(false);
             }
         };
 

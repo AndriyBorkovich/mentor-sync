@@ -60,14 +60,6 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
 
         fetchAvailability();
     }, [mentorId]); // Format date for display
-    const formatDate = (dateString: string): string => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString("uk-UA", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        });
-    };
 
     // Format date for input fields (YYYY-MM-DD)
     const formatDateForInput = (date: Date): string => {

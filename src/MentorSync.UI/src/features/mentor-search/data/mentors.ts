@@ -1,4 +1,4 @@
-import { Mentor } from "../../dashboard/data/mentors";
+import { Mentor } from "../../../shared/types";
 
 export const recommendedMentors: Mentor[] = [
     {

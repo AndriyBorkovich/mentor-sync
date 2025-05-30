@@ -3,12 +3,11 @@ using MediatR;
 using MentorSync.Scheduling.Data;
 using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
 
 public sealed class GetMentorUpcomingSessionsQueryHandler(
-    SchedulingDbContext dbContext, ILogger<GetMentorUpcomingSessionsQueryHandler> logger)
+    SchedulingDbContext dbContext)
     : IRequestHandler<GetMentorUpcomingSessionsQuery, Result<MentorUpcomingSessionsResponse>>
 {
     public async Task<Result<MentorUpcomingSessionsResponse>> Handle(GetMentorUpcomingSessionsQuery request, CancellationToken cancellationToken)

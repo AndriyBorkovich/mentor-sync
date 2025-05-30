@@ -8,7 +8,6 @@ import {
     createMaterial,
     uploadAttachment,
     mapMaterialType,
-    mapToApiMaterialType,
 } from "../services/materialService";
 import "../../../components/layout/styles/logo.css";
 import "../../../components/layout/styles/sidebar.css";
