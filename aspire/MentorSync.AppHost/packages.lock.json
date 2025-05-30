@@ -2,12 +2,6 @@
   "version": 1,
   "dependencies": {
     "net9.0": {
-      "Aspire.Dashboard.Sdk.linux-x64": {
-        "type": "Direct",
-        "requested": "[9.3.0, )",
-        "resolved": "9.3.0",
-        "contentHash": "AaM8qGUW6Z9rVQU/vIOi61vtLCZVOz8H9JcMbrfaHtcESY/ATBOEYgZWYlxdqj54IJeOQQp7tUWe+ebA09qUmQ=="
-      },
       "Aspire.Dashboard.Sdk.win-x64": {
         "type": "Direct",
         "requested": "[9.3.0, )",
