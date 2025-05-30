@@ -60,7 +60,7 @@ builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
     .WithReference(postgresDb)
     .WaitFor(postgresDb);
 
-const int uiPort = 51393;
+const int uiPort = 51990;
 
 // API project
 var api = builder.AddProject<Projects.MentorSync_API>("api")
@@ -80,7 +80,6 @@ builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scrip
     .WaitFor(api)
     .WithEnvironment("BROWSER", "none")
     .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
-    .WithEnvironment("VITE_PORT", uiPort.ToString())
     .WithHttpEndpoint(env: "VITE_PORT", port: uiPort)
     .WithExternalHttpEndpoints()
     .WithNpmPackageInstallation()
