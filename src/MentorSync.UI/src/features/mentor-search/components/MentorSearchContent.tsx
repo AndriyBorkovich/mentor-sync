@@ -3,9 +3,9 @@ import { EnhancedMentorCard } from "./EnhancedMentorCard";
 import { mentorSearchService } from "../services/mentorSearchService";
 import { Industry, industriesMapping } from "../../../shared/enums/industry";
 import { programmingLanguages } from "../../../shared/constants/programmingLanguages";
-import { Mentor } from "../../../shared/types";
+import { Mentor, RecommendedMentor } from "../../../shared/types";
 
-// Tabs for mentors and saved mentors
+// Tabs for mentors and recommended mentors
 type TabType = "mentors" | "recommendedMentors";
 
 const MentorSearchContent: React.FC = () => {
@@ -15,6 +15,9 @@ const MentorSearchContent: React.FC = () => {
     const [showFilters, setShowFilters] = useState(true);
     const [minExperience, setMinExperience] = useState<number>(1); // added slider state
     const [mentors, setMentors] = useState<Mentor[]>([]);
+    const [recommendedMentors, setRecommendedMentors] = useState<
+        RecommendedMentor[]
+    >([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -90,19 +93,63 @@ const MentorSearchContent: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    }; // Fetch recommended mentors from API based on filters
+    const fetchRecommendedMentors = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            // Determine industry filter based on selected directions
+            let industryFilter: Industry | undefined;
+            if (selectedDirections.length === 1) {
+                industryFilter = selectedDirections[0];
+            }
+
+            const response = await mentorSearchService.getRecommendedMentors({
+                searchTerm: searchTerm || undefined,
+                programmingLanguages:
+                    selectedSkills.length > 0 ? selectedSkills : undefined,
+                industry: industryFilter,
+                minExperienceYears: minExperience,
+            });
+
+            if (response.success && response.data) {
+                setRecommendedMentors(response.data);
+            } else {
+                setError(
+                    response.error || "Failed to load recommended mentors"
+                );
+            }
+        } catch (err) {
+            console.error("Error fetching recommended mentors:", err);
+            setError("An error occurred while fetching recommended mentors");
+        } finally {
+            setLoading(false);
+        }
     };
 
     // Call the API when filters change
     useEffect(() => {
         // Use a debounce to avoid too many API calls while typing
-        const timeoutId = setTimeout(fetchMentors, 500);
+        const timeoutId = setTimeout(() => {
+            if (activeTab === "mentors") {
+                fetchMentors();
+            } else {
+                fetchRecommendedMentors();
+            }
+        }, 500);
         return () => clearTimeout(timeoutId);
-    }, [searchTerm, selectedSkills, selectedDirections, minExperience]);
+    }, [
+        searchTerm,
+        selectedSkills,
+        selectedDirections,
+        minExperience,
+        activeTab,
+    ]);
 
-    // Get saved mentors
-    const savedMentors: Mentor[] = [];
-    // Determine which mentors to display based on active tab
-    const mentorsToDisplay = activeTab === "mentors" ? mentors : savedMentors;
+    // Get saved mentors    // Determine which mentors to display based on active tab
+    const mentorsToDisplay =
+        activeTab === "mentors" ? mentors : recommendedMentors;
 
     return (
         <div className="flex h-full bg-[#F8FAFC]">
@@ -298,13 +345,19 @@ const MentorSearchContent: React.FC = () => {
                     {/* Tabs */}
                     <div className="border-b border-[#E2E8F0] mb-6">
                         <div className="flex space-x-8">
+                            {" "}
                             <button
                                 className={`pb-4 font-medium text-base transition-colors ${
                                     activeTab === "mentors"
                                         ? "text-[#4318D1] border-b-2 border-[#4318D1]"
                                         : "text-[#64748B] hover:text-[#1E293B]"
                                 }`}
-                                onClick={() => setActiveTab("mentors")}
+                                onClick={() => {
+                                    setActiveTab("mentors");
+                                    if (mentors.length === 0) {
+                                        fetchMentors();
+                                    }
+                                }}
                             >
                                 Усі ментори
                             </button>
@@ -314,9 +367,12 @@ const MentorSearchContent: React.FC = () => {
                                         ? "text-[#4318D1] border-b-2 border-[#4318D1]"
                                         : "text-[#64748B] hover:text-[#1E293B]"
                                 }`}
-                                onClick={() =>
-                                    setActiveTab("recommendedMentors")
-                                }
+                                onClick={() => {
+                                    setActiveTab("recommendedMentors");
+                                    if (recommendedMentors.length === 0) {
+                                        fetchRecommendedMentors();
+                                    }
+                                }}
                             >
                                 {" "}
                                 Мої рекомендації
@@ -349,7 +405,11 @@ const MentorSearchContent: React.FC = () => {
                         <p className="text-red-500">{error}</p>{" "}
                         <button
                             className="mt-4 px-4 py-2 bg-[#4318D1] text-white rounded-md hover:bg-[#3a15b3]"
-                            onClick={fetchMentors}
+                            onClick={
+                                activeTab === "mentors"
+                                    ? fetchMentors
+                                    : fetchRecommendedMentors
+                            }
                         >
                             Спробувати ще раз
                         </button>
@@ -358,17 +418,22 @@ const MentorSearchContent: React.FC = () => {
                 {/* Grid of mentor cards */}
                 {!loading && !error && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {" "}
                         {mentorsToDisplay.map((mentor) => (
                             <EnhancedMentorCard
                                 key={mentor.id}
                                 mentor={mentor}
+                                showRecommendationScores={
+                                    activeTab === "recommendedMentors"
+                                }
                             />
                         ))}
                         {mentorsToDisplay.length === 0 && (
                             <div className="col-span-3 text-center py-12">
+                                {" "}
                                 <p className="text-[#64748B] text-lg">
                                     {activeTab === "recommendedMentors"
-                                        ? "У вас ще немає рекомендованих менторів"
+                                        ? "У вас ще немає рекомендованих менторів. Взаємодійте з платформою, щоб отримати персоналізовані рекомендації."
                                         : "Не знайдено менторів за вашими критеріями пошуку"}
                                 </p>
                             </div>

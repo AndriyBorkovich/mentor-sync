@@ -4,6 +4,7 @@
   <Project Path="src/MentorSync.API/MentorSync.API.csproj" />
   <Project Path="src/MentorSync.MigrationService/MentorSync.MigrationService.csproj" />
   <Project Path="src/MentorSync.SharedKernel/MentorSync.SharedKernel.csproj" />
+  <Project Path="src/Modules/Materials/MentorSync.Materials.Contracts/MentorSync.Materials.Contracts.csproj" Id="642c82ee-fece-43b4-9207-7b2999ef0822" />
   <Project Path="src/Modules/Materials/MentorSync.Materials/MentorSync.Materials.csproj" Id="dd6b7668-764f-40f9-b1fe-9cad0a883eea" />
   <Project Path="src/Modules/Notifications/MentorSync.Notifications.Contracts/MentorSync.Notifications.Contracts.csproj" />
   <Project Path="src/Modules/Notifications/MentorSync.Notifications/MentorSync.Notifications.csproj" />

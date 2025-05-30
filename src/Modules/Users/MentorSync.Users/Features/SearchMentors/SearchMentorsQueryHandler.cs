@@ -1,12 +1,11 @@
-using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.SearchMentors;
 
-public sealed partial class SearchMentorsCommandHandler(
-    UsersDbContext usersDbContext) : IRequestHandler<SearchMentorsCommand, List<MentorSearchResponse>>
+public sealed partial class SearchMentorsQueryHandler(
+    UsersDbContext usersDbContext) : IRequestHandler<SearchMentorsQuery, List<MentorSearchResponse>>
 {
     private static readonly FormattableString SqlQuery = $@"
         SELECT DISTINCT ON (u.""Id"")
@@ -46,7 +45,7 @@ public sealed partial class SearchMentorsCommandHandler(
         INNER JOIN users.""MentorProfiles"" mp ON u.""Id"" = mp.""MentorId""
         LEFT JOIN ratings.""MentorReviews"" mr ON mp.""MentorId"" = mr.""MentorId""";
 
-    public async Task<List<MentorSearchResponse>> Handle(SearchMentorsCommand request, CancellationToken cancellationToken)
+    public async Task<List<MentorSearchResponse>> Handle(SearchMentorsQuery request, CancellationToken cancellationToken)
     {
         var mentorsQuery = usersDbContext.Database
             .SqlQuery<MentorSearchResultDto>(SqlQuery);

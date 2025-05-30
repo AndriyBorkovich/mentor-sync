@@ -1,5 +1,4 @@
 ﻿using MentorSync.Recommendations.Data;
-using MentorSync.Recommendations.Domain.Preferences;
 using MentorSync.Recommendations.Domain;
 using MentorSync.Recommendations.Infrastructure.MachineLearning.Input;
 using MentorSync.Recommendations.Infrastructure.MachineLearning.Output;
@@ -21,6 +20,7 @@ public interface IHybridScorer
 
 public class HybridScorer(
     RecommendationsDbContext db,
+    IMenteeProfileService menteeProfileService,
     IMentorProfileService mentorProfileService,
     ILogger<HybridScorer> logger) : IHybridScorer
 {
@@ -32,30 +32,30 @@ public class HybridScorer(
         _model = _mlContext.Model.Load("model.zip", out _);
         logger.LogInformation("Generating hybrid recommendations...");
 
-        var menteesIds = await db.MenteePreferences.Select(x => x.MenteeId).ToListAsync(cancellationToken);
+        var menteePreferences = await menteeProfileService.GetMenteesPreferences();
         var mentors = await mentorProfileService.GetAllMentorsAsync();
 
         var engine = _mlContext.Model.CreatePredictionEngine<MenteeMentorRatingData, MentorPrediction>(_model);
 
-        foreach (var menteeId in menteesIds)
+        foreach (var preferences in menteePreferences)
         {
-            var preferences = await db.MenteePreferences.FirstOrDefaultAsync(x => x.MenteeId == menteeId, cancellationToken);
             foreach (var mentor in mentors)
             {
                 var cfScore = engine.Predict(new MenteeMentorRatingData
                 {
-                    MenteeId = menteeId.ToString(),
+                    MenteeId = preferences.MenteeId.ToString(),
                     MentorId = mentor.Id.ToString()
                 }).Score;
 
+                var normalizedCfScore = float.IsNaN(cfScore) ? 0 : cfScore;
                 var cbfScore = CalculateCBFScore(preferences, mentor);
-                var finalScore = (cfScore * 0.7f) + (cbfScore * 0.3f);
+                var finalScore = (normalizedCfScore * 0.7f) + (cbfScore * 0.3f);
 
                 db.RecommendationResults.Add(new RecommendationResult
                 {
-                    MenteeId = menteeId,
+                    MenteeId = preferences.MenteeId,
                     MentorId = mentor.Id,
-                    CollaborativeScore = cfScore,
+                    CollaborativeScore = normalizedCfScore,
                     ContentBasedScore = cbfScore,
                     FinalScore = finalScore,
                     GeneratedAt = DateTime.UtcNow
@@ -67,7 +67,7 @@ public class HybridScorer(
         logger.LogInformation("Hybrid recommendations saved.");
     }
 
-    private static float CalculateCBFScore(MenteePreference pref, MentorProfileModel mentor)
+    private static float CalculateCBFScore(MenteePreferences pref, MentorProfileModel mentor)
     {
         float score = 0;
         var prefLangs = pref?.DesiredProgrammingLanguages ?? [];

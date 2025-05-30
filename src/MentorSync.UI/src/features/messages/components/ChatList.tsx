@@ -27,7 +27,13 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
                 <div className="h-12 w-12 rounded-full bg-gray-200 flex-shrink-0">
                     {chat.participantAvatar && (
                         <img
-                            src={chat.participantAvatar}
+                            src={
+                                chat.participantAvatar
+                                    ? chat.participantAvatar
+                                    : "https://ui-avatars.com/api/?name=" +
+                                      encodeURIComponent(chat.participantName) +
+                                      "&background=F3F4F6&color=1E293B&size=64"
+                            }
                             alt={participantName}
                             className="h-full w-full rounded-full object-cover"
                         />

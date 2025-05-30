@@ -19,4 +19,19 @@ public sealed class MenteeProfileService(UsersDbContext usersDbContext) : IMente
 
         return result;
     }
+
+    public async Task<List<MenteePreferences>> GetMenteesPreferences()
+    {
+        var rnd = new Random();
+        var result = await usersDbContext.MenteeProfiles
+            .Select(m => new MenteePreferences
+            {
+                MenteeId = m.MenteeId,
+                DesiredProgrammingLanguages = m.ProgrammingLanguages,
+                DesiredIndustries = m.Industries,
+                MinMentorExperienceYears = rnd.Next(1, 7)
+            }).ToListAsync();
+
+        return result;
+    }
 }

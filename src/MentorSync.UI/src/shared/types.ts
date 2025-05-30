@@ -14,6 +14,12 @@ export interface Mentor {
     category?: string; // mentor direction
 }
 
+export interface RecommendedMentor extends Mentor {
+    collaborativeScore: number;
+    contentBasedScore: number;
+    finalScore: number;
+}
+
 // BasicInfo types
 export interface MentorProfileSkill {
     id: string;

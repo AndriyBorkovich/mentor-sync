@@ -4,7 +4,7 @@ using MentorSync.SharedKernel.CommonEntities;
 
 namespace MentorSync.Users.Features.SearchMentors;
 
-public sealed record SearchMentorsCommand(
+public sealed record SearchMentorsQuery(
     string SearchTerm = null,
     List<string> ProgrammingLanguages = null,
     Industry? Industry = null,

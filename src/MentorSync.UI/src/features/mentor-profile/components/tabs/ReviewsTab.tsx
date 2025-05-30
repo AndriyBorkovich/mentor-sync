@@ -113,7 +113,15 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({
                                 <div className="flex items-center">
                                     {review.authorImage ? (
                                         <img
-                                            src={review.authorImage}
+                                            src={
+                                                review.authorImage
+                                                    ? review.authorImage
+                                                    : "https://ui-avatars.com/api/?name=" +
+                                                      encodeURIComponent(
+                                                          review.authorName
+                                                      ) +
+                                                      "&background=F3F4F6&color=1E293B&size=64"
+                                            }
                                             alt={review.authorName}
                                             className="w-10 h-10 rounded-full mr-3"
                                         />

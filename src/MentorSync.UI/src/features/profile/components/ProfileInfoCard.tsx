@@ -19,10 +19,12 @@ const ProfileInfoCard: React.FC<ProfileInfoCardProps> = ({ title, items }) => {
             <div className="space-y-3">
                 {items.map((item, index) => (
                     <div key={index} className="flex flex-col">
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 break-words">
                             {item.label}
                         </span>
-                        <span className="text-gray-700">{item.value}</span>
+                        <span className="text-gray-700 break-words">
+                            {item.value}
+                        </span>
                     </div>
                 ))}
             </div>

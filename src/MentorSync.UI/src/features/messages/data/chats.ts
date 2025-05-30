@@ -22,7 +22,7 @@ export const mockChats: Chat[] = [
         id: "1",
         participantId: "101",
         participantName: "Оксана Лень",
-        participantAvatar: "/placeholder-avatar.jpg",
+        participantAvatar: undefined,
         lastMessage: {
             id: "m1",
             senderId: "101",
@@ -38,7 +38,7 @@ export const mockChats: Chat[] = [
         id: "2",
         participantId: "102",
         participantName: "Михайло Янків",
-        participantAvatar: "/placeholder-avatar.jpg",
+        participantAvatar: undefined,
         lastMessage: {
             id: "m2",
             senderId: "current-user",
@@ -54,7 +54,7 @@ export const mockChats: Chat[] = [
         id: "3",
         participantId: "103",
         participantName: "Петро Петрів",
-        participantAvatar: "/placeholder-avatar.jpg",
+        participantAvatar: undefined,
         lastMessage: {
             id: "m3",
             senderId: "103",
@@ -70,7 +70,7 @@ export const mockChats: Chat[] = [
         id: "4",
         participantId: "104",
         participantName: "Дмитро Кім",
-        participantAvatar: "/placeholder-avatar.jpg",
+        participantAvatar: undefined,
         lastMessage: {
             id: "m4",
             senderId: "current-user",
@@ -86,7 +86,7 @@ export const mockChats: Chat[] = [
         id: "5",
         participantId: "105",
         participantName: "Юлія Король",
-        participantAvatar: "/placeholder-avatar.jpg",
+        participantAvatar: undefined,
         lastMessage: {
             id: "m5",
             senderId: "105",

@@ -24,7 +24,7 @@ public sealed class SearchMentorsEndpoint : IEndpoint
                 Industry? industryEnum = industry.HasValue ? (Industry)industry.Value : null;
                 var programmingLanguagesList = programmingLanguages?.ToList();
 
-                var result = await sender.Send(new SearchMentorsCommand(
+                var result = await sender.Send(new SearchMentorsQuery(
                     searchTerm,
                     programmingLanguagesList,
                     industryEnum,

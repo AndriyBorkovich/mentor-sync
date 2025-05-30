@@ -122,16 +122,14 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
                             </div>
 
                             <div className="flex gap-2 mt-4">
-                                {mentor.skills.slice(0, 3).map((skill) => (
-                                    <div
-                                        key={skill.id}
-                                        className="px-3 py-1 bg-[#F8FAFC] rounded-2xl"
-                                    >
-                                        <span className="text-xs text-[#1E293B]">
-                                            {skill.name}
-                                        </span>
-                                    </div>
-                                ))}
+                                <div
+                                    key={mentor.category}
+                                    className="px-3 py-1 bg-[#F8FAFC] rounded-2xl"
+                                >
+                                    <span className="text-xs text-[#1E293B]">
+                                        {mentor.category}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>

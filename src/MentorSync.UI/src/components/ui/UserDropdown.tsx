@@ -49,7 +49,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
                 <h3 className="text-base font-medium text-[#1E293B]">
                     {loading ? "Loading..." : profile?.userName || "User"}
                 </h3>
-                <p className="text-sm text-[#64748B]">
+                <p className="text-sm text-[#64748B] break-words">
                     {profile?.email || "Loading email..."}
                 </p>
                 {profile?.role && (

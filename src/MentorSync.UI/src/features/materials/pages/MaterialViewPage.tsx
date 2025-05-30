@@ -3,7 +3,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import Sidebar from "../../../components/layout/Sidebar";
 import Header from "../../../components/layout/Header";
 import MaterialViewContent from "../components/MaterialViewContent";
-import MaterialAnalytics from "../components/MaterialAnalytics";
 import { getMaterialById } from "../services/materialService";
 import { toast } from "react-toastify";
 import "../../../components/layout/styles/logo.css";
@@ -17,12 +16,6 @@ const MaterialViewPage: React.FC = () => {
     const [material, setMaterial] = useState<Material | undefined>();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [viewCount, setViewCount] = useState<number>(0);
-    const [analyticsData, setAnalyticsData] = useState({
-        ratingCount: 0,
-        averageRating: 0,
-        commentCount: 0,
-    });
 
     useEffect(() => {
         const fetchMaterial = async () => {
@@ -80,20 +73,6 @@ const MaterialViewPage: React.FC = () => {
                 };
 
                 setMaterial(uiMaterial);
-
-                // Set analytics data - for now we'll use mocked values since the API doesn't provide these yet
-                const mockAnalytics = {
-                    viewCount: 24,
-                    ratingCount: 8,
-                    averageRating: 4.5,
-                    commentCount: 3,
-                };
-                setViewCount(mockAnalytics.viewCount);
-                setAnalyticsData({
-                    ratingCount: mockAnalytics.ratingCount,
-                    averageRating: mockAnalytics.averageRating,
-                    commentCount: mockAnalytics.commentCount,
-                });
 
                 // Set document title
                 document.title = `${uiMaterial.title} | MentorSync Materials`;
@@ -201,13 +180,6 @@ const MaterialViewPage: React.FC = () => {
                                     {material.title}
                                 </h1>
                             </div>
-
-                            <MaterialAnalytics
-                                viewCount={viewCount}
-                                ratingCount={analyticsData.ratingCount}
-                                averageRating={analyticsData.averageRating}
-                                commentCount={analyticsData.commentCount}
-                            />
 
                             <MaterialViewContent material={material} />
                         </div>

@@ -3,6 +3,7 @@ using System;
 using MentorSync.Recommendations.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MentorSync.Recommendations.Data.Migrations
 {
     [DbContext(typeof(RecommendationsDbContext))]
-    partial class RecommendationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250530024038_DeletePreferencesTable")]
+    partial class DeletePreferencesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,14 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { hasRole } from "../../auth/utils/authUtils";
-import { Mentor } from "../../../shared/types";
+import { Mentor, RecommendedMentor } from "../../../shared/types";
 
 // Enhanced MentorCard component without save/bookmark functionality
 export interface MentorCardProps {
-    mentor: Mentor;
+    mentor: Mentor | RecommendedMentor;
+    showRecommendationScores?: boolean;
 }
-export const EnhancedMentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
+export const EnhancedMentorCard: React.FC<MentorCardProps> = ({
+    mentor,
+    showRecommendationScores = false,
+}) => {
     const isMentee = hasRole("Mentee");
+    const isRecommendedMentor = "collaborativeScore" in mentor;
 
     return (
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6 relative">
@@ -49,6 +54,48 @@ export const EnhancedMentorCard: React.FC<MentorCardProps> = ({ mentor }) => {
                     <p className="text-[#64748B] text-sm mt-2">
                         {mentor.category}
                     </p>
+
+                    {/* Recommendation scores - only shown for RecommendedMentor type */}
+                    {showRecommendationScores && isRecommendedMentor && (
+                        <div className="mt-3 border-t border-gray-100 pt-2">
+                            <h4 className="text-sm font-medium text-[#1E293B] mb-1">
+                                Оцінки рекомендацій:
+                            </h4>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <span className="text-[#64748B]">
+                                        Активність:{" "}
+                                    </span>
+                                    <span className="font-medium">
+                                        {(
+                                            mentor as RecommendedMentor
+                                        ).collaborativeScore.toFixed(2)}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span className="text-[#64748B]">
+                                        За інтересами:{" "}
+                                    </span>
+                                    <span className="font-medium">
+                                        {(
+                                            mentor as RecommendedMentor
+                                        ).contentBasedScore.toFixed(2)}
+                                    </span>
+                                </div>
+                                <div className="col-span-2 mt-1 bg-gray-100 p-1 rounded">
+                                    <span className="text-[#4318D1] font-bold">
+                                        Загальна оцінка:{" "}
+                                    </span>
+                                    <span className="font-bold">
+                                        {(
+                                            mentor as RecommendedMentor
+                                        ).finalScore.toFixed(2)}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="flex flex-wrap gap-2 mt-4">
                         {mentor.skills.map((skill) => (
                             <div
