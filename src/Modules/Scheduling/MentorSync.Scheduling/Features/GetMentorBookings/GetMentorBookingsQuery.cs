@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 
-namespace MentorSync.Scheduling.Features.Booking;
+namespace MentorSync.Scheduling.Features.GetMentorBookings;
 
 public sealed record GetMentorBookingsQuery(
     int MentorId,

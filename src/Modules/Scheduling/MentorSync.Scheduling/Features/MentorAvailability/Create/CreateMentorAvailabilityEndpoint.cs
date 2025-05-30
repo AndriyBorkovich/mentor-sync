@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using MediatR;
-using MentorSync.Scheduling.Features.MentorAvailability.Create;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace MentorSync.Scheduling.Features.MentorAvailability;
+namespace MentorSync.Scheduling.Features.MentorAvailability.Create;
 
 public sealed class CreateMentorAvailabilityEndpoint : IEndpoint
 {

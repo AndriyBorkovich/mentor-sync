@@ -4,7 +4,7 @@ using MentorSync.Scheduling.Data;
 using MentorSync.Users.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace MentorSync.Scheduling.Features.Booking;
+namespace MentorSync.Scheduling.Features.GetMentorBookings;
 
 public sealed class GetMentorBookingsQueryHandler(
     SchedulingDbContext dbContext,

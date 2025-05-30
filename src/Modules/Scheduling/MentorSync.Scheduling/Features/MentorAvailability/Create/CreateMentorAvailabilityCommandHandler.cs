@@ -1,10 +1,9 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Scheduling.Data;
-using MentorSync.Scheduling.Features.MentorAvailability.Create;
 using Microsoft.EntityFrameworkCore;
 
-namespace MentorSync.Scheduling.Features.MentorAvailability;
+namespace MentorSync.Scheduling.Features.MentorAvailability.Create;
 
 public sealed class CreateMentorAvailabilityCommandHandler(
     SchedulingDbContext dbContext)

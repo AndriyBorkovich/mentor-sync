@@ -1,11 +1,10 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Scheduling.Data;
-using MentorSync.Scheduling.Features.MentorAvailability.Get;
 using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
 
-namespace MentorSync.Scheduling.Features.MentorAvailability;
+namespace MentorSync.Scheduling.Features.MentorAvailability.Get;
 
 public sealed class GetMentorAvailabilityQueryHandler(
     SchedulingDbContext dbContext)
