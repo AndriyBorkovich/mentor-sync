@@ -16,7 +16,7 @@ public sealed class AppUser : IdentityUser<int>, IHaveDomainEvents
     [StringLength(500)]
     public string ProfileImageUrl { get; set; }
     public bool IsActive { get; set; }
-    [StringLength(30)]
+    [StringLength(100)]
     public string Country { get; set; }
     [NotMapped]
     public IEnumerable<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();

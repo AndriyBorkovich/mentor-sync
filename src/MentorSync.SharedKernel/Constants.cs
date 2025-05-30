@@ -80,3 +80,47 @@ public static class ContainerNames
     public const string Avatars = "user-avatars";
     public const string MaterialsAttachments = "material-attachments";
 }
+
+public static class ProgrammingLanguages
+{
+    public static List<string> Values { get; } = [
+        "JavaScript",
+        "TypeScript",
+        "Python",
+        "Java",
+        "C#",
+        "C++",
+        "C",
+        "PHP",
+        "Ruby",
+        "Swift",
+        "Kotlin",
+        "Go",
+        "Rust",
+        "Dart",
+        "Scala",
+        "Elixir",
+        "Perl",
+        "Powelshell",
+        "F#",
+        "Shell Scripting",
+        "HTML",
+        "CSS",
+        "SQL",
+        "R",
+        "MATLAB",
+        "Lua",
+        "Haskell",
+        "Julia",
+        "Objective-C",
+        "Visual Basic",
+        "Assembly",
+        "Groovy",
+        "Clojure",
+        "Erlang",
+        "COBOL",
+        "Fortran",
+        "Solidity",
+        "Scheme",
+    ];
+}
