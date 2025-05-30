@@ -80,6 +80,7 @@ builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scrip
     .WaitFor(api)
     .WithEnvironment("BROWSER", "none")
     .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
+    .WithEnvironment("VITE_PORT", uiPort.ToString())
     .WithHttpEndpoint(env: "VITE_PORT", port: uiPort)
     .WithExternalHttpEndpoints()
     .WithNpmPackageInstallation()
