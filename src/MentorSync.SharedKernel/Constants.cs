@@ -12,7 +12,7 @@ public static class GeneralConstants
     public const int ProtectionTokenTimeInHours = 2;
     public const int MaxFailedAccessAttempts = 5;
     public const string AllowedUserNameCharacters =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+/ ";
 }
 
 public static class CorsPolicyNames
