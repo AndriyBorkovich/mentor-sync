@@ -1,4 +1,4 @@
-# 🚀 Welcome to Mentor Sync App!  
+# 🚀 Welcome to MentorSync app!  
 
 [![Backend - build & test](https://github.com/AndriyBorkovich/mentor-sync/actions/workflows/backend-build-and-test.yml/badge.svg)](https://github.com/AndriyBorkovich/mentor-sync/actions/workflows/backend-build-and-test.yml)
 
@@ -8,13 +8,13 @@
 
 [![Deploy to Azure](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/azure-dev.yml/badge.svg)](https://github.com/AndriyBorkovich/mentor-sync-be/actions/workflows/azure-dev.yml)  
 
-Mentor Sync is an application designed to connect mentors and mentees seamlessly for effective learning and guidance.  
+MentorSync is an application designed to connect mentors and mentees seamlessly for effective learning and guidance.  
 
 ## 📌 Features  
-- **Mentor-Mentee Matching** – Intelligent pairing based on skills and interests.  
-- **Session Scheduling** – Easily schedule and track mentorship sessions.  
-- **Real-time Messaging** – Communicate effortlessly within the platform.  
-- **Progress Tracking** – Monitor mentorship goals and milestones.  
+- **Mentor-mentee matching** – Intelligent pairing based on skills and interests.  
+- **Session scheduling** – Easily schedule and track mentorship sessions with interactive calendar view.  
+- **Real-time messaging** – Communicate effortlessly within the platform.  
+- **Learning materials** – Browse through library of top-tier knowlegde from mentors.  
 
 ## 🛠️ Installation & Setup  
 1. **Clone the repository:**  
