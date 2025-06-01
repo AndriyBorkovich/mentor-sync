@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Services;
 
-internal class MentorReviewService(RatingsDbContext ratingsDbContext) : IMentorReviewService
+internal sealed class MentorReviewService(RatingsDbContext ratingsDbContext) : IMentorReviewService
 {
     public double GetAverageRating(int mentorId)
     {
