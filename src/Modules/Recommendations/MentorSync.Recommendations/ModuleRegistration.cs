@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using MentorSync.Recommendations.Data;
-using MentorSync.Recommendations.Features.Pipeline;
+using MentorSync.Recommendations.Features.Pipelines.Base;
+using MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
+using MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +25,7 @@ public static class ModuleRegistration
 
         AddEndpoints(builder.Services);
 
-        builder.Services.AddScoped<IInteractionAggregator, InteractionAggregator>();
-        builder.Services.AddScoped<ICollaborativeTrainer, CollaborativeTrainer>();
-        builder.Services.AddScoped<IHybridScorer, HybridScorer>();
-
-        builder.Services.AddHostedService<RecommendationPipeline>();
+        AddBackgroundJobs(builder.Services);
     }
 
     private static void AddEndpoints(IServiceCollection services)
@@ -35,5 +33,22 @@ public static class ModuleRegistration
         services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
         services.AddEndpoints(typeof(RecommendationsDbContext).Assembly);
+    }
+
+    private static void AddBackgroundJobs(this IServiceCollection services)
+    {
+        // Mentor recommendation services
+        services.AddKeyedScoped<IInteractionAggregator, MentorInteractionAggregator>(ServicesConstants.MentorsKey);
+        services.AddKeyedScoped<ICollaborativeTrainer, MentorCollaborativeTrainer>(ServicesConstants.MentorsKey);
+        services.AddKeyedScoped<IHybridScorer, MentorHybridScorer>(ServicesConstants.MentorsKey);
+
+        // Learning material recommendation services
+        services.AddKeyedScoped<IInteractionAggregator, MaterialInteractionAggregator>(ServicesConstants.MaterialsKey);
+        services.AddKeyedScoped<ICollaborativeTrainer, MaterialCollaborativeTrainer>(ServicesConstants.MaterialsKey);
+        services.AddKeyedScoped<IHybridScorer, MaterialHybridScorer>(ServicesConstants.MaterialsKey);
+
+        // recommendation pipelines
+        services.AddHostedService<MentorRecommendationPipeline>();
+        services.AddHostedService<MaterialRecommendationPipeline>();
     }
 }

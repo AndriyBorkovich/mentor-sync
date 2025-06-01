@@ -1,6 +1,6 @@
 using Ardalis.Result;
 using MediatR;
-using MentorSync.Materials.Domain.Enums;
+using MentorSync.SharedKernel.CommonEntities;
 using System.ComponentModel.DataAnnotations;
 
 namespace MentorSync.Materials.Features.CreateMaterial;

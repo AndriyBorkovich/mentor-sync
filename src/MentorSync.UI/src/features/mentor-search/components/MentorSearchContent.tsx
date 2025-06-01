@@ -4,10 +4,7 @@ import { mentorSearchService } from "../services/mentorSearchService";
 import { Industry, industriesMapping } from "../../../shared/enums/industry";
 import { programmingLanguages } from "../../../shared/constants/programmingLanguages";
 import { Mentor, RecommendedMentor } from "../../../shared/types";
-import {
-    PaginatedResponse,
-    PaginationParams,
-} from "../../../shared/types/pagination";
+import { PaginatedResponse } from "../../../shared/types/pagination";
 
 // Tabs for mentors and recommended mentors
 type TabType = "mentors" | "recommendedMentors";

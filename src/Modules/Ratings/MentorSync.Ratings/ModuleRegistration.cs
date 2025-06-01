@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MentorSync.Ratings.Contracts;
+using MentorSync.Ratings.Contracts.Services;
 using MentorSync.Ratings.Data;
 using MentorSync.Ratings.Services;
 using MentorSync.SharedKernel;
@@ -24,7 +24,7 @@ public static class ModuleRegistration
 
         AddEndpoints(builder.Services);
 
-        builder.Services.AddScoped<IMentorReviewService, MentorReviewService>();
+        AddExternalServices(builder.Services);
     }
 
     private static void AddEndpoints(IServiceCollection services)
@@ -32,5 +32,11 @@ public static class ModuleRegistration
         services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
         services.AddEndpoints(typeof(RatingsDbContext).Assembly);
+    }
+
+    private static void AddExternalServices(IServiceCollection services)
+    {
+        services.AddScoped<IMentorReviewService, MentorReviewService>();
+        services.AddScoped<IMaterialReviewService, MaterialReviewService>();
     }
 }

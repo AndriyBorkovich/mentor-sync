@@ -18,12 +18,12 @@ namespace MentorSync.Ratings.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("ratings")
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MentorSync.Ratings.Domain.ArticleReview", b =>
+            modelBuilder.Entity("MentorSync.Ratings.Domain.MaterialReview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,13 +31,13 @@ namespace MentorSync.Ratings.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
@@ -56,11 +56,11 @@ namespace MentorSync.Ratings.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("MaterialId");
 
                     b.HasIndex("ReviewerId");
 
-                    b.ToTable("ArticleReviews", "ratings");
+                    b.ToTable("MaterialReviews", "ratings");
                 });
 
             modelBuilder.Entity("MentorSync.Ratings.Domain.MentorReview", b =>

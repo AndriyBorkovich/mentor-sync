@@ -1,6 +1,6 @@
 using MediatR;
-using MentorSync.Materials.Domain.Enums;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.CommonEntities;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;

@@ -23,6 +23,31 @@ namespace MentorSync.Recommendations.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("MentorSync.Recommendations.Domain.Interaction.MenteeMaterialInteraction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MenteeId")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("Score")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MenteeMaterialInteractions", "recommendations");
+                });
+
             modelBuilder.Entity("MentorSync.Recommendations.Domain.Interaction.MentorMenteeInteraction", b =>
                 {
                     b.Property<int>("Id")
@@ -48,7 +73,38 @@ namespace MentorSync.Recommendations.Data.Migrations
                     b.ToTable("MenteeMentorInteractions", "recommendations");
                 });
 
-            modelBuilder.Entity("MentorSync.Recommendations.Domain.RecommendationResult", b =>
+            modelBuilder.Entity("MentorSync.Recommendations.Domain.Result.MaterialRecommendationResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("CollaborativeScore")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ContentBasedScore")
+                        .HasColumnType("real");
+
+                    b.Property<float>("FinalScore")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MenteeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MaterialRecommendationResults", "recommendations");
+                });
+
+            modelBuilder.Entity("MentorSync.Recommendations.Domain.Result.MentorRecommendationResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +132,51 @@ namespace MentorSync.Recommendations.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RecommendationResults", "recommendations");
+                    b.ToTable("MentorRecommendationResults", "recommendations");
+                });
+
+            modelBuilder.Entity("MentorSync.Recommendations.Domain.Tracking.MaterialLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LikedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MenteeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MaterialLikes", "recommendations");
+                });
+
+            modelBuilder.Entity("MentorSync.Recommendations.Domain.Tracking.MaterialViewEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MenteeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ViewedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MaterialViewEvents", "recommendations");
                 });
 
             modelBuilder.Entity("MentorSync.Recommendations.Domain.Tracking.MentorBookmark", b =>

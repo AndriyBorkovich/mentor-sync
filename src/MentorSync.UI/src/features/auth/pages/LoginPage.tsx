@@ -39,11 +39,9 @@ const LoginPage: React.FC = () => {
 
         try {
             const response = await authService.login(data);
-            console.log("Login response:", response);
             if (response?.success) {
                 // Check if user needs onboarding based on API response
                 const userRoleToUse = userRole || getUserRole() || "mentee";
-                console.log("User role to use:", userRoleToUse);
                 if (response.needOnboarding) {
                     // User needs onboarding - use the role from either registration state or from user's data
 
@@ -51,10 +49,8 @@ const LoginPage: React.FC = () => {
                 } else {
                     if (userRoleToUse.toLocaleLowerCase() === "mentor") {
                         navigate("/sessions", { replace: true });
-                        console.log("Navigating to sessions as mentor");
                     } else {
                         navigate("/dashboard", { replace: true });
-                        console.log("Navigating to dashboard as mentee");
                     }
                 }
             } else {

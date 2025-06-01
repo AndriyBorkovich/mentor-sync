@@ -1351,9 +1351,16 @@
         "dependencies": {
           "Aspire.Npgsql.EntityFrameworkCore.PostgreSQL": "[9.3.0, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.0.0, )",
+          "MentorSync.Materials.Contracts": "[1.0.0, )",
           "MentorSync.SharedKernel": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[9.0.5, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )"
+        }
+      },
+      "mentorsync.materials.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "MentorSync.SharedKernel": "[1.0.0, )"
         }
       },
       "mentorsync.notifications": {
@@ -1390,6 +1397,7 @@
         "dependencies": {
           "Aspire.Npgsql.EntityFrameworkCore.PostgreSQL": "[9.3.0, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.0.0, )",
+          "MentorSync.Materials.Contracts": "[1.0.0, )",
           "MentorSync.Ratings.Contracts": "[1.0.0, )",
           "MentorSync.Scheduling.Contracts": "[1.0.0, )",
           "MentorSync.SharedKernel": "[1.0.0, )",

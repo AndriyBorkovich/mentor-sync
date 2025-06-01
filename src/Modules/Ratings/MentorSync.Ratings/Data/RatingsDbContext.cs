@@ -7,11 +7,13 @@ namespace MentorSync.Ratings.Data;
 public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options) : DbContext(options)
 {
     public DbSet<MentorReview> MentorReviews { get; set; }
-    public DbSet<ArticleReview> ArticleReviews { get; set; }
+    public DbSet<MaterialReview> MaterialReviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(SchemaConstants.Ratings);
+
+        const int ReviewTextMaxLength = 2000;
 
         modelBuilder.Entity<MentorReview>(entity =>
         {
@@ -25,7 +27,7 @@ public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options)
             entity.Property(e => e.Rating)
                   .IsRequired();
             entity.Property(e => e.ReviewText)
-                  .HasMaxLength(2000);
+                  .HasMaxLength(ReviewTextMaxLength);
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("timestamp with time zone")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -40,19 +42,19 @@ public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options)
             entity.HasIndex(e => e.MenteeId);
         });
 
-        modelBuilder.Entity<ArticleReview>(entity =>
+        modelBuilder.Entity<MaterialReview>(entity =>
         {
-            entity.ToTable("ArticleReviews");
+            entity.ToTable("MaterialReviews");
             entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.ArticleId)
+            entity.Property(e => e.MaterialId)
                   .IsRequired();
             entity.Property(e => e.ReviewerId)
                   .IsRequired();
             entity.Property(e => e.Rating)
                   .IsRequired();
             entity.Property(e => e.ReviewText)
-                  .HasMaxLength(2000);
+                  .HasMaxLength(ReviewTextMaxLength);
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("timestamp with time zone")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -63,7 +65,7 @@ public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnUpdate();
 
-            entity.HasIndex(e => e.ArticleId);
+            entity.HasIndex(e => e.MaterialId);
             entity.HasIndex(e => e.ReviewerId);
         });
     }

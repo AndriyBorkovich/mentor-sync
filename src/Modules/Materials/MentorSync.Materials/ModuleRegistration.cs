@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using MentorSync.Materials.Contracts.Services;
 using MentorSync.Materials.Data;
+using MentorSync.Materials.Services;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,8 @@ public static class ModuleRegistration
             });
 
         AddEndpoints(builder.Services);
+
+        AddExternalServices(builder.Services);
     }
 
     private static void AddEndpoints(IServiceCollection services)
@@ -28,5 +32,10 @@ public static class ModuleRegistration
         services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
         services.AddEndpoints(typeof(MaterialsDbContext).Assembly);
+    }
+
+    private static void AddExternalServices(IServiceCollection services)
+    {
+        services.AddScoped<ILearningMaterialsService, LearningMaterialsService>();
     }
 }

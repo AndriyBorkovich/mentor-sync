@@ -1,5 +1,5 @@
-﻿using MentorSync.Ratings.Contracts;
-using MentorSync.Ratings.Contracts.Models;
+﻿using MentorSync.Ratings.Contracts.Models;
+using MentorSync.Ratings.Contracts.Services;
 using MentorSync.Ratings.Data;
 using Microsoft.EntityFrameworkCore;
 

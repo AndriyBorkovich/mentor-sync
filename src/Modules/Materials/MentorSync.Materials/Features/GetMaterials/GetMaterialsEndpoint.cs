@@ -15,9 +15,9 @@ public sealed class GetMaterialsEndpoint : IEndpoint
     {
         app.MapGet("materials", async (
             string? search,
-            [FromQuery] string[]? types,
-            [FromQuery] string[]? tags,
-            string? sortBy,
+            [FromQuery] string[] types,
+            [FromQuery] string[] tags,
+            string sortBy,
             int pageNumber,
             int pageSize,
             ISender sender) =>

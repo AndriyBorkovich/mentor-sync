@@ -1,4 +1,4 @@
-﻿using MentorSync.Materials.Domain.Enums;
+﻿using MentorSync.SharedKernel.CommonEntities;
 
 namespace MentorSync.Materials.Domain;
 

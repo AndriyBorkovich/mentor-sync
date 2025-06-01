@@ -1,4 +1,5 @@
-﻿using MentorSync.SharedKernel;
+﻿using MentorSync.Notifications.Infrastructure.Hubs;
+using MentorSync.SharedKernel;
 using Serilog;
 
 namespace MentorSync.API.Extensions;
@@ -41,5 +42,10 @@ public static class AppBuilderExtensions
     {
         app.UseCors(CorsPolicyNames.All);
         return app;
+    }
+
+    public static void MapHubs(this WebApplication app)
+    {
+        app.MapHub<NotificationHub>("/notificationHub");
     }
 }

@@ -25,9 +25,9 @@ public static class ModuleRegistration
 
         AddEndpoints(builder.Services);
 
-        builder.Services.AddScoped<IBookingService, BookingService>();
-        builder.Services.AddScoped<INotificationService, NotificationService>();
-        builder.Services.AddHostedService<UpdatePendingBookingsJob>();
+        AddExternalServices(builder.Services);
+
+        AddBackgroundJobs(builder.Services);
     }
 
     private static void AddEndpoints(IServiceCollection services)
@@ -35,5 +35,16 @@ public static class ModuleRegistration
         services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
         services.AddEndpoints(typeof(SchedulingDbContext).Assembly);
+    }
+
+    private static void AddExternalServices(this IServiceCollection services)
+    {
+        services.AddScoped<IBookingService, BookingService>();
+        services.AddScoped<INotificationService, NotificationService>();
+    }
+
+    private static void AddBackgroundJobs(this IServiceCollection services)
+    {
+        services.AddHostedService<UpdatePendingBookingsJob>();
     }
 }
