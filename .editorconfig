@@ -47,6 +47,9 @@ dotnet_style_qualification_for_property = false:error
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_event = false:suggestion
 
+# avoid unused usings
+dotnet_diagnostic.IDE0005.severity = error
+
 # Types: use var
 csharp_style_var_for_built_in_types = true:suggestion
 csharp_style_var_when_type_is_apparent = false:none
