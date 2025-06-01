@@ -13,4 +13,5 @@ public sealed record GetRecommendedMentorsQuery(
     List<string> ProgrammingLanguages = null,
     Industry? Industry = null,
     int? MinExperienceYears = null,
-    int MaxResults = 10) : IRequest<Result<List<RecommendedMentorResponse>>>;
+    int PageNumber = 1,
+    int PageSize = 10) : IRequest<Result<PaginatedList<RecommendedMentorResponse>>>;

@@ -54,7 +54,7 @@ public sealed class Worker(
     private static async Task MigrateAsync<T>(
         IServiceProvider sp,
         CancellationToken cancellationToken,
-        params Func<Task>?[] postMigrationSteps)
+        params Func<Task>[] postMigrationSteps)
         where T : DbContext
     {
         var context = sp.GetRequiredService<T>();
@@ -239,7 +239,7 @@ public sealed class Worker(
                 var selectedIndustries = new List<Industry>();
 
                 // Select 1-2 random industries
-                for (int i = 0; i < f.Random.Int(1, 2); i++)
+                for (var i = 0; i < f.Random.Int(1, 2); i++)
                 {
                     selectedIndustries.Add(f.PickRandom(industryValues));
                 }
@@ -300,35 +300,35 @@ public sealed class Worker(
             if (primaryIndustry != Industry.None)
             {
                 // Set industry-specific position
-                if (industryPositionMappings.TryGetValue(primaryIndustry, out var positions) && positions.Any())
+                if (industryPositionMappings.TryGetValue(primaryIndustry, out var positions) && positions.Count != 0)
                 {
                     mentorProfile.Position = faker.PickRandom(positions);
                 }
 
                 // Set industry-specific programming languages
-                if (industryLanguagesMappings.TryGetValue(primaryIndustry, out var languages) && languages.Any())
+                if (industryLanguagesMappings.TryGetValue(primaryIndustry, out var languages) && languages.Count != 0)
                 {
                     // Take 1-3 languages from the industry-specific list, or default if empty
-                    mentorProfile.ProgrammingLanguages = languages.Any()
-                        ? faker.PickRandom(languages, faker.Random.Int(1, Math.Min(3, languages.Count))).ToList()
-                        : ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2).ToList();
+                    mentorProfile.ProgrammingLanguages = languages.Count != 0
+                        ? [.. faker.PickRandom(languages, faker.Random.Int(1, Math.Min(3, languages.Count)))]
+                        : [.. ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2)];
                 }
                 else
                 {
                     // Fallback to random languages
-                    mentorProfile.ProgrammingLanguages = ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2).ToList();
+                    mentorProfile.ProgrammingLanguages = [.. ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2)];
                 }
 
                 // Set industry-specific skills
-                if (industrySkillsMappings.TryGetValue(primaryIndustry, out var skills) && skills.Any())
+                if (industrySkillsMappings.TryGetValue(primaryIndustry, out var skills) && skills.Count != 0)
                 {
                     // Pick 3-5 skills from the industry-specific list
-                    mentorProfile.Skills = faker.PickRandom(skills, faker.Random.Int(3, Math.Min(5, skills.Count))).ToList();
+                    mentorProfile.Skills = [.. faker.PickRandom(skills, faker.Random.Int(3, Math.Min(5, skills.Count)))];
                 }
                 else
                 {
                     // Fallback to random skills from the general list
-                    mentorProfile.Skills = faker.PickRandom(skillsList, faker.Random.Int(3, 5)).ToList();
+                    mentorProfile.Skills = [.. faker.PickRandom(skillsList, faker.Random.Int(3, 5))];
                 }
 
                 // Set company name - more senior positions (containing "Senior", "Lead", "Manager", "Architect", etc.) 
@@ -510,7 +510,7 @@ public sealed class Worker(
                 var selectedIndustries = new List<Industry>();
 
                 // Mentees often are interested in 1-2 industries
-                for (int i = 0; i < f.Random.Int(1, 2); i++)
+                for (var i = 0; i < f.Random.Int(1, 2); i++)
                 {
                     selectedIndustries.Add(f.PickRandom(industryValues));
                 }
@@ -555,7 +555,7 @@ public sealed class Worker(
             if (primaryIndustry != Industry.None)
             {
                 // Set industry-specific position - mentees often have more junior positions
-                if (industryPositionMappings.TryGetValue(primaryIndustry, out var positions) && positions.Any())
+                if (industryPositionMappings.TryGetValue(primaryIndustry, out var positions) && positions.Count != 0)
                 {
                     // For mentees, modify position titles to make them more junior
                     var position = faker.PickRandom(positions);
@@ -583,36 +583,36 @@ public sealed class Worker(
                 }
 
                 // Set industry-specific programming languages
-                if (industryLanguagesMappings.TryGetValue(primaryIndustry, out var languages) && languages.Any())
+                if (industryLanguagesMappings.TryGetValue(primaryIndustry, out var languages) && languages.Count != 0)
                 {
                     // Take 1-2 languages from the industry-specific list, or default if empty
-                    menteeProfile.ProgrammingLanguages = languages.Any()
-                        ? faker.PickRandom(languages, faker.Random.Int(1, Math.Min(2, languages.Count))).ToList()
-                        : ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2).ToList();
+                    menteeProfile.ProgrammingLanguages = languages.Count != 0
+                        ? [.. faker.PickRandom(languages, faker.Random.Int(1, Math.Min(2, languages.Count)))]
+                        : [.. ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2)];
                 }
                 else
                 {
                     // Fallback to random languages
-                    menteeProfile.ProgrammingLanguages = ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2).ToList();
+                    menteeProfile.ProgrammingLanguages = [.. ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2)];
                 }
 
                 // Set industry-specific skills - mentees have fewer skills than mentors
-                if (industrySkillsMappings.TryGetValue(primaryIndustry, out var skills) && skills.Any())
+                if (industrySkillsMappings.TryGetValue(primaryIndustry, out var skills) && skills.Count != 0)
                 {
                     // Pick 2-4 skills from the industry-specific list
-                    menteeProfile.Skills = faker.PickRandom(skills, faker.Random.Int(2, Math.Min(4, skills.Count))).ToList();
+                    menteeProfile.Skills = [.. faker.PickRandom(skills, faker.Random.Int(2, Math.Min(4, skills.Count)))];
                 }
                 else
                 {
                     // Fallback to random skills from the general list
-                    menteeProfile.Skills = faker.PickRandom(skillsList, faker.Random.Int(2, 4)).ToList();
+                    menteeProfile.Skills = [.. faker.PickRandom(skillsList, faker.Random.Int(2, 4))];
                 }
 
                 // Generate learning goals that are related to the industry and skills
                 var relevantGoals = new List<string>();
 
                 // Add industry-specific goals
-                if (industrySkillsMappings.TryGetValue(primaryIndustry, out var industrySkills) && industrySkills.Any())
+                if (industrySkillsMappings.TryGetValue(primaryIndustry, out var industrySkills) && industrySkills.Count != 0)
                 {
                     // Pick 1-3 skills they don't have yet but want to learn
                     var skillsToLearn = industrySkills
@@ -627,7 +627,7 @@ public sealed class Worker(
                 }
 
                 // Add language-specific goals
-                if (industryLanguagesMappings.TryGetValue(primaryIndustry, out var industryLanguages) && industryLanguages.Any())
+                if (industryLanguagesMappings.TryGetValue(primaryIndustry, out var industryLanguages) && industryLanguages.Count != 0)
                 {
                     // Pick 0-2 languages they don't know yet but want to learn
                     var languagesToLearn = industryLanguages
@@ -649,15 +649,15 @@ public sealed class Worker(
                     relevantGoals.AddRange(generalGoals);
                 }
 
-                menteeProfile.LearningGoals = relevantGoals.ToList();
+                menteeProfile.LearningGoals = [.. relevantGoals];
             }
             else
             {
                 // Fallback to random values if no industry is selected
                 menteeProfile.Position = faker.Name.JobTitle();
-                menteeProfile.Skills = faker.PickRandom(skillsList, faker.Random.Int(2, 4)).ToList();
-                menteeProfile.ProgrammingLanguages = ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2).ToList();
-                menteeProfile.LearningGoals = faker.PickRandom(learningGoalsList, faker.Random.Int(2, 5)).ToList();
+                menteeProfile.Skills = [.. faker.PickRandom(skillsList, faker.Random.Int(2, 4))];
+                menteeProfile.ProgrammingLanguages = [.. ProgrammingLanguages.Values.OrderBy(_ => faker.Random.Int()).Take(2)];
+                menteeProfile.LearningGoals = [.. faker.PickRandom(learningGoalsList, faker.Random.Int(2, 5))];
             }
 
             usersContext.MenteeProfiles.Add(menteeProfile);
@@ -685,7 +685,7 @@ public sealed class Worker(
         var mentors = await usersContext.MentorProfiles.ToListAsync();
         var mentees = await usersContext.MenteeProfiles.ToListAsync();
 
-        if (!mentors.Any() || !mentees.Any())
+        if (mentors.Count == 0 || mentees.Count == 0)
         {
             logger.LogWarning("No mentors or mentees found, skipping review seeding.");
             return;

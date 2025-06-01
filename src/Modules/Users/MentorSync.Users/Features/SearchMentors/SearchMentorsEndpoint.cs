@@ -1,7 +1,6 @@
 using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.CommonEntities;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -19,16 +18,20 @@ public sealed class SearchMentorsEndpoint : IEndpoint
             [FromQuery] string[] programmingLanguages,
             [FromQuery] int? industry,
             [FromQuery] int? minExperienceYears,
+            [FromQuery] int pageNumber,
+            [FromQuery] int pageSize,
             ISender sender) =>
             {
-                Industry? industryEnum = industry.HasValue ? (Industry)industry.Value : null;
+                var industryEnum = industry.HasValue ? (Industry?)industry.Value : null;
                 var programmingLanguagesList = programmingLanguages?.ToList();
 
                 var result = await sender.Send(new SearchMentorsQuery(
                     searchTerm,
                     programmingLanguagesList,
                     industryEnum,
-                    minExperienceYears));
+                    minExperienceYears,
+                    pageNumber,
+                    pageSize));
 
                 return result;
             })

@@ -1,54 +1,32 @@
 using MediatR;
 using MentorSync.Users.Data;
+using MentorSync.SharedKernel.Extensions;
+using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.SearchMentors;
 
 public sealed partial class SearchMentorsQueryHandler(
-    UsersDbContext usersDbContext) : IRequestHandler<SearchMentorsQuery, List<MentorSearchResponse>>
+    UsersDbContext usersDbContext) : IRequestHandler<SearchMentorsQuery, PaginatedList<MentorSearchResponse>>
 {
-    private static readonly FormattableString SqlQuery = $@"
-        SELECT DISTINCT ON (u.""Id"")
-            u.""Id"",
-            u.""UserName"" as ""Name"",
-            mp.""Position"" as ""Title"",
-            COALESCE(AVG(mr.""Rating"") OVER (PARTITION BY mp.""MentorId""), 0) AS ""Rating"",
-            mp.""Skills"",
-            u.""ProfileImageUrl"" as ""ProfileImage"",
-            mp.""ExperienceYears"",
-            CASE 
-                WHEN (mp.""Industries"" & 1) = 1 THEN 'Веб розробка'
-                WHEN (mp.""Industries"" & 2) = 2 THEN 'Наука даних'
-                WHEN (mp.""Industries"" & 4) = 4 THEN 'Кібербезпека'
-                WHEN (mp.""Industries"" & 8) = 8 THEN 'Хмарні обчислення'
-                WHEN (mp.""Industries"" & 16) = 16 THEN 'DevOps'
-                WHEN (mp.""Industries"" & 32) = 32 THEN 'Розробка ігор'
-                WHEN (mp.""Industries"" & 64) = 64 THEN 'ІТ-підтрика'
-                WHEN (mp.""Industries"" & 128) = 128 THEN 'Штучний інтелект'
-                WHEN (mp.""Industries"" & 256) = 256 THEN 'Блокчейн'
-                WHEN (mp.""Industries"" & 512) = 512 THEN 'Мережі'
-                WHEN (mp.""Industries"" & 1024) = 1024 THEN 'UX/UI дизайн'
-                WHEN (mp.""Industries"" & 2048) = 2048 THEN 'Вбудовані системи'
-                WHEN (mp.""Industries"" & 4096) = 4096 THEN 'IT консалтинг'
-                WHEN (mp.""Industries"" & 8192) = 8192 THEN 'Адміністрування баз даних'
-                WHEN (mp.""Industries"" & 16384) = 16384 THEN 'Управління проектами'
-                WHEN (mp.""Industries"" & 32768) = 32768 THEN 'Мобільна розробка'
-                WHEN (mp.""Industries"" & 65536) = 65536 THEN 'Low-code/No-code'
-                WHEN (mp.""Industries"" & 131072) = 131072 THEN 'QA/QC'
-                WHEN (mp.""Industries"" & 262144) = 262144 THEN 'Машинне навчання'
-                ELSE 'Інше'
-            END as ""Category"",
-            mp.""ProgrammingLanguages"",
-            mp.""Industries"",
-            u.""IsActive""
-        FROM users.""Users"" u
-        INNER JOIN users.""MentorProfiles"" mp ON u.""Id"" = mp.""MentorId""
-        LEFT JOIN ratings.""MentorReviews"" mr ON mp.""MentorId"" = mr.""MentorId""";
-
-    public async Task<List<MentorSearchResponse>> Handle(SearchMentorsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedList<MentorSearchResponse>> Handle(SearchMentorsQuery request, CancellationToken cancellationToken)
     {
         var mentorsQuery = usersDbContext.Database
-            .SqlQuery<MentorSearchResultDto>(SqlQuery);
+            .SqlQuery<MentorSearchResultDto>($@"
+                SELECT DISTINCT ON (u.""Id"")
+                    u.""Id"",
+                    u.""UserName"" as ""Name"",
+                    mp.""Position"" as ""Title"",
+                    COALESCE(AVG(mr.""Rating"") OVER (PARTITION BY mp.""MentorId""), 0) AS ""Rating"",
+                    mp.""Skills"",
+                    u.""ProfileImageUrl"" as ""ProfileImage"",
+                    mp.""ExperienceYears"",
+                    mp.""Industries"",
+                    mp.""ProgrammingLanguages"",
+                    u.""IsActive""
+                FROM users.""Users"" u
+                INNER JOIN users.""MentorProfiles"" mp ON u.""Id"" = mp.""MentorId""
+                LEFT JOIN ratings.""MentorReviews"" mr ON mp.""MentorId"" = mr.""MentorId""");
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
@@ -67,10 +45,10 @@ public sealed partial class SearchMentorsQueryHandler(
                     m.ProgrammingLanguages.Contains(lang)));
         }
 
-        if (request.Industry.HasValue && request.Industry.Value != 0)
+        var searchedIndustry = request.Industry;
+        if (searchedIndustry.HasValue && searchedIndustry.Value != 0)
         {
-            var industryValue = (int)request.Industry.Value;
-            mentorsQuery = mentorsQuery.Where(m => (m.Industries & industryValue) > 0);
+            mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) > 0);
         }
 
         if (request.MinExperienceYears.HasValue)
@@ -79,13 +57,20 @@ public sealed partial class SearchMentorsQueryHandler(
                 m.ExperienceYears.HasValue &&
                 m.ExperienceYears.Value >= request.MinExperienceYears.Value);
         }
-
         mentorsQuery = mentorsQuery.Where(m => m.IsActive);
         mentorsQuery = mentorsQuery.OrderByDescending(m => m.Rating);
 
+        // Get total count before pagination
+        var totalCount = await mentorsQuery.CountAsync(cancellationToken);
+
+        // Apply pagination
+        mentorsQuery = mentorsQuery
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize);
+
         // Execute the query
         var mentors = await mentorsQuery.ToListAsync(cancellationToken);
-        var response = mentors.Select(m => new MentorSearchResponse(
+        var items = mentors.Select(m => new MentorSearchResponse(
             m.Id,
             m.Name,
             m.Title,
@@ -93,16 +78,22 @@ public sealed partial class SearchMentorsQueryHandler(
             ConvertSkillsToList(m.Skills),
             m.ProfileImage,
             m.ExperienceYears,
-            m.Category
+            m.Industries.GetCategories()
         )).ToList();
 
-        return response;
+        return new PaginatedList<MentorSearchResponse>
+        {
+            Items = items,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+            TotalCount = totalCount
+        };
     }
 
     private static List<SkillResponse> ConvertSkillsToList(string[] skills)
     {
         // Convert skills array to list of SkillResponse objects
-        return skills.Select((skill, index) => new SkillResponse(index.ToString(), skill)).ToList();
+        return [.. skills.Select((skill, index) => new SkillResponse(index.ToString(), skill))];
     }
 }
 

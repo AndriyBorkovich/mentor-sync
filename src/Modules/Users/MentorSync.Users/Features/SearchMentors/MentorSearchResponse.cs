@@ -1,5 +1,3 @@
-using MentorSync.SharedKernel.CommonEntities;
-
 namespace MentorSync.Users.Features.SearchMentors;
 
 /// <summary>

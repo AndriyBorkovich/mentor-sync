@@ -15,6 +15,15 @@ const AboutTab: React.FC<AboutTabProps> = ({ mentor }) => {
         return "";
     };
 
+    const getProgramingLanguages = () => {
+        if (isMentorProfile(mentor) && mentor.programmingLanguages) {
+            return mentor.programmingLanguages;
+        }
+
+        return [];
+    };
+
+    const programmingLanguages = getProgramingLanguages();
     return (
         <div className="flex">
             <div className="w-2/3 pr-6">
@@ -37,6 +46,22 @@ const AboutTab: React.FC<AboutTabProps> = ({ mentor }) => {
                         </div>
                     ))}
                 </div>
+                {programmingLanguages.length > 0 && (
+                    <>
+                        <h2 className="text-lg font-medium text-[#1E293B] mb-3 mt-6">
+                            Мови програмування
+                        </h2>
+                        <div className="flex flex-wrap gap-2">
+                            {programmingLanguages.map((lang) => (
+                                <div className="px-3 py-1 bg-[#F8FAFC] rounded-2xl">
+                                    <span className="text-xs text-[#1E293B]">
+                                        {lang}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
             <div className="w-1/3 bg-white rounded-xl shadow-sm p-6">
                 {/* Availability section */}

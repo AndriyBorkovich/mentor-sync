@@ -1,8 +1,12 @@
 import api from "../../auth/services/api";
 import { Industry } from "../../../shared/enums/industry";
 import { Mentor, RecommendedMentor } from "../../../shared/types";
+import {
+    PaginatedResponse,
+    PaginationParams,
+} from "../../../shared/types/pagination";
 
-interface SearchMentorsParams {
+interface SearchMentorsParams extends PaginationParams {
     searchTerm?: string;
     programmingLanguages?: string[];
     industry?: Industry;
@@ -13,11 +17,15 @@ export const mentorSearchService = {
     /**
      * Search for mentors with filters
      * @param params Search parameters
-     * @returns List of mentors matching the search criteria
+     * @returns List of mentors matching the search criteria with pagination
      */
     searchMentors: async (
         params: SearchMentorsParams
-    ): Promise<{ success: boolean; data?: Mentor[]; error?: string }> => {
+    ): Promise<{
+        success: boolean;
+        data?: PaginatedResponse<Mentor>;
+        error?: string;
+    }> => {
         try {
             // Build query parameters
             const queryParams = new URLSearchParams();
@@ -31,7 +39,6 @@ export const mentorSearchService = {
                     queryParams.append("programmingLanguages", lang);
                 });
             }
-
             if (params.industry) {
                 queryParams.append("industry", params.industry.toString());
             }
@@ -41,6 +48,14 @@ export const mentorSearchService = {
                     "minExperienceYears",
                     params.minExperienceYears.toString()
                 );
+            }
+
+            if (params.pageNumber) {
+                queryParams.append("pageNumber", params.pageNumber.toString());
+            }
+
+            if (params.pageSize) {
+                queryParams.append("pageSize", params.pageSize.toString());
             }
 
             // Make API call to search mentors
@@ -65,12 +80,11 @@ export const mentorSearchService = {
      * Get recommended mentors with filters
      * @param params Search parameters
      * @returns List of recommended mentors with scores
-     */
-    getRecommendedMentors: async (
+     */ getRecommendedMentors: async (
         params: SearchMentorsParams
     ): Promise<{
         success: boolean;
-        data?: RecommendedMentor[];
+        data?: PaginatedResponse<RecommendedMentor>;
         error?: string;
     }> => {
         try {
@@ -97,9 +111,13 @@ export const mentorSearchService = {
                     params.minExperienceYears.toString()
                 );
             }
+            if (params.pageNumber) {
+                queryParams.append("pageNumber", params.pageNumber.toString());
+            }
 
-            // default maxResults to 10 if not provided
-            queryParams.append("maxResults", "12");
+            if (params.pageSize) {
+                queryParams.append("pageSize", params.pageSize.toString());
+            }
 
             // Make API call to get recommended mentors
             const response = await api.get(

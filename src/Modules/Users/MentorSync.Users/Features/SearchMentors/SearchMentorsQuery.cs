@@ -1,4 +1,3 @@
-using Ardalis.Result;
 using MediatR;
 using MentorSync.SharedKernel.CommonEntities;
 
@@ -8,4 +7,6 @@ public sealed record SearchMentorsQuery(
     string SearchTerm = null,
     List<string> ProgrammingLanguages = null,
     Industry? Industry = null,
-    int? MinExperienceYears = null) : IRequest<List<MentorSearchResponse>>;
+    int? MinExperienceYears = null,
+    int PageNumber = 1,
+    int PageSize = 10) : IRequest<PaginatedList<MentorSearchResponse>>;

@@ -2,7 +2,7 @@ using MentorSync.Users.Domain.Enums;
 
 namespace MentorSync.Users.Extensions;
 
-public static class AvailabilityFormatter
+public static partial class EnumFormatter
 {
     public static string ToReadableString(this Availability availability)
     {

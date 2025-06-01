@@ -4,6 +4,10 @@ import { mentorSearchService } from "../services/mentorSearchService";
 import { Industry, industriesMapping } from "../../../shared/enums/industry";
 import { programmingLanguages } from "../../../shared/constants/programmingLanguages";
 import { Mentor, RecommendedMentor } from "../../../shared/types";
+import {
+    PaginatedResponse,
+    PaginationParams,
+} from "../../../shared/types/pagination";
 
 // Tabs for mentors and recommended mentors
 type TabType = "mentors" | "recommendedMentors";
@@ -14,12 +18,32 @@ const MentorSearchContent: React.FC = () => {
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(true);
     const [minExperience, setMinExperience] = useState<number>(1); // added slider state
-    const [mentors, setMentors] = useState<Mentor[]>([]);
+    const [mentors, setMentors] = useState<PaginatedResponse<Mentor>>({
+        items: [],
+        pageNumber: 1,
+        pageSize: 12,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+        totalPages: 0,
+    });
     const [recommendedMentors, setRecommendedMentors] = useState<
-        RecommendedMentor[]
-    >([]);
+        PaginatedResponse<RecommendedMentor>
+    >({
+        items: [],
+        pageNumber: 1,
+        pageSize: 12,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+        totalPages: 0,
+    });
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize] = useState<number>(12);
 
     // Direction filters - store Industry enum values instead of strings
     const [selectedDirections, setSelectedDirections] = useState<Industry[]>(
@@ -43,6 +67,7 @@ const MentorSearchContent: React.FC = () => {
         } else {
             setSelectedSkills([...selectedSkills, skill]);
         }
+        setCurrentPage(1);
     };
 
     // Helper function to toggle direction selection
@@ -54,6 +79,7 @@ const MentorSearchContent: React.FC = () => {
         } else {
             setSelectedDirections([...selectedDirections, direction]);
         }
+        setCurrentPage(1);
     };
 
     // Helper function to get label for an Industry enum value
@@ -80,6 +106,8 @@ const MentorSearchContent: React.FC = () => {
                     selectedSkills.length > 0 ? selectedSkills : undefined,
                 industry: industryFilter,
                 minExperienceYears: minExperience,
+                pageNumber: currentPage,
+                pageSize,
             });
 
             if (response.success && response.data) {
@@ -111,6 +139,8 @@ const MentorSearchContent: React.FC = () => {
                     selectedSkills.length > 0 ? selectedSkills : undefined,
                 industry: industryFilter,
                 minExperienceYears: minExperience,
+                pageNumber: currentPage,
+                pageSize,
             });
 
             if (response.success && response.data) {
@@ -145,11 +175,12 @@ const MentorSearchContent: React.FC = () => {
         selectedDirections,
         minExperience,
         activeTab,
+        currentPage,
     ]);
 
     // Get saved mentors    // Determine which mentors to display based on active tab
     const mentorsToDisplay =
-        activeTab === "mentors" ? mentors : recommendedMentors;
+        activeTab === "mentors" ? mentors.items : recommendedMentors.items;
 
     return (
         <div className="flex h-full bg-[#F8FAFC]">
@@ -173,7 +204,10 @@ const MentorSearchContent: React.FC = () => {
                                 placeholder="Шукати менторів..."
                                 className="w-full p-2 pl-3 text-sm border border-[#E2E8F0] rounded-md focus:ring-[#4318D1] focus:border-[#4318D1]"
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentPage(1);
+                                }}
                             />
                         </div>
                     </div>
@@ -272,9 +306,10 @@ const MentorSearchContent: React.FC = () => {
                                 max={10}
                                 step={1}
                                 value={minExperience}
-                                onChange={(e) =>
-                                    setMinExperience(Number(e.target.value))
-                                }
+                                onChange={(e) => {
+                                    setMinExperience(Number(e.target.value));
+                                    setCurrentPage(1);
+                                }}
                                 className="w-full accent-[#4318D1]"
                             />
                             <span className="ml-2 text-sm text-[#1E293B]">
@@ -354,9 +389,8 @@ const MentorSearchContent: React.FC = () => {
                                 }`}
                                 onClick={() => {
                                     setActiveTab("mentors");
-                                    if (mentors.length === 0) {
-                                        fetchMentors();
-                                    }
+                                    setCurrentPage(1);
+                                    fetchMentors();
                                 }}
                             >
                                 Усі ментори
@@ -369,9 +403,8 @@ const MentorSearchContent: React.FC = () => {
                                 }`}
                                 onClick={() => {
                                     setActiveTab("recommendedMentors");
-                                    if (recommendedMentors.length === 0) {
-                                        fetchRecommendedMentors();
-                                    }
+                                    setCurrentPage(1);
+                                    fetchRecommendedMentors();
                                 }}
                             >
                                 {" "}
@@ -438,6 +471,87 @@ const MentorSearchContent: React.FC = () => {
                                 </p>
                             </div>
                         )}
+                    </div>
+                )}
+                {/* Pagination controls */}
+                {!loading && !error && mentorsToDisplay.length > 0 && (
+                    <div className="mt-6 flex justify-between items-center">
+                        <div className="text-sm text-[#64748B]">
+                            Показано{" "}
+                            {(activeTab === "mentors"
+                                ? mentors
+                                : recommendedMentors
+                            ).pageNumber *
+                                pageSize -
+                                pageSize +
+                                1}{" "}
+                            -{" "}
+                            {(activeTab === "mentors"
+                                ? mentors
+                                : recommendedMentors
+                            ).pageNumber *
+                                pageSize >
+                            (activeTab === "mentors"
+                                ? mentors
+                                : recommendedMentors
+                            ).totalCount
+                                ? (activeTab === "mentors"
+                                      ? mentors
+                                      : recommendedMentors
+                                  ).totalCount
+                                : (activeTab === "mentors"
+                                      ? mentors
+                                      : recommendedMentors
+                                  ).pageNumber * pageSize}{" "}
+                            з{" "}
+                            {
+                                (activeTab === "mentors"
+                                    ? mentors
+                                    : recommendedMentors
+                                ).totalCount
+                            }{" "}
+                            менторів
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => {
+                                    setCurrentPage((prev) =>
+                                        Math.max(prev - 1, 1)
+                                    );
+                                    if (activeTab === "mentors") {
+                                        fetchMentors();
+                                    } else {
+                                        fetchRecommendedMentors();
+                                    }
+                                }}
+                                disabled={
+                                    !(activeTab === "mentors"
+                                        ? mentors.hasPreviousPage
+                                        : recommendedMentors.hasPreviousPage)
+                                }
+                                className="px-4 py-2 bg-[#4318D1] text-white rounded-md hover:bg-[#3a15b3] disabled:bg-[#E2E8F0] disabled:text-[#A0AEC0]"
+                            >
+                                Попередня
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setCurrentPage((prev) => prev + 1);
+                                    if (activeTab === "mentors") {
+                                        fetchMentors();
+                                    } else {
+                                        fetchRecommendedMentors();
+                                    }
+                                }}
+                                disabled={
+                                    !(activeTab === "mentors"
+                                        ? mentors.hasNextPage
+                                        : recommendedMentors.hasNextPage)
+                                }
+                                className="px-4 py-2 bg-[#4318D1] text-white rounded-md hover:bg-[#3a15b3] disabled:bg-[#E2E8F0] disabled:text-[#A0AEC0]"
+                            >
+                                Наступна
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

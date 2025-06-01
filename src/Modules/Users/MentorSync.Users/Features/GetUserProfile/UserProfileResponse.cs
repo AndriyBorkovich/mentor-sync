@@ -16,6 +16,7 @@ public sealed record MenteeProfileInfo(
     string Bio,
     string Position,
     string Company,
+    string Category,
     List<string> Skills,
     List<string> ProgrammingLanguages,
     List<string> LearningGoals
@@ -26,6 +27,7 @@ public sealed record MentorProfileInfo(
     string Bio,
     string Position,
     string Company,
+    string Category,
     List<string> Skills,
     List<string> ProgrammingLanguages,
     int ExperienceYears

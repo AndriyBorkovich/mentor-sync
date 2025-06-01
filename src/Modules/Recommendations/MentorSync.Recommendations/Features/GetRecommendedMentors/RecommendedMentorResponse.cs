@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
 /// <summary>

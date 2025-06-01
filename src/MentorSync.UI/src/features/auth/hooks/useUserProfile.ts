@@ -7,6 +7,7 @@ export interface MenteeProfileInfo {
     bio: string;
     position: string;
     company: string;
+    category: string;
     skills: string[];
     programmingLanguages: string[];
     learningGoals: string[];
@@ -17,6 +18,7 @@ export interface MentorProfileInfo {
     bio: string;
     position: string;
     company: string;
+    category: string;
     skills: string[];
     programmingLanguages: string[];
     experienceYears: number;

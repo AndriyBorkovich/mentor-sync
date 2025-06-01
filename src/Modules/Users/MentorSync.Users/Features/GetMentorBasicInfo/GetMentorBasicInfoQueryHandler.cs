@@ -1,8 +1,8 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Data;
-using MentorSync.Users.Domain.Enums;
 using MentorSync.Users.Extensions;
+using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -28,15 +28,16 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
                     profile => profile.MentorId,
                     (user, profile) => new
                     {
-                        Id = user.Id,
+                        user.Id,
                         Name = user.UserName,
                         Title = profile.Position,
                         ProfileImage = user.ProfileImageUrl,
                         YearsOfExperience = profile.ExperienceYears,
-                        Bio = profile.Bio,
-                        Availability = profile.Availability,
-                        Skills = profile.Skills,
-                        Industries = profile.Industries
+                        profile.Bio,
+                        profile.Availability,
+                        profile.Skills,
+                        profile.Industries,
+                        profile.ProgrammingLanguages
                     }
                 )
                 .FirstOrDefaultAsync(cancellationToken);
@@ -53,7 +54,6 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
                     WHERE ""MentorId"" = {request.MentorId}"
                 ).FirstOrDefaultAsync(cancellationToken);
 
-            var category = GetCategoryFromIndustries((int)mentorInfo.Industries);
 
             var response = new MentorBasicInfoResponse
             {
@@ -63,9 +63,10 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
                 Rating = averageRating?.Value ?? 0.0,
                 ProfileImage = mentorInfo.ProfileImage,
                 YearsOfExperience = mentorInfo.YearsOfExperience,
-                Category = category,
+                Category = mentorInfo.Industries.GetCategories(),
                 Bio = mentorInfo.Bio,
-                Availability = GetReadableAvailability(mentorInfo.Availability),
+                Availability = mentorInfo.Availability.ToReadableString(),
+                ProgrammingLanguages = mentorInfo.ProgrammingLanguages ?? [],
                 Skills = [.. mentorInfo.Skills
                     .Select((skill, index) => new MentorSkillDto
                     {
@@ -81,38 +82,5 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
             _logger.LogError(ex, "Error getting mentor basic info for MentorId: {MentorId}", request.MentorId);
             return Result.Error($"An error occurred while getting mentor basic info: {ex.Message}");
         }
-    }
-
-    private static string GetCategoryFromIndustries(int industries)
-    {
-        // This matches the CASE expression in your original SQL query
-        return industries switch
-        {
-            var i when (i & 1) == 1 => "Веб розробка",
-            var i when (i & 2) == 2 => "Наука даних",
-            var i when (i & 4) == 4 => "Кібербезпека",
-            var i when (i & 8) == 8 => "Хмарні обчислення",
-            var i when (i & 16) == 16 => "DevOps",
-            var i when (i & 32) == 32 => "Розробка ігор",
-            var i when (i & 64) == 64 => "IT підтримка",
-            var i when (i & 128) == 128 => "Штучний інтелект",
-            var i when (i & 256) == 256 => "Блокчейн",
-            var i when (i & 512) == 512 => "Мережі",
-            var i when (i & 1024) == 1024 => "UX/UI дизайн",
-            var i when (i & 2048) == 2048 => "Вбудовані системи",
-            var i when (i & 4096) == 4096 => "IT консалтинг",
-            var i when (i & 8192) == 8192 => "Адміністрування баз даних",
-            var i when (i & 16384) == 16384 => "Проєктний менеджемент",
-            var i when (i & 32768) == 32768 => "Мобільна розробка",
-            var i when (i & 65536) == 65536 => "Low/No кодування",
-            var i when (i & 131072) == 131072 => "QA/QC",
-            var i when (i & 262144) == 262144 => "Машинне навчання",
-            _ => "Інше"
-        };
-    }
-
-    private static string GetReadableAvailability(Availability availability)
-    {
-        return AvailabilityFormatter.ToReadableString(availability);
     }
 }

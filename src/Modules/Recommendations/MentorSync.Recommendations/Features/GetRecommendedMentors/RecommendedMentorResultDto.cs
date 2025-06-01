@@ -1,3 +1,5 @@
+using MentorSync.SharedKernel.CommonEntities;
+
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
 /// <summary>
@@ -12,9 +14,8 @@ public sealed class RecommendedMentorResultDto
     public string[] Skills { get; set; }
     public string ProfileImage { get; set; }
     public int? ExperienceYears { get; set; }
-    public string Category { get; set; }
     public string[] ProgrammingLanguages { get; set; }
-    public int Industries { get; set; }
+    public Industry Industries { get; set; }
     public bool IsActive { get; set; }
     public float CollaborativeScore { get; set; }
     public float ContentBasedScore { get; set; }

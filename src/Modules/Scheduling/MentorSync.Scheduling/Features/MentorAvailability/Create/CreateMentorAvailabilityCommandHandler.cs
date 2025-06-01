@@ -21,12 +21,12 @@ public sealed class CreateMentorAvailabilityCommandHandler(
         }
 
         // Check for overlapping availability slots
-        var overlappingSlots = await dbContext.MentorAvailabilities
+        var hasOverlappingSlots = await dbContext.MentorAvailabilities
             .Where(a => a.MentorId == request.MentorId)
             .Where(a => a.Start < request.End && a.End > request.Start)
             .AnyAsync(cancellationToken);
 
-        if (overlappingSlots)
+        if (hasOverlappingSlots)
         {
             return Result.Invalid(new ValidationError(
                 "Overlapping availability slot: This time slot overlaps with an existing availability slot"));

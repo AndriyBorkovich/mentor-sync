@@ -1,14 +1,17 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using MentorSync.Recommendations.Data;
+using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
 public sealed class GetRecommendedMentorsQueryHandler(
-    RecommendationsDbContext recommendationsContext) : IRequestHandler<GetRecommendedMentorsQuery, Result<List<RecommendedMentorResponse>>>
+    RecommendationsDbContext recommendationsContext)
+        : IRequestHandler<GetRecommendedMentorsQuery, Result<PaginatedList<RecommendedMentorResponse>>>
 {
-    public async Task<Result<List<RecommendedMentorResponse>>> Handle(GetRecommendedMentorsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<RecommendedMentorResponse>>> Handle(GetRecommendedMentorsQuery request, CancellationToken cancellationToken)
     {
         var menteeId = request.MenteeId;
         var mentorsQuery = recommendationsContext.Database
@@ -21,28 +24,6 @@ public sealed class GetRecommendedMentorsQueryHandler(
                     mp.""Skills"",
                     u.""ProfileImageUrl"" as ""ProfileImage"",
                     mp.""ExperienceYears"",
-                    CASE 
-                        WHEN (mp.""Industries"" & 1) = 1 THEN 'Веб розробка'
-                        WHEN (mp.""Industries"" & 2) = 2 THEN 'Наука даних'
-                        WHEN (mp.""Industries"" & 4) = 4 THEN 'Кібербезпека'
-                        WHEN (mp.""Industries"" & 8) = 8 THEN 'Хмарні обчислення'
-                        WHEN (mp.""Industries"" & 16) = 16 THEN 'DevOps'
-                        WHEN (mp.""Industries"" & 32) = 32 THEN 'Розробка ігор'
-                        WHEN (mp.""Industries"" & 64) = 64 THEN 'ІТ-підтримка'
-                        WHEN (mp.""Industries"" & 128) = 128 THEN 'Штучний інтелект'
-                        WHEN (mp.""Industries"" & 256) = 256 THEN 'Блокчейн'
-                        WHEN (mp.""Industries"" & 512) = 512 THEN 'Мережі'
-                        WHEN (mp.""Industries"" & 1024) = 1024 THEN 'UX/UI дизайн'
-                        WHEN (mp.""Industries"" & 2048) = 2048 THEN 'Вбудовані системи'
-                        WHEN (mp.""Industries"" & 4096) = 4096 THEN 'IT консалтинг'
-                        WHEN (mp.""Industries"" & 8192) = 8192 THEN 'Адміністрування баз даних'
-                        WHEN (mp.""Industries"" & 16384) = 16384 THEN 'Проектний менеджмент'
-                        WHEN (mp.""Industries"" & 32768) = 32768 THEN 'Мобільна розробка'
-                        WHEN (mp.""Industries"" & 65536) = 65536 THEN 'Low-code/No-code'
-                        WHEN (mp.""Industries"" & 131072) = 131072 THEN 'QA/QC'
-                        WHEN (mp.""Industries"" & 262144) = 262144 THEN 'Машинне навчання'
-                        ELSE 'Інше'
-                    END as ""Category"",
                     mp.""ProgrammingLanguages"",
                     mp.""Industries"",
                     u.""IsActive"",
@@ -72,10 +53,10 @@ public sealed class GetRecommendedMentorsQueryHandler(
                     m.ProgrammingLanguages.Contains(lang)));
         }
 
-        if (request.Industry.HasValue && request.Industry.Value != 0)
+        var searchedIndustry = request.Industry;
+        if (searchedIndustry.HasValue && searchedIndustry.Value != 0)
         {
-            var industryValue = (int)request.Industry.Value;
-            mentorsQuery = mentorsQuery.Where(m => (m.Industries & industryValue) > 0);
+            mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) > 0);
         }
 
         if (request.MinExperienceYears.HasValue)
@@ -85,24 +66,29 @@ public sealed class GetRecommendedMentorsQueryHandler(
                 m.ExperienceYears.Value >= request.MinExperienceYears.Value);
         }
 
-        mentorsQuery = mentorsQuery.Where(m => m.IsActive);
+        mentorsQuery = mentorsQuery.Where(m => m.IsActive); mentorsQuery = mentorsQuery.OrderByDescending(m => m.FinalScore);
 
-        mentorsQuery = mentorsQuery.OrderByDescending(m => m.FinalScore);
+        // Get total count before pagination
+        var totalCount = await mentorsQuery.CountAsync(cancellationToken);
 
-        // Limit the results
-        if (request.MaxResults > 0)
+        if (totalCount == 0)
         {
-            mentorsQuery = mentorsQuery.Take(request.MaxResults);
+            return Result.NotFound("No recommended mentors found");
         }
+
+        // Apply pagination
+        mentorsQuery = mentorsQuery
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize);
 
         var mentors = await mentorsQuery.ToListAsync(cancellationToken);
 
         if (mentors == null || mentors.Count == 0)
         {
-            return Result.NotFound("No recommended mentors found");
+            return Result.NotFound("No recommended mentors found on this page");
         }
 
-        var response = mentors.Select(m => new RecommendedMentorResponse(
+        var items = mentors.Select(m => new RecommendedMentorResponse(
             m.Id,
             m.Name,
             m.Title,
@@ -110,21 +96,29 @@ public sealed class GetRecommendedMentorsQueryHandler(
             ConvertSkillsToList(m.Skills),
             m.ProfileImage,
             m.ExperienceYears,
-            m.Category,
+            m.Industries.GetCategories(),
             float.IsNaN(m.CollaborativeScore) ? 0 : m.CollaborativeScore,
             float.IsNaN(m.ContentBasedScore) ? 0 : m.ContentBasedScore,
             float.IsNaN(m.FinalScore) ? 0 : m.FinalScore
         )).ToList();
 
-        return Result.Success(response);
+        var paginatedList = new PaginatedList<RecommendedMentorResponse>
+        {
+            Items = items,
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+            TotalCount = totalCount
+        };
+
+        return Result.Success(paginatedList);
     }
 
     private static List<RecommendedSkillResponse> ConvertSkillsToList(string[] skills)
     {
         if (skills == null)
-            return new List<RecommendedSkillResponse>();
+            return [];
 
         // Convert skills array to list of SkillResponse objects
-        return skills.Select((skill, index) => new RecommendedSkillResponse(index.ToString(), skill)).ToList();
+        return [.. skills.Select((skill, index) => new RecommendedSkillResponse(index.ToString(), skill))];
     }
 }

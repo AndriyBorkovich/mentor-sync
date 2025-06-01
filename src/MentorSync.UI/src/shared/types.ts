@@ -37,6 +37,7 @@ export interface MentorBasicInfo {
     bio: string;
     availability: string;
     skills: MentorProfileSkill[];
+    programmingLanguages: string[];
 }
 
 // Reviews types
@@ -103,6 +104,7 @@ export interface MentorProfile {
     yearsOfExperience: number | null;
     category: string;
     skills: MentorProfileSkill[];
+    programmingLanguages: string[];
     bio: string;
     availability?: string;
     reviewCount: number;

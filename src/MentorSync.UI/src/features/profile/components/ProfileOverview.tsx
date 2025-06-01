@@ -61,7 +61,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                     </div>
                 )}
 
-                {displayProfile?.position && (
+                {displayProfile?.position && displayProfile.position && (
                     <div>
                         <h3 className="font-medium text-gray-700">Посада</h3>
                         <p className="text-gray-600 mt-1">
@@ -75,6 +75,17 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                         <h3 className="font-medium text-gray-700">Компанія</h3>
                         <p className="text-gray-600 mt-1">
                             {displayProfile.company}
+                        </p>
+                    </div>
+                )}
+
+                {displayProfile?.category && (
+                    <div>
+                        <h3 className="font-medium text-gray-700">
+                            {isMentee ? "Напрямки розвитку" : "Напрямки"}
+                        </h3>
+                        <p className="text-gray-600 mt-1">
+                            {displayProfile.category}
                         </p>
                     </div>
                 )}
@@ -115,7 +126,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = ({
                                     (language, index) => (
                                         <span
                                             key={index}
-                                            className="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm"
+                                            className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-sm"
                                         >
                                             {language}
                                         </span>

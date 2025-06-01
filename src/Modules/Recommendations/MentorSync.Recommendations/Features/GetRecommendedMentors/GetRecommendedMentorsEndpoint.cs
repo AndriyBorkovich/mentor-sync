@@ -20,7 +20,8 @@ public sealed class GetRecommendedMentorsEndpoint : IEndpoint
             [FromQuery] string[] programmingLanguages,
             [FromQuery] int? industry,
             [FromQuery] int? minExperienceYears,
-            [FromQuery] int maxResults,
+            [FromQuery] int? pageNumber,
+            [FromQuery] int? pageSize,
             ISender sender,
             HttpContext httpContext,
             CancellationToken ct) =>
@@ -39,13 +40,13 @@ public sealed class GetRecommendedMentorsEndpoint : IEndpoint
                 programmingLanguages?.ToList() ?? [],
                 industryEnum,
                 minExperienceYears,
-                maxResults > 0 ? maxResults : 10), ct);
+                pageNumber ?? 1,
+                pageSize ?? 10), ct);
 
             return result.DecideWhatToReturn();
-        })
-        .WithTags(TagsConstants.Recommendations)
+        }).WithTags(TagsConstants.Recommendations)
         .WithDescription("Get recommended mentors for the currently logged-in mentee with filtering options")
-        .Produces<List<RecommendedMentorResponse>>(StatusCodes.Status200OK)
+        .Produces<PaginatedList<RecommendedMentorResponse>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
     }

@@ -1,3 +1,5 @@
+using MentorSync.SharedKernel.CommonEntities;
+
 namespace MentorSync.Users.Features.SearchMentors;
 
 public sealed class MentorSearchResultDto
@@ -9,9 +11,8 @@ public sealed class MentorSearchResultDto
     public string[] Skills { get; set; }
     public string ProfileImage { get; set; }
     public int? ExperienceYears { get; set; }
-    public string Category { get; set; }
+    public Industry Industries { get; set; }
     public string[] ProgrammingLanguages { get; set; }
-    public int Industries { get; set; }
     public bool IsActive { get; set; }
 }
 

@@ -19,7 +19,7 @@ public static class ResultExtensions
                 statusCode: StatusCodes.Status400BadRequest,
                 title: "Validation Error",
                 detail: "One or more validation errors occurred.",
-                extensions: new Dictionary<string, object?>
+                extensions: new Dictionary<string, object>
                 {
                     ["errors"] = result.ValidationErrors,
                 }),
@@ -62,7 +62,7 @@ public static class ResultExtensions
                 statusCode: StatusCodes.Status400BadRequest,
                 title: "Validation Error",
                 detail: "One or more validation errors occurred.",
-                extensions: new Dictionary<string, object?>
+                extensions: new Dictionary<string, object>
                 {
                     ["validationErrors"] = result.ValidationErrors
                 }),
@@ -88,10 +88,10 @@ public static class ResultExtensions
     private static IResult CreateProblem(
         int statusCode,
         string title,
-        string? detail = null,
-        string? type = null,
-        string? instance = null,
-        IDictionary<string, object?>? extensions = null)
+        string detail = null,
+        string type = null,
+        string instance = null,
+        IDictionary<string, object> extensions = null)
     {
         return Results.Problem(
             detail: detail,

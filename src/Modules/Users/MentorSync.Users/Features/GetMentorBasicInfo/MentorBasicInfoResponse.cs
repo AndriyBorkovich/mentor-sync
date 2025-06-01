@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace MentorSync.Users.Features.GetMentorBasicInfo;
 
 public record MentorBasicInfoResponse
@@ -13,7 +11,8 @@ public record MentorBasicInfoResponse
     public string Category { get; init; }
     public string Bio { get; init; }
     public string Availability { get; init; }
-    public List<MentorSkillDto> Skills { get; init; } = new();
+    public List<string> ProgrammingLanguages { get; init; } = [];
+    public List<MentorSkillDto> Skills { get; init; } = [];
 }
 
 public record MentorSkillDto

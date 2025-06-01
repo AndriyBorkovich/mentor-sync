@@ -2,6 +2,7 @@ using Ardalis.Result;
 using MediatR;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
+using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,15 +27,12 @@ public sealed class GetUserProfileQueryHandler(
 
         var role = user.UserRoles?.FirstOrDefault()?.Role?.Name;
 
-        // Get mentee profile if it exists
         var menteeProfile = await usersDbContext.MenteeProfiles
             .FirstOrDefaultAsync(mp => mp.MenteeId == user.Id, cancellationToken);
 
-        // Get mentor profile if it exists
         var mentorProfile = await usersDbContext.MentorProfiles
             .FirstOrDefaultAsync(mp => mp.MentorId == user.Id, cancellationToken);
 
-        // Create profile response based on user type and available profiles
         var response = new UserProfileResponse(
             Id: user.Id,
             UserName: user.UserName,
@@ -48,6 +46,7 @@ public sealed class GetUserProfileQueryHandler(
                     menteeProfile.Bio,
                     menteeProfile.Position,
                     menteeProfile.Company,
+                    menteeProfile.Industries.GetCategories(),
                     menteeProfile.Skills,
                     menteeProfile.ProgrammingLanguages,
                     menteeProfile.LearningGoals)
@@ -58,6 +57,7 @@ public sealed class GetUserProfileQueryHandler(
                     mentorProfile.Bio,
                     mentorProfile.Position,
                     mentorProfile.Company,
+                    mentorProfile.Industries.GetCategories(),
                     mentorProfile.Skills,
                     mentorProfile.ProgrammingLanguages,
                     mentorProfile.ExperienceYears)

@@ -36,7 +36,7 @@ export const EnhancedMentorCard: React.FC<MentorCardProps> = ({
                     <p className="text-[#64748B] text-sm">{mentor.title}</p>
                     <div className="flex items-center mt-1">
                         <span className="text-sm font-medium text-[#1E293B] mr-1">
-                            {mentor.rating}
+                            {mentor.rating.toFixed(1)}
                         </span>
                         <div className="flex">
                             {[...Array(5)].map((_, i) => (
