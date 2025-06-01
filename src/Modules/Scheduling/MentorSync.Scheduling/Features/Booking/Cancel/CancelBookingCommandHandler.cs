@@ -59,7 +59,7 @@ public sealed class CancelBookingCommandHandler(
             // Send notification to other user (if mentor cancels, notify student and vice versa)
             var recipientId = request.UserId == booking.MentorId ? booking.MenteeId : booking.MentorId;
 
-            // Send notification via SignalR
+            // Send notification
             await mediator.Send(new SendBookingStatusChangedNotificationCommand
             {
                 UserId = recipientId.ToString(),

@@ -60,6 +60,7 @@ export const authService = {
             };
         }
     },
+
     login: async (data: LoginRequest): Promise<AuthResponse> => {
         try {
             const response = await api.post("/users/login", data); // If login was successful, save the tokens to localStorage

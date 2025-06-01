@@ -47,8 +47,8 @@ export const getMentorAvailability = async (
     startDate: Date,
     endDate: Date
 ): Promise<MentorAvailabilityResponse> => {
-    const start = startDate.toISOString().split("T")[0]; // YYYY-MM-DD
-    const end = endDate.toISOString().split("T")[0];
+    const start = startDate.toISOString();
+    const end = endDate.toISOString();
 
     const response = await api.get<MentorAvailabilityResponse>(
         `scheduling/mentors/${mentorId}/availability?startDate=${start}&endDate=${end}`

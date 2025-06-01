@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
 
 public record MentorUpcomingSessionsResponse

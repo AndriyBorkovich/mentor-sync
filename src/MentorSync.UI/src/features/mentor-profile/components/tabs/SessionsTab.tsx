@@ -38,6 +38,8 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
                 // Set end date to the same day as the selected date
                 const startDate = new Date(selectedDate);
                 const endDate = new Date(selectedDate);
+                // add 1 day to endDate to include the whole day
+                endDate.setDate(endDate.getDate() + 1);
 
                 const availabilityResponse = await getMentorAvailability(
                     mentorId,

@@ -2,7 +2,7 @@ using Ardalis.Result;
 using MediatR;
 using MentorSync.Scheduling.Data;
 using Microsoft.EntityFrameworkCore;
-
+using MentorAvailabilityEntity = MentorSync.Scheduling.Domain.MentorAvailability;
 namespace MentorSync.Scheduling.Features.MentorAvailability.Create;
 
 public sealed class CreateMentorAvailabilityCommandHandler(
@@ -32,8 +32,7 @@ public sealed class CreateMentorAvailabilityCommandHandler(
                 "Overlapping availability slot: This time slot overlaps with an existing availability slot"));
         }
 
-        // Create new availability slot
-        var availability = new Domain.MentorAvailability
+        var availability = new MentorAvailabilityEntity
         {
             MentorId = request.MentorId,
             Start = request.Start,

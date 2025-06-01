@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MentorSync.Scheduling.Contracts;
 using MentorSync.Scheduling.Data;
+using MentorSync.Scheduling.Features.Booking.UpdatePending;
 using MentorSync.Scheduling.Services;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
@@ -26,6 +27,7 @@ public static class ModuleRegistration
 
         builder.Services.AddScoped<IBookingService, BookingService>();
         builder.Services.AddScoped<INotificationService, NotificationService>();
+        builder.Services.AddHostedService<UpdatePendingBookingsJob>();
     }
 
     private static void AddEndpoints(IServiceCollection services)

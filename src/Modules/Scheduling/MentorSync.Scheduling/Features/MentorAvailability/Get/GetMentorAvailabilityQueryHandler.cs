@@ -16,7 +16,7 @@ public sealed class GetMentorAvailabilityQueryHandler(
     {
         var startDate = request.StartDate.ToUniversalTime();
         var endDate = request.EndDate.ToUniversalTime();
-        // Get all availability slots in the date range
+
         var availabilitySlots = await dbContext.MentorAvailabilities
             .Where(a => a.MentorId == request.MentorId)
             .Where(a => a.Start >= startDate && a.End <= endDate)
@@ -29,13 +29,12 @@ public sealed class GetMentorAvailabilityQueryHandler(
             .Where(b => b.Start >= startDate && b.End <= endDate)
             .ToListAsync(cancellationToken);
 
-        // Map availabilities to AvailabilitySlot objects, marking those that are booked
         var slots = availabilitySlots
             .Select(a => new AvailabilitySlot(
                 a.Id,
                 a.Start,
                 a.End,
-                // Check if this slot is booked (overlapping with any booking)
+                // Check if this slot is overlapping with any booking
                 bookings.Any(b => b.Start <= a.End && b.End >= a.Start)))
             .ToList();
 

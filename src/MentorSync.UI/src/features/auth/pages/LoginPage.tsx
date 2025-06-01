@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { authService, LoginRequest } from "../services/authService";
+import { getUserRole } from "../utils/authUtils";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -38,18 +39,23 @@ const LoginPage: React.FC = () => {
 
         try {
             const response = await authService.login(data);
+            console.log("Login response:", response);
             if (response?.success) {
                 // Check if user needs onboarding based on API response
+                const userRoleToUse = userRole || getUserRole() || "mentee";
+                console.log("User role to use:", userRoleToUse);
                 if (response.needOnboarding) {
                     // User needs onboarding - use the role from either registration state or from user's data
-                    const userRoleToUse =
-                        userRole ||
-                        localStorage.getItem("userRole") ||
-                        "mentee";
+
                     navigate(`/onboarding/${userRoleToUse}`, { replace: true });
                 } else {
-                    // User doesn't need onboarding - redirect to dashboard
-                    navigate("/dashboard", { replace: true });
+                    if (userRoleToUse.toLocaleLowerCase() === "mentor") {
+                        navigate("/sessions", { replace: true });
+                        console.log("Navigating to sessions as mentor");
+                    } else {
+                        navigate("/dashboard", { replace: true });
+                        console.log("Navigating to dashboard as mentee");
+                    }
                 }
             } else {
                 setErrorMessage("Помилка входу. Невірний email або пароль.");

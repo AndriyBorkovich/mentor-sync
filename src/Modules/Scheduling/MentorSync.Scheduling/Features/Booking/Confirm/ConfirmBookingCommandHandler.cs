@@ -2,7 +2,6 @@ using Ardalis.Result;
 using MediatR;
 using MentorSync.Scheduling.Data;
 using MentorSync.Scheduling.Services;
-using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using BookingStatus = MentorSync.SharedKernel.CommonEntities.BookingStatus;
@@ -37,16 +36,6 @@ public sealed class ConfirmBookingCommandHandler(
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            // Notify both mentor and mentee
-            await notificationService.SendBookingStatusChangedNotificationAsync(
-                booking.Id,
-                booking.Status.ToString(),
-                "Booking Confirmed",
-                booking.Start.UtcDateTime,
-                booking.End.UtcDateTime,
-                booking.MentorId,
-                "Your booking has been confirmed."
-            );
             await notificationService.SendBookingStatusChangedNotificationAsync(
                 booking.Id,
                 booking.Status.ToString(),

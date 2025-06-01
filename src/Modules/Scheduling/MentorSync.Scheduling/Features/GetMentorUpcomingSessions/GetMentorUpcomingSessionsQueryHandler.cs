@@ -32,12 +32,10 @@ public sealed class GetMentorUpcomingSessionsQueryHandler(
             .Take(5)
             .ToListAsync(cancellationToken);
 
-        // Create response
-        var response = new MentorUpcomingSessionsResponse
+
+        return Result.Success(new MentorUpcomingSessionsResponse
         {
             UpcomingSessions = sessions
-        };
-
-        return Result.Success(response);
+        });
     }
 }

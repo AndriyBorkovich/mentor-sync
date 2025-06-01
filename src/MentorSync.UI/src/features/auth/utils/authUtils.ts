@@ -62,6 +62,17 @@ export const getUserId = (): number => {
     return parseInt(localStorage.getItem("userId") || "0", 10);
 };
 
+export const getUserRole = (): string => {
+    // First try to get the ID from the JWT token
+    const user = getUserFromToken();
+    const tokenRole =
+        user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+    return typeof tokenRole === "string"
+        ? tokenRole
+        : localStorage.getItem("userRole") || "";
+};
+
 /**
  * Get the remaining time in seconds before the token expires
  */
