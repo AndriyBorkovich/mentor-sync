@@ -56,8 +56,7 @@ public sealed class MaterialsDbContext(DbContextOptions<MaterialsDbContext> opti
             entity.Property(e => e.Description)
                   .HasMaxLength(100);
 
-            entity.HasIndex(e => e.Name)
-                  .IsUnique();
+            entity.HasIndex(e => e.Name);
         });
 
         modelBuilder.Entity<MaterialAttachment>(entity =>

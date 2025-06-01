@@ -1,0 +1,313 @@
+using Bogus;
+using MentorSync.Materials.Data;
+using MentorSync.Materials.Domain;
+using MentorSync.Ratings.Data;
+using MentorSync.Ratings.Domain;
+using MentorSync.Recommendations.Data;
+using MentorSync.Recommendations.Domain.Tracking;
+using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.Users.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
+
+namespace MentorSync.MigrationService.Seeders;
+
+public static class LearningMaterialsSeeder
+{
+    private static readonly ImmutableList<(string Title, string Description, string[] Tags)> ProgrammingTopics =
+        ImmutableList.Create(
+            ("Understanding SOLID Principles", "A comprehensive guide to SOLID principles in modern software development",
+                new[] { "design-patterns", "best-practices", "architecture" }),
+            ("Mastering Git Workflow", "Learn professional Git workflow patterns and best practices",
+                new[] { "git", "version-control", "collaboration" }),
+            ("Clean Code: Best Practices", "Writing clean, maintainable, and efficient code",
+                new[] { "clean-code", "best-practices", "code-quality" }),
+            ("Design Patterns in C#", "Implementing common design patterns in C# applications",
+                new[] { "csharp", "design-patterns", "object-oriented" }),
+            ("RESTful API Design", "Best practices for designing RESTful APIs",
+                new[] { "api", "web-development", "rest" }),
+            ("Microservices Architecture", "Introduction to microservices architecture and patterns",
+                new[] { "microservices", "architecture", "distributed-systems" }),
+            ("Unit Testing Fundamentals", "Writing effective unit tests and following TDD",
+                new[] { "testing", "tdd", "best-practices" }),
+            ("Dependency Injection Explained", "Understanding DI patterns and implementations",
+                new[] { "dependency-injection", "design-patterns", "architecture" }),
+            ("Async Programming in C#", "Mastering asynchronous programming patterns",
+                new[] { "csharp", "async", "performance" }),
+            ("Domain-Driven Design", "Implementing DDD principles in modern applications",
+                new[] { "ddd", "architecture", "design-patterns" }),
+            ("Entity Framework Core Best Practices", "Optimizing database operations with EF Core",
+                new[] { "entity-framework", "database", "performance" }),
+            ("Security Best Practices", "Implementing security in modern applications",
+                new[] { "security", "best-practices", "authentication" }),
+            ("CI/CD Pipeline Implementation", "Setting up robust CI/CD pipelines",
+                new[] { "devops", "ci-cd", "automation" }),
+            ("Docker Containerization", "Getting started with Docker and containers",
+                new[] { "docker", "devops", "containers" }),
+            ("Kubernetes for Developers", "Understanding Kubernetes fundamentals",
+                new[] { "kubernetes", "devops", "containers" }),
+            ("Event-Driven Architecture", "Building event-driven microservices",
+                new[] { "architecture", "events", "microservices" }),
+            ("GraphQL API Development", "Building efficient GraphQL APIs",
+                new[] { "graphql", "api", "web-development" }),
+            ("Redis Caching Strategies", "Implementing effective caching with Redis",
+                new[] { "redis", "caching", "performance" }),
+            ("MongoDB Best Practices", "Working effectively with MongoDB",
+                new[] { "mongodb", "database", "nosql" }),
+            ("Azure Cloud Architecture", "Designing solutions for Azure cloud",
+                new[] { "azure", "cloud", "architecture" }),
+            ("Blazor Web Development", "Building modern web apps with Blazor",
+                new[] { "blazor", "web-development", "csharp" }),
+            ("gRPC Service Development", "Implementing efficient gRPC services",
+                new[] { "grpc", "microservices", "performance" }),
+            ("Message Queue Patterns", "Working with RabbitMQ and message queues",
+                new[] { "messaging", "rabbitmq", "architecture" }),
+            ("OAuth2 Implementation", "Securing applications with OAuth2",
+                new[] { "security", "oauth", "authentication" }),
+            ("Elasticsearch in .NET", "Implementing search with Elasticsearch",
+                new[] { "elasticsearch", "search", "performance" }),
+            ("Machine Learning Basics", "Introduction to ML concepts and implementation",
+                new[] { "machine-learning", "ai", "data-science" }),
+            ("Code Review Best Practices", "Conducting effective code reviews",
+                new[] { "code-review", "collaboration", "best-practices" }),
+            ("Performance Optimization", "Optimizing .NET application performance",
+                new[] { "performance", "optimization", "best-practices" }),
+            ("Logging and Monitoring", "Setting up proper logging and monitoring",
+                new[] { "logging", "monitoring", "devops" }),
+            ("API Security Patterns", "Securing APIs and web services",
+                new[] { "security", "api", "authentication" })
+        );
+
+    public static async Task SeedAsync(IServiceProvider serviceProvider, ILogger logger)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var materialsContext = scope.ServiceProvider.GetRequiredService<MaterialsDbContext>();
+        var usersContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+        var ratingsContext = scope.ServiceProvider.GetRequiredService<RatingsDbContext>();
+        var recommendationsContext = scope.ServiceProvider.GetRequiredService<RecommendationsDbContext>();
+
+        if (materialsContext.LearningMaterials.Any())
+        {
+            logger.LogInformation("Learning materials already seeded. Skipping seeding process.");
+            return;
+        }
+
+        // Get mentors and mentees for seeding
+        var mentorIds = await usersContext.MentorProfiles.Select(m => m.MentorId).ToListAsync();
+        var menteeIds = await usersContext.MenteeProfiles.Select(m => m.MenteeId).ToListAsync();
+
+        if (!mentorIds.Any() || !menteeIds.Any())
+        {
+            logger.LogWarning("No mentors or mentees found for seeding materials");
+            return;
+        }
+
+        // Initialize Bogus faker
+        var faker = new Faker { Random = new Randomizer(42) }; // Fixed seed for reproducibility
+
+        // Generate learning materials from predefined topics
+        var materials = new List<LearningMaterial>();
+        var topics = ProgrammingTopics.ToList();
+        foreach (var topic in topics)
+        {
+            var createdAt = faker.Date.Recent(90).ToUniversalTime();
+            var material = new LearningMaterial
+            {
+                Title = topic.Title,
+                Description = topic.Description,
+                Type = MaterialType.Article,
+                ContentMarkdown = GenerateMarkdownContent(faker, topic.Title, topic.Description),
+                MentorId = faker.PickRandom(mentorIds),
+                CreatedAt = createdAt,
+                UpdatedAt = faker.Random.Bool(0.5f) ? faker.Date.Between(createdAt, DateTime.UtcNow).ToUniversalTime() : null,
+                Attachments = new List<MaterialAttachment>(),
+                Tags = topic.Tags.Select(tagName => new Tag { Name = tagName }).ToList()
+            };
+
+            materials.Add(material);
+        }
+
+        await materialsContext.LearningMaterials.AddRangeAsync(materials);
+        await materialsContext.SaveChangesAsync();
+
+        // Generate view events (60-80% of mentees view each material)
+        var viewEvents = materials.SelectMany(material =>
+        {
+            var viewerCount = (int)(menteeIds.Count * faker.Random.Double(0.6, 0.8));
+            return faker.PickRandom(menteeIds, viewerCount)
+                .Select(menteeId => new MaterialViewEvent
+                {
+                    MaterialId = material.Id,
+                    MenteeId = menteeId,
+                    ViewedAt = faker.Date.Between(material.CreatedAt, DateTime.UtcNow).ToUniversalTime()
+                });
+        }).ToList();
+
+        await recommendationsContext.MaterialViewEvents.AddRangeAsync(viewEvents);
+        await recommendationsContext.SaveChangesAsync();
+
+        // Generate reviews (20-40% of viewers leave a review)
+        var reviews = materials.SelectMany(material =>
+        {
+            var viewers = viewEvents.Where(v => v.MaterialId == material.Id).Select(v => v.MenteeId).ToList();
+            var reviewerCount = (int)(viewers.Count * faker.Random.Double(0.2, 0.4));
+            return faker.PickRandom(viewers, reviewerCount)
+                .Select(menteeId =>
+                {
+                    var rating = faker.Random.Int(3, 5);
+                    return new MaterialReview
+                    {
+                        MaterialId = material.Id,
+                        ReviewerId = menteeId,
+                        Rating = rating,
+                        ReviewText = GenerateReviewComment(faker, rating),
+                        CreatedAt = faker.Date.Between(
+                            viewEvents.First(v => v.MaterialId == material.Id && v.MenteeId == menteeId).ViewedAt,
+                            DateTime.UtcNow).ToUniversalTime()
+                    };
+                });
+        }).ToList();
+
+        await ratingsContext.MaterialReviews.AddRangeAsync(reviews);
+        await ratingsContext.SaveChangesAsync();
+
+        // Generate likes (40-60% of viewers like the material)
+        var likes = materials.SelectMany(material =>
+        {
+            var viewers = viewEvents.Where(v => v.MaterialId == material.Id).Select(v => v.MenteeId).ToList();
+            var likerCount = (int)(viewers.Count * faker.Random.Double(0.4, 0.6));
+            return faker.PickRandom(viewers, likerCount)
+                .Select(menteeId => new MaterialLike
+                {
+                    MaterialId = material.Id,
+                    MenteeId = menteeId,
+                    LikedAt = faker.Date.Between(
+                        viewEvents.First(v => v.MaterialId == material.Id && v.MenteeId == menteeId).ViewedAt,
+                        DateTime.UtcNow).ToUniversalTime()
+                });
+        }).ToList();
+
+        await recommendationsContext.MaterialLikes.AddRangeAsync(likes);
+        await recommendationsContext.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Seeded {MaterialCount} materials with {ViewCount} views, {ReviewCount} reviews, and {LikeCount} likes",
+            materials.Count,
+            viewEvents.Count,
+            reviews.Count,
+            likes.Count);
+    }
+
+    private static string GenerateMarkdownContent(Faker faker, string title, string description)
+    {
+        var keyPoints = new[]
+        {
+            "Understanding core principles and patterns",
+            "Following industry best practices",
+            "Avoiding common pitfalls and mistakes",
+            "Performance considerations and optimizations",
+            "Security implications and guidelines",
+            "Testing strategies and methodologies",
+            "DevOps and deployment considerations",
+            "Scalability and maintenance aspects"
+        };
+
+        var bestPractices = new[]
+        {
+            "Follow established design patterns",
+            "Write clean and maintainable code",
+            "Implement proper error handling",
+            "Use dependency injection",
+            "Write comprehensive unit tests",
+            "Document your code thoroughly",
+            "Consider security implications",
+            "Optimize for performance",
+            "Follow SOLID principles",
+            "Use meaningful naming conventions"
+        };
+
+        return $@"# {title}
+
+## Introduction
+
+{description}. This comprehensive guide will help you understand and implement these concepts effectively in your projects.
+
+### Key Points
+
+{string.Join("\n", faker.PickRandom(keyPoints, faker.Random.Int(4, 6)).Select(point => $"- {point}"))}
+
+## Main Content
+
+{faker.Lorem.Paragraphs(3)}
+
+### Real-World Scenarios
+
+{faker.Lorem.Paragraph()}
+
+### Code Example
+
+```csharp
+public class {faker.Hacker.Noun()}Service
+{{
+    private readonly I{faker.Hacker.Noun()}Repository _{faker.Hacker.Verb()}Repository;
+
+    public async Task<Result> {faker.Hacker.Verb()}Async({faker.Hacker.Noun()} request)
+    {{
+        // Implementation details
+        var result = await _{faker.Hacker.Verb()}Repository.{faker.Hacker.Verb()}Async(request);
+        return Result.Success(result);
+    }}
+}}
+```
+
+## Best Practices
+
+{string.Join("\n", faker.PickRandom(bestPractices, faker.Random.Int(4, 6)).Select((practice, i) => $"{i + 1}. {practice}"))}
+
+## Implementation Considerations
+
+{faker.Lorem.Paragraph()}
+
+## Common Pitfalls
+
+{faker.Lorem.Paragraph()}
+
+## Conclusion
+
+Thank you for reading this guide about {title}. Apply these concepts in your projects to write better, more maintainable code.
+
+---
+*Last updated: {faker.Date.Recent().ToString("MMMM d, yyyy")}*";
+    }
+
+    private static string GenerateReviewComment(Faker faker, int rating)
+    {
+        var positivePoints = new[]
+        {
+            "Very informative and well-structured",
+            "Great practical examples",
+            "Clear explanations of complex concepts",
+            "Excellent code samples",
+            "Comprehensive coverage of the topic",
+            "Very practical and applicable",
+            "Well-organized content"
+        };
+
+        var improvements = new[]
+        {
+            "Could use more practical examples",
+            "Would benefit from more detailed explanations",
+            "Some concepts need more context",
+            "Could include more real-world scenarios",
+            "Would like to see more code samples"
+        };
+
+        return rating switch
+        {
+            5 => $"{faker.PickRandom(positivePoints)}! {faker.PickRandom(positivePoints).ToLower()}. Highly recommended!",
+            4 => $"{faker.PickRandom(positivePoints)}. {faker.PickRandom(improvements).ToLower()}.",
+            3 => $"Decent article but {faker.PickRandom(improvements).ToLower()}. {faker.PickRandom(improvements).ToLower()}.",
+            _ => "Interesting read with some useful information."
+        };
+    }
+}

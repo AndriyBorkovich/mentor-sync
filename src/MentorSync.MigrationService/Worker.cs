@@ -38,7 +38,11 @@ public sealed class Worker(
                     () => MenteesSeeder.SeedAsync(scope.ServiceProvider, logger)]);
 
             await MigrateAsync<SchedulingDbContext>(scope.ServiceProvider, cancellationToken);
-            await MigrateAsync<MaterialsDbContext>(scope.ServiceProvider, cancellationToken);
+            await MigrateAsync<MaterialsDbContext>(
+                scope.ServiceProvider,
+                cancellationToken,
+                postMigrationSteps:
+                    [() => LearningMaterialsSeeder.SeedAsync(scope.ServiceProvider, logger)]);
             await MigrateAsync<RatingsDbContext>(
                 scope.ServiceProvider,
                 cancellationToken,
