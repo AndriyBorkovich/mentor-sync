@@ -130,6 +130,12 @@ export interface Material {
     attachments?: MaterialAttachment[];
 }
 
+export interface RecommendedMaterial extends Material {
+    collaborativeScore: number;
+    contentBasedScore: number;
+    finalScore: number;
+}
+
 export interface MaterialAttachment {
     id: number;
     fileName: string;

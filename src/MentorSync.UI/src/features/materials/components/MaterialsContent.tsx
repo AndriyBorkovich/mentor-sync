@@ -1,10 +1,10 @@
 import React from "react";
 import MaterialCard from "./MaterialCard";
 import MaterialsFilter from "./MaterialsFilter";
-import { Material } from "../../../shared/types";
+import { Material, RecommendedMaterial } from "../../../shared/types";
 
 interface MaterialsContentProps {
-    materials: Material[];
+    materials: Material[] | RecommendedMaterial[];
     onFilterChange: (filters: any) => void;
     currentFilters: {
         search: string;
@@ -15,6 +15,7 @@ interface MaterialsContentProps {
         pageSize: number;
     };
     totalCount?: number;
+    isRecommended?: boolean;
 }
 
 const MaterialsContent: React.FC<MaterialsContentProps> = ({
@@ -22,6 +23,7 @@ const MaterialsContent: React.FC<MaterialsContentProps> = ({
     onFilterChange,
     currentFilters,
     totalCount = 0,
+    isRecommended = false,
 }) => {
     // Use the current page directly from filters
     const currentPage = currentFilters.pageNumber;
@@ -44,7 +46,7 @@ const MaterialsContent: React.FC<MaterialsContentProps> = ({
         onFilterChange({
             ...currentFilters,
             ...newFilters,
-            pageNumber: 1, // Reset to first page when filters change
+            pageNumber: currentPage,
         });
     };
 
@@ -89,10 +91,12 @@ const MaterialsContent: React.FC<MaterialsContentProps> = ({
                         Показано {materials.length} з {totalCount} матеріалів
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {" "}
                         {materials.map((material) => (
                             <MaterialCard
                                 key={material.id}
                                 material={material}
+                                showRecommendationScores={isRecommended}
                             />
                         ))}
                     </div>{" "}

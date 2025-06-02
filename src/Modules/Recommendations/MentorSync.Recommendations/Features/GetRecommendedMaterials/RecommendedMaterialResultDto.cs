@@ -13,7 +13,6 @@ public sealed class RecommendedMaterialResultDto
     public int MentorId { get; set; }
     public string MentorName { get; set; }
     public DateTime CreatedAt { get; set; }
-    public bool IsActive { get; set; }
     public float CollaborativeScore { get; set; }
     public float ContentBasedScore { get; set; }
     public float FinalScore { get; set; }

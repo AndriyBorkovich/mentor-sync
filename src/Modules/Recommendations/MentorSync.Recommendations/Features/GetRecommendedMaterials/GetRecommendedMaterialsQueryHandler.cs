@@ -12,15 +12,21 @@ public sealed class GetRecommendedMaterialsQueryHandler(
 {
     public async Task<Result<PaginatedList<RecommendedMaterialResponse>>> Handle(GetRecommendedMaterialsQuery request, CancellationToken cancellationToken)
     {
-        var menteeId = request.MenteeId;
-        var materialsQuery = recommendationsContext.Database
+        var menteeId = request.MenteeId; var materialsQuery = recommendationsContext.Database
             .SqlQuery<RecommendedMaterialResultDto>($@"
-                SELECT
+                SELECT DISTINCT ON (lm.""Id"", lm.""Title"")
                     lm.""Id"",
                     lm.""Title"",
                     lm.""Description"",
-                    lm.""Type"" as ""Type"",
-                    lm.""Tags"",
+                    lm.""Type""::text as ""Type"",
+                    COALESCE(
+                        (SELECT array_agg(t.""Name""::text)
+                         FROM materials.""LearningMaterialTag"" lmt
+                         JOIN materials.""Tags"" t ON lmt.""TagsId"" = t.""Id""
+                         WHERE lmt.""LearningMaterialsId"" = lm.""Id""
+                         GROUP BY lmt.""LearningMaterialsId""),
+                        ARRAY[]::text[]
+                    ) as ""Tags"",
                     lm.""MentorId"",
                     u.""UserName"" as ""MentorName"",
                     lm.""CreatedAt"",
@@ -30,7 +36,7 @@ public sealed class GetRecommendedMaterialsQueryHandler(
                 FROM materials.""LearningMaterials"" lm
                 INNER JOIN users.""Users"" u ON lm.""MentorId"" = u.""Id""
                 INNER JOIN recommendations.""MaterialRecommendationResults"" mrr ON lm.""Id"" = mrr.""MaterialId"" AND mrr.""MenteeId"" = {menteeId}
-                WHERE mrr.""MenteeId"" = {menteeId} AND mrr.""FinalScore"" != 'NaN'");
+                WHERE mrr.""MenteeId"" = {menteeId} AND mrr.""FinalScore"" != 'NaN' AND mrr.""ContentBasedScore"" > 0.0 AND mrr.""CollaborativeScore"" > 0.0");
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {

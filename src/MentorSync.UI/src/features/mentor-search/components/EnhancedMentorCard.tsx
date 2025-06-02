@@ -60,33 +60,51 @@ export const EnhancedMentorCard: React.FC<MentorCardProps> = ({
                         <div className="mt-3 border-t border-gray-100 pt-2">
                             <h4 className="text-sm font-medium text-[#1E293B] mb-1">
                                 Оцінки рекомендацій:
-                            </h4>
+                            </h4>{" "}
                             <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div>
-                                    <span className="text-[#64748B]">
+                                    <span
+                                        className="text-[#64748B] cursor-help"
+                                        title="Оцінка на основі активності: враховує досвід взаємодії інших менті з цим ментором та популярність серед користувачів з подібними інтересами"
+                                    >
                                         Активність:{" "}
                                     </span>
-                                    <span className="font-medium">
+                                    <span
+                                        className="font-medium cursor-help"
+                                        title="Оцінка від 0 до 10, де вища оцінка означає, що ментор більше підходить на основі аналізу взаємодій інших користувачів"
+                                    >
                                         {(
                                             mentor as RecommendedMentor
                                         ).collaborativeScore.toFixed(2)}
                                     </span>
                                 </div>
                                 <div>
-                                    <span className="text-[#64748B]">
+                                    <span
+                                        className="text-[#64748B] cursor-help"
+                                        title="Оцінка на основі ваших інтересів: показує наскільки навички та спеціалізація ментора відповідають вашим потребам та цілям навчання"
+                                    >
                                         За інтересами:{" "}
                                     </span>
-                                    <span className="font-medium">
+                                    <span
+                                        className="font-medium cursor-help"
+                                        title="Оцінка від 0 до 10, де вища оцінка означає більшу відповідність між вашими інтересами і спеціалізацією ментора"
+                                    >
                                         {(
                                             mentor as RecommendedMentor
                                         ).contentBasedScore.toFixed(2)}
                                     </span>
                                 </div>
                                 <div className="col-span-2 mt-1 bg-gray-100 p-1 rounded">
-                                    <span className="text-[#4318D1] font-bold">
+                                    <span
+                                        className="text-[#4318D1] font-bold cursor-help"
+                                        title="Загальна оцінка рекомендації: комбінована метрика, яка враховує як активність ментора, так і відповідність вашим інтересам"
+                                    >
                                         Загальна оцінка:{" "}
                                     </span>
-                                    <span className="font-bold">
+                                    <span
+                                        className="font-bold cursor-help"
+                                        title="Підсумкова оцінка від 0 до 10, вища оцінка означає, що система з більшою впевненістю рекомендує цього ментора саме вам"
+                                    >
                                         {(
                                             mentor as RecommendedMentor
                                         ).finalScore.toFixed(2)}

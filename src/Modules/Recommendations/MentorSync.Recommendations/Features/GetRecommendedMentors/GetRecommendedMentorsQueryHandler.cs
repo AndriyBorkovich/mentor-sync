@@ -34,7 +34,7 @@ public sealed class GetRecommendedMentorsQueryHandler(
                 INNER JOIN users.""MentorProfiles"" mp ON u.""Id"" = mp.""MentorId""
                 LEFT JOIN ratings.""MentorReviews"" mr ON mp.""MentorId"" = mr.""MentorId""
                 INNER JOIN recommendations.""MentorRecommendationResults"" rr ON mp.""MentorId"" = rr.""MentorId"" AND rr.""MenteeId"" = {menteeId}
-                WHERE rr.""MenteeId"" = {menteeId} AND rr.""FinalScore"" != 'NaN'");
+                WHERE rr.""MenteeId"" = {menteeId} AND rr.""FinalScore"" != 'NaN' AND rr.""ContentBasedScore"" > 0.0 AND rr.""CollaborativeScore"" > 0.0");
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
