@@ -113,12 +113,12 @@ const SessionsContent: React.FC = () => {
     // Filter bookings based on status and date
     const filteredBookings = bookings.filter((booking) => {
         if (filterType === "all") return true;
-        if (filterType === "pending") return booking.status === "pending";
-        if (filterType === "confirmed") return booking.status === "confirmed";
+        if (filterType === "pending") return booking.status === "Pending";
+        if (filterType === "confirmed") return booking.status === "Confirmed";
         if (filterType === "past") {
             // Consider completed, cancelled, and other non-active statuses as past
             return (
-                booking.status !== "pending" && booking.status !== "confirmed"
+                booking.status !== "Pending" && booking.status !== "Confirmed"
             );
         }
         return true;
@@ -126,13 +126,13 @@ const SessionsContent: React.FC = () => {
 
     // Group bookings by status for display
     const pendingBookings = filteredBookings.filter(
-        (b) => b.status === "pending"
+        (b) => b.status === "Pending"
     );
     const confirmedBookings = filteredBookings.filter(
-        (b) => b.status === "confirmed"
+        (b) => b.status === "Confirmed"
     );
     const pastBookings = filteredBookings.filter(
-        (b) => b.status !== "pending" && b.status !== "confirmed"
+        (b) => b.status !== "Pending" && b.status !== "Confirmed"
     );
 
     // Determine if we need to show a group based on filter

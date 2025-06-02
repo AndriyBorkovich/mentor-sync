@@ -107,7 +107,7 @@ export const authService = {
             }
 
             const response = await api.post("/users/refresh-token", {
-                token: tokens.token,
+                accessToken: tokens.token,
                 refreshToken: tokens.refreshToken,
             });
 

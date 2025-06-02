@@ -1,5 +1,3 @@
-using MentorSync.SharedKernel.CommonEntities;
-
 namespace MentorSync.Scheduling.Features.GetUserBookings.Common;
 
 public sealed class UserBookingsResponse
@@ -18,7 +16,7 @@ public sealed class BookingDto
     public string MenteeImage { get; set; }
     public DateTimeOffset Start { get; set; }
     public DateTimeOffset End { get; set; }
-    public BookingStatus Status { get; set; }
+    public string Status { get; set; } = string.Empty;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

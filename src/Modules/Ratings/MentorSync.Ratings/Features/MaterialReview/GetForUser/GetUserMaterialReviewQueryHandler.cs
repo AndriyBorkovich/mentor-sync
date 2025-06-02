@@ -2,13 +2,11 @@ using Ardalis.Result;
 using MediatR;
 using MentorSync.Ratings.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Ratings.Features.MaterialReview.GetForUser;
 
 public sealed class GetUserMaterialReviewQueryHandler(
-    RatingsDbContext dbContext,
-    ILogger<GetUserMaterialReviewQueryHandler> logger)
+    RatingsDbContext dbContext)
     : IRequestHandler<GetUserMaterialReviewQuery, Result<UserMaterialReviewResponse>>
 {
     public async Task<Result<UserMaterialReviewResponse>> Handle(GetUserMaterialReviewQuery request, CancellationToken cancellationToken)

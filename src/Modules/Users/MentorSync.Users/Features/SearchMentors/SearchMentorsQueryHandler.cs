@@ -32,9 +32,9 @@ public sealed partial class SearchMentorsQueryHandler(
         {
             var searchTerm = request.SearchTerm.ToLower();
             mentorsQuery = mentorsQuery.Where(m =>
-                m.Name.ToLower().Contains(searchTerm) ||
-                m.Title.ToLower().Contains(searchTerm) ||
-                m.Skills.Any(s => s.ToLower().Contains(searchTerm)));
+                EF.Functions.ILike(m.Name, $"%{request.SearchTerm}%") ||
+                EF.Functions.ILike(m.Title, $"%{request.SearchTerm}%") ||
+                m.Skills.Any(skill => EF.Functions.ILike(skill, $"%{request.SearchTerm}%")));
         }
 
         if (request.ProgrammingLanguages != null && request.ProgrammingLanguages.Count != 0)
@@ -48,7 +48,7 @@ public sealed partial class SearchMentorsQueryHandler(
         var searchedIndustry = request.Industry;
         if (searchedIndustry.HasValue && searchedIndustry.Value != 0)
         {
-            mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) > 0);
+            mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) == searchedIndustry.Value);
         }
 
         if (request.MinExperienceYears.HasValue)
