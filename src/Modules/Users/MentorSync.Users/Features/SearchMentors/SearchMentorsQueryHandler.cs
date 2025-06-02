@@ -92,7 +92,6 @@ public sealed partial class SearchMentorsQueryHandler(
 
     private static List<SkillResponse> ConvertSkillsToList(string[] skills)
     {
-        // Convert skills array to list of SkillResponse objects
         return [.. skills.Select((skill, index) => new SkillResponse(index.ToString(), skill))];
     }
 }

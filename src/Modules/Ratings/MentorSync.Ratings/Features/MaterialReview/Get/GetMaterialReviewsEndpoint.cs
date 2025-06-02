@@ -6,24 +6,24 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace MentorSync.Ratings.Features.MentorReview.Get;
+namespace MentorSync.Ratings.Features.MaterialReview.Get;
 
-public sealed class GetMentorReviewsEndpoint : IEndpoint
+public sealed class GetMaterialReviewsEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("ratings/mentors/{id}/reviews", async (
+        app.MapGet("ratings/materials/{id}/reviews", async (
             int id,
             ISender sender) =>
             {
-                var result = await sender.Send(new GetMentorReviewsQuery(id));
+                var result = await sender.Send(new GetMaterialReviewsQuery(id));
 
                 return result.DecideWhatToReturn();
             })
             .WithTags(TagsConstants.Ratings)
-            .WithDescription("Gets reviews for a mentor")
-            .Produces<MentorReviewsResponse>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound)
+            .WithDescription("Gets reviews for a learning material")
+            .Produces<MaterialReviewsResponse>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .AllowAnonymous();
     }
 }

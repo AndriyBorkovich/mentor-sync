@@ -54,6 +54,7 @@ const MaterialsPage: React.FC = () => {
                     description: item.description,
                     type: mapMaterialType(item.type),
                     mentorName: item.mentorName || "Unknown Mentor",
+                    mentorId: item.mentorId,
                     createdAt: new Date(item.createdAt).toLocaleDateString(
                         "uk-UA",
                         {

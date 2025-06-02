@@ -30,7 +30,7 @@ public sealed class CheckMentorReviewEndpoint : IEndpoint
 
             return result.DecideWhatToReturn();
         })
-        .WithTags("Ratings")
+        .WithTags(TagsConstants.Ratings)
         .WithDescription("Checks if the current mentee has already reviewed a mentor")
         .Produces<CheckMentorReviewResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)

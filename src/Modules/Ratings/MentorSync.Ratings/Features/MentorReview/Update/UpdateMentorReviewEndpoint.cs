@@ -36,7 +36,7 @@ public sealed class UpdateMentorReviewEndpoint : IEndpoint
 
             return result.DecideWhatToReturn();
         })
-        .WithTags("Ratings")
+        .WithTags(TagsConstants.Ratings)
         .WithDescription("Updates an existing review for a mentor")
         .Produces<UpdateMentorReviewResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)

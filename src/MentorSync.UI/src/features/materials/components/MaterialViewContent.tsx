@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { marked } from "marked";
-import { CommentForm, CommentsList, Comment } from "./Comments";
-import MaterialRating from "./MaterialRating";
 import ShareMaterial from "./ShareMaterial";
 import { Material, MaterialAttachment } from "../../../shared/types";
+import MaterialReviewContainer from "../containers/MaterialReviewContainer";
 
 interface DocumentViewProps {
     material: Material;
@@ -207,26 +206,6 @@ const AttachmentsList: React.FC<{
     );
 };
 
-// Mock comments data
-const mockComments: Comment[] = [
-    {
-        id: "1",
-        author: "Олександр Ковальчук",
-        authorAvatar: "/placeholder-avatar.jpg",
-        content:
-            "Дуже корисний матеріал! Особливо сподобався розділ про React Hooks.",
-        timestamp: "21 травня 2025, 14:35",
-    },
-    {
-        id: "2",
-        author: "Марія Шевченко",
-        authorAvatar: "/placeholder-avatar.jpg",
-        content:
-            "Чи планується продовження цього матеріалу? Хотілося б детальніше дізнатися про контекст у React.",
-        timestamp: "22 травня 2025, 09:12",
-    },
-];
-
 interface MaterialViewContentProps {
     material: Material;
 }
@@ -234,32 +213,9 @@ interface MaterialViewContentProps {
 const MaterialViewContent: React.FC<MaterialViewContentProps> = ({
     material,
 }) => {
-    const [comments, setComments] = useState<Comment[]>(mockComments);
     const [activeTab, setActiveTab] = useState<"content" | "comments">(
         "content"
     );
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const handleAddComment = (content: string) => {
-        setIsSubmitting(true);
-
-        // Simulate API call delay
-        setTimeout(() => {
-            const newComment: Comment = {
-                id: `comment-${Date.now()}`,
-                author: "You",
-                authorAvatar: "/placeholder-avatar.jpg",
-                content,
-                timestamp: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString(
-                    [],
-                    { hour: "2-digit", minute: "2-digit", hour12: false }
-                )}`,
-            };
-
-            setComments([...comments, newComment]);
-            setIsSubmitting(false);
-        }, 1000);
-    };
 
     const renderMaterialContent = () => {
         switch (material.type) {
@@ -334,7 +290,6 @@ const MaterialViewContent: React.FC<MaterialViewContentProps> = ({
                     ))}
                 </div>
             </div>
-
             {/* Tabs for Content/Comments */}
             <div className="border-b border-[#E2E8F0] mb-6">
                 <div className="flex">
@@ -357,34 +312,26 @@ const MaterialViewContent: React.FC<MaterialViewContentProps> = ({
                         }`}
                     >
                         Коментарі
-                        <span className="ml-1 bg-[#F1F5F9] text-[#64748B] rounded-full px-2 py-0.5 text-xs">
-                            {comments.length}
-                        </span>
                     </button>
                 </div>{" "}
-            </div>
-
+            </div>{" "}
             {activeTab === "content" ? (
-                <>
-                    <MaterialRating
-                        initialRating={4.5}
-                        totalRatings={12}
-                        onRatingSubmit={(rating) =>
-                            console.log(`Rating submitted: ${rating}`)
-                        }
-                    />
-                    {renderMaterialContent()}
-                </>
+                <>{renderMaterialContent()}</>
             ) : (
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                     <h2 className="text-xl font-medium text-[#1E293B] mb-6">
                         Коментарі
                     </h2>
-                    <CommentsList comments={comments} />
-                    <CommentForm
-                        onSubmit={handleAddComment}
-                        isLoading={isSubmitting}
-                    />
+                    {/* Display reviews in a separate section */}
+                    <div className="mt-8">
+                        <h2 className="text-xl font-bold text-[#1E293B] mb-4">
+                            Відгуки про матеріал
+                        </h2>
+                        <MaterialReviewContainer
+                            materialId={parseInt(material.id, 10)}
+                            mentorId={material.mentorId}
+                        />
+                    </div>
                 </div>
             )}
         </div>

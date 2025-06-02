@@ -119,6 +119,7 @@ export interface Material {
     description: string;
     type: "document" | "video" | "link" | "presentation";
     sessionId?: string;
+    mentorId: number;
     mentorName: string;
     createdAt: string;
     tags: string[];

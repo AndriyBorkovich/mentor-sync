@@ -14,7 +14,6 @@ public sealed class MaterialsDbContext(DbContextOptions<MaterialsDbContext> opti
     {
         modelBuilder.HasDefaultSchema(SchemaConstants.Materials);
 
-        // LearningMaterial
         modelBuilder.Entity<LearningMaterial>(entity =>
         {
             entity.HasKey(e => e.Id);

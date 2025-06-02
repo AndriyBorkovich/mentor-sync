@@ -36,7 +36,7 @@ public sealed class CreateMentorReviewEndpoint : IEndpoint
 
             return result.DecideWhatToReturn();
         })
-        .WithTags("Ratings")
+        .WithTags(TagsConstants.Ratings)
         .WithDescription("Creates a new review for a mentor")
         .Produces<CreateMentorReviewResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)

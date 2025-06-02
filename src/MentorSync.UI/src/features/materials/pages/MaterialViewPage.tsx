@@ -30,14 +30,13 @@ const MaterialViewPage: React.FC = () => {
                 if (!response) {
                     navigate("/materials");
                     return;
-                }
-
-                // Map API response to UI Material type
+                } // Map API response to UI Material type
                 const uiMaterial: Material = {
                     id: response.id.toString(),
                     title: response.title,
                     description: response.description,
                     type: mapTypeToUiFormat(response.type) as Material["type"],
+                    mentorId: response.mentorId,
                     mentorName: response.mentorName || "Unknown Mentor",
                     createdAt: new Date(response.createdAt).toLocaleDateString(
                         "uk-UA",

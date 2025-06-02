@@ -30,7 +30,7 @@ public sealed class DeleteMentorReviewEndpoint : IEndpoint
 
             return result.DecideWhatToReturn();
         })
-        .WithTags("Ratings")
+        .WithTags(TagsConstants.Ratings)
         .WithDescription("Deletes an existing review for a mentor")
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -1,5 +1,3 @@
-using MentorSync.SharedKernel.CommonEntities;
-
 namespace MentorSync.Recommendations.Features.GetRecommendedMaterials;
 
 /// <summary>
