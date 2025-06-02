@@ -16,6 +16,8 @@ public sealed class MentorProfileService(UsersDbContext usersDbContext) : IMento
                 ProgrammingLanguages = x.ProgrammingLanguages,
                 ExperienceYears = x.ExperienceYears,
                 Industry = x.Industries,
+                Position = x.Position,
+                Skills = x.Skills
             })
             .ToListAsync();
 

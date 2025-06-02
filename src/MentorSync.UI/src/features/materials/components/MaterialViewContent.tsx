@@ -131,7 +131,6 @@ const PresentationView: React.FC<DocumentViewProps> = ({ material }) => {
 const AttachmentsList: React.FC<{
     attachments: MaterialAttachment[];
 }> = ({ attachments }) => {
-    console.log("Rendering attachments list", attachments);
     if (!attachments?.length) return null;
 
     const getFileIcon = (contentType: string): string => {
@@ -220,7 +219,6 @@ const MaterialViewContent: React.FC<MaterialViewContentProps> = ({
     const renderMaterialContent = () => {
         switch (material.type) {
             case "document":
-                console.log("Rendering document view", material);
                 return (
                     <>
                         <DocumentView material={material} />

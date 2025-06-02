@@ -47,7 +47,9 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
                     endDate
                 );
 
-                setAvailabilitySlots(availabilityResponse.slots);
+                setAvailabilitySlots(
+                    availabilityResponse.slots.filter((s) => !s.isBooked)
+                );
             } catch (error) {
                 console.error("Failed to fetch mentor availability:", error);
                 toast.error("Не вдалося завантажити доступний час");
@@ -95,7 +97,9 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
                 endDate
             );
 
-            setAvailabilitySlots(availabilityResponse.slots);
+            setAvailabilitySlots(
+                availabilityResponse.slots.filter((s) => !s.isBooked)
+            );
         } catch (error) {
             console.error("Failed to book session:", error);
             toast.error("Не вдалося забронювати сесію. Спробуйте ще раз.");

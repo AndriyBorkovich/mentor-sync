@@ -31,7 +31,7 @@ public class MaterialCollaborativeTrainer(
                 MatrixColumnIndexColumnName = "MenteeKey",
                 MatrixRowIndexColumnName = "MaterialKey",
                 LabelColumnName = nameof(MenteeMaterialRatingData.Label),
-                NumberOfIterations = 20,
+                NumberOfIterations = 30,
                 ApproximationRank = 100
             }));
 

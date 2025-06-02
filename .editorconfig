@@ -51,6 +51,8 @@ dotnet_style_qualification_for_event = false:suggestion
 dotnet_diagnostic.IDE0005.severity = error
 # Seal internal types
 dotnet_diagnostic.CA1852.severity = error
+#unused parameters
+dotnet_diagnostic.CS9113.severity = error
 
 # Types: use var
 csharp_style_var_for_built_in_types = true:warning

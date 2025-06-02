@@ -44,19 +44,11 @@ export const getUserMaterialReview = async (
     materialId: number,
     userId: number
 ): Promise<UserReview | null> => {
-    try {
-        const response = await api.get<UserReview>(
-            `/ratings/materials/${materialId}/user/${userId}/review`
-        );
-        return response.data;
-    } catch (error: unknown) {
-        if (error.response?.status === 404) {
-            // User hasn't reviewed this material yet
-            return null;
-        }
-        console.error("Error fetching user material review:", error);
-        throw error;
-    }
+    const response = await api.get<UserReview | null>(
+        `/ratings/materials/${materialId}/user/${userId}/review`
+    );
+
+    return response.data;
 };
 
 // Create a new review

@@ -29,7 +29,9 @@ public sealed class MenteeProfileService(UsersDbContext usersDbContext) : IMente
                 MenteeId = m.MenteeId,
                 DesiredProgrammingLanguages = m.ProgrammingLanguages,
                 DesiredIndustries = m.Industries,
-                MinMentorExperienceYears = rnd.Next(1, 7)
+                MinMentorExperienceYears = rnd.Next(1, 7),
+                Position = m.Position,
+                DesiredSkills = m.Skills
             }).ToListAsync();
 
         return result;

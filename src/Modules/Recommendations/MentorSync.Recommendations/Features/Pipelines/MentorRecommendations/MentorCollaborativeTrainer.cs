@@ -29,7 +29,7 @@ public class MentorCollaborativeTrainer(RecommendationsDbContext db, ILogger<Men
             MatrixColumnIndexColumnName = "MenteeKey",
             MatrixRowIndexColumnName = "MentorKey",
             LabelColumnName = nameof(MenteeMentorRatingData.Label),
-            NumberOfIterations = 20,
+            NumberOfIterations = 30,
             ApproximationRank = 100
         }));
 

@@ -8,4 +8,6 @@ public sealed class MentorProfileModel
     public IEnumerable<string> ProgrammingLanguages { get; set; }
     public int? ExperienceYears { get; set; }
     public Industry Industry { get; set; }
+    public string Position { get; set; }
+    public List<string> Skills { get; set; }
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { MentorData, isMentorProfile } from "../../types/mentorTypes";
+import { useNavigate } from "react-router-dom";
 
 interface MaterialsTabProps {
     mentor: MentorData;
@@ -19,38 +20,6 @@ interface Material {
 }
 
 const MaterialsTab: React.FC<MaterialsTabProps> = ({ mentor }) => {
-    // Mock materials as fallback
-    const mockMaterials: Material[] = [
-        {
-            id: "1",
-            title: "Introduction to System Design",
-            description: "Learn the basics of system design",
-            type: "article",
-            date: "Грудень 2023",
-        },
-        {
-            id: "2",
-            title: "Microservices Architecture Patterns",
-            description: "Explore common microservices patterns",
-            type: "article",
-            date: "Листопад 2023",
-        },
-        {
-            id: "3",
-            title: "Scaling Distributed Systems",
-            description: "How to scale your distributed applications",
-            type: "video",
-            date: "Жовтень 2023",
-        },
-        {
-            id: "4",
-            title: "Cloud Architecture Best Practices",
-            description: "Best practices for cloud architecture",
-            type: "video",
-            date: "Вересень 2023",
-        },
-    ];
-
     // Format material date from ISO string
     const formatMaterialDate = (dateString: string): string => {
         const date = new Date(dateString);
@@ -79,34 +48,13 @@ const MaterialsTab: React.FC<MaterialsTabProps> = ({ mentor }) => {
                 attachments: material.attachments,
             }));
         }
-        return mockMaterials;
+        return [];
     };
 
     const materials = getMaterials(); // Handle view material
+    const navigate = useNavigate();
     const handleViewMaterial = (material: Material) => {
-        if (material.url) {
-            window.open(material.url, "_blank", "noopener,noreferrer");
-        } else if (material.contentMarkdown) {
-            // In a real implementation, navigate to a dedicated page with markdown rendering
-            // For now, we'll use localStorage to demonstrate the concept
-            localStorage.setItem(
-                "viewMaterial",
-                JSON.stringify({
-                    title: material.title,
-                    content: material.contentMarkdown,
-                    type: material.type,
-                    description: material.description,
-                    attachments: material.attachments || [],
-                })
-            );
-            window.open(
-                `/materials/view/${material.id}`,
-                "_blank",
-                "noopener,noreferrer"
-            );
-        } else {
-            alert(`Відкриваю матеріал: ${material.title}`);
-        }
+        navigate(`/materials/${material.id}`);
     };
 
     // Translate material type to Ukrainian

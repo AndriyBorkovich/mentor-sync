@@ -47,15 +47,32 @@ public class MaterialHybridScorer(
                 var cbfScore = CalculateCBFScore(preferences, material);
                 var finalScore = normalizedCfScore * 0.6f + cbfScore * 0.4f;
 
-                db.MaterialRecommendationResults.Add(new MaterialRecommendationResult
+                var existingRec = await db.MaterialRecommendationResults
+                    .FirstOrDefaultAsync(r =>
+                        r.MenteeId == preferences.MenteeId &&
+                        r.MaterialId == material.Id,
+                        cancellationToken);
+
+                if (existingRec != null)
                 {
-                    MenteeId = preferences.MenteeId,
-                    MaterialId = material.Id,
-                    CollaborativeScore = normalizedCfScore,
-                    ContentBasedScore = cbfScore,
-                    FinalScore = finalScore,
-                    GeneratedAt = DateTime.UtcNow
-                });
+                    existingRec.CollaborativeScore = normalizedCfScore;
+                    existingRec.ContentBasedScore = cbfScore;
+                    existingRec.FinalScore = finalScore;
+                    existingRec.GeneratedAt = DateTime.UtcNow;
+                    db.MaterialRecommendationResults.Update(existingRec);
+                }
+                else
+                {
+                    db.MaterialRecommendationResults.Add(new MaterialRecommendationResult
+                    {
+                        MenteeId = preferences.MenteeId,
+                        MaterialId = material.Id,
+                        CollaborativeScore = normalizedCfScore,
+                        ContentBasedScore = cbfScore,
+                        FinalScore = finalScore,
+                        GeneratedAt = DateTime.UtcNow
+                    });
+                }
             }
         }
 

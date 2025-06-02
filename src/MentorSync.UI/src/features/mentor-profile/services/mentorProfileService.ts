@@ -64,9 +64,6 @@ export const recordMentorViewEvent = async (
 
         // If it's been less than the debounce time, skip the request
         if (currentTime - lastViewTime < VIEW_DEBOUNCE_TIME) {
-            console.log(
-                `Skipping view event for mentor ${mentorId} - viewed recently`
-            );
             return false;
         }
 
