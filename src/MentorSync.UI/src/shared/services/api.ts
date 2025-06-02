@@ -8,7 +8,7 @@ import {
     ApiErrorResponse,
     getAuthTokens,
     removeAuthTokens,
-} from "./authStorage";
+} from "../../features/auth/services/authStorage";
 
 // Create an axios instance with default configuration
 const api = axios.create({

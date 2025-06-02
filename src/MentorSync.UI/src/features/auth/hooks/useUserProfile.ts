@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import api from "../services/api";
+import api from "../../../shared/services/api";
 
 export interface MenteeProfileInfo {
     id: number;

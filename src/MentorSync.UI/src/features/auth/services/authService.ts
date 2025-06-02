@@ -1,5 +1,5 @@
 // filepath: d:\PetProjects\MentorSync\src\MentorSync.UI\src\features\auth\services\authService.ts
-import api from "./api";
+import api from "../../../shared/services/api";
 import { saveAuthTokens, removeAuthTokens, getAuthTokens } from "./authStorage";
 
 export interface RegisterRequest {

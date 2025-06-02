@@ -13,7 +13,7 @@ export { usePersistentAuth } from "./hooks/usePersistentAuth";
 
 // Services
 export { authService } from "./services/authService";
-export { default as api } from "./services/api";
+export { default as api } from "../../shared/services/api";
 
 // Utilities
 export * from "./utils/authUtils";

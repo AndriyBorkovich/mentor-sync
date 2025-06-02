@@ -1,4 +1,4 @@
-import api from "../../auth/services/api";
+import api from "../../../shared/services/api";
 import { OnboardingData } from "../data/OnboardingTypes";
 import { getUserId } from "../../auth/utils/authUtils";
 

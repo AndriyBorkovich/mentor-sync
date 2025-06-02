@@ -1,4 +1,4 @@
-import api from "../../auth/services/api";
+import api from "../../../shared/services/api";
 
 export interface MentorAvailabilitySlot {
     id: number;

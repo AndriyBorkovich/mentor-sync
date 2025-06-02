@@ -1,4 +1,4 @@
-import api from "../../auth/services/api";
+import api from "../../../shared/services/api";
 import { Industry } from "../../../shared/enums/industry";
 import { Mentor, RecommendedMentor } from "../../../shared/types";
 import {

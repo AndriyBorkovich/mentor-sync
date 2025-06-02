@@ -4,7 +4,7 @@ import {
     MentorReviews,
     MentorUpcomingSessions,
 } from "../../../shared/types";
-import api from "../../auth/services/api";
+import api from "../../../shared/services/api";
 
 // Fetch basic info
 export const getMentorBasicInfo = async (
