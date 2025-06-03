@@ -279,35 +279,51 @@ Thank you for reading this guide about {title}. Apply these concepts in your pro
 ---
 *Last updated: {faker.Date.Recent().ToString("MMMM d, yyyy")}*";
     }
-
     private static string GenerateReviewComment(Faker faker, int rating)
     {
+        // Ukrainian positive points for material reviews
         var positivePoints = new[]
         {
-            "Very informative and well-structured",
-            "Great practical examples",
-            "Clear explanations of complex concepts",
-            "Excellent code samples",
-            "Comprehensive coverage of the topic",
-            "Very practical and applicable",
-            "Well-organized content"
+            "Дуже інформативний та добре структурований матеріал",
+            "Чудові практичні приклади",
+            "Зрозумілі пояснення складних концепцій",
+            "Відмінні зразки коду",
+            "Всебічне висвітлення теми",
+            "Дуже практичний і застосовний контент",
+            "Добре організований зміст",
+            "Матеріал легко засвоюється",
+            "Дуже корисно для професійного розвитку"
         };
 
+        // Ukrainian suggestions for improvement
         var improvements = new[]
         {
-            "Could use more practical examples",
-            "Would benefit from more detailed explanations",
-            "Some concepts need more context",
-            "Could include more real-world scenarios",
-            "Would like to see more code samples"
+            "можна додати більше практичних прикладів",
+            "було б корисно мати детальніші пояснення",
+            "деякі концепції потребують більше контексту",
+            "варто включити більше реальних сценаріїв",
+            "хотілося б бачити більше прикладів коду",
+            "можна додати більше візуальних матеріалів",
+            "деякі частини потребують спрощення"
+        };
+
+        // Ukrainian negative comments for low ratings
+        var negativePoints = new[]
+        {
+            "Зміст занадто поверхневий",
+            "Приклади застарілі",
+            "Важко зрозуміти пояснення",
+            "Не вистачає глибини",
+            "Матеріал занадто теоретичний"
         };
 
         return rating switch
         {
-            5 => $"{faker.PickRandom(positivePoints)}! {faker.PickRandom(positivePoints).ToLower()}. Highly recommended!",
-            4 => $"{faker.PickRandom(positivePoints)}. {faker.PickRandom(improvements).ToLower()}.",
-            3 => $"Decent article but {faker.PickRandom(improvements).ToLower()}. {faker.PickRandom(improvements).ToLower()}.",
-            _ => "Interesting read with some useful information."
+            5 => $"{faker.PickRandom(positivePoints)}! {faker.PickRandom(positivePoints).ToLower()}. Дуже рекомендую!",
+            4 => $"{faker.PickRandom(positivePoints)}. Але {faker.PickRandom(improvements).ToLower()}.",
+            3 => $"Непоганий матеріал, але {faker.PickRandom(improvements).ToLower()}. Також {faker.PickRandom(improvements).ToLower()}.",
+            2 => $"{faker.PickRandom(negativePoints)}. Потрібно доопрацювати.",
+            _ => $"{faker.PickRandom(negativePoints)}. Не рекомендую."
         };
     }
 }

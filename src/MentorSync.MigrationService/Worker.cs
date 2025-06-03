@@ -29,6 +29,8 @@ public sealed class Worker(
         {
             using var scope = serviceProvider.CreateScope();
 
+            // CleanDbContext<UsersDbContext>(scope.ServiceProvider, cancellationToken);            
+
             await MigrateAsync<UsersDbContext>(
                 scope.ServiceProvider,
                 cancellationToken,
@@ -37,17 +39,24 @@ public sealed class Worker(
                     () => MentorsSeeder.SeedAsync(scope.ServiceProvider, logger),
                     () => MenteesSeeder.SeedAsync(scope.ServiceProvider, logger)]);
 
-            await MigrateAsync<SchedulingDbContext>(scope.ServiceProvider, cancellationToken);
+            await MigrateAsync<SchedulingDbContext>(
+                scope.ServiceProvider,
+                cancellationToken,
+                postMigrationSteps:
+                    [() => MentorAvailabilitySeeder.SeedAsync(scope.ServiceProvider, logger)]);
+
             await MigrateAsync<MaterialsDbContext>(
                 scope.ServiceProvider,
                 cancellationToken,
                 postMigrationSteps:
                     [() => LearningMaterialsSeeder.SeedAsync(scope.ServiceProvider, logger)]);
+
             await MigrateAsync<RatingsDbContext>(
                 scope.ServiceProvider,
                 cancellationToken,
                 postMigrationSteps:
                     [() => MentorReviewsSeeder.SeedAsync(scope.ServiceProvider, logger)]);
+
             await MigrateAsync<RecommendationsDbContext>(scope.ServiceProvider, cancellationToken);
 
             logger.LogInformation("Migrated database successfully.");
@@ -59,6 +68,15 @@ public sealed class Worker(
         }
 
         hostApplicationLifetime.StopApplication();
+    }
+
+    public static void CleanDbContext<T>(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        where T : DbContext
+    {
+        using var scope = serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<T>();
+
+        context.Database.EnsureDeleted();
     }
 
     private static async Task MigrateAsync<T>(
