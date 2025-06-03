@@ -24,6 +24,6 @@ public sealed class GetMentorBasicInfoEndpoint : IEndpoint
             .WithDescription("Gets basic profile information for a mentor")
             .Produces<MentorBasicInfoResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .AllowAnonymous();
+            .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
     }
 }

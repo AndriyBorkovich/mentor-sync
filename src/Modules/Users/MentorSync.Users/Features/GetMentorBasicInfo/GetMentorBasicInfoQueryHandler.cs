@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Features.GetMentorBasicInfo;
 
-internal sealed record AverateRating(double Value);
+internal sealed record MentorRatingsData(double Average, int Count);
 
 public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<GetMentorBasicInfoQueryHandler> logger) : IRequestHandler<GetMentorBasicInfoQuery, Result<MentorBasicInfoResponse>>
 {
@@ -47,9 +47,11 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
                 return Result.NotFound($"Mentor with ID {request.MentorId} not found.");
             }
 
-            var averageRating = await _dbContext.Database.SqlQuery<AverateRating>// Assuming MentorReviews are in a different context
+            var ratings = await _dbContext.Database.SqlQuery<MentorRatingsData>// Assuming MentorReviews are in a different context
                 ($@"
-                    SELECT COALESCE(AVG(""Rating""), 0) AS ""Value""
+                    SELECT 
+                        COALESCE(AVG(""Rating""), 0) AS ""Average"", 
+                        COUNT(*) AS ""Count""
                     FROM ratings.""MentorReviews""
                     WHERE ""MentorId"" = {request.MentorId}"
                 ).FirstOrDefaultAsync(cancellationToken);
@@ -60,7 +62,8 @@ public class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext, ILogger<Ge
                 Id = mentorInfo.Id,
                 Name = mentorInfo.Name,
                 Title = mentorInfo.Title,
-                Rating = averageRating?.Value ?? 0.0,
+                Rating = ratings?.Average ?? 0.0,
+                ReviewsCount = ratings?.Count ?? 0,
                 ProfileImage = mentorInfo.ProfileImage,
                 YearsOfExperience = mentorInfo.YearsOfExperience,
                 Category = mentorInfo.Industries.GetCategories(),

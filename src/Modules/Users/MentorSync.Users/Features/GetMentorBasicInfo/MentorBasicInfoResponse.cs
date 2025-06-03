@@ -6,6 +6,7 @@ public record MentorBasicInfoResponse
     public string Name { get; init; }
     public string Title { get; init; }
     public double Rating { get; init; }
+    public int ReviewsCount { get; init; }
     public string ProfileImage { get; init; }
     public int? YearsOfExperience { get; init; }
     public string Category { get; init; }

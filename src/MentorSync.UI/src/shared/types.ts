@@ -31,6 +31,7 @@ export interface MentorBasicInfo {
     name: string;
     title: string;
     rating: number;
+    reviewsCount: number;
     profileImage: string;
     yearsOfExperience: number | null;
     category: string;

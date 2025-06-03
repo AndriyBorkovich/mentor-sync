@@ -256,7 +256,8 @@ const MentorProfileContainer: React.FC = () => {
                 try {
                     const mentorProfile = {
                         ...basicInfo,
-                        reviewCount: reviews?.reviewCount || 0,
+                        reviewCount:
+                            basicInfo.reviewsCount || reviews?.reviewCount || 0,
                         recentReviews: reviews?.reviews || [],
                         upcomingSessions: sessions?.upcomingSessions || [],
                         materials: materials?.materials || [],

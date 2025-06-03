@@ -6,7 +6,6 @@ import SessionsTab from "./tabs/SessionsTab";
 import MaterialsTab from "./tabs/MaterialsTab";
 import { hasRole } from "../../auth/utils/authUtils";
 
-// Define tab types
 export type ProfileTabType = "about" | "reviews" | "sessions" | "materials";
 
 interface MentorProfileTabsProps {
