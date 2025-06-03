@@ -483,3 +483,7 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 /.vscode
+
+# ML zip files
+src/MentorSync.API/material_model.zip
+src/MentorSync.API/mentor_model.zip
