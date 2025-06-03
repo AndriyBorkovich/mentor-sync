@@ -72,61 +72,67 @@ const MaterialsTab: React.FC<MaterialsTabProps> = ({ mentor }) => {
     return (
         <div>
             <h2 className="text-lg font-medium text-[#1E293B] mb-4">
-                Навчальні матеріали
+            Навчальні матеріали
             </h2>
 
+            {materials.length === 0 ? (
+            <div className="text-[#64748B] text-sm">
+                Немає навчальних матеріалів.
+            </div>
+            ) : (
             <div className="space-y-4">
                 {materials.map((material) => (
-                    <div
-                        key={material.id}
-                        className="border border-[#E2E8F0] p-4 rounded-lg flex justify-between items-center"
-                    >
-                        <div className="flex-1">
-                            <h3 className="text-base font-medium text-[#1E293B]">
-                                {material.title}
-                            </h3>
-                            {material.description && (
-                                <p className="text-sm text-[#64748B] mt-1 line-clamp-2">
-                                    {material.description}
-                                </p>
-                            )}
-                            <div className="flex mt-2 text-sm text-[#64748B]">
-                                <span className="mr-4">
-                                    {translateMaterialType(material.type)}
-                                </span>
-                                <span>{material.date}</span>
-                            </div>
-                            {material.tags && material.tags.length > 0 && (
-                                <div className="flex flex-wrap gap-1 mt-2">
-                                    {material.tags.map((tag, index) => (
-                                        <span
-                                            key={index}
-                                            className="px-2 py-0.5 bg-[#F8FAFC] text-xs rounded-md text-[#64748B]"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
-                            {material.attachments &&
-                                material.attachments.length > 0 && (
-                                    <div className="mt-2 text-xs text-blue-600">
-                                        {material.attachments.length}{" "}
-                                        {material.attachments.length === 1
-                                            ? "додаток"
-                                            : "додатків"}
-                                    </div>
-                                )}
-                        </div>
-                        <button
-                            className="px-4 py-2 border border-[#E2E8F0] rounded-lg text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
-                            onClick={() => handleViewMaterial(material)}
-                        >
-                            Переглянути
-                        </button>
+                <div
+                    key={material.id}
+                    className="border border-[#E2E8F0] p-4 rounded-lg flex justify-between items-center"
+                >
+                    <div className="flex-1">
+                    <h3 className="text-base font-medium text-[#1E293B]">
+                        {material.title}
+                    </h3>
+                    {material.description && (
+                        <p className="text-sm text-[#64748B] mt-1 line-clamp-2">
+                        {material.description}
+                        </p>
+                    )}
+                    <div className="flex mt-2 text-sm text-[#64748B]">
+                        <span className="mr-4">
+                        {translateMaterialType(material.type)}
+                        </span>
+                        <span>{material.date}</span>
                     </div>
+                    {material.tags && material.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                        {material.tags.map((tag, index) => (
+                            <span
+                            key={index}
+                            className="px-2 py-0.5 bg-[#F8FAFC] text-xs rounded-md text-[#64748B]"
+                            >
+                            {tag}
+                            </span>
+                        ))}
+                        </div>
+                    )}
+                    {material.attachments &&
+                        material.attachments.length > 0 && (
+                        <div className="mt-2 text-xs text-blue-600">
+                            {material.attachments.length}{" "}
+                            {material.attachments.length === 1
+                            ? "додаток"
+                            : "додатків"}
+                        </div>
+                        )}
+                    </div>
+                    <button
+                    className="px-4 py-2 border border-[#E2E8F0] rounded-lg text-[#1E293B] hover:bg-[#F8FAFC] transition-colors"
+                    onClick={() => handleViewMaterial(material)}
+                    >
+                    Переглянути
+                    </button>
+                </div>
                 ))}
             </div>
+            )}
         </div>
     );
 };
