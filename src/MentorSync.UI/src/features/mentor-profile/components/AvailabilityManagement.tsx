@@ -7,6 +7,11 @@ import {
 import { toast } from "react-toastify";
 import { hasRole } from "../../auth";
 import CalendarView from "./CalendarView";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
+import "./timepicker.css";
+import TimePickerField from "./TimePickerField";
 
 interface AvailabilityManagementProps {
     mentorId: number;
@@ -21,8 +26,8 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [endDate, setEndDate] = useState<Date>(new Date());
-    const [startTime, setStartTime] = useState<string>("09:00");
-    const [endTime, setEndTime] = useState<string>("10:00");
+    const [startTime, setStartTime] = useState<string | null>("10:00");
+    const [endTime, setEndTime] = useState<string | null>("11:00");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [filteredSlots, setFilteredSlots] = useState<
@@ -69,24 +74,32 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
         )}-${String(date.getDate()).padStart(2, "0")}`;
     };
 
-    // Format date for input fi
+    // Format date for input fi    // Ensure time is in 24-hour format
+    const ensureTimeFormat = (time: string | null): string => {
+        // If time is null or empty, return a default time
+        if (!time) {
+            return "09:00";
+        }
 
-    // Ensure time is in 24-hour format
-    const ensureTimeFormat = (time: string): string => {
-        // If the time is already in 24-hour format, return it
+        // If the time is already in 24-hour format, return it with consistent padding
         if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
-            return time;
+            const [hours, minutes] = time.split(":").map(Number);
+            return `${hours.toString().padStart(2, "0")}:${minutes
+                .toString()
+                .padStart(2, "0")}`;
         }
 
         try {
             // Try to parse the time and convert to 24-hour format
             const [hours, minutes] = time.split(":").map(Number);
-            return `${hours.toString().padStart(2, "0")}:${minutes
+            return `${Math.min(23, Math.max(0, hours))
+                .toString()
+                .padStart(2, "0")}:${Math.min(59, Math.max(0, minutes))
                 .toString()
                 .padStart(2, "0")}`;
         } catch (e) {
             console.error("Failed to parse time:", e);
-            return time;
+            return "09:00"; // Return default if parsing fails
         }
     };
 
@@ -109,9 +122,12 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                 "Тільки ментори можуть створювати доступні слоти часу"
             );
             return;
+        } // Validate the times
+        if (!startTime || !endTime) {
+            toast.warning("Будь ласка, вкажіть час початку та закінчення");
+            return;
         }
 
-        // Validate the times
         if (startTime >= endTime) {
             toast.warning("Час початку має бути раніше за час закінчення");
             return;
@@ -349,22 +365,13 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                             min={formatDateForInput(new Date())}
                             required
                         />
-                    </div>
+                    </div>{" "}
                     <div>
-                        <label className="block text-sm font-medium text-[#64748B] mb-1">
-                            Час початку
-                        </label>{" "}
-                        <input
-                            type="time"
-                            className="w-full border border-[#E2E8F0] p-2 rounded-md"
+                        <TimePickerField
+                            label="Час початку"
                             value={startTime}
-                            onChange={(e) =>
-                                setStartTime(ensureTimeFormat(e.target.value))
-                            }
-                            required
-                            min="00:00"
-                            max="23:59"
-                            step="900"
+                            onChange={(value) => setStartTime(value)}
+                            required={true}
                         />
                     </div>{" "}
                     <div>
@@ -389,22 +396,13 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                             min={formatDateForInput(startDate)}
                             required
                         />
-                    </div>
+                    </div>{" "}
                     <div>
-                        <label className="block text-sm font-medium text-[#64748B] mb-1">
-                            Час закінчення
-                        </label>{" "}
-                        <input
-                            type="time"
-                            className="w-full border border-[#E2E8F0] p-2 rounded-md"
+                        <TimePickerField
+                            label="Час закінчення"
                             value={endTime}
-                            onChange={(e) =>
-                                setEndTime(ensureTimeFormat(e.target.value))
-                            }
-                            min="00:00"
-                            max="23:59"
-                            step="900"
-                            required
+                            onChange={(value) => setEndTime(value)}
+                            required={true}
                         />
                     </div>
                 </div>
