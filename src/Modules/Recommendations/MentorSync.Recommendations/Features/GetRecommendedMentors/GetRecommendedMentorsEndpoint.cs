@@ -20,6 +20,8 @@ public sealed class GetRecommendedMentorsEndpoint : IEndpoint
             [FromQuery] string[] programmingLanguages,
             [FromQuery] int? industry,
             [FromQuery] int? minExperienceYears,
+            [FromQuery] double? minRating,
+            [FromQuery] double? maxRating,
             [FromQuery] int? pageNumber,
             [FromQuery] int? pageSize,
             ISender sender,
@@ -40,6 +42,8 @@ public sealed class GetRecommendedMentorsEndpoint : IEndpoint
                 programmingLanguages?.ToList() ?? [],
                 industryEnum,
                 minExperienceYears,
+                minRating,
+                maxRating,
                 pageNumber ?? 1,
                 pageSize ?? 10), ct);
 

@@ -14,7 +14,8 @@ const MentorSearchContent: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(true);
-    const [minExperience, setMinExperience] = useState<number>(1); // added slider state
+    const [minExperience, setMinExperience] = useState<number>(1);
+    const [ratingRange, setRatingRange] = useState<[number, number]>([0, 5]);
     const [mentors, setMentors] = useState<PaginatedResponse<Mentor>>({
         items: [],
         pageNumber: 1,
@@ -96,13 +97,14 @@ const MentorSearchContent: React.FC = () => {
             if (selectedDirections.length === 1) {
                 industryFilter = selectedDirections[0];
             }
-
             const response = await mentorSearchService.searchMentors({
                 searchTerm: searchTerm || undefined,
                 programmingLanguages:
                     selectedSkills.length > 0 ? selectedSkills : undefined,
                 industry: industryFilter,
                 minExperienceYears: minExperience,
+                minRating: ratingRange[0] > 0 ? ratingRange[0] : undefined,
+                maxRating: ratingRange[1] < 5 ? ratingRange[1] : undefined,
                 pageNumber: currentPage,
                 pageSize,
             });
@@ -129,13 +131,14 @@ const MentorSearchContent: React.FC = () => {
             if (selectedDirections.length === 1) {
                 industryFilter = selectedDirections[0];
             }
-
             const response = await mentorSearchService.getRecommendedMentors({
                 searchTerm: searchTerm || undefined,
                 programmingLanguages:
                     selectedSkills.length > 0 ? selectedSkills : undefined,
                 industry: industryFilter,
                 minExperienceYears: minExperience,
+                minRating: ratingRange[0] > 0 ? ratingRange[0] : undefined,
+                maxRating: ratingRange[1] < 5 ? ratingRange[1] : undefined,
                 pageNumber: currentPage,
                 pageSize,
             });
@@ -171,6 +174,7 @@ const MentorSearchContent: React.FC = () => {
         selectedSkills,
         selectedDirections,
         minExperience,
+        ratingRange,
         activeTab,
         currentPage,
     ]);
@@ -312,6 +316,59 @@ const MentorSearchContent: React.FC = () => {
                             <span className="ml-2 text-sm text-[#1E293B]">
                                 {minExperience < 10 ? minExperience : "10+"}
                             </span>
+                        </div>{" "}
+                    </div>
+
+                    {/* Rating Filter */}
+                    <div className="mb-5">
+                        <div className="font-medium text-[#1E293B] mb-2">
+                            Рейтинг
+                        </div>
+                        <div className="flex flex-col">
+                            <div className="flex justify-between text-xs text-[#64748B] mb-1">
+                                <span>{ratingRange[0]}</span>
+                                <span>{ratingRange[1]}</span>
+                            </div>
+                            <input
+                                type="range"
+                                min={0}
+                                max={5}
+                                step={0.5}
+                                value={ratingRange[0]}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    setRatingRange([
+                                        value,
+                                        Math.max(value, ratingRange[1]),
+                                    ]);
+                                    setCurrentPage(1);
+                                }}
+                                className="w-full accent-[#4318D1] mb-2"
+                            />
+                            <input
+                                type="range"
+                                min={0}
+                                max={5}
+                                step={0.5}
+                                value={ratingRange[1]}
+                                onChange={(e) => {
+                                    const value = Number(e.target.value);
+                                    setRatingRange([
+                                        Math.min(ratingRange[0], value),
+                                        value,
+                                    ]);
+                                    setCurrentPage(1);
+                                }}
+                                className="w-full accent-[#4318D1]"
+                            />
+                            <div className="flex justify-between mt-1">
+                                <span className="text-xs text-[#64748B]">
+                                    Мінімум: {ratingRange[0]}
+                                </span>
+                                <span className="text-xs text-[#64748B]">
+                                    Максимум: {ratingRange[1]}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

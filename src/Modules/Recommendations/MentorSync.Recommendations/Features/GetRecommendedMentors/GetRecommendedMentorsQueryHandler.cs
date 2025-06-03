@@ -58,7 +58,6 @@ public sealed class GetRecommendedMentorsQueryHandler(
         {
             mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) > 0);
         }
-
         if (request.MinExperienceYears.HasValue)
         {
             mentorsQuery = mentorsQuery.Where(m =>
@@ -66,7 +65,18 @@ public sealed class GetRecommendedMentorsQueryHandler(
                 m.ExperienceYears.Value >= request.MinExperienceYears.Value);
         }
 
-        mentorsQuery = mentorsQuery.Where(m => m.IsActive); mentorsQuery = mentorsQuery.OrderByDescending(m => m.FinalScore);
+        if (request.MinRating.HasValue)
+        {
+            mentorsQuery = mentorsQuery.Where(m => m.Rating >= request.MinRating.Value);
+        }
+
+        if (request.MaxRating.HasValue)
+        {
+            mentorsQuery = mentorsQuery.Where(m => m.Rating <= request.MaxRating.Value);
+        }
+
+        mentorsQuery = mentorsQuery.Where(m => m.IsActive);
+        mentorsQuery = mentorsQuery.OrderByDescending(m => m.FinalScore);
 
         // Get total count before pagination
         var totalCount = await mentorsQuery.CountAsync(cancellationToken);

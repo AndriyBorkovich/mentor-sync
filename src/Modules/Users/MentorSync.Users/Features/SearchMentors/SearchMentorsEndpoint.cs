@@ -18,6 +18,8 @@ public sealed class SearchMentorsEndpoint : IEndpoint
             [FromQuery] string[] programmingLanguages,
             [FromQuery] int? industry,
             [FromQuery] int? minExperienceYears,
+            [FromQuery] double? minRating,
+            [FromQuery] double? maxRating,
             [FromQuery] int pageNumber,
             [FromQuery] int pageSize,
             ISender sender) =>
@@ -30,6 +32,8 @@ public sealed class SearchMentorsEndpoint : IEndpoint
                     programmingLanguagesList,
                     industryEnum,
                     minExperienceYears,
+                    minRating,
+                    maxRating,
                     pageNumber,
                     pageSize));
 

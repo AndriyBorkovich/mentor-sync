@@ -11,6 +11,8 @@ interface SearchMentorsParams extends PaginationParams {
     programmingLanguages?: string[];
     industry?: Industry;
     minExperienceYears?: number;
+    minRating?: number;
+    maxRating?: number;
 }
 
 export const mentorSearchService = {
@@ -42,12 +44,19 @@ export const mentorSearchService = {
             if (params.industry) {
                 queryParams.append("industry", params.industry.toString());
             }
-
             if (params.minExperienceYears) {
                 queryParams.append(
                     "minExperienceYears",
                     params.minExperienceYears.toString()
                 );
+            }
+
+            if (params.minRating !== undefined) {
+                queryParams.append("minRating", params.minRating.toString());
+            }
+
+            if (params.maxRating !== undefined) {
+                queryParams.append("maxRating", params.maxRating.toString());
             }
 
             if (params.pageNumber) {
@@ -104,13 +113,21 @@ export const mentorSearchService = {
             if (params.industry) {
                 queryParams.append("industry", params.industry.toString());
             }
-
             if (params.minExperienceYears) {
                 queryParams.append(
                     "minExperienceYears",
                     params.minExperienceYears.toString()
                 );
             }
+
+            if (params.minRating !== undefined) {
+                queryParams.append("minRating", params.minRating.toString());
+            }
+
+            if (params.maxRating !== undefined) {
+                queryParams.append("maxRating", params.maxRating.toString());
+            }
+
             if (params.pageNumber) {
                 queryParams.append("pageNumber", params.pageNumber.toString());
             }

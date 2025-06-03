@@ -50,13 +50,23 @@ public sealed partial class SearchMentorsQueryHandler(
         {
             mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) == searchedIndustry.Value);
         }
-
         if (request.MinExperienceYears.HasValue)
         {
             mentorsQuery = mentorsQuery.Where(m =>
                 m.ExperienceYears.HasValue &&
                 m.ExperienceYears.Value >= request.MinExperienceYears.Value);
         }
+
+        if (request.MinRating.HasValue)
+        {
+            mentorsQuery = mentorsQuery.Where(m => m.Rating >= request.MinRating.Value);
+        }
+
+        if (request.MaxRating.HasValue)
+        {
+            mentorsQuery = mentorsQuery.Where(m => m.Rating <= request.MaxRating.Value);
+        }
+
         mentorsQuery = mentorsQuery.Where(m => m.IsActive);
         mentorsQuery = mentorsQuery.OrderByDescending(m => m.Rating);
 
