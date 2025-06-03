@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Button from "../../../components/ui/Button";
-import PlaceholderImage from "../../../components/ui/PlaceholderImage";
 
 const HeroSection: React.FC = () => {
     const [isMobile, setIsMobile] = useState(false); // Default to desktop view for SSR

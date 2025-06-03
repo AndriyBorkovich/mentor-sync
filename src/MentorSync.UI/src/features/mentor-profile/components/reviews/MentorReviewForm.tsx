@@ -72,8 +72,6 @@ const MentorReviewForm: React.FC<MentorReviewFormProps> = ({
                         setValue("reviewText", result.reviewText);
                     }
                 }
-            } catch (error) {
-                console.error("Error checking existing review:", error);
             } finally {
                 if (isMounted) {
                     setIsLoading(false);
@@ -322,7 +320,7 @@ const MentorReviewForm: React.FC<MentorReviewFormProps> = ({
                         ) : existingReview?.hasReviewed ? (
                             "Зберегти зміни"
                         ) : (
-                            "Надіслати відгук"
+                            "Додати відгук"
                         )}
                     </button>
                 </div>
