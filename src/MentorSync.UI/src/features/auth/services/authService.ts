@@ -60,18 +60,26 @@ export const authService = {
             };
         }
     },
-
     login: async (data: LoginRequest): Promise<AuthResponse> => {
         try {
-            const response = await api.post("/users/login", data); // If login was successful, save the tokens to localStorage
+            const response = await api.post("/users/login", data);
+            console.log("Login API response:", response.data);
+
+            // If login was successful, save the tokens to localStorage
             if (response.data.token) {
-                saveAuthTokens({
+                const authData = {
                     token: response.data.token,
                     refreshToken: response.data.refreshToken,
                     expiration: response.data.expiration,
                     needOnboarding: response.data.needOnboarding,
                     userId: response.data.userId,
+                };
+
+                console.log("Saving auth tokens to localStorage:", {
+                    ...authData,
+                    token: "REDACTED",
                 });
+                saveAuthTokens(authData);
 
                 // Save the needOnboarding flag to localStorage for easier access across components
                 if (response.data.needOnboarding !== undefined) {

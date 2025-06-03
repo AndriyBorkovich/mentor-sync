@@ -3,15 +3,32 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { authService, LoginRequest } from "../services/authService";
 import { getUserRole } from "../utils/authUtils";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { loginUser, isAuthenticated, verifyAuthStatus } = useAuth(); // Get auth context
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [showSuccessMessage, setShowSuccessMessage] =
         useState<boolean>(false);
-    const [userRole, setUserRole] = useState<string>(""); // Check if user was redirected from registration
+    const [userRole, setUserRole] = useState<string>("");
+
+    // Debug log for authentication state
+    useEffect(() => {
+
+        // If already authenticated, redirect to appropriate page
+        if (isAuthenticated) {
+            const userRoleToUse = userRole || getUserRole() || "mentee";
+            const redirectPath =
+                userRoleToUse.toLowerCase() === "mentor"
+                    ? "/sessions"
+                    : "/dashboard";
+
+            navigate(redirectPath, { replace: true });
+        }
+    }, [isAuthenticated, navigate, userRole]); // Check if user was redirected from registration
     useEffect(() => {
         if (location.state?.registrationSuccess) {
             setShowSuccessMessage(true);
@@ -32,34 +49,52 @@ const LoginPage: React.FC = () => {
         handleSubmit,
         formState: { errors },
     } = useForm<LoginRequest>();
-
     const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
         setIsSubmitting(true);
         setErrorMessage(null);
 
         try {
+            console.log("Login submission started");
             const response = await authService.login(data);
+
             if (response?.success) {
+                // Update auth context with the successful login
+                loginUser(response);
+
+                // Explicitly verify authentication status
+                await verifyAuthStatus();
+
                 // Check if user needs onboarding based on API response
                 const userRoleToUse = userRole || getUserRole() || "mentee";
-                if (response.needOnboarding) {
-                    // User needs onboarding - use the role from either registration state or from user's data
 
-                    navigate(`/onboarding/${userRoleToUse}`, { replace: true });
-                } else {
-                    if (userRoleToUse.toLocaleLowerCase() === "mentor") {
-                        navigate("/sessions", { replace: true });
+                // Add a small delay to ensure auth context state is updated before navigation
+                setTimeout(() => {
+
+                    if (response.needOnboarding) {
+                        // User needs onboarding
+                        navigate(`/onboarding/${userRoleToUse}`, {
+                            replace: true,
+                        });
                     } else {
-                        navigate("/dashboard", { replace: true });
+                        if (userRoleToUse.toLocaleLowerCase() === "mentor") {
+                            navigate("/sessions", { replace: true });
+                        } else {
+                            navigate("/dashboard", { replace: true });
+                        }
                     }
-                }
+
+                    setIsSubmitting(false);
+                }, 100); // Small delay to allow state updates
+
+                return; // Return early since we'll set isSubmitting to false in the timeout
             } else {
                 setErrorMessage("Помилка входу. Невірний email або пароль.");
             }
         } catch (error) {
-            setErrorMessage("Помилка зєднання з сервером. Спробуйте пізніше.");
             console.error("Login error:", error);
+            setErrorMessage("Помилка зєднання з сервером. Спробуйте пізніше.");
         } finally {
+            // Only set isSubmitting to false if we didn't return early
             setIsSubmitting(false);
         }
     };
