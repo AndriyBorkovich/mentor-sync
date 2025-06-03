@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../../components/ui/Button";
 import PlaceholderImage from "../../../components/ui/PlaceholderImage";
 
 const HeroSection: React.FC = () => {
+    const [isMobile, setIsMobile] = useState(false); // Default to desktop view for SSR
+
+    useEffect(() => {
+        // Set initial state
+        setIsMobile(window.innerWidth < 1024);
+
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 1024);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
     return (
         <div
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative"
             style={{
                 display: "grid",
-                gridTemplateColumns: "1fr",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                 gap: "3rem",
                 alignItems: "center",
                 position: "relative",
+                maxWidth: "1200px",
+                margin: "0 auto",
+                padding: "0 1.5rem",
             }}
         >
             {/* Background decorative element */}
@@ -40,7 +59,7 @@ const HeroSection: React.FC = () => {
                     opacity: "0.2",
                     filter: "blur(64px)",
                 }}
-            ></div>{" "}
+            ></div>
             <div
                 className="py-8 md:py-12 relative z-10"
                 style={{
@@ -61,8 +80,8 @@ const HeroSection: React.FC = () => {
                     <br />
                     за допомогою
                     <br />
-                    наставництва
-                </h1>{" "}
+                    наставництва{" "}
+                </h1>
                 <p
                     className="text-lg md:text-xl mb-10 leading-relaxed"
                     style={{
@@ -72,17 +91,18 @@ const HeroSection: React.FC = () => {
                     Зв'яжіться з досвідченими технічними професіоналами або
                     поділіться своєю досвідом. Приєднуйтесь до нашої спільноти
                     учнів та лідерів.
-                </p>{" "}
+                </p>
                 <div
                     className="flex flex-col sm:flex-row gap-4"
                     style={{
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: isMobile ? "column" : "row",
                         gap: "1rem",
                     }}
                 >
                     <Button
                         variant="primary"
+                        style={{ minWidth: "200px" }}
                         onClick={() =>
                             (window.location.href = "/register?role=mentee")
                         }
@@ -91,6 +111,7 @@ const HeroSection: React.FC = () => {
                     </Button>
                     <Button
                         variant="outline"
+                        style={{ minWidth: "200px" }}
                         onClick={() =>
                             (window.location.href = "/register?role=mentor")
                         }
@@ -125,77 +146,21 @@ const HeroSection: React.FC = () => {
                     <span>Безкоштовна реєстрація, почніть відразу</span>
                 </div>
             </div>
-            <div className="hidden lg:flex items-center justify-center relative z-10">
-                {/* Placeholder for hero image */}
+            <div
+                className={`${
+                    isMobile ? "hidden" : "flex"
+                } items-center justify-center relative z-10`}
+            >
+                {/* Placeholder for hero image               
                 <PlaceholderImage
                     height="500px"
                     width="100%"
-                    text="Hero Image - Professional mentorship illustration"
+                    text="MentorSync - Прискорити свою кар'єру за допомогою наставництва"
                     backgroundColor="#f0f4f8"
                     className="rounded-2xl shadow-xl"
                     pattern="gradient"
-                />
-                {/* Stats badge positioned over the image */}{" "}
-                <div
-                    style={{
-                        position: "absolute",
-                        bottom: "-1.25rem",
-                        left: "-1.25rem",
-                        backgroundColor: "white",
-                        padding: "1rem",
-                        borderRadius: "0.75rem",
-                        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <div
-                        style={{
-                            backgroundColor: "rgba(67, 24, 209, 0.1)", // primary with 10% opacity
-                            padding: "0.5rem",
-                            borderRadius: "0.5rem",
-                            marginRight: "0.75rem",
-                        }}
-                    >
-                        <svg
-                            style={{
-                                width: "1.5rem",
-                                height: "1.5rem",
-                                color: "var(--color-primary)",
-                            }}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                            ></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <p
-                            style={{
-                                fontSize: "0.875rem",
-                                fontWeight: "500",
-                                color: "var(--color-text-gray)",
-                            }}
-                        >
-                            Запуск платформи
-                        </p>
-                        <p
-                            style={{
-                                fontSize: "1.125rem",
-                                fontWeight: "bold",
-                                color: "var(--color-secondary)",
-                            }}
-                        >
-                            Травень 2025
-                        </p>
-                    </div>
-                </div>
+                /> */}
+                <img alt="mentor-sync" src="/main-logo.svg"></img>
             </div>
         </div>
     );
