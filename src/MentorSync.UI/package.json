@@ -13,7 +13,7 @@
         "@microsoft/signalr": "^8.0.7",
         "@tailwindcss/vite": "^4.1.8",
         "@types/marked": "^5.0.2",
-        "@types/node": "^22.15.29",
+        "@types/node": "^22.15.30",
         "@types/react-time-picker": "^4.0.3",
         "axios": "^1.9.0",
         "jwt-decode": "^4.0.0",
