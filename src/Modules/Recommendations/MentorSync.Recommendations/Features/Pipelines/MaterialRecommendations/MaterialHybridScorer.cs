@@ -14,7 +14,7 @@ using Microsoft.ML;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 
-public class MaterialHybridScorer(
+public sealed class MaterialHybridScorer(
     RecommendationsDbContext db,
     IMenteeProfileService menteeProfileService,
     ILearningMaterialsService learningMaterialsService,

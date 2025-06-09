@@ -29,7 +29,6 @@ public sealed class MaterialRecommendationPipeline(
 
                 await etl.RunAsync(stoppingToken);
                 await trainer.TrainAsync(stoppingToken);
-
                 await scorer.GenerateRecommendationsAsync(stoppingToken);
 
                 logger.LogInformation("Learning material recommendation pipeline completed successfully");

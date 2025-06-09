@@ -8,7 +8,7 @@ using Microsoft.ML.Trainers;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 
-public class MaterialCollaborativeTrainer(
+public sealed class MaterialCollaborativeTrainer(
     RecommendationsDbContext db,
     ILogger<MaterialCollaborativeTrainer> logger) : ICollaborativeTrainer
 {
