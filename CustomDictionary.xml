@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dictionary>
+  <RecognizedWords>
+    <Word>OAuth</Word>
+    <Word>HttpClientFactory</Word>
+    <Word>asyncify</Word>
+    <Word>Kubernetes</Word>
+    <Word>Antiforgery</Word>
+  </RecognizedWords>
+</Dictionary>

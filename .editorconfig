@@ -189,3 +189,5 @@ indent_size = 2
 end_of_line = lf
 [*.{cmd,bat}]
 end_of_line = crlf
+
+csharp_custom_dictionary = CustomDictionary.xml
