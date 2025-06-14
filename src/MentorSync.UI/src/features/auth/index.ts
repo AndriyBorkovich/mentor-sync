@@ -2,7 +2,6 @@
 export { ProtectedRoute } from "./components/ProtectedRoute";
 export { RoleBasedRoute } from "./components/RoleBasedRoute";
 export { UnauthorizedPage } from "./components/UnauthorizedPage";
-export { AuthStatus } from "./components/AuthStatus";
 
 // Context and Provider
 export { AuthProvider, useAuth } from "./context/AuthContext";

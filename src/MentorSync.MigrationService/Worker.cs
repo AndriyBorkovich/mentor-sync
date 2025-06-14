@@ -29,7 +29,7 @@ public sealed class Worker(
         {
             using var scope = serviceProvider.CreateScope();
 
-            // CleanDbContext<UsersDbContext>(scope.ServiceProvider, cancellationToken);            
+            // CleanDbContext<UsersDbContext>(scope.ServiceProvider);            
 
             await MigrateAsync<UsersDbContext>(
                 scope.ServiceProvider,
@@ -70,7 +70,7 @@ public sealed class Worker(
         hostApplicationLifetime.StopApplication();
     }
 
-    public static void CleanDbContext<T>(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+    public static void CleanDbContext<T>(IServiceProvider serviceProvider)
         where T : DbContext
     {
         using var scope = serviceProvider.CreateScope();
