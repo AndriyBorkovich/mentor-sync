@@ -60,7 +60,7 @@ builder.AddProject<Projects.MentorSync_MigrationService>("migration-service")
     .WithReference(postgresDb)
     .WaitFor(postgresDb);
 
-const int uiPort = 51990;
+var uiPort = builder.Configuration.GetValue<int>("UI_PORT");
 
 // API project
 var api = builder.AddProject<Projects.MentorSync_API>("api")
