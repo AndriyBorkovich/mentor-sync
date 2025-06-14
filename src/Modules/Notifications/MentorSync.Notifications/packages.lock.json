@@ -25,11 +25,11 @@
       },
       "Azure.Communication.Email": {
         "type": "Direct",
-        "requested": "[1.1.0-beta.1, )",
-        "resolved": "1.1.0-beta.1",
-        "contentHash": "pyoN5pLK9u0IieVd+S7Qdl+yz+cP+f49GsfOEufqOX8b88TahgluHHeCBamkC/8DkIDyducRfayc2WnI5JninA==",
+        "requested": "[1.1.0-beta.2, )",
+        "resolved": "1.1.0-beta.2",
+        "contentHash": "lg+H79nIMfPKdspwttHYZrWxd/zti6GyyCvU1YSQUsggVu7b4IjdT/6yR0TwNSlEXBFsbIxFeQn9AQf2hRmWZA==",
         "dependencies": {
-          "Azure.Core": "1.40.0"
+          "Azure.Core": "1.43.0"
         }
       },
       "Ardalis.Result": {
