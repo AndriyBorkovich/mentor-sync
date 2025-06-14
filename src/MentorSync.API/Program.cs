@@ -18,7 +18,7 @@ builder.Services.AddGlobalRateLimiting();
 
 builder.Services.AddCustomCorsPolicy();
 
-builder.AddAplicationModules();
+builder.AddApplicationModules();
 
 var app = builder.Build();
 

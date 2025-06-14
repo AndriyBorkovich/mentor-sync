@@ -142,7 +142,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static void AddAplicationModules(this IHostApplicationBuilder builder)
+    public static void AddApplicationModules(this IHostApplicationBuilder builder)
     {
         builder.Services.AddMediatR(cfg =>
         {

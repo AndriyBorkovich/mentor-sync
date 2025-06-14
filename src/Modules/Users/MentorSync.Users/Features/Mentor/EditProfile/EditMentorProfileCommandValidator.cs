@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using MentorSync.Users.Features.Mentor.CreateProfile;
 
 namespace MentorSync.Users.Features.Mentor.EditProfile;
 

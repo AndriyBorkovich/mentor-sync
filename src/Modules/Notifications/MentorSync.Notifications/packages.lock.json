@@ -4,9 +4,9 @@
     "net9.0": {
       "Aspire.MongoDB.Driver.v3": {
         "type": "Direct",
-        "requested": "[9.3.0, )",
-        "resolved": "9.3.0",
-        "contentHash": "RWtr1DDuSRBNzZqkA9YNjpEmMuiBIwNttxvKeAbCO7XcojlAcdz4/Jc0k/jNtlr5tuIjD9r//8Wb26v+46kpZw==",
+        "requested": "[9.3.1, )",
+        "resolved": "9.3.1",
+        "contentHash": "5PeO+wq3qZR+DQF2ez8w6jDx6fzuJ0mGxh0YcCNUXzAXHxIPevm7lP+XxI1Iy3vwXJmBDApsiEF+bb+Flih+YA==",
         "dependencies": {
           "AspNetCore.HealthChecks.MongoDb": "9.0.0",
           "DnsClient": "1.8.0",
@@ -39,8 +39,8 @@
       },
       "Aspire.Azure.Storage.Blobs": {
         "type": "Transitive",
-        "resolved": "9.3.0",
-        "contentHash": "Y2dhAfVTHqcnICmHc3pJ56uojplQmTdcZWuRhDJFpJxtpA8dJtcR3m2FoQwlLsy8rw0f/7w92Cx0xyefxoJ8IA==",
+        "resolved": "9.3.1",
+        "contentHash": "d0oWRXS4lwab3WepkX1Q9MiDkM5+ebk+egyfCCOmVdzJU6I8A5Zpd9P6i55RWKCBBoIQrZcuzF8izyC7hoWx+g==",
         "dependencies": {
           "AspNetCore.HealthChecks.Azure.Storage.Blobs": "9.0.0",
           "Azure.Core": "1.46.0",
@@ -472,7 +472,7 @@
         "type": "Project",
         "dependencies": {
           "Ardalis.Result": "[10.1.0, )",
-          "Aspire.Azure.Storage.Blobs": "[9.3.0, )",
+          "Aspire.Azure.Storage.Blobs": "[9.3.1, )",
           "FluentValidation": "[12.0.0, )",
           "MediatR": "[12.5.0, )"
         }

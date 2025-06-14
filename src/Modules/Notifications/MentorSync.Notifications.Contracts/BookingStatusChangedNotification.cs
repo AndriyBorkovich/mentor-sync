@@ -1,5 +1,4 @@
 using MediatR;
-using MentorSync.SharedKernel;
 
 namespace MentorSync.Notifications.Contracts;
 

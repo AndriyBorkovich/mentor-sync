@@ -14,7 +14,7 @@ public sealed class GetMaterialsEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("materials", async (
-            string? search,
+            string search,
             [FromQuery] string[] types,
             [FromQuery] string[] tags,
             string sortBy,

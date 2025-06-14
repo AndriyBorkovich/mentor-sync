@@ -1,5 +1,4 @@
 ﻿using MentorSync.SharedKernel.CommonEntities;
-using MentorSync.Users.Domain.Enums;
 
 namespace MentorSync.Users.Features.Common.Responses;
 
