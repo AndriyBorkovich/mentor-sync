@@ -8,7 +8,7 @@ using Microsoft.ML.Trainers;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 
-public class MentorCollaborativeTrainer(RecommendationsDbContext db, ILogger<MentorCollaborativeTrainer> logger) : ICollaborativeTrainer
+public sealed class MentorCollaborativeTrainer(RecommendationsDbContext db, ILogger<MentorCollaborativeTrainer> logger) : ICollaborativeTrainer
 {
     private readonly MLContext _mlContext = new();
 

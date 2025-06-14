@@ -12,7 +12,7 @@ using MentorSync.SharedKernel.Extensions;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 
-public class MentorHybridScorer(
+public sealed class MentorHybridScorer(
     RecommendationsDbContext db,
     IMenteeProfileService menteeProfileService,
     IMentorProfileService mentorProfileService,
