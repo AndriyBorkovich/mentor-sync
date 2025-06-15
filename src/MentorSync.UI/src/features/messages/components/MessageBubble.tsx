@@ -1,5 +1,5 @@
 import React from "react";
-import { Message } from "../data/chats";
+import { Message } from "../../../shared/types";
 
 interface MessageBubbleProps {
     message: Message;
