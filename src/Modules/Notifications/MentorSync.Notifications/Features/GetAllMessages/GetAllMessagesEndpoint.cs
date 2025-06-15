@@ -21,7 +21,6 @@ public sealed class GetAllMessagesEndpoint : IEndpoint
             .WithTags(TagsConstants.Notifications)
             .Produces<List<GetAllMessagesResponse>>()
             .Produces<Unit>(StatusCodes.Status204NoContent)
-            .RequireAuthorization()
-            .RequireAntiforgeryToken();
+            .RequireAuthorization();
     }
 }

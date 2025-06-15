@@ -5,19 +5,27 @@ import {
     LogLevel,
 } from "@microsoft/signalr";
 import { toast } from "react-toastify";
+import { getAuthTokens } from "../auth/services/authStorage";
 
 const SIGNALR_URL = `${import.meta.env.VITE_API_URL}/notificationHub`;
 
 export function useNotifications(onBookingStatusChanged?: (data: any) => void) {
     const connectionRef = useRef<HubConnection | null>(null);
-
     useEffect(() => {
+        // Get token for connection
+        const authTokens = getAuthTokens();
+        const token = authTokens?.token || "";
+
+        // Add token in both ways: query string and accessTokenFactory
         const connection = new HubConnectionBuilder()
-            .withUrl(SIGNALR_URL)
+            .withUrl(`${SIGNALR_URL}`, {
+                accessTokenFactory: () => token,
+            })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Warning)
             .build();
 
+        // Booking status notifications
         connection.on("BookingStatusChanged", (json: string) => {
             let data;
             try {
@@ -33,6 +41,17 @@ export function useNotifications(onBookingStatusChanged?: (data: any) => void) {
                     : "Booking status updated"
             );
             if (onBookingStatusChanged) onBookingStatusChanged(data);
+        });
+
+        // Basic chat notifications
+        connection.on("ReceiveChatMessage", (messageDto) => {
+            if (messageDto?.content) {
+                toast.info(
+                    `New message: ${messageDto.content.substring(0, 50)}${
+                        messageDto.content.length > 50 ? "..." : ""
+                    }`
+                );
+            }
         });
 
         connection.start().catch((err: unknown) => {

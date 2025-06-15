@@ -1,55 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Chat, Message } from "../data/chats";
-
-interface MessageBubbleProps {
-    message: Message;
-    isCurrentUser: boolean;
-}
-
-const MessageBubble: React.FC<MessageBubbleProps> = ({
-    message,
-    isCurrentUser,
-}) => {
-    return (
-        <div
-            className={`flex mb-4 ${
-                isCurrentUser ? "justify-end" : "justify-start"
-            }`}
-        >
-            {!isCurrentUser && (
-                <div className="w-8 h-8 rounded-full bg-gray-200 mr-2 mt-1 flex-shrink-0"></div>
-            )}
-            <div
-                className={`max-w-[70%] px-4 py-3 rounded-lg ${
-                    isCurrentUser
-                        ? "bg-[#6C5DD3] text-white rounded-tr-none"
-                        : "bg-[#F1F5F9] text-[#1E293B] rounded-tl-none"
-                }`}
-            >
-                <p className="break-words">{message.content}</p>
-                <div
-                    className={`text-xs mt-1 ${
-                        isCurrentUser ? "text-[#E2E8F0]" : "text-[#94A3B8]"
-                    } text-right`}
-                >
-                    {message.timestamp}
-                    {isCurrentUser && (
-                        <span className="material-icons text-xs ml-1">
-                            {message.read ? "done_all" : "done"}
-                        </span>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
+import { Chat, Message } from "../../../shared/types";
+import { MessageBubble } from "./MessageBubble";
+import { getUserId } from "../../auth";
 
 interface ChatWindowProps {
     chat: Chat | null;
     messages: Message[];
+    onSendMessage?: (recipientId: number, content: string) => void;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({
+    chat,
+    messages,
+    onSendMessage,
+}) => {
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -64,10 +28,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault();
         if (newMessage.trim() && chat) {
-            // In a real app, we would send this message to an API
-            console.log(
-                `Sending message to ${chat.participantName}: ${newMessage}`
-            );
+            if (onSendMessage) {
+                onSendMessage(chat.participantId, newMessage);
+            } else {
+                console.log(
+                    `Sending message to ${chat.participantName}: ${newMessage}`
+                );
+            }
             // Clear the input
             setNewMessage("");
         }
@@ -133,7 +100,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, messages }) => {
                     <MessageBubble
                         key={message.id}
                         message={message}
-                        isCurrentUser={message.senderId === "current-user"}
+                        isCurrentUser={message.senderId === getUserId()}
                     />
                 ))}
                 <div ref={messagesEndRef} />

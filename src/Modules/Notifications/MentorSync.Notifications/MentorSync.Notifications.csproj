@@ -10,5 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MentorSync.Notifications.Contracts\MentorSync.Notifications.Contracts.csproj" />
+    <ProjectReference Include="..\..\Users\MentorSync.Users.Contracts\MentorSync.Users.Contracts.csproj" />
   </ItemGroup>
 </Project>

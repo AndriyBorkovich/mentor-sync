@@ -16,6 +16,8 @@ public sealed class GetUserProfileQueryHandler(
     public async Task<Result<UserProfileResponse>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
         var user = await userManager.Users
+            .AsNoTracking()
+            .Where(u => u.IsActive)
             .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
             .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
@@ -28,9 +30,11 @@ public sealed class GetUserProfileQueryHandler(
         var role = user.UserRoles?.FirstOrDefault()?.Role?.Name;
 
         var menteeProfile = await usersDbContext.MenteeProfiles
+            .AsNoTracking()
             .FirstOrDefaultAsync(mp => mp.MenteeId == user.Id, cancellationToken);
 
         var mentorProfile = await usersDbContext.MentorProfiles
+            .AsNoTracking()
             .FirstOrDefaultAsync(mp => mp.MentorId == user.Id, cancellationToken);
 
         var response = new UserProfileResponse(

@@ -15,6 +15,17 @@ public static class ModuleRegistration
 {
     public static void AddSchedulingModule(this IHostApplicationBuilder builder)
     {
+        AddDatabase(builder);
+
+        AddEndpoints(builder.Services);
+
+        AddExternalServices(builder.Services);
+
+        AddBackgroundJobs(builder.Services);
+    }
+
+    private static void AddDatabase(this IHostApplicationBuilder builder)
+    {
         builder.AddNpgsqlDbContext<SchedulingDbContext>(
             connectionName: GeneralConstants.DatabaseName,
             configureSettings: c => c.DisableTracing = true,
@@ -22,12 +33,6 @@ public static class ModuleRegistration
             {
                 opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Scheduling));
             });
-
-        AddEndpoints(builder.Services);
-
-        AddExternalServices(builder.Services);
-
-        AddBackgroundJobs(builder.Services);
     }
 
     private static void AddEndpoints(IServiceCollection services)

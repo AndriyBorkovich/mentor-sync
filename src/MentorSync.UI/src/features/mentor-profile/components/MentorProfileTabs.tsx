@@ -5,6 +5,8 @@ import ReviewsTab from "./tabs/ReviewsTab";
 import SessionsTab from "./tabs/SessionsTab";
 import MaterialsTab from "./tabs/MaterialsTab";
 import { hasRole } from "../../auth/utils/authUtils";
+import { useInitiateChat } from "../../messages/services/chatApi";
+import { toast } from "react-toastify";
 
 export type ProfileTabType = "about" | "reviews" | "sessions" | "materials";
 
@@ -28,6 +30,19 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
     onRefreshReviews,
 }) => {
     const isMentee = hasRole("Mentee");
+    const { startChatWithMentor } = useInitiateChat();
+
+    const handleStartChat = async () => {
+        try {
+            const mentorId =
+                typeof mentor.id === "string"
+                    ? parseInt(mentor.id, 10)
+                    : mentor.id;
+            await startChatWithMentor(mentorId);
+        } catch (error) {
+            toast.error("Не вдалося почати чат. Спробуйте пізніше.");
+        }
+    };
 
     function getReviewWord(count: number): string {
         const n = Math.abs(count) % 100;
@@ -132,28 +147,44 @@ const MentorProfileTabs: React.FC<MentorProfileTabsProps> = ({
                             </div>
                         </div>
                     </div>
-                    {isMentee && onToggleBookmark && (
-                        <button
-                            onClick={onToggleBookmark}
-                            disabled={bookmarkLoading}
-                            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 focus:outline-none"
-                            title={
-                                isBookmarked
-                                    ? "Видалити з обраного"
-                                    : "Додати до обраного"
-                            }
-                        >
-                            <span
-                                className={`material-icons text-2xl ${
-                                    isBookmarked
-                                        ? "text-yellow-500"
-                                        : "text-gray-400"
-                                }`}
+                    <div className="flex items-center gap-2">
+                        {isMentee && (
+                            <button
+                                onClick={handleStartChat}
+                                className="flex items-center bg-[#4318D1] hover:bg-[#3a14b8] text-white px-4 py-2 rounded-lg transition-colors"
+                                title="Написати повідомлення"
                             >
-                                {isBookmarked ? "bookmark" : "bookmark_outline"}
-                            </span>
-                        </button>
-                    )}
+                                <span className="material-icons mr-1 text-sm">
+                                    chat
+                                </span>
+                                Написати
+                            </button>
+                        )}
+                        {isMentee && onToggleBookmark && (
+                            <button
+                                onClick={onToggleBookmark}
+                                disabled={bookmarkLoading}
+                                className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 focus:outline-none"
+                                title={
+                                    isBookmarked
+                                        ? "Видалити з обраного"
+                                        : "Додати до обраного"
+                                }
+                            >
+                                <span
+                                    className={`material-icons text-2xl ${
+                                        isBookmarked
+                                            ? "text-yellow-500"
+                                            : "text-gray-400"
+                                    }`}
+                                >
+                                    {isBookmarked
+                                        ? "bookmark"
+                                        : "bookmark_outline"}
+                                </span>
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 

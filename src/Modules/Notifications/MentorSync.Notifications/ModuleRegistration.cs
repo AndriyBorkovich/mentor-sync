@@ -19,7 +19,7 @@ public static class ModuleRegistration
         builder.AddMongoDBClient("mongodb");
         builder.Services.Configure<MongoSettings>(
            builder.Configuration.GetSection(nameof(MongoSettings)));
-        builder.Services.AddSingleton<NotificationsDbContext>();
+        builder.Services.AddScoped<NotificationsDbContext>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
         builder.Services.AddEndpoints(typeof(NotificationsDbContext).Assembly);

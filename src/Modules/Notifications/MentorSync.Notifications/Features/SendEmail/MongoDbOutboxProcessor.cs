@@ -2,14 +2,15 @@ using System.Diagnostics;
 using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Domain;
 using MentorSync.Notifications.Infrastructure.Emails;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.SendEmail;
 
 public sealed class EmailOutboxProcessor(
-    NotificationsDbContext dbContext,
     IEmailSender emailSender,
+    IServiceProvider serviceProvider,
     ILogger<EmailOutboxProcessor> logger)
     : IOutboxProcessor
 {
@@ -19,8 +20,9 @@ public sealed class EmailOutboxProcessor(
     /// <returns></returns>
     public async Task CheckForEmailsToSend()
     {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
         var filter = Builders<EmailOutbox>.Filter.Eq(entity => entity.DateTimeUtcProcessed, null);
-
         var unsentEmails = await dbContext.EmailOutboxes.Find(filter).ToListAsync();
 
         if (unsentEmails.Count == 0)

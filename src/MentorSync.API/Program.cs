@@ -14,7 +14,7 @@ builder.Services.ConfigureJsonOptions();
 
 builder.Services.AddExceptionHandling();
 
-builder.Services.AddGlobalRateLimiting();
+//builder.Services.AddGlobalRateLimiting();
 
 builder.Services.AddCustomCorsPolicy();
 
@@ -36,7 +36,7 @@ app.UseHttpsRedirection();
 
 app.UseAuth();
 
-app.UseRateLimiter();
+//app.UseRateLimiter();
 
 app.UseAntiforgery();
 

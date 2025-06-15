@@ -24,13 +24,7 @@ public static class ModuleRegistration
 {
     public static void AddUsersModule(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<UsersDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Users));
-            });
+        AddDatabase(builder);
 
         AddIdentity(builder.Services);
 
@@ -42,6 +36,15 @@ public static class ModuleRegistration
 
         AddExternalServices(builder.Services);
     }
+
+    private static void AddDatabase(IHostApplicationBuilder builder)
+        => builder.AddNpgsqlDbContext<UsersDbContext>(
+                connectionName: GeneralConstants.DatabaseName,
+                configureSettings: c => c.DisableTracing = true,
+                configureDbContextOptions: opt =>
+                {
+                    opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Users));
+                });
 
     private static void AddIdentity(IServiceCollection services)
     {
@@ -129,7 +132,25 @@ public static class ModuleRegistration
 
                         if (string.IsNullOrEmpty(authorization))
                         {
-                            context.NoResult();
+                            // Try to get access token from query string (for SignalR connections)
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/hubs/chat") || path.StartsWithSegments("/notificationHub")))
+                            {
+                                context.Token = accessToken;
+                            }
+                        }
+                        else
+                        {
+                            // Extract token from Authorization header (Bearer token)
+                            var token = authorization.Replace("Bearer ", string.Empty);
+                            if (!string.IsNullOrEmpty(token))
+                            {
+                                context.Token = token;
+                            }
                         }
 
                         return Task.CompletedTask;
@@ -184,5 +205,6 @@ public static class ModuleRegistration
     {
         services.AddScoped<IMentorProfileService, MentorProfileService>();
         services.AddScoped<IMenteeProfileService, MenteeProfileService>();
+        services.AddScoped<IUserService, UserService>();
     }
 }

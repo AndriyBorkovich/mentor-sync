@@ -8,5 +8,7 @@ public sealed class NotificationsDbContext(IMongoClient mongoClient, IOptions<Mo
 {
     private readonly IMongoDatabase _database = mongoClient.GetDatabase(settings.Value.Database);
 
-    public IMongoCollection<EmailOutbox> EmailOutboxes => _database.GetCollection<EmailOutbox>(settings.Value.Collection);
+    public IMongoCollection<EmailOutbox> EmailOutboxes => _database.GetCollection<EmailOutbox>(settings.Value.OutboxCollection);
+    public IMongoCollection<ChatRoom> ChatRooms => _database.GetCollection<ChatRoom>(settings.Value.RoomsCollection);
+    public IMongoCollection<ChatMessage> ChatMessages => _database.GetCollection<ChatMessage>(settings.Value.MessagesCollection);
 }

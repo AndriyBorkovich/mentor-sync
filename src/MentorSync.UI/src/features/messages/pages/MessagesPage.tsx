@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Sidebar from "../../../components/layout/Sidebar";
 import Header from "../../../components/layout/Header";
 import MessagesContent from "../components/MessagesContent";
@@ -7,6 +8,8 @@ import "../../../components/layout/styles/sidebar.css";
 
 const MessagesPage: React.FC = () => {
     const [sidebarExpanded, setSidebarExpanded] = useState(false);
+    const [searchParams] = useSearchParams();
+    const chatId = searchParams.get("chatId");
 
     const handleSidebarToggle = (expanded: boolean) => {
         setSidebarExpanded(expanded);
@@ -23,7 +26,7 @@ const MessagesPage: React.FC = () => {
             </div>
             <div className="flex flex-col flex-1 overflow-hidden">
                 <Header showNotifications={false} />
-                <MessagesContent />
+                <MessagesContent initialChatId={chatId} />
             </div>
         </div>
     );

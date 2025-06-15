@@ -15,18 +15,21 @@ public static class ModuleRegistration
 {
     public static void AddRecommendationsModule(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<RecommendationsDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Recommendations));
-            });
+        AddDatabase(builder);
 
         AddEndpoints(builder.Services);
 
         AddBackgroundJobs(builder.Services);
     }
+
+    private static void AddDatabase(IHostApplicationBuilder builder)
+        => builder.AddNpgsqlDbContext<RecommendationsDbContext>(
+                connectionName: GeneralConstants.DatabaseName,
+                configureSettings: c => c.DisableTracing = true,
+                configureDbContextOptions: opt =>
+                {
+                    opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Recommendations));
+                });
 
     private static void AddEndpoints(IServiceCollection services)
     {

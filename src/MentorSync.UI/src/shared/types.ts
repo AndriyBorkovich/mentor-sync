@@ -145,3 +145,22 @@ export interface MaterialAttachment {
     contentType: string;
     uploadedAt: string;
 }
+
+export interface Message {
+    id: string;
+    senderId: number;
+    receiverId: number;
+    content: string;
+    timestamp: string;
+    read: boolean;
+}
+
+export interface Chat {
+    id: string;
+    participantId: number; // The other person in the chat
+    participantName: string;
+    participantAvatar?: string;
+    lastMessage?: Message;
+    unreadCount: number;
+    isOnline: boolean;
+}

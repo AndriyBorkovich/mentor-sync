@@ -1,3 +1,4 @@
+import { Claims } from "../../../shared/constants/claims";
 import { getAuthTokens } from "../services/authStorage";
 import { jwtDecode } from "jwt-decode";
 
@@ -49,12 +50,8 @@ export const getUserFromToken = (): JwtPayload | null => {
 };
 
 export const getUserId = (): number => {
-    // First try to get the ID from the JWT token
     const tokenPayload = getUserFromToken();
-    const nameIdentifier =
-        tokenPayload?.[
-            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-        ];
+    const nameIdentifier = tokenPayload?.[Claims.UserId];
     if (nameIdentifier) {
         return parseInt(String(nameIdentifier), 10);
     }
@@ -63,11 +60,8 @@ export const getUserId = (): number => {
 };
 
 export const getUserRole = (): string => {
-    // First try to get the ID from the JWT token
     const user = getUserFromToken();
-    const tokenRole =
-        user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-
+    const tokenRole = user?.[Claims.UserRole];
     return typeof tokenRole === "string"
         ? tokenRole
         : localStorage.getItem("userRole") || "";
@@ -98,10 +92,7 @@ export const getTokenTimeRemaining = (): number | null => {
 export const hasRole = (role: string | string[]): boolean => {
     try {
         const user = getUserFromToken();
-        const tokenRole =
-            user?.[
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-            ];
+        const tokenRole = user?.[Claims.UserRole];
         if (!tokenRole) return false;
 
         const roles = Array.isArray(role) ? role : [role];

@@ -1369,7 +1369,8 @@
         "dependencies": {
           "Aspire.MongoDB.Driver.v3": "[9.3.1, )",
           "Azure.Communication.Email": "[1.1.0-beta.2, )",
-          "MentorSync.Notifications.Contracts": "[1.0.0, )"
+          "MentorSync.Notifications.Contracts": "[1.0.0, )",
+          "MentorSync.Users.Contracts": "[1.0.0, )"
         }
       },
       "mentorsync.notifications.contracts": {

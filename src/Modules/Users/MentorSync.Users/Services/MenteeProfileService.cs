@@ -7,11 +7,12 @@ namespace MentorSync.Users.Services;
 
 public sealed class MenteeProfileService(UsersDbContext usersDbContext) : IMenteeProfileService
 {
-    public async Task<MenteeBasicInfoModel> GetMenteeInfo(int menteeId)
+    public async Task<UserBasicInfoModel> GetMenteeInfo(int menteeId)
     {
         var result = await usersDbContext.Users
-        .Select(u => new MenteeBasicInfoModel
+        .Select(u => new UserBasicInfoModel
         {
+            Id = u.Id,
             UserName = u.UserName,
             ProfileImageUrl = u.ProfileImageUrl,
         })
