@@ -14,7 +14,7 @@ namespace MentorSync.MigrationService.Seeders;
 
 public static class LearningMaterialsSeeder
 {
-    private static readonly ImmutableList<(string Title, string Description, string[] Tags)> ProgrammingTopics =
+    private static readonly ImmutableList<(string Title, string Description, string[] Tags)> _programmingTopics =
         ImmutableList.Create(
             ("Understanding SOLID Principles", "A comprehensive guide to SOLID principles in modern software development",
                 new[] { "design-patterns", "best-practices", "architecture" }),
@@ -96,7 +96,7 @@ public static class LearningMaterialsSeeder
         var mentorIds = await usersContext.MentorProfiles.Select(m => m.MentorId).ToListAsync();
         var menteeIds = await usersContext.MenteeProfiles.Select(m => m.MenteeId).ToListAsync();
 
-        if (!mentorIds.Any() || !menteeIds.Any())
+        if (mentorIds.Count == 0 || menteeIds.Count == 0)
         {
             logger.LogWarning("No mentors or mentees found for seeding materials");
             return;
@@ -107,26 +107,23 @@ public static class LearningMaterialsSeeder
 
         // Generate learning materials from predefined topics
         var materials = new List<LearningMaterial>();
-        var topics = ProgrammingTopics.ToList();
-        foreach (var topic in topics)
-        {
-            var createdAt = faker.Date.Recent(90).ToUniversalTime();
-            var material = new LearningMaterial
-            {
-                Title = topic.Title,
-                Description = topic.Description,
-                Type = MaterialType.Article,
-                ContentMarkdown = GenerateMarkdownContent(faker, topic.Title, topic.Description),
-                MentorId = faker.PickRandom(mentorIds),
-                CreatedAt = createdAt,
-                UpdatedAt = faker.Random.Bool(0.5f) ? faker.Date.Between(createdAt, DateTime.UtcNow).ToUniversalTime() : null,
-                Attachments = new List<MaterialAttachment>(),
-                Tags = topic.Tags.Select(tagName => new Tag { Name = tagName }).ToList()
-            };
+        var topics = _programmingTopics.ToList();
 
-            materials.Add(material);
-        }
-
+        materials.AddRange(from topic in topics
+                           let createdAt = faker.Date.Recent(90).ToUniversalTime()
+                           let material = new LearningMaterial
+                           {
+                               Title = topic.Title,
+                               Description = topic.Description,
+                               Type = MaterialType.Article,
+                               ContentMarkdown = GenerateMarkdownContent(faker, topic.Title, topic.Description),
+                               MentorId = faker.PickRandom(mentorIds),
+                               CreatedAt = createdAt,
+                               UpdatedAt = faker.Random.Bool(0.5f) ? faker.Date.Between(createdAt, DateTime.UtcNow).ToUniversalTime() : null,
+                               Attachments = [],
+                               Tags = topic.Tags.Select(tagName => new Tag { Name = tagName }).ToList()
+                           }
+                           select material);
         await materialsContext.LearningMaterials.AddRangeAsync(materials);
         await materialsContext.SaveChangesAsync();
 
@@ -277,7 +274,7 @@ public class {faker.Hacker.Noun()}Service
 Thank you for reading this guide about {title}. Apply these concepts in your projects to write better, more maintainable code.
 
 ---
-*Last updated: {faker.Date.Recent().ToString("MMMM d, yyyy")}*";
+*Last updated: {faker.Date.Recent():MMMM d, yyyy}*";
     }
     private static string GenerateReviewComment(Faker faker, int rating)
     {
