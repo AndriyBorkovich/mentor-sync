@@ -126,33 +126,42 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggle, activePage = "home" }) => {
                     to="/mentors"
                 />
             )}{" "}
-            <SidebarLink
-                icon="sessions-icon"
-                label="Мої сесії"
-                active={activePage === "sessions"}
-                expanded={expanded}
-                to="/sessions"
-            />{" "}
-            <SidebarLink
-                icon="messages-icon"
-                label="Повідомлення"
-                active={activePage === "messages"}
-                expanded={expanded}
-                to="/messages"
-            />{" "}
-            <SidebarLink
-                icon="materials-icon"
-                label="Матеріали"
-                active={activePage === "materials"}
-                expanded={expanded}
-                to="/materials"
-            />{" "}
-            <SidebarLink
-                icon="settings-icon"
-                label="Налаштування"
-                active={activePage === "settings"}
-                expanded={expanded}
-            />
+            {hasRole(["Mentee", "Mentor"]) && (
+                <SidebarLink
+                    icon="sessions-icon"
+                    label="Мої сесії"
+                    active={activePage === "sessions"}
+                    expanded={expanded}
+                    to="/sessions"
+                />
+            )}{" "}
+            {hasRole(["Mentee", "Mentor"]) && (
+                <SidebarLink
+                    icon="messages-icon"
+                    label="Повідомлення"
+                    active={activePage === "messages"}
+                    expanded={expanded}
+                    to="/messages"
+                />
+            )}{" "}
+            {hasRole(["Mentee", "Mentor"]) && (
+                <SidebarLink
+                    icon="materials-icon"
+                    label="Матеріали"
+                    active={activePage === "materials"}
+                    expanded={expanded}
+                    to="/materials"
+                />
+            )}{" "}
+            {hasRole("Admin") && (
+                <SidebarLink
+                    icon="settings-icon"
+                    label="Налаштування"
+                    active={activePage === "settings"}
+                    expanded={expanded}
+                    to="/settings"
+                />
+            )}
         </div>
     );
 };

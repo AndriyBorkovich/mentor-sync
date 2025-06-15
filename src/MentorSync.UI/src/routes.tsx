@@ -12,6 +12,7 @@ import MessagesPage from "./features/messages/pages/MessagesPage";
 import MaterialsPage from "./features/materials/pages/MaterialsPage";
 import MaterialViewPage from "./features/materials/pages/MaterialViewPage";
 import ProfilePage from "./features/profile/pages/ProfilePage";
+import SettingsPage from "./features/settings/pages/SettingsPage";
 import { OnboardingPage } from "./features/onboarding";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
 import { RoleBasedRoute } from "./features/auth/components/RoleBasedRoute";
@@ -114,11 +115,11 @@ const router = createBrowserRouter([
                     />
                 ),
                 children: [
-                    // Add admin-specific routes here
-                    // {
-                    //     path: "/admin/users",
-                    //     element: <ManageUsersPage />,
-                    // },
+                    // Admin-specific routes
+                    {
+                        path: "/settings",
+                        element: <SettingsPage />,
+                    },
                 ],
             },
         ],

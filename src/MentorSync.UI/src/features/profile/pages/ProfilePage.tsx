@@ -6,6 +6,7 @@ import ProfileHeader from "../components/ProfileHeader";
 import ProfileOverview from "../components/ProfileOverview";
 import ProfileInfoCard from "../components/ProfileInfoCard";
 import { ProfileSkeleton } from "../components/ProfileSkeleton";
+import { formatRoleName } from "../../../shared/utils/formatters";
 
 const ProfilePage: React.FC = () => {
     const { profile, loading, error } = useUserProfile();
@@ -40,7 +41,7 @@ const ProfilePage: React.FC = () => {
         );
     }
 
-    const role = profile?.role == "Mentor" ? "Ментор" : "Менті";
+    const role = formatRoleName(profile?.role || "");
 
     return (
         <div className="min-h-screen flex bg-[#FFFFFF] overflow-hidden">

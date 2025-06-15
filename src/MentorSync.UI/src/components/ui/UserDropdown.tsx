@@ -1,11 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../features/auth/context/AuthContext";
+import { formatRoleName } from "../../shared/utils/formatters";
+import { UserProfile } from "../../features/auth/hooks/useUserProfile";
 
 interface UserDropdownProps {
     isOpen: boolean;
     onClose: () => void;
-    profile: any; // Use the correct UserProfile type if available
+    profile: UserProfile | null;
     loading: boolean;
 }
 export const UserDropdown: React.FC<UserDropdownProps> = ({
@@ -47,14 +49,14 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
             {" "}
             <div className="border-b border-[#E2E8F0] p-4">
                 <h3 className="text-base font-medium text-[#1E293B]">
-                    {loading ? "Loading..." : profile?.userName || "User"}
+                    {loading ? "Завантаження..." : profile?.userName || "User"}
                 </h3>
                 <p className="text-sm text-[#64748B] break-words">
-                    {profile?.email || "Loading email..."}
+                    {profile?.email || "Емейл..."}
                 </p>
                 {profile?.role && (
                     <span className="text-xs bg-[#4318D1]/10 text-[#4318D1] px-2 py-0.5 rounded-full">
-                        {profile.role === "Mentor" ? "Ментор" : "Менті"}
+                        {formatRoleName(profile.role)}
                     </span>
                 )}
             </div>
@@ -67,15 +69,6 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
                     }}
                 >
                     Профіль
-                </div>
-                <div
-                    className="py-2 cursor-pointer text-[#1E293B] hover:text-[#4318D1]"
-                    onClick={() => {
-                        navigate("/settings");
-                        onClose();
-                    }}
-                >
-                    Налаштування
                 </div>{" "}
                 <div
                     className="py-2 cursor-pointer text-[#DC2626] hover:text-[#B91C1C]"
