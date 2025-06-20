@@ -1354,6 +1354,7 @@
           "FluentValidation.DependencyInjectionExtensions": "[12.0.0, )",
           "MentorSync.Materials.Contracts": "[1.0.0, )",
           "MentorSync.SharedKernel": "[1.0.0, )",
+          "MentorSync.Users.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[9.0.6, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )"
         }

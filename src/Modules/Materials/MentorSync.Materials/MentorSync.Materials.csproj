@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\Users\MentorSync.Users.Contracts\MentorSync.Users.Contracts.csproj" />
     <ProjectReference Include="..\MentorSync.Materials.Contracts\MentorSync.Materials.Contracts.csproj" />
   </ItemGroup>
 

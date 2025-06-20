@@ -38,11 +38,11 @@ public sealed class GetRecommendedMentorsQueryHandler(
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            var searchTerm = request.SearchTerm.ToLower();
-            mentorsQuery = mentorsQuery.Where(m =>
-                m.Name.ToLower().Contains(searchTerm) ||
-                m.Title.ToLower().Contains(searchTerm) ||
-                m.Skills.Any(s => s.ToLower().Contains(searchTerm)));
+            var pattern = $"%{request.SearchTerm.ToLower()}%";
+            mentorsQuery = mentorsQuery
+                .Where(m => EF.Functions.ILike(m.Name, pattern) ||
+                            EF.Functions.ILike(m.Title, pattern) ||
+                            m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
         }
 
         if (request.ProgrammingLanguages != null && request.ProgrammingLanguages.Count != 0)

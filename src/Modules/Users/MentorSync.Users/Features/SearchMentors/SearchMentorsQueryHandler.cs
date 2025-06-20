@@ -30,11 +30,11 @@ public sealed partial class SearchMentorsQueryHandler(
 
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
-            var searchTerm = request.SearchTerm.ToLower();
-            mentorsQuery = mentorsQuery.Where(m =>
-                EF.Functions.ILike(m.Name, $"%{request.SearchTerm}%") ||
-                EF.Functions.ILike(m.Title, $"%{request.SearchTerm}%") ||
-                m.Skills.Any(skill => EF.Functions.ILike(skill, $"%{request.SearchTerm}%")));
+            var pattern = $"%{request.SearchTerm.ToLower()}%";
+            mentorsQuery = mentorsQuery
+                .Where(m => EF.Functions.ILike(m.Name, pattern) ||
+                            EF.Functions.ILike(m.Title, pattern) ||
+                            m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
         }
 
         if (request.ProgrammingLanguages != null && request.ProgrammingLanguages.Count != 0)
@@ -70,15 +70,12 @@ public sealed partial class SearchMentorsQueryHandler(
         mentorsQuery = mentorsQuery.Where(m => m.IsActive);
         mentorsQuery = mentorsQuery.OrderByDescending(m => m.Rating);
 
-        // Get total count before pagination
         var totalCount = await mentorsQuery.CountAsync(cancellationToken);
 
-        // Apply pagination
         mentorsQuery = mentorsQuery
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize);
 
-        // Execute the query
         var mentors = await mentorsQuery.ToListAsync(cancellationToken);
         var items = mentors.Select(m => new MentorSearchResponse(
             m.Id,

@@ -7,12 +7,19 @@ namespace MentorSync.Users.Services;
 
 public sealed class MentorProfileService(UsersDbContext usersDbContext) : IMentorProfileService
 {
-    public async Task<IEnumerable<MentorProfileModel>> GetAllMentorsAsync()
+    public async Task<IEnumerable<MentorProfileModel>> GetAllMentorsAsync(params int[] mentorIds)
     {
-        var result = await usersDbContext.MentorProfiles
+        var query = usersDbContext.MentorProfiles.AsNoTracking();
+        if (mentorIds.Length > 0)
+        {
+            query = query.Where(x => mentorIds.Contains(x.Id));
+        }
+
+        var result = await query
             .Select(x => new MentorProfileModel
             {
                 Id = x.Id,
+                UserName = x.User.UserName,
                 ProgrammingLanguages = x.ProgrammingLanguages,
                 ExperienceYears = x.ExperienceYears,
                 Industry = x.Industries,

@@ -81,11 +81,11 @@ public class AddTagsToMaterialCommandHandler(
             var response = new AddTagsResponse
             {
                 MaterialId = material.Id,
-                Tags = material.Tags.Select(t => new TagInfo
+                Tags = [.. material.Tags.Select(t => new TagInfo
                 {
                     Id = t.Id,
                     Name = t.Name
-                }).ToList()
+                })]
             };
 
             return Result.Success(response);
