@@ -57,11 +57,12 @@ const ProfilePage: React.FC = () => {
                     <ProfileSkeleton />
                 ) : (
                     <div className="max-w-4xl mx-auto">
+                        {" "}
                         <ProfileHeader
                             userName={profile?.userName || ""}
                             profileImageUrl={profile?.profileImageUrl || ""}
+                            userRole={profile?.role}
                         />
-
                         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="col-span-1">
                                 <ProfileInfoCard

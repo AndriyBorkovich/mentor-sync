@@ -12,6 +12,8 @@ import MessagesPage from "./features/messages/pages/MessagesPage";
 import MaterialsPage from "./features/materials/pages/MaterialsPage";
 import MaterialViewPage from "./features/materials/pages/MaterialViewPage";
 import ProfilePage from "./features/profile/pages/ProfilePage";
+import MentorProfileEditPage from "./features/profile/pages/MentorProfileEditPage";
+import MenteeProfileEditPage from "./features/profile/pages/MenteeProfileEditPage";
 import SettingsPage from "./features/settings/pages/SettingsPage";
 import { OnboardingPage } from "./features/onboarding";
 import { ProtectedRoute } from "./features/auth/components/ProtectedRoute";
@@ -71,6 +73,34 @@ const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <ProfilePage />,
+            },
+            {
+                element: (
+                    <RoleBasedRoute
+                        allowedRoles={["Mentor", "Admin"]}
+                        redirectTo="/unauthorized"
+                    />
+                ),
+                children: [
+                    {
+                        path: "/profile/edit/mentor",
+                        element: <MentorProfileEditPage />,
+                    },
+                ],
+            },
+            {
+                element: (
+                    <RoleBasedRoute
+                        allowedRoles={["Mentee", "Admin"]}
+                        redirectTo="/unauthorized"
+                    />
+                ),
+                children: [
+                    {
+                        path: "/profile/edit/mentee",
+                        element: <MenteeProfileEditPage />,
+                    },
+                ],
             },
             {
                 path: "/bookings",

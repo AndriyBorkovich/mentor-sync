@@ -69,12 +69,9 @@ export const useUserProfile = () => {
         fetchUserProfile();
     }, [isAuthenticated]);
 
-    const updateProfile = async (
-        data: Partial<UserProfile>
-    ): Promise<boolean> => {
+    const updateProfile = async (): Promise<boolean> => {
         try {
             setLoading(true);
-            await api.put("/users/profile", data);
 
             // Refresh profile data
             const response = await api.get("/users/profile");

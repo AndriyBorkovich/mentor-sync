@@ -1,14 +1,27 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileHeaderProps {
     userName: string;
     profileImageUrl?: string;
+    userRole?: string;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     userName,
     profileImageUrl,
+    userRole,
 }) => {
+    const navigate = useNavigate();
+
+    const handleEditProfile = () => {
+        if (userRole?.toLowerCase() === "mentor") {
+            navigate("/profile/edit/mentor");
+        } else {
+            navigate("/profile/edit/mentee");
+        }
+    };
+
     return (
         <div className="bg-white rounded-lg shadow p-6">
             <div className="flex flex-col md:flex-row items-center">
@@ -31,7 +44,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     </h1>
                 </div>
                 <div className="flex-1 flex justify-end mt-4 md:mt-0">
-                    <button className="bg-white border border-primary text-primary hover:bg-primary hover:text-white transition-colors px-4 py-2 rounded-lg">
+                    <button
+                        onClick={handleEditProfile}
+                        className="bg-white border border-primary text-primary hover:bg-primary hover:text-white transition-colors px-4 py-2 rounded-lg"
+                    >
                         Редагувати профіль
                     </button>
                 </div>

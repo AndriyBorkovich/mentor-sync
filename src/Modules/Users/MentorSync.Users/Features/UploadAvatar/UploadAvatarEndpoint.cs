@@ -29,6 +29,7 @@ public sealed class UploadAvatarEndpoint : IEndpoint
         .Accepts<IFormFile>("multipart/form-data")
         .Produces<string>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .RequireAuthorization();
+        .RequireAuthorization(PolicyConstants.ActiveUserOnly)
+        .DisableAntiforgery();
     }
 }
