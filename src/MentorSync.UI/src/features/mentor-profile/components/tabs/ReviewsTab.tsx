@@ -17,18 +17,32 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({
 
     // Calculated values
     const totalRating = mentor.rating;
-    const totalReviews = isMentorProfile(mentor) ? mentor.reviewCount : 0;
-
-    // Format the date from ISO string with time since
+    const totalReviews = isMentorProfile(mentor) ? mentor.reviewCount : 0; // Format the date from ISO string with time since
     const formatReviewDate = (dateString: string): string => {
         const date = new Date(dateString);
         const today = new Date();
-        const diffTime = Math.abs(today.getTime() - date.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // Check if the date is today by comparing year, month, and day
+        const isToday =
+            date.getFullYear() === today.getFullYear() &&
+            date.getMonth() === today.getMonth() &&
+            date.getDate() === today.getDate();
+
+        // Check if the date is yesterday
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const isYesterday =
+            date.getFullYear() === yesterday.getFullYear() &&
+            date.getMonth() === yesterday.getMonth() &&
+            date.getDate() === yesterday.getDate();
+
+        // For older dates, calculate the difference in days
+        const diffTime = today.getTime() - date.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
         if (diffDays < 7) {
-            if (diffDays === 0) return "Сьогодні";
-            if (diffDays === 1) return "Вчора";
+            if (isToday) return "Сьогодні";
+            if (isYesterday) return "Вчора";
             return `${diffDays} днів тому`;
         }
 

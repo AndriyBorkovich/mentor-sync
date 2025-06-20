@@ -108,7 +108,7 @@ const MaterialReviewContainer: React.FC<MaterialReviewContainerProps> = ({
                 });
             }
 
-            // Refresh reviews list
+            // Refresh reviews list with full data to update ratings and review count
             const updatedReviews = await getMaterialReviews(materialId);
             setReviewsData(updatedReviews);
         } catch (error) {
@@ -126,12 +126,10 @@ const MaterialReviewContainer: React.FC<MaterialReviewContainerProps> = ({
             setIsSubmitting(true);
             try {
                 await deleteMaterialReview(userReview.reviewId, userId);
-                toast.success("Відгук успішно видалено");
-
-                // Update local state
+                toast.success("Відгук успішно видалено"); // Update local state
                 setUserReview(null);
 
-                // Refresh reviews list
+                // Refresh reviews list with full data to update ratings and review count
                 const updatedReviews = await getMaterialReviews(materialId);
                 setReviewsData(updatedReviews);
             } catch (error) {

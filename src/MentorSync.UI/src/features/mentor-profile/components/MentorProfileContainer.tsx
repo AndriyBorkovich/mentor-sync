@@ -280,17 +280,43 @@ const MentorProfileContainer: React.FC = () => {
         loadingMaterials,
         reviewsRefreshTrigger,
     ]);
-
     const handleTabChange = (tab: ProfileTabType) => {
         setActiveTab(tab);
-    }; // Method to refresh reviews data
-    const handleRefreshReviews = () => {
+    };
+
+    // Method to refresh reviews data
+    const handleRefreshReviews = async () => {
         // Only refresh if we're not already loading
         if (!loadingReviews && reviewsRefreshTrigger === 0) {
             // Reset review loaded state to force reload
             reviewsLoadedRef.current = false;
+
             // Set the refresh trigger to 1 to indicate a refresh is needed
             setReviewsRefreshTrigger(1);
+
+            // Also fetch the basic info again to update rating and review count
+            if (mentorId) {
+                try {
+                    setLoadingBasicInfo(true);
+                    const mentorIdInt = parseInt(mentorId, 10);
+                    const basicInfoData = await getMentorBasicInfo(mentorIdInt);
+
+                    // Transform skill IDs to string
+                    const updatedBasicInfo = {
+                        ...basicInfoData,
+                        skills: basicInfoData.skills.map((skill) => ({
+                            ...skill,
+                            id: ensureStringId(skill.id),
+                        })),
+                    };
+
+                    setBasicInfo(updatedBasicInfo);
+                } catch (err) {
+                    console.error("Failed to refresh basic info:", err);
+                } finally {
+                    setLoadingBasicInfo(false);
+                }
+            }
         }
     };
 

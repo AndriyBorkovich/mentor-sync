@@ -22,8 +22,35 @@ const MaterialReviews: React.FC<MaterialReviewsProps> = ({
     reviewCount,
     averageRating,
 }) => {
-    const formatDate = (date: string): string => {
-        return new Date(date).toLocaleDateString("uk-UA", {
+    const formatDate = (dateString: string): string => {
+        const date = new Date(dateString);
+        const today = new Date();
+
+        // Check if the date is today by comparing year, month, and day
+        const isToday =
+            date.getFullYear() === today.getFullYear() &&
+            date.getMonth() === today.getMonth() &&
+            date.getDate() === today.getDate();
+
+        // Check if the date is yesterday
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const isYesterday =
+            date.getFullYear() === yesterday.getFullYear() &&
+            date.getMonth() === yesterday.getMonth() &&
+            date.getDate() === yesterday.getDate();
+
+        // For older dates, calculate the difference in days
+        const diffTime = today.getTime() - date.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 7) {
+            if (isToday) return "Сьогодні";
+            if (isYesterday) return "Вчора";
+            return `${diffDays} днів тому`;
+        }
+
+        return date.toLocaleDateString("uk-UA", {
             day: "numeric",
             month: "long",
             year: "numeric",
