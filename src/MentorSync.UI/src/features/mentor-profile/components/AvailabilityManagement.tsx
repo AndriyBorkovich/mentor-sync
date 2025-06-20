@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
     getMentorAvailability,
     createMentorAvailability,
+    deleteMentorAvailability,
     MentorAvailabilitySlot,
 } from "../../scheduling/services/schedulingService";
 import { toast } from "react-toastify";
@@ -112,7 +113,38 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
         });
     };
 
-    // Handle creating a new availability slot
+    // Handle creating a new availability slot    // Handle deleting an availability slot
+    const handleDeleteSlot = async (slotId: number) => {
+        if (!isMentor || !mentorId) {
+            toast.warning("Тільки ментори можуть видаляти доступні слоти часу");
+            return;
+        }
+
+        if (
+            window.confirm(
+                "Ви впевнені, що хочете видалити цей слот часу? Якщо слот заброньований, бронювання також буде видалено."
+            )
+        ) {
+            try {
+                setIsLoading(true);
+                await deleteMentorAvailability(mentorId, slotId);
+
+                // Remove the slot from the local state
+                const updatedSlots = availabilitySlots.filter(
+                    (slot) => slot.id !== slotId
+                );
+                setAvailabilitySlots(updatedSlots);
+
+                toast.success("Слот часу успішно видалено");
+            } catch (error) {
+                console.error("Failed to delete availability slot:", error);
+                toast.error("Не вдалося видалити слот часу");
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
     const handleCreateSlot = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -303,6 +335,7 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                         </div>
                     ) : (
                         <div className="space-y-3">
+                            {" "}
                             {filteredSlots?.map((slot) => (
                                 <div
                                     key={slot.id}
@@ -315,16 +348,31 @@ const AvailabilityManagement: React.FC<AvailabilityManagementProps> = ({
                                                 {formatTime(slot.end)}
                                             </div>
                                         </div>
-                                        <div
-                                            className={
-                                                slot.isBooked
-                                                    ? "bg-red-100 text-red-800 text-xs py-1 px-2 rounded"
-                                                    : "bg-green-100 text-green-800 text-xs py-1 px-2 rounded"
-                                            }
-                                        >
-                                            {slot.isBooked
-                                                ? "Заброньований"
-                                                : "Доступний"}
+                                        <div className="flex items-center space-x-2">
+                                            <div
+                                                className={
+                                                    slot.isBooked
+                                                        ? "bg-red-100 text-red-800 text-xs py-1 px-2 rounded"
+                                                        : "bg-green-100 text-green-800 text-xs py-1 px-2 rounded"
+                                                }
+                                            >
+                                                {slot.isBooked
+                                                    ? "Заброньований"
+                                                    : "Доступний"}
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleDeleteSlot(slot.id);
+                                                }}
+                                                className="text-red-600 hover:text-red-800 p-1 rounded transition-colors"
+                                                title="Видалити слот"
+                                                aria-label="Видалити слот"
+                                            >
+                                                <span className="material-icons text-sm">
+                                                    delete
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

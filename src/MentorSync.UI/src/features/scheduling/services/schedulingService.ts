@@ -85,6 +85,19 @@ export const createMentorAvailability = async (
 };
 
 /**
+ * Deletes an availability slot for a mentor
+ * Also deletes any associated bookings
+ */
+export const deleteMentorAvailability = async (
+    mentorId: number,
+    availabilityId: number
+): Promise<void> => {
+    await api.delete(
+        `scheduling/mentors/${mentorId}/availability/${availabilityId}`
+    );
+};
+
+/**
  * Gets bookings for a mentee
  */
 export const getMenteeBookings = async (): Promise<BookingSession[]> => {
