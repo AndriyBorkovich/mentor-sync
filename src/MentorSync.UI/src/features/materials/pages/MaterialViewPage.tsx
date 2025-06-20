@@ -62,14 +62,11 @@ const MaterialViewPage: React.FC = () => {
                             fileUrl: att.fileUrl,
                             fileSize: att.fileSize,
                             contentType: att.contentType,
-                            uploadedAt: att.uploadedAt, // keep as string
+                            uploadedAt: att.uploadedAt,
                         })) || [],
                 };
 
                 setMaterial(uiMaterial);
-
-                // Set document title
-                document.title = `${uiMaterial.title} | MentorSync Materials`;
             } catch (err) {
                 toast.error("Failed to load material");
                 console.error("Error fetching material:", err);

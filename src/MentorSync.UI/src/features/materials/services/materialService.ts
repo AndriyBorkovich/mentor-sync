@@ -72,12 +72,17 @@ export const getMaterials = async (
             queryParams.append("sortBy", filters.sortBy);
         }
 
+        console.log("API call with pageNumber:", filters?.pageNumber);
         queryParams.append(
             "pageNumber",
             filters?.pageNumber?.toString() || "1"
         );
         queryParams.append("pageSize", filters?.pageSize?.toString() || "10");
-        const response = await api.get(`/materials?${queryParams.toString()}`);
+
+        const url = `/materials?${queryParams.toString()}`;
+        console.log("API request URL:", url);
+
+        const response = await api.get(url);
         return response.data;
     } catch (error) {
         console.error("Failed to fetch materials:", error);

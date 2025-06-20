@@ -91,7 +91,7 @@ const SessionsContent: React.FC = () => {
                 setBookings(
                     bookings.map((booking) =>
                         booking.id === bookingId
-                            ? { ...booking, status: "cancelled" }
+                            ? { ...booking, status: "Cancelled" }
                             : booking
                     )
                 );

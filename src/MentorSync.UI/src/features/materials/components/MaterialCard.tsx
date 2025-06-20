@@ -13,7 +13,6 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
 }) => {
     const navigate = useNavigate();
 
-    // Type guard to check if material is a RecommendedMaterial
     const isRecommendedMaterial = (
         material: Material | RecommendedMaterial
     ): material is RecommendedMaterial => {
@@ -28,7 +27,6 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
         navigate(`/materials/${material.id}`);
     };
 
-    // Function to determine icon based on material type
     const getTypeIcon = (type: string) => {
         switch (type) {
             case "document":
@@ -44,7 +42,6 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
         }
     };
 
-    // Format score to percentages with 1 decimal place
     const formatScore = (score: number) => {
         return `${(score ?? 0).toFixed(1)}`;
     };

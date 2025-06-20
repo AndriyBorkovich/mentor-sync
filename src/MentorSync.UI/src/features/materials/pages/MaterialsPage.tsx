@@ -98,7 +98,7 @@ const MaterialsPage: React.FC = () => {
                         tags: filters.tags,
                         pageNumber: filters.pageNumber,
                         pageSize: filters.pageSize,
-                    }); // Map API recommended materials to UI format
+                    });
                     const uiRecommendedMaterials = response.items.map(
                         (item) => ({
                             id: item.id,
@@ -232,9 +232,11 @@ const MaterialsPage: React.FC = () => {
                     </div>
                     {/* Tab navigation */}
                     <div className="container mx-auto px-4 border-b border-[#E2E8F0]">
-                        <div className="flex space-x-8">
-                            <button
-                                onClick={() => setActiveTab("allMaterials")}
+                        <div className="flex space-x-8">                            <button
+                                onClick={() => {
+                                    setActiveTab("allMaterials");
+                                    setFilters({...filters, pageNumber: 1}); // Reset to first page when changing tabs
+                                }}
                                 className={`py-4 px-1 font-medium text-sm border-b-2 transition-colors ${
                                     activeTab === "allMaterials"
                                         ? "border-[#6C5DD3] text-[#6C5DD3]"
@@ -245,9 +247,10 @@ const MaterialsPage: React.FC = () => {
                             </button>
                             {isMentee && (
                                 <button
-                                    onClick={() =>
-                                        setActiveTab("recommendedMaterials")
-                                    }
+                                    onClick={() => {
+                                        setActiveTab("recommendedMaterials");
+                                        setFilters({...filters, pageNumber: 1}); // Reset to first page when changing tabs
+                                    }}
                                     className={`py-4 px-1 font-medium text-sm border-b-2 transition-colors ${
                                         activeTab === "recommendedMaterials"
                                             ? "border-[#6C5DD3] text-[#6C5DD3]"

@@ -26,17 +26,16 @@ const MaterialsContent: React.FC<MaterialsContentProps> = ({
     isRecommended = false,
 }) => {
     // Use the current page directly from filters
-    const currentPage = currentFilters.pageNumber;
-
-    // Extract all unique tags from materials
+    const currentPage = currentFilters.pageNumber; // Extract all unique tags from materials
     const allTags = Array.from(
         new Set(materials.flatMap((material) => material.tags || []))
-    ).sort(); // Handle page change
-    const handlePageChange = (page: number) => {
-        onFilterChange({ ...currentFilters, pageNumber: page });
-    };
+    ).sort();
 
-    // Handle filter changes
+    // Handle page change
+    const handlePageChange = (page: number) => {
+        console.log("Changing to page:", page);
+        onFilterChange({ ...currentFilters, pageNumber: page });
+    }; // Handle filter changes
     const handleFilterUpdate = (newFilters: {
         search?: string;
         types?: string[];
@@ -46,14 +45,12 @@ const MaterialsContent: React.FC<MaterialsContentProps> = ({
         onFilterChange({
             ...currentFilters,
             ...newFilters,
-            pageNumber: currentPage,
+            pageNumber: 1, // Reset to page 1 when filters change
         });
     };
 
-    // Use server-side pagination with the total count from API
     const itemsPerPage = currentFilters.pageSize;
 
-    // Calculate total pages based on the total count received from API response
     const totalPages = Math.max(1, Math.ceil(totalCount / itemsPerPage));
 
     // Generate page numbers

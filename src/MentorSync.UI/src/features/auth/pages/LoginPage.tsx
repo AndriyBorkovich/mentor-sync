@@ -17,7 +17,6 @@ const LoginPage: React.FC = () => {
 
     // Debug log for authentication state
     useEffect(() => {
-
         // If already authenticated, redirect to appropriate page
         if (isAuthenticated) {
             const userRoleToUse = userRole || getUserRole() || "mentee";
@@ -58,18 +57,13 @@ const LoginPage: React.FC = () => {
             const response = await authService.login(data);
 
             if (response?.success) {
-                // Update auth context with the successful login
                 loginUser(response);
 
-                // Explicitly verify authentication status
                 await verifyAuthStatus();
 
-                // Check if user needs onboarding based on API response
                 const userRoleToUse = userRole || getUserRole() || "mentee";
 
-                // Add a small delay to ensure auth context state is updated before navigation
                 setTimeout(() => {
-
                     if (response.needOnboarding) {
                         // User needs onboarding
                         navigate(`/onboarding/${userRoleToUse}`, {
@@ -78,15 +72,19 @@ const LoginPage: React.FC = () => {
                     } else {
                         if (userRoleToUse.toLocaleLowerCase() === "mentor") {
                             navigate("/sessions", { replace: true });
-                        } else {
+                        } else if (
+                            userRoleToUse.toLocaleLowerCase() === "mentee"
+                        ) {
                             navigate("/dashboard", { replace: true });
+                        } else {
+                            navigate("/settings", { replace: true }); // admin
                         }
                     }
 
                     setIsSubmitting(false);
-                }, 100); // Small delay to allow state updates
+                }, 100);
 
-                return; // Return early since we'll set isSubmitting to false in the timeout
+                return;
             } else {
                 setErrorMessage("Помилка входу. Невірний email або пароль.");
             }
@@ -94,7 +92,6 @@ const LoginPage: React.FC = () => {
             console.error("Login error:", error);
             setErrorMessage("Помилка зєднання з сервером. Спробуйте пізніше.");
         } finally {
-            // Only set isSubmitting to false if we didn't return early
             setIsSubmitting(false);
         }
     };
