@@ -26,7 +26,11 @@ public sealed class Worker(
         {
             using var scope = serviceProvider.CreateScope();
 
-            // CleanDbContext<UsersDbContext>(scope.ServiceProvider);            
+            /*CleanDbContext<UsersDbContext>(scope.ServiceProvider);           
+            CleanDbContext<SchedulingDbContext>(scope.ServiceProvider);           
+            CleanDbContext<MaterialsDbContext>(scope.ServiceProvider);           
+            CleanDbContext<RatingsDbContext>(scope.ServiceProvider);           
+            CleanDbContext<RecommendationsDbContext>(scope.ServiceProvider);*/           
 
             await MigrateAsync<UsersDbContext>(
                 scope.ServiceProvider,
@@ -42,19 +46,20 @@ public sealed class Worker(
                 postMigrationSteps:
                     [() => MentorAvailabilitySeeder.SeedAsync(scope.ServiceProvider, logger)]);
 
+            await MigrateAsync<RecommendationsDbContext>(scope.ServiceProvider, cancellationToken);
+
+            await MigrateAsync<RatingsDbContext>(
+              scope.ServiceProvider,
+              cancellationToken,
+              postMigrationSteps:
+                  [() => MentorReviewsSeeder.SeedAsync(scope.ServiceProvider, logger)]);
+
             await MigrateAsync<MaterialsDbContext>(
                 scope.ServiceProvider,
                 cancellationToken,
                 postMigrationSteps:
                     [() => LearningMaterialsSeeder.SeedAsync(scope.ServiceProvider, logger)]);
 
-            await MigrateAsync<RatingsDbContext>(
-                scope.ServiceProvider,
-                cancellationToken,
-                postMigrationSteps:
-                    [() => MentorReviewsSeeder.SeedAsync(scope.ServiceProvider, logger)]);
-
-            await MigrateAsync<RecommendationsDbContext>(scope.ServiceProvider, cancellationToken);
 
             logger.LogInformation("Migrated database successfully.");
         }
