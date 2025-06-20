@@ -48,6 +48,10 @@ export const getUserMaterialReview = async (
         `/ratings/materials/${materialId}/user/${userId}/review`
     );
 
+    if (response.status === 204) {
+        return null;
+    }
+
     return response.data;
 };
 
@@ -82,7 +86,13 @@ export const updateMaterialReview = async (
     reviewText: string
 ): Promise<void> => {
     try {
-        await api.put(`/ratings/materials/reviews/${reviewId}`, {
+        // Make sure the review ID is defined before making the request
+        if (!reviewId || isNaN(reviewId)) {
+            throw new Error("Review ID is required for updating a review");
+        }
+
+        await api.put(`/ratings/reviews/material`, {
+            reviewId,
             reviewerId,
             rating,
             reviewText,

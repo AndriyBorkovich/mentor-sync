@@ -274,7 +274,7 @@ public class {faker.Hacker.Noun()}Service
 Thank you for reading this guide about {title}. Apply these concepts in your projects to write better, more maintainable code.
 
 ---
-*Last updated: {faker.Date.Recent():MMMM d, yyyy}*";
+*Дата останнього оновлення: {faker.Date.Recent():MMMM d, yyyy}*";
     }
     private static string GenerateReviewComment(Faker faker, int rating)
     {
