@@ -4,10 +4,7 @@ using MentorSync.MigrationService.Seeders;
 using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
 using MentorSync.Scheduling.Data;
-using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
-using MentorSync.Users.Domain.Role;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -35,7 +32,7 @@ public sealed class Worker(
                 scope.ServiceProvider,
                 cancellationToken,
                 postMigrationSteps:
-                    [SeedRolesAsync,
+                    [() => RolesSeeder.SeedAsync(scope.ServiceProvider),
                     () => MentorsSeeder.SeedAsync(scope.ServiceProvider, logger),
                     () => MenteesSeeder.SeedAsync(scope.ServiceProvider, logger)]);
 
@@ -118,32 +115,5 @@ public sealed class Worker(
         {
             await dbContext.Database.MigrateAsync(cancellationToken);
         });
-    }
-
-    private async Task SeedRolesAsync()
-    {
-        using var scope = serviceProvider.CreateScope();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
-
-        await CreateRole(Roles.Admin);
-        await CreateRole(Roles.Mentor);
-        await CreateRole(Roles.Mentee);
-
-        return;
-
-        async Task CreateRole(string roleName)
-        {
-            var appRole = await roleManager.FindByNameAsync(roleName);
-
-            if (appRole is null)
-            {
-                appRole = new AppRole
-                {
-                    Name = roleName
-                };
-
-                await roleManager.CreateAsync(appRole);
-            }
-        }
     }
 }
