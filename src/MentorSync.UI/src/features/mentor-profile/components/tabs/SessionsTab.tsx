@@ -119,11 +119,11 @@ const SessionsTab: React.FC<SessionsTabProps> = ({ mentor }) => {
     // Translate booking status to Ukrainian
     const translateBookingStatus = (status: string): string => {
         const statusMap: Record<string, string> = {
-            pending: "Очікується",
-            ponfirmed: "Підтверджено",
-            pompleted: "Завершено",
-            cancelled: "Скасовано",
-            scheduled: "Заплановано",
+            Pending: "Очікується",
+            Confirmed: "Підтверджено",
+            Completed: "Завершено",
+            Cancelled: "Скасовано",
+            Scheduled: "Заплановано",
         };
 
         return statusMap[status] || status;

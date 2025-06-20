@@ -14,22 +14,26 @@ public sealed class GetMentorUpcomingSessionsQueryHandler(
     {
         var now = DateTimeOffset.UtcNow;
 
-        var sessions = await dbContext.Bookings
-            .Where(b =>
-                b.MentorId == request.MentorId &&
-                b.Start > now &&
-                b.Status == BookingStatus.Pending)
-            .OrderBy(b => b.Start)
-            .Select(booking => new SessionInfo
-            {
-                Id = booking.Id,
-                Title = $"Session with",
-                Description = "Mentoring Session",
-                StartTime = booking.Start,
-                EndTime = booking.End,
-                Status = booking.Status.ToString(),
-            })
-            .Take(5)
+        var sessions = await dbContext.Database
+            .SqlQuery<SessionInfo>(
+            $@"
+                SELECT 
+                b.""Id"",
+                'Сесія з ' || u.""UserName"" AS ""Title"",
+                'Mentoring Session' AS ""Description"",
+                b.""Start"" AS ""StartTime"",
+                b.""End"" AS ""EndTime"",
+                CAST(b.""Status"" AS varchar) AS ""Status"",
+                u.""UserName"" AS ""MenteeName"",
+                u.""ProfileImageUrl"" AS ""MenteeImage""
+                FROM scheduling.""Bookings"" b
+                INNER JOIN users.""Users"" u ON b.""MenteeId"" = u.""Id""
+                WHERE 
+                b.""MentorId"" = {request.MentorId}
+                AND b.""Status"" = {BookingStatus.Pending.ToString()}
+                ORDER BY b.""Start""
+                OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY")
+            .Where(s => s.StartTime > now)
             .ToListAsync(cancellationToken);
 
 
