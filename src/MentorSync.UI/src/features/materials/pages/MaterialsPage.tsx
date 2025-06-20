@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Sidebar from "../../../components/layout/Sidebar";
 import Header from "../../../components/layout/Header";
 import MaterialsContent from "../components/MaterialsContent";
@@ -32,119 +32,146 @@ const MaterialsPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<TabType>("allMaterials");
+    // Separate filter state from pagination state to prevent unnecessary rerenders
     const [filters, setFilters] = useState({
         search: "",
         types: [] as string[],
         tags: [] as string[],
         sortBy: "newest",
+    });
+
+    const [pagination, setPagination] = useState({
         pageNumber: 1,
         pageSize: 12,
     });
-
     const isMentor = hasRole("Mentor");
-    const isMentee = hasRole("Mentee"); // Fetch materials when component mounts or filters change
-    useEffect(() => {
-        const fetchMaterials = async () => {
-            setIsLoading(true);
-            try {
-                if (activeTab === "allMaterials") {
-                    const response = await getMaterials({
-                        search: filters.search,
-                        types: filters.types,
-                        tags: filters.tags,
-                        sortBy: filters.sortBy,
-                        pageNumber: filters.pageNumber,
-                        pageSize: filters.pageSize,
-                    });
+    const isMentee = hasRole("Mentee");
 
-                    // Map API materials to UI format
-                    const uiMaterials = response.items.map((item) => ({
-                        id: item.id.toString(),
-                        title: item.title,
-                        description: item.description,
-                        type: mapMaterialType(item.type),
-                        mentorName: item.mentorName || "Unknown Mentor",
-                        mentorId: item.mentorId,
-                        createdAt: new Date(item.createdAt).toLocaleDateString(
-                            "uk-UA",
-                            {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric",
-                            }
-                        ),
-                        tags: item.tags?.map((tag) => tag.name) || [],
-                        content: item.contentMarkdown,
-                        fileSize:
-                            item.attachments && item.attachments.length > 0
-                                ? `${(
-                                      item.attachments[0].fileSize /
-                                      (1024 * 1024)
-                                  ).toFixed(1)} MB`
-                                : undefined,
-                        url:
-                            item.attachments && item.attachments.length > 0
-                                ? item.attachments[0].fileUrl
-                                : undefined,
-                    }));
-                    setMaterials(uiMaterials);
-                    setTotalCount(response.totalCount || uiMaterials.length);
-                    setError(null);
-                } else {
-                    // Fetch recommended materials
-                    const response = await getRecommendedMaterials({
-                        searchTerm: filters.search,
-                        types: filters.types,
-                        tags: filters.tags,
-                        pageNumber: filters.pageNumber,
-                        pageSize: filters.pageSize,
-                    });
-                    const uiRecommendedMaterials = response.items.map(
-                        (item) => ({
-                            id: item.id,
-                            title: item.title,
-                            description: item.description,
-                            type: mapMaterialType(item.type) as
-                                | "document"
-                                | "video"
-                                | "link"
-                                | "presentation",
-                            mentorName: item.mentorName,
-                            mentorId: item.mentorId,
-                            createdAt: new Date(
-                                item.createdAt
-                            ).toLocaleDateString("uk-UA", {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric",
-                            }),
-                            tags: item.tags || [],
-                            url: item.url,
-                            fileSize: item.fileSize,
-                            // Add recommendation score fields
-                            collaborativeScore: item.collaborativeScore,
-                            contentBasedScore: item.contentBasedScore,
-                            finalScore: item.finalScore,
-                        })
-                    );
+    // Memoize the combined filters object to prevent recreation on every render
+    const combinedFilters = useMemo(
+        () => ({
+            ...filters,
+            ...pagination,
+        }),
+        [filters, pagination]
+    ); // Memoize the mapper functions to avoid recreating them on every render
+    const mapAPIToUIMaterials = useCallback(
+        (item: any) => ({
+            id: item.id.toString(),
+            title: item.title,
+            description: item.description,
+            type: mapMaterialType(item.type),
+            mentorName: item.mentorName || "Unknown Mentor",
+            mentorId: item.mentorId,
+            createdAt: new Date(item.createdAt).toLocaleDateString("uk-UA", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+            }),
+            tags: item.tags?.map((tag: any) => tag.name) || [],
+            content: item.contentMarkdown,
+            fileSize:
+                item.attachments && item.attachments.length > 0
+                    ? `${(item.attachments[0].fileSize / (1024 * 1024)).toFixed(
+                          1
+                      )} MB`
+                    : undefined,
+            url:
+                item.attachments && item.attachments.length > 0
+                    ? item.attachments[0].fileUrl
+                    : undefined,
+        }),
+        []
+    );
 
-                    setRecommendedMaterials(uiRecommendedMaterials);
-                    setRecommendedTotalCount(
-                        response.totalCount || uiRecommendedMaterials.length
-                    );
-                    setError(null);
-                }
-            } catch (err) {
-                console.error("Error fetching materials:", err);
-                setError("Failed to load materials. Please try again later.");
-                toast.error("Не вдалося завантажити матеріали");
-            } finally {
-                setIsLoading(false);
+    const mapAPIToUIRecommendedMaterials = useCallback(
+        (item: any) => ({
+            id: item.id,
+            title: item.title,
+            description: item.description,
+            type: mapMaterialType(item.type) as
+                | "document"
+                | "video"
+                | "link"
+                | "presentation",
+            mentorName: item.mentorName,
+            mentorId: item.mentorId,
+            createdAt: new Date(item.createdAt).toLocaleDateString("uk-UA", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+            }),
+            tags: item.tags || [],
+            url: item.url,
+            fileSize: item.fileSize,
+            // Add recommendation score fields
+            collaborativeScore: item.collaborativeScore,
+            contentBasedScore: item.contentBasedScore,
+            finalScore: item.finalScore,
+        }),
+        []
+    );
+
+    // Memoize fetch materials function to avoid recreating it on every render
+    const fetchMaterials = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            // Create a combined request object from filters and pagination
+            const requestParams = {
+                search: filters.search,
+                types: filters.types,
+                tags: filters.tags,
+                sortBy: filters.sortBy,
+                pageNumber: pagination.pageNumber,
+                pageSize: pagination.pageSize,
+            };
+
+            if (activeTab === "allMaterials") {
+                const response = await getMaterials(requestParams);
+
+                // Map API materials to UI format
+                const uiMaterials = response.items.map(mapAPIToUIMaterials);
+                setMaterials(uiMaterials);
+                setTotalCount(response.totalCount || uiMaterials.length);
+                setError(null);
+            } else {
+                // Fetch recommended materials
+                const response = await getRecommendedMaterials({
+                    searchTerm: filters.search,
+                    types: filters.types,
+                    tags: filters.tags,
+                    pageNumber: pagination.pageNumber,
+                    pageSize: pagination.pageSize,
+                });
+                const uiRecommendedMaterials = response.items.map(
+                    mapAPIToUIRecommendedMaterials
+                );
+
+                setRecommendedMaterials(uiRecommendedMaterials);
+                setRecommendedTotalCount(
+                    response.totalCount || uiRecommendedMaterials.length
+                );
+                setError(null);
             }
-        };
+        } catch (err) {
+            console.error("Error fetching materials:", err);
+            setError("Failed to load materials. Please try again later.");
+            toast.error("Не вдалося завантажити матеріали");
+        } finally {
+            setIsLoading(false);
+        }
+    }, [
+        activeTab,
+        filters,
+        pagination,
+        mapAPIToUIMaterials,
+        mapAPIToUIRecommendedMaterials,
+    ]);
 
+    // Fetch materials when component mounts or filters change
+    useEffect(() => {
         fetchMaterials();
-    }, [filters, activeTab]);
+    }, [fetchMaterials]);
 
     const handleSidebarToggle = (expanded: boolean) => {
         setSidebarExpanded(expanded);
@@ -167,24 +194,64 @@ const MaterialsPage: React.FC = () => {
                 await uploadAttachment(newMaterial.id, materialData.file);
             }
 
-            // Refresh the materials list
-            const updatedFilters = { ...filters, pageNumber: 1 };
-            setFilters(updatedFilters);
+            // Refresh the materials list and reset to first page
+            setPagination((prev) => ({ ...prev, pageNumber: 1 }));
 
             toast.success("Матеріал успішно створено");
         } catch (err) {
             console.error("Error uploading material:", err);
             toast.error("Не вдалося створити матеріал");
         }
-    };
+    }; // Memoize handleFilterChange to prevent unnecessary re-renders
+    const handleFilterChange = useCallback((newFilters: any) => {
+        // Handle filter changes (search, types, tags, sortBy)
+        if (
+            newFilters.search !== undefined ||
+            newFilters.types !== undefined ||
+            newFilters.tags !== undefined ||
+            newFilters.sortBy !== undefined
+        ) {
+            setFilters((prevFilters) => ({
+                ...prevFilters,
+                search:
+                    newFilters.search !== undefined
+                        ? newFilters.search
+                        : prevFilters.search,
+                types:
+                    newFilters.types !== undefined
+                        ? newFilters.types
+                        : prevFilters.types,
+                tags:
+                    newFilters.tags !== undefined
+                        ? newFilters.tags
+                        : prevFilters.tags,
+                sortBy:
+                    newFilters.sortBy !== undefined
+                        ? newFilters.sortBy
+                        : prevFilters.sortBy,
+            }));
 
-    const handleFilterChange = (newFilters: any) => {
-        setFilters({
-            ...filters,
-            ...newFilters,
-            pageNumber: 1, // Reset to first page when filters change
-        });
-    };
+            // Reset to first page when search filters change
+            setPagination((prev) => ({ ...prev, pageNumber: 1 }));
+        }
+
+        // Handle pagination changes
+        if (
+            newFilters.pageNumber !== undefined ||
+            newFilters.pageSize !== undefined
+        ) {
+            setPagination((prev) => ({
+                pageNumber:
+                    newFilters.pageNumber !== undefined
+                        ? newFilters.pageNumber
+                        : prev.pageNumber,
+                pageSize:
+                    newFilters.pageSize !== undefined
+                        ? newFilters.pageSize
+                        : prev.pageSize,
+            }));
+        }
+    }, []);
     return (
         <div className="min-h-screen flex bg-[#FFFFFF] overflow-hidden">
             <div
@@ -229,13 +296,20 @@ const MaterialsPage: React.FC = () => {
                                 Додати матеріал
                             </button>
                         )}
-                    </div>
+                    </div>{" "}
                     {/* Tab navigation */}
                     <div className="container mx-auto px-4 border-b border-[#E2E8F0]">
-                        <div className="flex space-x-8">                            <button
+                        <div className="flex space-x-8">
+                            {" "}
+                            <button
                                 onClick={() => {
+                                    // Use callback form to ensure we have the latest state
                                     setActiveTab("allMaterials");
-                                    setFilters({...filters, pageNumber: 1}); // Reset to first page when changing tabs
+                                    // Reset pagination to page 1 when switching tabs but preserve filters
+                                    setPagination((prev) => ({
+                                        ...prev,
+                                        pageNumber: 1,
+                                    }));
                                 }}
                                 className={`py-4 px-1 font-medium text-sm border-b-2 transition-colors ${
                                     activeTab === "allMaterials"
@@ -248,8 +322,13 @@ const MaterialsPage: React.FC = () => {
                             {isMentee && (
                                 <button
                                     onClick={() => {
+                                        // Use callback form to ensure we have the latest state
                                         setActiveTab("recommendedMaterials");
-                                        setFilters({...filters, pageNumber: 1}); // Reset to first page when changing tabs
+                                        // Reset pagination to page 1 when switching tabs but preserve filters
+                                        setPagination((prev) => ({
+                                            ...prev,
+                                            pageNumber: 1,
+                                        }));
                                     }}
                                     className={`py-4 px-1 font-medium text-sm border-b-2 transition-colors ${
                                         activeTab === "recommendedMaterials"
@@ -274,7 +353,7 @@ const MaterialsPage: React.FC = () => {
                                     : recommendedMaterials
                             }
                             onFilterChange={handleFilterChange}
-                            currentFilters={filters}
+                            currentFilters={combinedFilters}
                             totalCount={
                                 activeTab === "allMaterials"
                                     ? totalCount

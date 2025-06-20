@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface MaterialsFilterProps {
     onFilterChange: (filters: {
@@ -36,6 +36,19 @@ const MaterialsFilter: React.FC<MaterialsFilterProps> = ({
     const [types, setTypes] = useState<string[]>(currentFilters.types || []);
     const [tags, setTags] = useState<string[]>(currentFilters.tags || []);
     const [sortBy, setSortBy] = useState(currentFilters.sortBy || "newest");
+
+    // Update local state when props change to keep them in sync
+    useEffect(() => {
+        setSearch(currentFilters.search || "");
+        setTypes(currentFilters.types || []);
+        setTags(currentFilters.tags || []);
+        setSortBy(currentFilters.sortBy || "newest");
+    }, [
+        currentFilters.search,
+        currentFilters.types,
+        currentFilters.tags,
+        currentFilters.sortBy,
+    ]);
     const [showFilters, setShowFilters] = useState(false);
 
     // Material types
