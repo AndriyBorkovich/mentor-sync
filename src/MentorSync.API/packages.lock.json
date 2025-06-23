@@ -34,12 +34,12 @@
       },
       "Microsoft.IdentityModel.Tokens": {
         "type": "Direct",
-        "requested": "[8.12.0, )",
-        "resolved": "8.12.0",
-        "contentHash": "WCU3wv5sioX5hhp3oHw8sCdygnfZJtRKJGCg+AckP6nbp0QGKK3VohTrxIF0dpuziLAPg57CPfS9X8UERroKxA==",
+        "requested": "[8.12.1, )",
+        "resolved": "8.12.1",
+        "contentHash": "DzgPEABn3eZmIk4lhov0QPcoHkIbnAfgkyDPM7uGuWDHeockR9DdqNCD9Zy30hPfExu5VhbOXn9oPRi+tFUhEQ==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
-          "Microsoft.IdentityModel.Logging": "8.12.0"
+          "Microsoft.IdentityModel.Logging": "8.12.1"
         }
       },
       "Serilog": {
@@ -826,8 +826,8 @@
       },
       "Microsoft.IdentityModel.Abstractions": {
         "type": "Transitive",
-        "resolved": "8.12.0",
-        "contentHash": "V7fHMFpfzvx7twWMV3jrf3OFVmYn3QhUYtvfMRD9yUPs9gxnQSaRMZh5NzCsnW3ZZ80J09EE7yyjM71y9JC6hQ=="
+        "resolved": "8.12.1",
+        "contentHash": "JzWhET0VOCORyJbqDc1Wtdl8Q/l+I1MjFB0I/Jko+Ma691JZll8X6o9XwZtUce8FkqGuV4uY4/V1808XZOpDVg=="
       },
       "Microsoft.IdentityModel.JsonWebTokens": {
         "type": "Transitive",
@@ -839,10 +839,10 @@
       },
       "Microsoft.IdentityModel.Logging": {
         "type": "Transitive",
-        "resolved": "8.12.0",
-        "contentHash": "IakwNWUTy5RlcDcKwtL5TyfDLZmA8FFnSDhfr+wfGGPMON9GkpkUY8NakIJjdy6mv6C1lM/Jkn3IuaeS9MXesA==",
+        "resolved": "8.12.1",
+        "contentHash": "39HjVkU7Voe2jRLmORRB5PoTmta1ZPKzUZCc6ldlNlLzdx+um0+fAnvfk05LUQPrNxpvb5ZoqF00SrNvyO2Fzg==",
         "dependencies": {
-          "Microsoft.IdentityModel.Abstractions": "8.12.0"
+          "Microsoft.IdentityModel.Abstractions": "8.12.1"
         }
       },
       "Microsoft.IdentityModel.Protocols": {
@@ -1466,7 +1466,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[9.0.6, )",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "[9.0.6, )",
           "Microsoft.EntityFrameworkCore": "[9.0.6, )",
-          "Microsoft.IdentityModel.Tokens": "[8.12.0, )",
+          "Microsoft.IdentityModel.Tokens": "[8.12.1, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )",
           "System.IdentityModel.Tokens.Jwt": "[8.12.0, )"
         }
