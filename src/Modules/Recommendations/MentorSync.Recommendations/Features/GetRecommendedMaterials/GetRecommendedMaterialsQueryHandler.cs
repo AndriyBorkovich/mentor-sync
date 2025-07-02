@@ -71,17 +71,12 @@ public sealed class GetRecommendedMaterialsQueryHandler(
 
         var materials = await materialsQuery.ToListAsync(cancellationToken);
 
-        if (materials == null || materials.Count == 0)
-        {
-            return Result.NotFound("No recommended materials found on this page");
-        }
-
         var items = materials.Select(m => new RecommendedMaterialResponse(
             m.Id,
             m.Title,
             m.Description,
             m.Type,
-            m.Tags.ToList(),
+            [.. m.Tags],
             m.MentorId,
             m.MentorName,
             m.CreatedAt,

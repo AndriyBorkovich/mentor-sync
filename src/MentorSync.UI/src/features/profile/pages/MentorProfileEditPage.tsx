@@ -28,7 +28,6 @@ const MentorProfileEditPage: React.FC = () => {
     const {
         register,
         handleSubmit,
-        control,
         setValue,
         watch,
         formState: { errors },
