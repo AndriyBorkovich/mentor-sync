@@ -1,7 +1,6 @@
 ﻿using MentorSync.SharedKernel;
 using MentorSync.Users.Domain.Role;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MentorSync.MigrationService.Seeders;
 

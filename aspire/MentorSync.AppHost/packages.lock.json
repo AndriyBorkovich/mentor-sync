@@ -239,13 +239,19 @@
       },
       "CommunityToolkit.Aspire.Hosting.NodeJS.Extensions": {
         "type": "Direct",
-        "requested": "[9.5.0, )",
-        "resolved": "9.5.0",
-        "contentHash": "8Ppbt7ZzUOAzqCKz05qnxwCc5ig3Hw7Lv/CKrnKEcB6DW3cjPHNEGp6UM310HBOWpPMT3+S1ok7XC7QTjAy6ow==",
+        "requested": "[9.6.0, )",
+        "resolved": "9.6.0",
+        "contentHash": "T4ZgJoJfT6mJ+rISp1MBhV+JlELwWNkCs2OjutJHLRlnS+exlM6u/wGGdb/LKktjrO06EGN08gF9SBEapJsIRA==",
         "dependencies": {
-          "Aspire.Hosting": "9.3.0",
-          "Aspire.Hosting.NodeJS": "9.3.0"
+          "Aspire.Hosting": "9.3.1",
+          "Aspire.Hosting.NodeJS": "9.3.1"
         }
+      },
+      "System.Text.Json": {
+        "type": "Direct",
+        "requested": "[9.0.7, )",
+        "resolved": "9.0.7",
+        "contentHash": "u/lN2FEEXs3ghj2ta8tWA4r2MS9Yni07K7jDmnz8h1UPDf0lIIIEMkWx383Zz4fJjJio7gDl+00RYuQ/7R8ZQw=="
       },
       "Aspire.Hosting": {
         "type": "Transitive",
@@ -1131,11 +1137,6 @@
         "type": "Transitive",
         "resolved": "4.5.0",
         "contentHash": "wLBKzFnDCxP12VL9ANydSYhk59fC4cvOr9ypYQLPnAj48NQIhqnjdD2yhP8yEKyBJEjERWS9DisKL7rX5eU25Q=="
-      },
-      "System.Text.Json": {
-        "type": "Transitive",
-        "resolved": "8.0.5",
-        "contentHash": "0f1B50Ss7rqxXiaBJyzUu9bWFOO2/zSlifZ/UNMdiIpDYe4cY4LQQicP4nirK1OS31I43rn062UIJ1Q9bpmHpg=="
       },
       "System.Threading.Tasks.Extensions": {
         "type": "Transitive",
