@@ -1,6 +1,6 @@
 namespace MentorSync.Materials.Features.UploadMaterialAttachment;
 
-public record UploadAttachmentResponse
+public sealed record UploadAttachmentResponse
 {
     public int Id { get; init; }
     public string FileName { get; init; }

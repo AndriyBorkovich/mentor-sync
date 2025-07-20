@@ -14,19 +14,21 @@ public static class ModuleRegistration
 {
     public static void AddRatingsModule(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<RatingsDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Ratings));
-            });
+        AddDatabase(builder);
 
         AddEndpoints(builder.Services);
 
         AddExternalServices(builder.Services);
     }
 
+    private static void AddDatabase(IHostApplicationBuilder builder) =>
+        builder.AddNpgsqlDbContext<RatingsDbContext>(
+                connectionName: GeneralConstants.DatabaseName,
+                configureSettings: c => c.DisableTracing = true,
+                configureDbContextOptions: opt =>
+                {
+                    opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Ratings));
+                });
     private static void AddEndpoints(IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);

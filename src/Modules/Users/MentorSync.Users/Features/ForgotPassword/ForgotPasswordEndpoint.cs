@@ -1,7 +1,7 @@
-﻿using MediatR;
-using MentorSync.SharedKernel;
+﻿using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +16,11 @@ public sealed class ForgotPasswordEndpoint : IEndpoint
         app.MapPost("/users/forgot-password", async (
             [FromBody] string email,
             HttpContext httpContext,
-            ISender sender,
+            IMediator mediator,
             CancellationToken ct) =>
         {
             var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-            var result = await sender.Send(new ForgotPasswordCommand(email, baseUrl), ct);
+            var result = await mediator.SendCommandAsync<ForgotPasswordCommand, string>(new ForgotPasswordCommand(email, baseUrl), ct);
 
             return result.DecideWhatToReturn();
         })

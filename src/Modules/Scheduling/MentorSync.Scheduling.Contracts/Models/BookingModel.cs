@@ -1,4 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities;
+﻿using MentorSync.SharedKernel.CommonEntities.Enums;
 
 namespace MentorSync.Scheduling.Contracts.Models;
 

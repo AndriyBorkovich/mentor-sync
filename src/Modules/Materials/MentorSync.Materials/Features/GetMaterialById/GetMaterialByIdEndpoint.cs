@@ -1,7 +1,7 @@
-using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -14,9 +14,9 @@ public sealed class GetMaterialByIdEndpoint : IEndpoint
     {
         app.MapGet("materials/{id}", async (
             int id,
-            ISender sender) =>
+            IMediator mediator) =>
             {
-                var result = await sender.Send(new GetMaterialByIdQuery(id));
+                var result = await mediator.SendQueryAsync<GetMaterialByIdQuery, MaterialResponse>(new GetMaterialByIdQuery(id));
 
                 return result.DecideWhatToReturn();
             })

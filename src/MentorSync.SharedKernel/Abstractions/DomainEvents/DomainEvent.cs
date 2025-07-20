@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace MentorSync.SharedKernel.BaseEntities;
+namespace MentorSync.SharedKernel.Abstractions.DomainEvents;
 
 public class DomainEvent : INotification
 {

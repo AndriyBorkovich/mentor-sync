@@ -1,6 +1,4 @@
-﻿using MentorSync.SharedKernel.BaseEntities;
-
-namespace MentorSync.SharedKernel.Interfaces;
+﻿namespace MentorSync.SharedKernel.Abstractions.DomainEvents;
 
 public interface IHaveDomainEvents
 {

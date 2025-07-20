@@ -1,6 +1,5 @@
-﻿using Ardalis.Result;
-using MediatR;
+﻿using MentorSync.SharedKernel.Abstractions.Messaging;
 
 namespace MentorSync.Users.Features.Confirm;
 
-public sealed record ConfirmAccountCommand(string Email, string Token) : IRequest<Result<string>>;
+public sealed record ConfirmAccountCommand(string Email, string Token) : ICommand<string>;

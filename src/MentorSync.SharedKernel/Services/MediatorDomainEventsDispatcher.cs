@@ -1,11 +1,12 @@
-﻿using MediatR;
-using MentorSync.SharedKernel.Interfaces;
+﻿using MentorSync.SharedKernel.Abstractions.Messaging;
+using IMediator = MediatR.IMediator;
+using MentorSync.SharedKernel.Abstractions.DomainEvents;
 
 namespace MentorSync.SharedKernel.Services;
 
 public sealed class MediatorDomainEventsDispatcher (IMediator mediator) : IDomainEventsDispatcher
 {
-    public async Task DispatchAndClearEvents(IEnumerable<IHaveDomainEvents> entitiesWithEvents)
+    public async Task DispatchAsync(IEnumerable<IHaveDomainEvents> entitiesWithEvents)
     {
         foreach (var entity in entitiesWithEvents)
         {

@@ -2,6 +2,7 @@
 using MediatR;
 using MentorSync.Notifications.Contracts;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -11,9 +12,9 @@ namespace MentorSync.Users.Features.ForgotPassword;
 
 public sealed class ForgotPasswordCommandHandler(
     UserManager<AppUser> userManager,
-    IMediator mediator,
+    MediatR.IMediator mediator,
     ILogger<ForgotPasswordCommandHandler> logger)
-    : IRequestHandler<ForgotPasswordCommand, Result<string>>
+    : ICommandHandler<ForgotPasswordCommand, string>
 {
     public async Task<Result<string>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {

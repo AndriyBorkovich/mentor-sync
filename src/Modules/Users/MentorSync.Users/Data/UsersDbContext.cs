@@ -1,6 +1,6 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Interfaces;
-using MentorSync.SharedKernel.Services;
+using MentorSync.SharedKernel.Abstractions.DomainEvents;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.Users.Domain.Mentee;
 using MentorSync.Users.Domain.Mentor;
 using MentorSync.Users.Domain.Role;
@@ -101,7 +101,7 @@ public sealed class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContext
             .Where(e => e.DomainEvents.Any())
             .ToArray();
 
-        await dispatcher.DispatchAndClearEvents(entitiesWithEvents);
+        await dispatcher.DispatchAsync(entitiesWithEvents);
 
         return result;
     }

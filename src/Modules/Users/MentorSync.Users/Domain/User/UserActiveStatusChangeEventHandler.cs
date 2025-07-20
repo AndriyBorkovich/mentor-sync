@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace MentorSync.Users.Domain.User;
 
 public sealed class UserActiveStatusChangeEventHandler (
-    IMediator mediator,
+    MediatR.IMediator mediator,
     ILogger<UserActiveStatusChangeEventHandler> logger)
     : INotificationHandler<UserActiveStatusChageEvent>
 {

@@ -1,6 +1,5 @@
-using Ardalis.Result;
-using MediatR;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 
 namespace MentorSync.Materials.Features.GetMentorMaterials;
 
-public record GetMentorMaterialsQuery(int MentorId) : IRequest<Result<MentorMaterialsResponse>>;
+public sealed record GetMentorMaterialsQuery(int MentorId) : IQuery<MentorMaterialsResponse>;

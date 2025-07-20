@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Scheduling.Data;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;

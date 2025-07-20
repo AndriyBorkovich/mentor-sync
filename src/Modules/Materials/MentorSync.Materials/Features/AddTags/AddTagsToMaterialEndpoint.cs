@@ -1,8 +1,8 @@
 using System.Security.Claims;
-using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,7 +16,7 @@ public sealed class AddTagsToMaterialEndpoint : IEndpoint
         app.MapPost("materials/{materialId}/tags", async (
             int materialId,
             AddTagsRequest request,
-            ISender sender,
+            IMediator mediator,
             HttpContext httpContext) =>
             {
                 var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
@@ -32,7 +32,7 @@ public sealed class AddTagsToMaterialEndpoint : IEndpoint
                     MentorId = mentorId
                 };
 
-                var result = await sender.Send(command);
+                var result = await mediator.SendCommandAsync<AddTagsToMaterialCommand, AddTagsResponse>(command);
 
                 return result.DecideWhatToReturn();
             })

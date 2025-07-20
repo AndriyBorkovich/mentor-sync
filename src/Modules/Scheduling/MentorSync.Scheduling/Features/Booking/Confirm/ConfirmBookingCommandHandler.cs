@@ -4,7 +4,7 @@ using MentorSync.Scheduling.Data;
 using MentorSync.Scheduling.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using BookingStatus = MentorSync.SharedKernel.CommonEntities.BookingStatus;
+using BookingStatus = MentorSync.SharedKernel.CommonEntities.Enums.BookingStatus;
 
 namespace MentorSync.Scheduling.Features.Booking.Confirm;
 

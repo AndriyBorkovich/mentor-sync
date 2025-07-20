@@ -29,4 +29,9 @@
     <ProjectReference Include="..\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
     <ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />
+    <PackageReference Update="Roslynator.Analyzers" Version="4.13.1" />
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="10.14.0.120626" />
+  </ItemGroup>
 </Project>

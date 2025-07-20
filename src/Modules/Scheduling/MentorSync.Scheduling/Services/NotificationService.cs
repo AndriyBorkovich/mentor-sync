@@ -1,4 +1,3 @@
-using MediatR;
 using MentorSync.Notifications.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -16,10 +15,10 @@ public interface INotificationService
         string message = null);
 }
 
-public class NotificationService(IMediator mediator,
+public class NotificationService(MediatR.IMediator mediator,
     ILogger<NotificationService> logger) : INotificationService
 {
-    private readonly IMediator _mediator = mediator;
+    private readonly MediatR.IMediator _mediator = mediator;
 
     public async Task SendBookingStatusChangedNotificationAsync(
         int bookingId,

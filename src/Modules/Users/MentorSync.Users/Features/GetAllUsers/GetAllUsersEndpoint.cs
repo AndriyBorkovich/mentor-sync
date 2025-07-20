@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Interfaces;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

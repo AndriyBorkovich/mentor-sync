@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Mentee;
 using MentorSync.Users.Domain.User;

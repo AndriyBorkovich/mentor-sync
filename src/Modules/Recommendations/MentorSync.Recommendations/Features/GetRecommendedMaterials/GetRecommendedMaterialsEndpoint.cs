@@ -1,9 +1,10 @@
 using System.Security.Claims;
 using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

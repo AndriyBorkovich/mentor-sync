@@ -1,11 +1,11 @@
 namespace MentorSync.Materials.Features.GetMentorMaterials;
 
-public record MentorMaterialsResponse
+public sealed record MentorMaterialsResponse
 {
-    public List<MaterialInfo> Materials { get; init; } = new();
+    public List<MaterialInfo> Materials { get; init; } = [];
 }
 
-public record MaterialInfo
+public sealed record MaterialInfo
 {
     public int Id { get; init; }
     public string Title { get; init; }
@@ -15,11 +15,11 @@ public record MaterialInfo
     public string Url { get; init; }
     public DateTime CreatedOn { get; init; }
     public DateTime? UpdatedOn { get; init; }
-    public List<MaterialAttachmentInfo> Attachments { get; init; } = new();
-    public List<string> Tags { get; init; } = new();
+    public List<MaterialAttachmentInfo> Attachments { get; init; } = [];
+    public List<string> Tags { get; init; } = [];
 }
 
-public record MaterialAttachmentInfo
+public sealed record MaterialAttachmentInfo
 {
     public int Id { get; init; }
     public string FileName { get; init; }

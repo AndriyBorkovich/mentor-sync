@@ -9,7 +9,7 @@ namespace MentorSync.Notifications.Features.SendEmail;
 
 public sealed class SendEmailCommandHandler(NotificationsDbContext dbContext) : IRequestHandler<SendEmailCommand, Result<string>>
 {
-    public async Task<Result<string>> Handle(SendEmailCommand request, CancellationToken ct)
+    public async Task<Result<string>> Handle(SendEmailCommand request, CancellationToken cancellationToken)
     {
         var id = ObjectId.GenerateNewId();
 
@@ -22,7 +22,7 @@ public sealed class SendEmailCommandHandler(NotificationsDbContext dbContext) : 
             Body = request.Body
         };
 
-        await dbContext.EmailOutboxes.InsertOneAsync(emailEntity, cancellationToken: ct);
+        await dbContext.EmailOutboxes.InsertOneAsync(emailEntity, cancellationToken: cancellationToken);
 
         return id.ToString();
     }

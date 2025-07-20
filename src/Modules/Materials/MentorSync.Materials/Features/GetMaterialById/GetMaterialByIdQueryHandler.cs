@@ -1,14 +1,15 @@
 using Ardalis.Result;
-using MediatR;
 using MentorSync.Materials.Data;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.Users.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Features.GetMaterialById;
 
-public class GetMaterialByIdQueryHandler(
+public sealed class GetMaterialByIdQueryHandler(
     MaterialsDbContext dbContext,
-    IMentorProfileService mentorProfileService) : IRequestHandler<GetMaterialByIdQuery, Result<MaterialResponse>>
+    IMentorProfileService mentorProfileService)
+        : IQueryHandler<GetMaterialByIdQuery, MaterialResponse>
 {
     public async Task<Result<MaterialResponse>> Handle(GetMaterialByIdQuery request, CancellationToken cancellationToken)
     {
@@ -24,7 +25,7 @@ public class GetMaterialByIdQueryHandler(
             return Result.NotFound($"Learning material with ID {request.Id} not found");
         }
 
-        // TODO: rewrite this to raw sql query with joins
+        // TODO: rewrite this to raw sql query with joins or define a view
         var mentors = await mentorProfileService.GetAllMentorsAsync();
         var mentorName = mentors.FirstOrDefault(m => m.Id == material.MentorId)?.UserName ?? "Unknown Mentor";
 

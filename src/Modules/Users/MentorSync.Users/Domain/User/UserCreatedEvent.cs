@@ -1,4 +1,4 @@
-﻿using MentorSync.SharedKernel.BaseEntities;
+﻿using MentorSync.SharedKernel.Abstractions.DomainEvents;
 
 namespace MentorSync.Users.Domain.User;
 

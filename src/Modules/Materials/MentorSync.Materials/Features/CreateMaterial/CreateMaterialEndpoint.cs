@@ -1,8 +1,8 @@
-using MediatR;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
+using MentorSync.SharedKernel.Abstractions.Messaging;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,7 +15,7 @@ public sealed class CreateMaterialEndpoint : IEndpoint
     {
         app.MapPost("materials", async (
             CreateMaterialRequest request,
-            ISender sender,
+            IMediator sender,
             HttpContext httpContext) =>
             {
                 // Convert request to command
@@ -29,7 +29,7 @@ public sealed class CreateMaterialEndpoint : IEndpoint
                     Tags = request.Tags
                 };
 
-                var result = await sender.Send(command);
+                var result = await sender.SendCommandAsync<CreateMaterialCommand, CreateMaterialResponse>(command);
 
                 return result.DecideWhatToReturn();
             })

@@ -3,7 +3,7 @@ using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
 using MentorSync.Scheduling.Data;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Services;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;

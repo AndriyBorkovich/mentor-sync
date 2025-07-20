@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 using MentorSync.Materials.Data;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.Users.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 

@@ -2,7 +2,7 @@ using Ardalis.Result;
 using MediatR;
 using MentorSync.Notifications.Contracts;
 using MentorSync.Scheduling.Data;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +11,7 @@ namespace MentorSync.Scheduling.Features.Booking.Cancel;
 public sealed class CancelBookingCommandHandler(
     SchedulingDbContext dbContext,
     ILogger<CancelBookingCommandHandler> logger,
-    IMediator mediator)
+    MediatR.IMediator mediator)
     : IRequestHandler<CancelBookingCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(CancelBookingCommand request, CancellationToken cancellationToken)

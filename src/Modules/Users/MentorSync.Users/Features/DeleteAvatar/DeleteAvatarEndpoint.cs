@@ -1,7 +1,7 @@
-﻿using MediatR;
-using MentorSync.SharedKernel;
+﻿using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -14,9 +14,9 @@ public sealed class DeleteAvatarEndpoint : IEndpoint
     {
         app.MapDelete("/users/{id:int}/avatar", async (
                 int id,
-                ISender sender) =>
+                IMediator mediator) =>
         {
-            var result = await sender.Send(new DeleteAvatarCommand(id));
+            var result = await mediator.SendCommandAsync<DeleteAvatarCommand, string>(new DeleteAvatarCommand(id));
 
             return result.DecideWhatToReturn();
         })

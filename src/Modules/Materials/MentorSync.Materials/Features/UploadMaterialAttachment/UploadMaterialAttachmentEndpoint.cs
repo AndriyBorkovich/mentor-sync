@@ -1,8 +1,7 @@
 using System.Security.Claims;
-using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -16,7 +15,7 @@ public sealed class UploadMaterialAttachmentEndpoint : IEndpoint
         app.MapPost("materials/{materialId}/attachments", async (
             int materialId,
             IFormFile file,
-            ISender sender,
+            IMediator mediator,
             HttpContext httpContext) =>
             {
                 var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
@@ -32,7 +31,7 @@ public sealed class UploadMaterialAttachmentEndpoint : IEndpoint
                     MentorId = mentorId
                 };
 
-                var result = await sender.Send(command);
+                var result = await mediator.SendCommandAsync<UploadMaterialAttachmentCommand, UploadAttachmentResponse>(command);
 
                 return result.DecideWhatToReturn();
             })

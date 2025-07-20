@@ -1,4 +1,4 @@
-﻿namespace MentorSync.SharedKernel.CommonEntities;
+﻿namespace MentorSync.SharedKernel.CommonEntities.Enums;
 
 public enum BookingStatus
 {

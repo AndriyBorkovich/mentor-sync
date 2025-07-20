@@ -1,5 +1,5 @@
 ﻿using Ardalis.Result;
-using MediatR;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +8,7 @@ namespace MentorSync.Users.Features.Confirm;
 
 public sealed class ConfirmAccountCommandHandler(
     UserManager<AppUser> userManager)
-    : IRequestHandler<ConfirmAccountCommand, Result<string>>
+    : ICommandHandler<ConfirmAccountCommand, string>
 {
     public async Task<Result<string>> Handle(ConfirmAccountCommand request, CancellationToken cancellationToken)
     {

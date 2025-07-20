@@ -3,7 +3,6 @@ using MentorSync.Notifications;
 using MentorSync.Ratings;
 using MentorSync.Recommendations;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Behaviours;
 using MentorSync.Users;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -14,6 +13,7 @@ using System.Text.Json;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Mvc;
 using MentorSync.Scheduling;
+using MentorSync.SharedKernel.Behaviors;
 
 namespace MentorSync.API.Extensions;
 

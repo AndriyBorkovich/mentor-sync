@@ -11,7 +11,7 @@ namespace MentorSync.Users.Domain.User;
 
 public sealed class UserCreatedEventHandler(
     IServiceProvider serviceProvider,
-    IMediator mediator,
+    MediatR.IMediator mediator,
     ILogger<UserCreatedEventHandler> logger) : INotificationHandler<UserCreatedEvent>
 {
     public async Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)

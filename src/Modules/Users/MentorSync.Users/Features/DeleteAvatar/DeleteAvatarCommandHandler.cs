@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
 using Azure.Storage.Blobs;
-using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,8 @@ namespace MentorSync.Users.Features.DeleteAvatar;
 public sealed class DeleteAvatarCommandHandler(
     BlobServiceClient blobServiceClient,
     UserManager<AppUser> userManager,
-    ILogger<DeleteAvatarCommandHandler> logger) : IRequestHandler<DeleteAvatarCommand, Result<string>>
+    ILogger<DeleteAvatarCommandHandler> logger)
+        : ICommandHandler<DeleteAvatarCommand, string>
 {
     private readonly BlobContainerClient _avatarsContainer = blobServiceClient.GetBlobContainerClient(ContainerNames.Avatars);
 

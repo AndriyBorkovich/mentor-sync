@@ -5,7 +5,7 @@ using MentorSync.Ratings.Data;
 using MentorSync.Ratings.Domain;
 using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Domain.Tracking;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.Users.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;

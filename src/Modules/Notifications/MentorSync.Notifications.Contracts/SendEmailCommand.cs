@@ -1,5 +1,5 @@
-﻿using Ardalis.Result;
-using MediatR;
+﻿using MediatR;
+using Ardalis.Result;
 
 namespace MentorSync.Notifications.Contracts;
 

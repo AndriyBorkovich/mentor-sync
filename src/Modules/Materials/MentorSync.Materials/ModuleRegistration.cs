@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MentorSync.Materials.Contracts.Services;
+﻿using MentorSync.Materials.Contracts.Services;
 using MentorSync.Materials.Data;
 using MentorSync.Materials.Services;
 using MentorSync.SharedKernel;
@@ -14,24 +13,28 @@ public static class ModuleRegistration
 {
     public static void AddMaterialsModule(this IHostApplicationBuilder builder)
     {
-        builder.AddNpgsqlDbContext<MaterialsDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Materials));
-            });
+        AddDatabase(builder);
 
         AddEndpoints(builder.Services);
 
         AddExternalServices(builder.Services);
     }
 
+    private static void AddDatabase(IHostApplicationBuilder builder)
+        => builder.AddNpgsqlDbContext<MaterialsDbContext>(
+                connectionName: GeneralConstants.DatabaseName,
+                configureSettings: c => c.DisableTracing = true,
+                configureDbContextOptions: opt =>
+                {
+                    opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Materials));
+                });
+
     private static void AddEndpoints(IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
-        services.AddEndpoints(typeof(MaterialsDbContext).Assembly);
+        var assembly = typeof(ModuleRegistration).Assembly;
+        services.AddValidators(assembly);
+        services.AddHandlers(assembly);
+        services.AddEndpoints(assembly);
     }
 
     private static void AddExternalServices(IServiceCollection services)

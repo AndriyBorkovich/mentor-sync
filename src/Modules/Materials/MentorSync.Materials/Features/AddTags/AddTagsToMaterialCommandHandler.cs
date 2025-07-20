@@ -1,5 +1,4 @@
 using Ardalis.Result;
-using MediatR;
 using MentorSync.Materials.Data;
 using MentorSync.Materials.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Materials.Features.AddTags;
 
-public class AddTagsToMaterialCommandHandler(
+public sealed class AddTagsToMaterialCommandHandler(
     MaterialsDbContext dbContext,
-    ILogger<AddTagsToMaterialCommandHandler> logger) : IRequestHandler<AddTagsToMaterialCommand, Result<AddTagsResponse>>
+    ILogger<AddTagsToMaterialCommandHandler> logger)
+        : ICommandHandler<AddTagsToMaterialCommand, AddTagsResponse>
 {
     public async Task<Result<AddTagsResponse>> Handle(AddTagsToMaterialCommand request, CancellationToken cancellationToken)
     {

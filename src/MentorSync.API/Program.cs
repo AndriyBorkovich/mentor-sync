@@ -46,4 +46,4 @@ app.MapEndpoints();
 
 app.MapHubs();
 
-app.Run();
+await app.RunAsync();

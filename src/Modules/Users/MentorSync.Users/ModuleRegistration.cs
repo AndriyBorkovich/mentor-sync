@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using FluentValidation;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
@@ -84,9 +83,10 @@ public static class ModuleRegistration
 
     private static void AddEndpoints(IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
-        services.AddEndpoints(typeof(UsersDbContext).Assembly);
+        var assembly = typeof(ModuleRegistration).Assembly;
+        services.AddValidators(assembly);
+        services.AddHandlers(assembly);
+        services.AddEndpoints(assembly);
     }
 
     private static void AddCustomAuth(IServiceCollection services, IConfiguration configuration)
@@ -135,7 +135,6 @@ public static class ModuleRegistration
                             // Try to get access token from query string (for SignalR connections)
                             var accessToken = context.Request.Query["access_token"];
 
-                            // If the request is for our hub...
                             var path = context.HttpContext.Request.Path;
                             if (!string.IsNullOrEmpty(accessToken) &&
                                 (path.StartsWithSegments("/hubs/chat") || path.StartsWithSegments("/notificationHub")))

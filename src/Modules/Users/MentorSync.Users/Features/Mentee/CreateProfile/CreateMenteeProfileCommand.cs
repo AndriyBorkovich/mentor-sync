@@ -1,6 +1,6 @@
 using Ardalis.Result;
 using MediatR;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.Users.Features.Common.Responses;
 
 namespace MentorSync.Users.Features.Mentee.CreateProfile;

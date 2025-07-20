@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace MentorSync.SharedKernel.Interfaces;
+namespace MentorSync.SharedKernel.Abstractions.Endpoints;
 
 public interface IEndpoint
 {

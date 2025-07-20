@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using MentorSync.SharedKernel.Interfaces;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;

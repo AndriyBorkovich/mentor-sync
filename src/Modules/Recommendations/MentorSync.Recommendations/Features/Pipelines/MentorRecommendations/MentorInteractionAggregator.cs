@@ -3,7 +3,7 @@ using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Domain.Interaction;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Scheduling.Contracts;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

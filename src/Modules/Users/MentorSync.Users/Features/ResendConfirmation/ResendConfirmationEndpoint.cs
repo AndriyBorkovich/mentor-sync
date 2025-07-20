@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MediatR;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Interfaces;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +13,7 @@ public sealed class ResendConfirmationEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/users/reconfirm", async ([FromQuery, Required] int userId, IMediator mediator) =>
+        app.MapGet("/users/reconfirm", async ([FromQuery, Required] int userId, MediatR.IMediator mediator) =>
             {
                 await mediator.Publish(new UserCreatedEvent(userId));
 

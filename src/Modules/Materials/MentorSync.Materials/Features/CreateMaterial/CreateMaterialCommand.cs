@@ -1,11 +1,10 @@
-using Ardalis.Result;
-using MediatR;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.Abstractions.Messaging;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace MentorSync.Materials.Features.CreateMaterial;
 
-public record CreateMaterialCommand : IRequest<Result<CreateMaterialResponse>>
+public sealed record CreateMaterialCommand : ICommand<CreateMaterialResponse>
 {
     [Required]
     [StringLength(200)]
@@ -22,5 +21,5 @@ public record CreateMaterialCommand : IRequest<Result<CreateMaterialResponse>>
     [Required]
     public int MentorId { get; init; }
 
-    public List<string> Tags { get; init; } = new();
+    public List<string> Tags { get; init; } = [];
 }

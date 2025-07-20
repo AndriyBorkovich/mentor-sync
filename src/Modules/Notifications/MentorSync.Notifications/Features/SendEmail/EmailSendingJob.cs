@@ -8,7 +8,7 @@ public sealed class EmailSendingJob(ILogger<EmailSendingJob> logger, IOutboxProc
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         const int delayMilliseconds = 30_000; // 30 seconds
-        logger.LogInformation("{serviceName} starting.", nameof(EmailSendingJob));
+        logger.LogInformation("{ServiceName} starting.", nameof(EmailSendingJob));
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -17,7 +17,7 @@ public sealed class EmailSendingJob(ILogger<EmailSendingJob> logger, IOutboxProc
             }
             catch (Exception ex)
             {
-                logger.LogError("Error processing outbox: {message}", ex.Message);
+                logger.LogError("Error processing outbox: {Message}", ex.Message);
             }
             finally
             {
@@ -25,6 +25,6 @@ public sealed class EmailSendingJob(ILogger<EmailSendingJob> logger, IOutboxProc
             }
         }
 
-        logger.LogInformation("{serviceName} stopping.", nameof(EmailSendingJob));
+        logger.LogInformation("{ServiceName} stopping.", nameof(EmailSendingJob));
     }
 }

@@ -1,7 +1,7 @@
 using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,6 @@ public sealed class GetMentorAvailabilityEndpoint : IEndpoint
             [FromQuery] DateTime endDate,
             ISender sender) =>
         {
-            // Default to a week range if no dates provided
             var start = startDate != default ?
                 new DateTimeOffset(startDate) :
                 DateTimeOffset.UtcNow.Date;

@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 

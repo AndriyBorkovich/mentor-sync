@@ -1,7 +1,7 @@
-﻿using MediatR;
-using MentorSync.SharedKernel;
+﻿using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
+using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +13,9 @@ public sealed class ConfirmAccountEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/users/confirm", async ([FromQuery] string email, [FromQuery] string token, ISender sender) =>
+        app.MapGet("/users/confirm", async ([FromQuery] string email, [FromQuery] string token, IMediator mediator) =>
         {
-            var result = await sender.Send(new ConfirmAccountCommand(email, token));
+            var result = await mediator.SendCommandAsync<ConfirmAccountCommand, string>(new ConfirmAccountCommand(email, token));
 
             return result.DecideWhatToReturn();
         })

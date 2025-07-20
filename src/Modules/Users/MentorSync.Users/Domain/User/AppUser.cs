@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MentorSync.SharedKernel.BaseEntities;
-using MentorSync.SharedKernel.Interfaces;
+using MentorSync.SharedKernel.Abstractions.DomainEvents;
 using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.Users.Domain.User;
