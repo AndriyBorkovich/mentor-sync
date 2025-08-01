@@ -14,7 +14,7 @@
         "@tailwindcss/vite": "^4.1.11",
         "@types/marked": "^5.0.2",
         "@types/node": "^24.0.10",
-        "@types/react-time-picker": "^4.0.3",
+        "@types/react-time-picker": "^6.0.0",
         "axios": "^1.10.0",
         "jwt-decode": "^4.0.0",
         "marked": "^16.0.0",
