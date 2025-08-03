@@ -1,9 +1,9 @@
 namespace MentorSync.Ratings.Features.MentorReview.Check;
 
-public sealed class CheckMentorReviewResponse
+public sealed record CheckMentorReviewResponse
 {
-    public bool HasReviewed { get; set; }
-    public int? ReviewId { get; set; }
-    public int? Rating { get; set; }
-    public string ReviewText { get; set; }
+	public bool HasReviewed { get; set; }
+	public int? ReviewId { get; set; }
+	public int? Rating { get; set; }
+	public string ReviewText { get; set; }
 }

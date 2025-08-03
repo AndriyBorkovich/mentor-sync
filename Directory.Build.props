@@ -1,13 +1,20 @@
 <Project>
-  <PropertyGroup>
-    <Description>MentorSync is an app to connect mentor and mentees</Description>
-    <Company>AndrewSolutions</Company>
-    <Product>MentorSync</Product>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+	<PropertyGroup>
+		<Description>MentorSync is an app to connect mentor and mentees</Description>
+		<Authors>Andrii B.</Authors>
+		<Company>AndrewSolutions</Company>
+		<Product>MentorSync</Product>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/AndriyBorkovich/mentor-sync.git</RepositoryUrl>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	</PropertyGroup>
   
   <ItemGroup>
     <Using Include="System" />
@@ -16,6 +23,7 @@
     <Using Include="System.Collections.Generic" />
     <Using Include="System.Linq" />
     <Using Include="MentorSync.SharedKernel.Abstractions.Messaging"/>
+	<Using Include="MentorSync.SharedKernel.Abstractions.Messaging.Notifications;"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -31,5 +39,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+	<PackageReference Include="Meziantou.Analyzer" Version="2.0.206">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
   </ItemGroup>
 </Project>

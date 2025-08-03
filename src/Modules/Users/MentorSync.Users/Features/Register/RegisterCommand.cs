@@ -1,6 +1,4 @@
-﻿using Ardalis.Result;
-using MediatR;
-using MentorSync.Users.Features.Common.Responses;
+﻿using MentorSync.Users.Features.Common.Responses;
 
 namespace MentorSync.Users.Features.Register;
 
@@ -13,8 +11,8 @@ namespace MentorSync.Users.Features.Register;
 /// <param name="Password"></param>
 /// <param name="ConfirmPassword"></param>
 public sealed record RegisterCommand(
-    string Email,
-    string UserName,
-    string Role,
-    string Password,
-    string ConfirmPassword) : IRequest<Result<CreatedEntityResponse>>;
+	string Email,
+	string UserName,
+	string Role,
+	string Password,
+	string ConfirmPassword) : ICommand<CreatedEntityResponse>;

@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -11,36 +10,36 @@ namespace MentorSync.Materials.Features.AddTags;
 
 public sealed class AddTagsToMaterialEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapPost("materials/{materialId}/tags", async (
-            int materialId,
-            AddTagsRequest request,
-            IMediator mediator,
-            HttpContext httpContext) =>
-            {
-                var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var mentorId))
-                {
-                    return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
-                }
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapPost("materials/{materialId}/tags", async (
+			int materialId,
+			AddTagsRequest request,
+			IMediator mediator,
+			HttpContext httpContext) =>
+			{
+				var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+				if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var mentorId))
+				{
+					return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
+				}
 
-                var command = new AddTagsToMaterialCommand
-                {
-                    MaterialId = materialId,
-                    TagNames = request.TagNames,
-                    MentorId = mentorId
-                };
+				var command = new AddTagsToMaterialCommand
+				{
+					MaterialId = materialId,
+					TagNames = request.TagNames,
+					MentorId = mentorId
+				};
 
-                var result = await mediator.SendCommandAsync<AddTagsToMaterialCommand, AddTagsResponse>(command);
+				var result = await mediator.SendCommandAsync<AddTagsToMaterialCommand, AddTagsResponse>(command);
 
-                return result.DecideWhatToReturn();
-            })
-            .WithTags(TagsConstants.Materials)
-            .WithDescription("Adds tags to an existing learning material")
-            .Produces<AddTagsResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status403Forbidden)
-            .ProducesProblem(StatusCodes.Status404NotFound);
-    }
+				return result.DecideWhatToReturn();
+			})
+			.WithTags(TagsConstants.Materials)
+			.WithDescription("Adds tags to an existing learning material")
+			.Produces<AddTagsResponse>(StatusCodes.Status200OK)
+			.ProducesProblem(StatusCodes.Status400BadRequest)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound);
+	}
 }

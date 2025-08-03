@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.Extensions;
@@ -12,27 +11,28 @@ namespace MentorSync.Recommendations.Features.CheckBookmark;
 
 public sealed class CheckBookmarkEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapGet("/recommendations/bookmarks/check/{mentorId:int}", async (
-            [FromRoute] int mentorId,
-            ISender sender,
-            HttpContext httpContext) =>
-        {
-            var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var menteeId))
-            {
-                return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
-            }
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapGet("/recommendations/bookmarks/check/{mentorId:int}", async (
+			[FromRoute] int mentorId,
+			IMediator mediator,
+			HttpContext httpContext) =>
+		{
+			var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var menteeId))
+			{
+				return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
+			}
 
-            var result = await sender.Send(new CheckBookmarkQuery(menteeId, mentorId));
+			var query = new CheckBookmarkQuery(menteeId, mentorId);
+			var result = await mediator.SendQueryAsync<CheckBookmarkQuery, CheckBookmarkResult>(query, httpContext.RequestAborted);
 
-            return result.DecideWhatToReturn();
-        })
-        .WithTags(TagsConstants.Recommendations)
-        .WithDescription("Checks if a mentor is bookmarked by the current mentee.")
-        .Produces<CheckBookmarkResult>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest)
-        .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
-    }
+			return result.DecideWhatToReturn();
+		})
+		.WithTags(TagsConstants.Recommendations)
+		.WithDescription("Checks if a mentor is bookmarked by the current mentee.")
+		.Produces<CheckBookmarkResult>(StatusCodes.Status200OK)
+		.ProducesProblem(StatusCodes.Status400BadRequest)
+		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
+	}
 }

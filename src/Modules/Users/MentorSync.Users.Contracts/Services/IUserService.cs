@@ -5,5 +5,5 @@ namespace MentorSync.Users.Contracts.Services;
 
 public interface IUserService
 {
-    Task<List<UserBasicInfoModel>> GetAllUsersExceptAsync(int userId);
+	Task<List<UserBasicInfoModel>> GetAllUsersExceptAsync(int userId);
 }

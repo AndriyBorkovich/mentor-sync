@@ -1,6 +1,5 @@
 ﻿using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -11,18 +10,18 @@ namespace MentorSync.Users.Features.Confirm;
 
 public sealed class ConfirmAccountEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapGet("/users/confirm", async ([FromQuery] string email, [FromQuery] string token, IMediator mediator) =>
-        {
-            var result = await mediator.SendCommandAsync<ConfirmAccountCommand, string>(new ConfirmAccountCommand(email, token));
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapGet("/users/confirm", async ([FromQuery] string email, [FromQuery] string token, IMediator mediator) =>
+		{
+			var result = await mediator.SendCommandAsync<ConfirmAccountCommand, string>(new ConfirmAccountCommand(email, token));
 
-            return result.DecideWhatToReturn();
-        })
-        .WithTags(TagsConstants.Users)
-        .WithDescription("Confirm user account by sending email with token")
-        .AllowAnonymous()
-        .Produces<string>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest);
-    }
+			return result.DecideWhatToReturn();
+		})
+		.WithTags(TagsConstants.Users)
+		.WithDescription("Confirm user account by sending email with token")
+		.AllowAnonymous()
+		.Produces<string>(StatusCodes.Status200OK)
+		.ProducesProblem(StatusCodes.Status400BadRequest);
+	}
 }

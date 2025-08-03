@@ -1,4 +1,3 @@
-using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.Extensions;
@@ -11,24 +10,24 @@ namespace MentorSync.Ratings.Features.MaterialReview.Delete;
 
 public sealed class DeleteMaterialReviewEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapDelete("ratings/materials/reviews/{reviewId}", async (
-            int reviewId,
-            [FromQuery] int userId,
-            ISender sender) =>
-            {
-                var command = new DeleteMaterialReviewCommand(reviewId, userId);
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapDelete("ratings/materials/reviews/{reviewId}", async (
+			int reviewId,
+			[FromQuery] int userId,
+			IMediator mediator) =>
+			{
+				var command = new DeleteMaterialReviewCommand(reviewId, userId);
 
-                var result = await sender.Send(command);
+				var result = await mediator.SendCommandAsync<DeleteMaterialReviewCommand, string>(command);
 
-                return result.DecideWhatToReturn();
-            })
-            .WithTags(TagsConstants.Ratings)
-            .WithDescription("Deletes a review for a learning material")
-            .Produces<Unit>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status204NoContent)
-            .ProducesProblem(StatusCodes.Status403Forbidden)
-            .ProducesProblem(StatusCodes.Status404NotFound);
-    }
+				return result.DecideWhatToReturn();
+			})
+			.WithTags(TagsConstants.Ratings)
+			.WithDescription("Deletes a review for a learning material")
+			.Produces<string>(StatusCodes.Status200OK)
+			.ProducesProblem(StatusCodes.Status204NoContent)
+			.ProducesProblem(StatusCodes.Status403Forbidden)
+			.ProducesProblem(StatusCodes.Status404NotFound);
+	}
 }

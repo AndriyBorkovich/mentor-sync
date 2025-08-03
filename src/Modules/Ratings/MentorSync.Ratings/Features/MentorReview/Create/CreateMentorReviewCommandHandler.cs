@@ -1,63 +1,51 @@
 using Ardalis.Result;
-using MediatR;
 using MentorSync.Ratings.Data;
 using Microsoft.EntityFrameworkCore;
 using MentorReviewEntity = MentorSync.Ratings.Domain.MentorReview;
-using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Ratings.Features.MentorReview.Create;
 
 public sealed class CreateMentorReviewCommandHandler(
-    RatingsDbContext dbContext,
-    ILogger<CreateMentorReviewCommandHandler> logger)
-    : IRequestHandler<CreateMentorReviewCommand, Result<CreateMentorReviewResponse>>
+	RatingsDbContext dbContext)
+	: ICommandHandler<CreateMentorReviewCommand, CreateMentorReviewResponse>
 {
-    public async Task<Result<CreateMentorReviewResponse>> Handle(
-        CreateMentorReviewCommand command,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            // Check if the mentee has already reviewed this mentor
-            var existingReview = await dbContext.MentorReviews
-                .FirstOrDefaultAsync(r => r.MentorId == command.MentorId && r.MenteeId == command.MenteeId,
-                    cancellationToken);
+	public async Task<Result<CreateMentorReviewResponse>> Handle(
+		CreateMentorReviewCommand command,
+		CancellationToken cancellationToken = default)
+	{
+		// Check if the mentee has already reviewed this mentor
+		var existingReview = await dbContext.MentorReviews
+			.AsNoTracking()
+			.FirstOrDefaultAsync(r => r.MentorId == command.MentorId && r.MenteeId == command.MenteeId,
+				cancellationToken);
 
-            if (existingReview != null)
-            {
-                return Result.Conflict("You have already submitted a review for this mentor");
-            }
+		if (existingReview != null)
+		{
+			return Result.Conflict("You have already submitted a review for this mentor");
+		}
 
-            var review = new MentorReviewEntity
-            {
-                MentorId = command.MentorId,
-                MenteeId = command.MenteeId,
-                Rating = command.Rating,
-                ReviewText = command.ReviewText,
-                CreatedAt = DateTime.UtcNow
-            };
+		var review = new MentorReviewEntity
+		{
+			MentorId = command.MentorId,
+			MenteeId = command.MenteeId,
+			Rating = command.Rating,
+			ReviewText = command.ReviewText,
+			CreatedAt = DateTime.UtcNow,
+		};
 
-            dbContext.MentorReviews.Add(review);
-            await dbContext.SaveChangesAsync(cancellationToken);
+		dbContext.MentorReviews.Add(review);
+		await dbContext.SaveChangesAsync(cancellationToken);
 
-            var response = new CreateMentorReviewResponse
-            {
-                ReviewId = review.Id,
-                MentorId = review.MentorId,
-                MenteeId = review.MenteeId,
-                Rating = review.Rating,
-                ReviewText = review.ReviewText,
-                CreatedAt = review.CreatedAt
-            };
+		var response = new CreateMentorReviewResponse
+		{
+			ReviewId = review.Id,
+			MentorId = review.MentorId,
+			MenteeId = review.MenteeId,
+			Rating = review.Rating,
+			ReviewText = review.ReviewText,
+			CreatedAt = review.CreatedAt,
+		};
 
-            return Result.Success(response);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error creating mentor review for mentor {MentorId} by mentee {MenteeId}",
-                command.MentorId, command.MenteeId);
-
-            return Result.Error($"Failed to create review: {ex.Message}");
-        }
-    }
+		return Result.Success(response);
+	}
 }

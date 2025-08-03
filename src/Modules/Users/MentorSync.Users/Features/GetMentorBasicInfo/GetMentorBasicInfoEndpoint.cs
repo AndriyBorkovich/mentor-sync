@@ -1,4 +1,3 @@
-using MediatR;
 using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.Extensions;
@@ -10,20 +9,20 @@ namespace MentorSync.Users.Features.GetMentorBasicInfo;
 
 public sealed class GetMentorBasicInfoEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapGet("users/mentors/{id}/basic-info", async (
-            int id,
-            ISender sender) =>
-            {
-                var result = await sender.Send(new GetMentorBasicInfoQuery(id));
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapGet("users/mentors/{id}/basic-info", async (
+			int id,
+			IMediator mediator) =>
+			{
+				var result = await mediator.SendQueryAsync<GetMentorBasicInfoQuery, MentorBasicInfoResponse>(new GetMentorBasicInfoQuery(id));
 
-                return result.DecideWhatToReturn();
-            })
-            .WithTags(TagsConstants.Mentors)
-            .WithDescription("Gets basic profile information for a mentor")
-            .Produces<MentorBasicInfoResponse>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound)
-            .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
-    }
+				return result.DecideWhatToReturn();
+			})
+			.WithTags(TagsConstants.Mentors)
+			.WithDescription("Gets basic profile information for a mentor")
+			.Produces<MentorBasicInfoResponse>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status404NotFound)
+			.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
+	}
 }

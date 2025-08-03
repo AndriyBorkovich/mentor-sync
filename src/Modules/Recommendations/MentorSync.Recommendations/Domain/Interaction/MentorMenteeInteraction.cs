@@ -5,5 +5,5 @@
 /// </summary>
 public sealed class MentorMenteeInteraction : BaseInteraction
 {
-    public int MentorId { get; set; }
+	public int MentorId { get; set; }
 }

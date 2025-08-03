@@ -1,5 +1,4 @@
 using Ardalis.Result;
-using MediatR;
 using MentorSync.Scheduling.Data;
 using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -7,16 +6,16 @@ using Microsoft.EntityFrameworkCore;
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
 
 public sealed class GetMentorUpcomingSessionsQueryHandler(
-    SchedulingDbContext dbContext)
-    : IRequestHandler<GetMentorUpcomingSessionsQuery, Result<MentorUpcomingSessionsResponse>>
+	SchedulingDbContext dbContext)
+	: IQueryHandler<GetMentorUpcomingSessionsQuery, MentorUpcomingSessionsResponse>
 {
-    public async Task<Result<MentorUpcomingSessionsResponse>> Handle(GetMentorUpcomingSessionsQuery request, CancellationToken cancellationToken)
-    {
-        var now = DateTimeOffset.UtcNow;
+	public async Task<Result<MentorUpcomingSessionsResponse>> Handle(GetMentorUpcomingSessionsQuery request, CancellationToken cancellationToken = default)
+	{
+		var now = DateTimeOffset.UtcNow;
 
-        var sessions = await dbContext.Database
-            .SqlQuery<SessionInfo>(
-            $@"
+		var sessions = await dbContext.Database
+			.SqlQuery<SessionInfo>(
+			$@"
                 SELECT 
                 b.""Id"",
                 'Сесія з ' || u.""UserName"" AS ""Title"",
@@ -33,13 +32,12 @@ public sealed class GetMentorUpcomingSessionsQueryHandler(
                 AND b.""Status"" = {BookingStatus.Pending.ToString()}
                 ORDER BY b.""Start""
                 OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY")
-            .Where(s => s.StartTime > now)
-            .ToListAsync(cancellationToken);
+			.Where(s => s.StartTime > now)
+			.ToListAsync(cancellationToken);
 
-
-        return Result.Success(new MentorUpcomingSessionsResponse
-        {
-            UpcomingSessions = sessions
-        });
-    }
+		return Result.Success(new MentorUpcomingSessionsResponse
+		{
+			UpcomingSessions = sessions,
+		});
+	}
 }

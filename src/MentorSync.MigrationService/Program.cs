@@ -12,4 +12,5 @@ builder.AddDbContexts();
 builder.Services.AddMigrationsWorker();
 
 var host = builder.Build();
-host.Run();
+
+await host.RunAsync();

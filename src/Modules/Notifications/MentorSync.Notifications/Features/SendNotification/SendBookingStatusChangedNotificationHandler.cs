@@ -1,5 +1,5 @@
 using System.Text.Json;
-using MediatR;
+using Ardalis.Result;
 using MentorSync.Notifications.Contracts;
 using MentorSync.Notifications.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -7,30 +7,32 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Notifications.Features.SendNotification;
 
-public class SendBookingStatusChangedNotificationHandler(
-    IHubContext<NotificationHub> hubContext,
-    ILogger<SendBookingStatusChangedNotificationHandler> logger) : IRequestHandler<SendBookingStatusChangedNotificationCommand, bool>
+public sealed class SendBookingStatusChangedNotificationHandler(
+	IHubContext<NotificationHub> hubContext,
+	ILogger<SendBookingStatusChangedNotificationHandler> logger)
+		: ICommandHandler<SendBookingStatusChangedNotificationCommand, bool>
 {
-    public async Task<bool> Handle(SendBookingStatusChangedNotificationCommand request, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var notificationJson = JsonSerializer.Serialize(request.Notification);
-            await hubContext.Clients.User(request.UserId)
-                .SendAsync("BookingStatusChanged", notificationJson, cancellationToken);
+	public async Task<Result<bool>> Handle(
+		SendBookingStatusChangedNotificationCommand request, CancellationToken cancellationToken = default)
+	{
+		try
+		{
+			var notificationJson = JsonSerializer.Serialize(request.Notification);
+			await hubContext.Clients.User(request.UserId)
+				.SendAsync("BookingStatusChanged", notificationJson, cancellationToken);
 
-            logger.LogInformation(
-                "Sent booking status changed notification for booking {BookingId} to user {UserId}",
-                request.Notification.BookingId, request.UserId);
+			logger.LogInformation(
+				"Sent booking status changed notification for booking {BookingId} to user {UserId}",
+				request.Notification.BookingId, request.UserId);
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex,
-                "Error sending booking status changed notification for booking {BookingId} to user {UserId}",
-                request.Notification.BookingId, request.UserId);
-            return false;
-        }
-    }
+			return true;
+		}
+		catch (Exception ex)
+		{
+			logger.LogError(ex,
+				"Error sending booking status changed notification for booking {BookingId} to user {UserId}",
+				request.Notification.BookingId, request.UserId);
+			return false;
+		}
+	}
 }

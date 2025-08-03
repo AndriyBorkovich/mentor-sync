@@ -4,8 +4,8 @@ namespace MentorSync.Ratings.Contracts.Services;
 
 public interface IMaterialReviewService
 {
-    /// <summary>
-    /// Get mentee material ratings (if any).
-    /// </summary>
-    Task<List<MaterialReviewResult>> GetAllReviewsAsync(CancellationToken cancellationToken = default);
+	/// <summary>
+	/// Get mentee material ratings (if any).
+	/// </summary>
+	Task<IReadOnlyList<MaterialReviewResult>> GetAllReviewsAsync(CancellationToken cancellationToken = default);
 }

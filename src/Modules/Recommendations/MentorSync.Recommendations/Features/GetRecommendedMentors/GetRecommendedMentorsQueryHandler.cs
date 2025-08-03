@@ -1,21 +1,22 @@
 ﻿using Ardalis.Result;
-using MediatR;
 using MentorSync.Recommendations.Data;
 using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
 public sealed class GetRecommendedMentorsQueryHandler(
-    RecommendationsDbContext recommendationsContext)
-        : IRequestHandler<GetRecommendedMentorsQuery, Result<PaginatedList<RecommendedMentorResponse>>>
+	RecommendationsDbContext recommendationsContext)
+		: IQueryHandler<GetRecommendedMentorsQuery, PaginatedList<RecommendedMentorResponse>>
 {
-    public async Task<Result<PaginatedList<RecommendedMentorResponse>>> Handle(GetRecommendedMentorsQuery request, CancellationToken cancellationToken)
-    {
-        var menteeId = request.MenteeId;
-        var mentorsQuery = recommendationsContext.Database
-            .SqlQuery<RecommendedMentorResultDto>($@"
+	public async Task<Result<PaginatedList<RecommendedMentorResponse>>> Handle(
+		GetRecommendedMentorsQuery request, CancellationToken cancellationToken = default)
+	{
+		var menteeId = request.MenteeId;
+		var mentorsQuery = recommendationsContext.Database
+			.SqlQuery<RecommendedMentorResultDto>($@"
                 SELECT DISTINCT ON (u.""Id"")
                     u.""Id"",
                     u.""UserName"" as ""Name"",
@@ -36,99 +37,100 @@ public sealed class GetRecommendedMentorsQueryHandler(
                 INNER JOIN recommendations.""MentorRecommendationResults"" rr ON mp.""MentorId"" = rr.""MentorId"" AND rr.""MenteeId"" = {menteeId}
                 WHERE rr.""MenteeId"" = {menteeId} AND rr.""FinalScore"" != 'NaN' AND rr.""ContentBasedScore"" > 0.0 AND rr.""CollaborativeScore"" > 0.0");
 
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
-        {
-            var pattern = $"%{request.SearchTerm.ToLower()}%";
-            mentorsQuery = mentorsQuery
-                .Where(m => EF.Functions.ILike(m.Name, pattern) ||
-                            EF.Functions.ILike(m.Title, pattern) ||
-                            m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
-        }
+		if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+		{
+			var pattern = $"%{request.SearchTerm.ToLower()}%";
+			mentorsQuery = mentorsQuery
+				.Where(m => EF.Functions.ILike(m.Name, pattern) ||
+							EF.Functions.ILike(m.Title, pattern) ||
+							m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
+		}
 
-        if (request.ProgrammingLanguages != null && request.ProgrammingLanguages.Count != 0)
-        {
-            mentorsQuery = mentorsQuery.Where(m =>
-                m.ProgrammingLanguages != null &&
-                request.ProgrammingLanguages.Any(lang =>
-                    m.ProgrammingLanguages.Contains(lang)));
-        }
+		if (request.ProgrammingLanguages != null && request.ProgrammingLanguages.Count != 0)
+		{
+			mentorsQuery = mentorsQuery.Where(m =>
+				m.ProgrammingLanguages != null &&
+				request.ProgrammingLanguages.Any(lang =>
+					m.ProgrammingLanguages.Contains(lang)));
+		}
 
-        var searchedIndustry = request.Industry;
-        if (searchedIndustry.HasValue && searchedIndustry.Value != 0)
-        {
-            mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) > 0);
-        }
-        if (request.MinExperienceYears.HasValue)
-        {
-            mentorsQuery = mentorsQuery.Where(m =>
-                m.ExperienceYears.HasValue &&
-                m.ExperienceYears.Value >= request.MinExperienceYears.Value);
-        }
+		var searchedIndustry = request.Industry;
+		if (searchedIndustry.HasValue && searchedIndustry.Value != Industry.None)
+		{
+			mentorsQuery = mentorsQuery.Where(m => (m.Industries & searchedIndustry.Value) > Industry.None);
+		}
 
-        if (request.MinRating.HasValue)
-        {
-            mentorsQuery = mentorsQuery.Where(m => m.Rating >= request.MinRating.Value);
-        }
+		if (request.MinExperienceYears.HasValue)
+		{
+			mentorsQuery = mentorsQuery.Where(m =>
+				m.ExperienceYears >= request.MinExperienceYears.Value);
+		}
 
-        if (request.MaxRating.HasValue)
-        {
-            mentorsQuery = mentorsQuery.Where(m => m.Rating <= request.MaxRating.Value);
-        }
+		if (request.MinRating.HasValue)
+		{
+			mentorsQuery = mentorsQuery.Where(m => m.Rating >= request.MinRating.Value);
+		}
 
-        mentorsQuery = mentorsQuery.Where(m => m.IsActive);
-        mentorsQuery = mentorsQuery.OrderByDescending(m => m.FinalScore);
+		if (request.MaxRating.HasValue)
+		{
+			mentorsQuery = mentorsQuery.Where(m => m.Rating <= request.MaxRating.Value);
+		}
 
-        // Get total count before pagination
-        var totalCount = await mentorsQuery.CountAsync(cancellationToken);
+		mentorsQuery = mentorsQuery.Where(m => m.IsActive);
+		mentorsQuery = mentorsQuery.OrderByDescending(m => m.FinalScore);
 
-        if (totalCount == 0)
-        {
-            return Result.NotFound("No recommended mentors found");
-        }
+		// Get total count before pagination
+		var totalCount = await mentorsQuery.CountAsync(cancellationToken);
 
-        // Apply pagination
-        mentorsQuery = mentorsQuery
-            .Skip((request.PageNumber - 1) * request.PageSize)
-            .Take(request.PageSize);
+		if (totalCount == 0)
+		{
+			return Result.NotFound("No recommended mentors found");
+		}
 
-        var mentors = await mentorsQuery.ToListAsync(cancellationToken);
+		// Apply pagination
+		mentorsQuery = mentorsQuery
+			.Skip((request.PageNumber - 1) * request.PageSize)
+			.Take(request.PageSize);
 
-        if (mentors == null || mentors.Count == 0)
-        {
-            return Result.NotFound("No recommended mentors found on this page");
-        }
+		var mentors = await mentorsQuery.ToListAsync(cancellationToken);
 
-        var items = mentors.Select(m => new RecommendedMentorResponse(
-            m.Id,
-            m.Name,
-            m.Title,
-            m.Rating,
-            ConvertSkillsToList(m.Skills),
-            m.ProfileImage,
-            m.ExperienceYears,
-            m.Industries.GetCategories(),
-            float.IsNaN(m.CollaborativeScore) ? 0 : m.CollaborativeScore,
-            float.IsNaN(m.ContentBasedScore) ? 0 : m.ContentBasedScore,
-            float.IsNaN(m.FinalScore) ? 0 : m.FinalScore
-        )).ToList();
+		if (mentors == null || mentors.Count == 0)
+		{
+			return Result.NotFound("No recommended mentors found on this page");
+		}
 
-        var paginatedList = new PaginatedList<RecommendedMentorResponse>
-        {
-            Items = items,
-            PageNumber = request.PageNumber,
-            PageSize = request.PageSize,
-            TotalCount = totalCount
-        };
+		var items = mentors.ConvertAll(m => new RecommendedMentorResponse(
+			m.Id,
+			m.Name,
+			m.Title,
+			m.Rating,
+			ConvertSkillsToList(m.Skills),
+			m.ProfileImage,
+			m.ExperienceYears,
+			m.Industries.GetCategories(),
+			float.IsNaN(m.CollaborativeScore) ? 0 : m.CollaborativeScore,
+			float.IsNaN(m.ContentBasedScore) ? 0 : m.ContentBasedScore,
+			float.IsNaN(m.FinalScore) ? 0 : m.FinalScore
+		));
 
-        return Result.Success(paginatedList);
-    }
+		var paginatedList = new PaginatedList<RecommendedMentorResponse>
+		{
+			Items = items,
+			PageNumber = request.PageNumber,
+			PageSize = request.PageSize,
+			TotalCount = totalCount
+		};
 
-    private static List<RecommendedSkillResponse> ConvertSkillsToList(string[] skills)
-    {
-        if (skills == null)
-            return [];
+		return Result.Success(paginatedList);
+	}
 
-        // Convert skills array to list of SkillResponse objects
-        return [.. skills.Select((skill, index) => new RecommendedSkillResponse(index.ToString(), skill))];
-    }
+	private static List<RecommendedSkillResponse> ConvertSkillsToList(string[] skills)
+	{
+		if (skills == null)
+		{
+			return [];
+		}
+
+		return [.. skills.Select((skill, index) => new RecommendedSkillResponse(index.ToString(), skill))];
+	}
 }

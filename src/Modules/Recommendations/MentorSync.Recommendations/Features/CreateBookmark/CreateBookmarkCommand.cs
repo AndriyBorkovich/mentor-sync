@@ -1,8 +1,5 @@
-﻿using Ardalis.Result;
-using MediatR;
-
-namespace MentorSync.Recommendations.Features.CreateBookmark;
+﻿namespace MentorSync.Recommendations.Features.CreateBookmark;
 
 public sealed record CreateBookmarkCommand(
-    int MenteeId,
-    int MentorId) : IRequest<Result<Unit>>;
+	int MenteeId,
+	int MentorId) : ICommand<string>;

@@ -1,26 +1,26 @@
 ﻿using Ardalis.Result;
-using MediatR;
 using MentorSync.Recommendations.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.DeleteBookmark;
 
 public sealed class DeleteBookmarkCommandHandler(
-    RecommendationsDbContext dbContext) : IRequestHandler<DeleteBookmarkCommand, Result<Unit>>
+	RecommendationsDbContext dbContext) : ICommandHandler<DeleteBookmarkCommand, string>
 {
-    public async Task<Result<Unit>> Handle(DeleteBookmarkCommand request, CancellationToken cancellationToken)
-    {
-        var bookmark = await dbContext.MentorBookmarks
-            .FirstOrDefaultAsync(b => b.MentorId == request.MentorId && b.MenteeId == request.MenteeId, cancellationToken);
-        if (bookmark == null)
-        {
-            return Result.NotFound($"Bookmark not found.");
-        }
+	public async Task<Result<string>> Handle(DeleteBookmarkCommand request, CancellationToken cancellationToken = default)
+	{
+		var bookmark = await dbContext.MentorBookmarks
+			.FirstOrDefaultAsync(b => b.MentorId == request.MentorId && b.MenteeId == request.MenteeId, cancellationToken);
 
-        dbContext.MentorBookmarks.Remove(bookmark);
+		if (bookmark == null)
+		{
+			return Result.NotFound($"Bookmark not found.");
+		}
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+		dbContext.MentorBookmarks.Remove(bookmark);
 
-        return Unit.Value;
-    }
+		await dbContext.SaveChangesAsync(cancellationToken);
+
+		return Result.Success("Bookmark deleted successfully");
+	}
 }

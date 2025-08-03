@@ -4,5 +4,5 @@ namespace MentorSync.Users.Contracts.Services;
 
 public interface IMentorProfileService
 {
-    Task<IEnumerable<MentorProfileModel>> GetAllMentorsAsync(params int[] mentorIds);
+	Task<IEnumerable<MentorProfileModel>> GetAllMentorsAsync(params int[] mentorIds);
 }

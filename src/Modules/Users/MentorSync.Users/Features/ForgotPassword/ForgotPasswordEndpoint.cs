@@ -1,6 +1,5 @@
 ﻿using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Abstractions.Messaging;
 using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -11,24 +10,24 @@ namespace MentorSync.Users.Features.ForgotPassword;
 
 public sealed class ForgotPasswordEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapPost("/users/forgot-password", async (
-            [FromBody] string email,
-            HttpContext httpContext,
-            IMediator mediator,
-            CancellationToken ct) =>
-        {
-            var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-            var result = await mediator.SendCommandAsync<ForgotPasswordCommand, string>(new ForgotPasswordCommand(email, baseUrl), ct);
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapPost("/users/forgot-password", async (
+			[FromBody] string email,
+			HttpContext httpContext,
+			IMediator mediator,
+			CancellationToken ct) =>
+		{
+			var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
+			var result = await mediator.SendCommandAsync<ForgotPasswordCommand, string>(new ForgotPasswordCommand(email, baseUrl), ct);
 
-            return result.DecideWhatToReturn();
-        })
-        .AllowAnonymous()
-        .WithTags(TagsConstants.Users)
-        .WithDescription("Initiate forgot password process for user (send email)")
-        .Produces<string>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status404NotFound)
-        .ProducesProblem(StatusCodes.Status409Conflict);
-    }
+			return result.DecideWhatToReturn();
+		})
+		.AllowAnonymous()
+		.WithTags(TagsConstants.Users)
+		.WithDescription("Initiate forgot password process for user (send email)")
+		.Produces<string>(StatusCodes.Status200OK)
+		.ProducesProblem(StatusCodes.Status404NotFound)
+		.ProducesProblem(StatusCodes.Status409Conflict);
+	}
 }

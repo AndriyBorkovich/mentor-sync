@@ -11,9 +11,9 @@ namespace MentorSync.SharedKernel.Abstractions.Messaging;
 /// <typeparam name="TCommand">The type of the command to handle. Must implement <see cref="ICommand{TResponse}"/>.</typeparam>
 /// <typeparam name="TResponse">The type of the response produced by handling the command.</typeparam>
 public interface ICommandHandler<in TCommand, TResponse>
-    where TCommand : ICommand<TResponse>
+	where TCommand : ICommand<TResponse>
 {
-    Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken = default);
+	Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -24,7 +24,7 @@ public interface ICommandHandler<in TCommand, TResponse>
 /// supports asynchronous  execution and allows cancellation through a <see cref="CancellationToken"/>.</remarks>
 /// <typeparam name="TCommand">The type of command to be handled. Must implement the <see cref="ICommand"/> interface.</typeparam>
 public interface ICommandHandler<in TCommand>
-    where TCommand : ICommand
+	where TCommand : ICommand
 {
-    Task<Result> Handle(TCommand command, CancellationToken cancellationToken = default);
+	Task<Result> Handle(TCommand command, CancellationToken cancellationToken = default);
 }

@@ -1,5 +1,4 @@
-﻿using MediatR;
-using MentorSync.SharedKernel;
+﻿using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Features.Common.Responses;
@@ -18,23 +17,23 @@ namespace MentorSync.Users.Features.Register;
 /// </remarks>
 public sealed class RegisterEndpoint : IEndpoint
 {
-    /// <summary>
-    /// Maps the registration endpoint to the application's routing configuration.
-    /// </summary>
-    /// <param name="app">The endpoint route builder used to configure the API endpoint.</param>
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapPost("users/register", async (RegisterCommand request, ISender sender) =>
-        {
-            var result = await sender.Send(request);
+	/// <summary>
+	/// Maps the registration endpoint to the application's routing configuration.
+	/// </summary>
+	/// <param name="app">The endpoint route builder used to configure the API endpoint.</param>
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapPost("users/register", async (RegisterCommand request, IMediator mediator) =>
+		{
+			var result = await mediator.SendCommandAsync<RegisterCommand, CreatedEntityResponse>(request);
 
-            return result.DecideWhatToReturn();
-        })
-        .AllowAnonymous()
-        .WithTags(TagsConstants.Users)
-        .WithDescription("Register new user")  
-        .Produces<CreatedEntityResponse>(StatusCodes.Status200OK)
-        .ProducesProblem(StatusCodes.Status400BadRequest)
-        .ProducesProblem(StatusCodes.Status409Conflict);
-    }
+			return result.DecideWhatToReturn();
+		})
+		.AllowAnonymous()
+		.WithTags(TagsConstants.Users)
+		.WithDescription("Register new user")
+		.Produces<CreatedEntityResponse>(StatusCodes.Status200OK)
+		.ProducesProblem(StatusCodes.Status400BadRequest)
+		.ProducesProblem(StatusCodes.Status409Conflict);
+	}
 }

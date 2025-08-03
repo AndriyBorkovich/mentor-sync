@@ -1,4 +1,3 @@
-using MentorSync.Notifications.Contracts;
 using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Features.SendEmail;
 using MentorSync.Notifications.Infrastructure.Emails;
@@ -10,36 +9,35 @@ namespace MentorSync.Notifications;
 
 public static class ModuleRegistration
 {
-    public static void AddNotificationsModule(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddSignalR();
+	public static void AddNotificationsModule(this IHostApplicationBuilder builder)
+	{
+		builder.Services.AddSignalR();
 
-        AddDatabase(builder);
+		AddDatabase(builder);
 
-        AddEndpoints(builder);
+		AddEndpoints(builder.Services);
 
-        AddBackgroundJobs(builder);
-    }
+		AddBackgroundJobs(builder);
+	}
 
-    private static void AddDatabase(IHostApplicationBuilder builder)
-    {
-        builder.AddMongoDBClient("mongodb");
-        builder.Services.Configure<MongoSettings>(
-           builder.Configuration.GetSection(nameof(MongoSettings)));
-        builder.Services.AddScoped<NotificationsDbContext>();
-    }
+	private static void AddDatabase(IHostApplicationBuilder builder)
+	{
+		builder.AddMongoDBClient("mongodb");
+		builder.Services.Configure<MongoSettings>(
+		   builder.Configuration.GetSection(nameof(MongoSettings)));
+		builder.Services.AddScoped<NotificationsDbContext>();
+	}
 
-    private static void AddEndpoints(IHostApplicationBuilder builder)
-    {
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(SendEmailCommand).Assembly));
-        builder.Services.AddEndpoints(typeof(NotificationsDbContext).Assembly);
-    }
+	private static void AddEndpoints(IServiceCollection services)
+	{
+		services.AddHandlers(typeof(ModuleRegistration).Assembly);
+		services.AddEndpoints(typeof(NotificationsDbContext).Assembly);
+	}
 
-    private static void AddBackgroundJobs(IHostApplicationBuilder builder)
-    {
-        builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
-        builder.Services.AddSingleton<IOutboxProcessor, EmailOutboxProcessor>();
-        builder.Services.AddHostedService<EmailSendingJob>();
-    }
+	private static void AddBackgroundJobs(IHostApplicationBuilder builder)
+	{
+		builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
+		builder.Services.AddSingleton<IOutboxProcessor, EmailOutboxProcessor>();
+		builder.Services.AddHostedService<EmailSendingJob>();
+	}
 }

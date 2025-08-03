@@ -5,8 +5,8 @@
 /// </summary>
 public sealed class MentorAvailability
 {
-    public int Id { get; set; }
-    public int MentorId { get; set; }
-    public DateTimeOffset Start { get; set; }
-    public DateTimeOffset End { get; set; }
+	public int Id { get; set; }
+	public int MentorId { get; set; }
+	public DateTimeOffset Start { get; set; }
+	public DateTimeOffset End { get; set; }
 }

@@ -5,7 +5,7 @@
 /// </summary>
 /// <typeparam name="TResponse">The type of the response produced by the command. This type must be non-nullable.</typeparam>
 public interface ICommand<TResponse> : IBaseCommand
-    where TResponse : notnull;
+	where TResponse : notnull;
 
 /// <summary>
 /// Represents a command that can be executed.

@@ -4,5 +4,5 @@ namespace MentorSync.Users.Domain.User;
 
 public sealed class AppUserToken : IdentityUserToken<int>
 {
-    public AppUser User { get; set; }
+	public AppUser User { get; set; }
 }

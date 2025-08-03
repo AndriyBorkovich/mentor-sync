@@ -5,7 +5,5 @@
 /// </summary>
 public interface IInteractionAggregator
 {
-    Task RunAsync(CancellationToken cancellationToken);
+	Task RunAsync(CancellationToken cancellationToken);
 }
-
-

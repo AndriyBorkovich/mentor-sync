@@ -5,5 +5,5 @@
 /// </summary>
 public interface IHybridScorer
 {
-    Task GenerateRecommendationsAsync(CancellationToken cancellationToken);
+	Task GenerateRecommendationsAsync(CancellationToken cancellationToken);
 }

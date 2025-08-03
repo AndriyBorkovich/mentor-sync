@@ -4,5 +4,5 @@ namespace MentorSync.SharedKernel.Abstractions.Messaging;
 
 public interface IDomainEventsDispatcher
 {
-    Task DispatchAsync(IEnumerable<IHaveDomainEvents> entitiesWithEvents);
+	Task DispatchAsync(IEnumerable<IHaveDomainEvents> entitiesWithEvents);
 }

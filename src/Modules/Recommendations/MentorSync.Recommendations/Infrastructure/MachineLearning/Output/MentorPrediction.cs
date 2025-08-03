@@ -2,5 +2,5 @@
 
 public sealed class MentorPrediction
 {
-    public float Score { get; set; }
+	public float Score { get; set; }
 }

@@ -1,37 +1,36 @@
 ﻿using Ardalis.Result;
 using FluentValidation;
-using MentorSync.SharedKernel.Abstractions.Messaging;
 
 namespace MentorSync.SharedKernel.Behaviors;
 
 public sealed class ValidationBehavior<TInput, TOutput>(IEnumerable<IValidator<TInput>> validators)
-    : IPipelineBehavior<TInput, TOutput>
+	: IPipelineBehavior<TInput, TOutput>
 {
-    public async Task<Result<TOutput>> Handle(TInput input, Func<Task<Result<TOutput>>> next, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(next);
+	public async Task<Result<TOutput>> Handle(TInput input, Func<Task<Result<TOutput>>> next, CancellationToken cancellationToken = default)
+	{
+		ArgumentNullException.ThrowIfNull(next);
 
-        if (!validators.Any())
-        {
-            return await next().ConfigureAwait(false);
-        }
-        
-        var context = new ValidationContext<TInput>(input);
+		if (!validators.Any())
+		{
+			return await next().ConfigureAwait(false);
+		}
 
-        var validationResults = await Task.WhenAll(
-            validators.Select(v =>
-                v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
+		var context = new ValidationContext<TInput>(input);
 
-        var failures = validationResults
-            .Where(r => r.Errors.Count > 0)
-            .SelectMany(r => r.Errors)
-            .ToList();
+		var validationResults = await Task.WhenAll(
+			validators.Select(v =>
+				v.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
 
-        if (failures.Count > 0)
-        {
-            throw new ValidationException(failures);
-        }
+		var failures = validationResults
+			.Where(r => r.Errors.Count > 0)
+			.SelectMany(r => r.Errors)
+			.ToList();
 
-        return await next().ConfigureAwait(false);
-    }
+		if (failures.Count > 0)
+		{
+			throw new ValidationException(failures);
+		}
+
+		return await next().ConfigureAwait(false);
+	}
 }

@@ -1,5 +1,3 @@
-﻿using MentorSync.SharedKernel.Abstractions.Messaging;
-
-namespace MentorSync.Users.Features.Confirm;
+﻿namespace MentorSync.Users.Features.Confirm;
 
 public sealed record ConfirmAccountCommand(string Email, string Token) : ICommand<string>;
