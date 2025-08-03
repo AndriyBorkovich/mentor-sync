@@ -5,7 +5,7 @@
 /// </summary>
 public sealed class MaterialReviewResult
 {
-    public int MenteeId { get; set; }
-    public int MaterialId { get; set; }
-    public int Rating { get; set; }
+	public int MenteeId { get; set; }
+	public int MaterialId { get; set; }
+	public int Rating { get; set; }
 }

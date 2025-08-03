@@ -5,5 +5,5 @@
 /// </summary>
 public sealed class MentorRecommendationResult : BaseRecommendationResult
 {
-    public int MentorId { get; set; }
+	public int MentorId { get; set; }
 }

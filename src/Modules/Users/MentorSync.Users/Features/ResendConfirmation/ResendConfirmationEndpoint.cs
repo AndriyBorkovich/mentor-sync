@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MediatR;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Interfaces;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,19 +11,21 @@ namespace MentorSync.Users.Features.ResendConfirmation;
 
 public sealed class ResendConfirmationEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapGet("/users/reconfirm", async ([FromQuery, Required] int userId, IMediator mediator) =>
-            {
-                await mediator.Publish(new UserCreatedEvent(userId));
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapGet("/users/reconfirm", async (
+			[FromQuery, Required] int userId,
+			IPublisher<UserCreatedEvent> eventPublisher) =>
+			{
+				await eventPublisher.PublishAsync(new UserCreatedEvent(userId));
 
-                return Results.Ok("Confirmation email sent");
-            })
-            .WithTags(TagsConstants.Users)
-            .WithDescription("Resend confirmation email to user")
-            .AllowAnonymous()
-            .Produces<string>()
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .RequireAuthorization(PolicyConstants.AdminOnly);
-    }
+				return Results.Ok("Confirmation email sent");
+			})
+			.WithTags(TagsConstants.Users)
+			.WithDescription("Resend confirmation email to user")
+			.AllowAnonymous()
+			.Produces<string>()
+			.Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+			.RequireAuthorization(PolicyConstants.AdminOnly);
+	}
 }

@@ -6,29 +6,29 @@ namespace MentorSync.MigrationService.Seeders;
 
 public static class RolesSeeder
 {
-    public static async Task SeedAsync(IServiceProvider serviceProvider)
-    {
-        var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
+	public static async Task SeedAsync(IServiceProvider serviceProvider)
+	{
+		var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
 
-        await CreateRole(Roles.Admin);
-        await CreateRole(Roles.Mentor);
-        await CreateRole(Roles.Mentee);
+		await CreateRole(Roles.Admin);
+		await CreateRole(Roles.Mentor);
+		await CreateRole(Roles.Mentee);
 
-        return;
+		return;
 
-        async Task CreateRole(string roleName)
-        {
-            var appRole = await roleManager.FindByNameAsync(roleName);
+		async Task CreateRole(string roleName)
+		{
+			var appRole = await roleManager.FindByNameAsync(roleName);
 
-            if (appRole is null)
-            {
-                appRole = new AppRole
-                {
-                    Name = roleName
-                };
+			if (appRole is null)
+			{
+				appRole = new AppRole
+				{
+					Name = roleName
+				};
 
-                await roleManager.CreateAsync(appRole);
-            }
-        }
-    }
+				await roleManager.CreateAsync(appRole);
+			}
+		}
+	}
 }

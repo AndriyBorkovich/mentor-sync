@@ -5,5 +5,5 @@
 /// </summary>
 public sealed class MentorViewEvent : BaseViewEvent
 {
-    public int MentorId { get; set; }
+	public int MentorId { get; set; }
 }

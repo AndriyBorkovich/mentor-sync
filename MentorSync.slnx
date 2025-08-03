@@ -6,6 +6,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path="CustomDictionary.xml" />
+    <File Path="Directory.build.props" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/MentorSync.API/MentorSync.API.csproj" />

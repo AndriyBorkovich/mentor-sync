@@ -2,5 +2,5 @@ namespace MentorSync.Notifications.Features.InitiateChat;
 
 public sealed class InitiateChatResponse
 {
-    public string ChatRoomId { get; set; }
+	public string ChatRoomId { get; set; }
 }

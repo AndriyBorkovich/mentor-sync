@@ -1,8 +1,6 @@
-using System.Security.Claims;
-using MediatR;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,34 +10,27 @@ namespace MentorSync.Scheduling.Features.MentorAvailability.Delete;
 
 public sealed class DeleteMentorAvailabilityEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder app)
-    {
-        app.MapDelete("/scheduling/mentors/{mentorId:int}/availability/{availabilityId:int}", async (
-            [FromRoute] int mentorId,
-            [FromRoute] int availabilityId,
-            ISender sender,
-            HttpContext httpContext) =>
-        {
-            var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
-            {
-                return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
-            }
+	public void MapEndpoint(IEndpointRouteBuilder app)
+	{
+		app.MapDelete("/scheduling/mentors/{mentorId:int}/availability/{availabilityId:int}", async (
+			[FromRoute] int mentorId,
+			[FromRoute] int availabilityId,
+			IMediator mediator) =>
+		{
+			var command = new DeleteMentorAvailabilityCommand(
+				mentorId,
+				availabilityId);
 
-            var command = new DeleteMentorAvailabilityCommand(
-                mentorId,
-                availabilityId);
+			var result = await mediator.SendCommandAsync<DeleteMentorAvailabilityCommand, string>(command);
 
-            var result = await sender.Send(command);
-
-            return result.DecideWhatToReturn();
-        })
-        .WithTags(TagsConstants.Scheduling)
-        .WithDescription("Deletes an availability slot for a mentor")
-        .Produces<Unit>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status403Forbidden)
-        .Produces(StatusCodes.Status404NotFound)
-        .RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorOnly);
-    }
+			return result.DecideWhatToReturn();
+		})
+		.WithTags(TagsConstants.Scheduling)
+		.WithDescription("Deletes an availability slot for a mentor")
+		.Produces<string>(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status400BadRequest)
+		.Produces(StatusCodes.Status403Forbidden)
+		.Produces(StatusCodes.Status404NotFound)
+		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorOnly);
+	}
 }

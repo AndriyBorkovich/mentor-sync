@@ -1,9 +1,7 @@
-﻿using MediatR;
+﻿namespace MentorSync.Notifications.Contracts;
 
-namespace MentorSync.Notifications.Contracts;
-
-public class SendBookingStatusChangedNotificationCommand : IRequest<bool>
+public sealed class SendBookingStatusChangedNotificationCommand : ICommand<bool>
 {
-    public required BookingStatusChangedNotification Notification { get; init; }
-    public required string UserId { get; init; }
+	public required BookingStatusChangedNotification Notification { get; init; }
+	public required string UserId { get; init; }
 }

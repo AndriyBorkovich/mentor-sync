@@ -12,31 +12,33 @@ namespace MentorSync.Ratings;
 
 public static class ModuleRegistration
 {
-    public static void AddRatingsModule(this IHostApplicationBuilder builder)
-    {
-        builder.AddNpgsqlDbContext<RatingsDbContext>(
-            connectionName: GeneralConstants.DatabaseName,
-            configureSettings: c => c.DisableTracing = true,
-            configureDbContextOptions: opt =>
-            {
-                opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Ratings));
-            });
+	public static void AddRatingsModule(this IHostApplicationBuilder builder)
+	{
+		AddDatabase(builder);
 
-        AddEndpoints(builder.Services);
+		AddEndpoints(builder.Services);
 
-        AddExternalServices(builder.Services);
-    }
+		AddExternalServices(builder.Services);
+	}
 
-    private static void AddEndpoints(IServiceCollection services)
-    {
-        services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
-        services.AddEndpoints(typeof(RatingsDbContext).Assembly);
-    }
+	private static void AddDatabase(IHostApplicationBuilder builder)
+		=> builder.AddNpgsqlDbContext<RatingsDbContext>(
+				connectionName: GeneralConstants.DatabaseName,
+				configureSettings: c => c.DisableTracing = true,
+				configureDbContextOptions: opt
+					=> opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Ratings)));
 
-    private static void AddExternalServices(IServiceCollection services)
-    {
-        services.AddScoped<IMentorReviewService, MentorReviewService>();
-        services.AddScoped<IMaterialReviewService, MaterialReviewService>();
-    }
+	private static void AddEndpoints(IServiceCollection services)
+	{
+		var assembly = typeof(ModuleRegistration).Assembly;
+		services.AddValidatorsFromAssembly(assembly);
+		services.AddHandlers(assembly);
+		services.AddEndpoints(assembly);
+	}
+
+	private static void AddExternalServices(IServiceCollection services)
+	{
+		services.AddScoped<IMentorReviewService, MentorReviewService>();
+		services.AddScoped<IMaterialReviewService, MaterialReviewService>();
+	}
 }

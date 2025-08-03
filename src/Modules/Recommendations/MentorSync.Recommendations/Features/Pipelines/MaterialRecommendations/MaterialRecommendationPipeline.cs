@@ -9,36 +9,36 @@ namespace MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 /// Automates the full hybrid (CF + CBF) recommendation pipeline for learning materials
 /// </summary>
 public sealed class MaterialRecommendationPipeline(
-    IServiceProvider serviceProvider,
-    ILogger<MaterialRecommendationPipeline> logger)
-    : BackgroundService
+	IServiceProvider serviceProvider,
+	ILogger<MaterialRecommendationPipeline> logger)
+	: BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        logger.LogInformation("Learning material recommendation pipeline started.");
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	{
+		logger.LogInformation("Learning material recommendation pipeline started.");
 
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            using var scope = serviceProvider.CreateScope();
+		while (!stoppingToken.IsCancellationRequested)
+		{
+			using var scope = serviceProvider.CreateScope();
 
-            try
-            {
-                var etl = scope.ServiceProvider.GetRequiredKeyedService<IInteractionAggregator>(ServicesConstants.MaterialsKey);
-                var trainer = scope.ServiceProvider.GetRequiredKeyedService<ICollaborativeTrainer>(ServicesConstants.MaterialsKey);
-                var scorer = scope.ServiceProvider.GetRequiredKeyedService<IHybridScorer>(ServicesConstants.MaterialsKey);
+			try
+			{
+				var etl = scope.ServiceProvider.GetRequiredKeyedService<IInteractionAggregator>(ServicesConstants.MaterialsKey);
+				var trainer = scope.ServiceProvider.GetRequiredKeyedService<ICollaborativeTrainer>(ServicesConstants.MaterialsKey);
+				var scorer = scope.ServiceProvider.GetRequiredKeyedService<IHybridScorer>(ServicesConstants.MaterialsKey);
 
-                await etl.RunAsync(stoppingToken);
-                await trainer.TrainAsync(stoppingToken);
-                await scorer.GenerateRecommendationsAsync(stoppingToken);
+				await etl.RunAsync(stoppingToken);
+				await trainer.TrainAsync(stoppingToken);
+				await scorer.GenerateRecommendationsAsync(stoppingToken);
 
-                logger.LogInformation("Learning material recommendation pipeline completed successfully");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Learning material recommendation pipeline failed");
-            }
+				logger.LogInformation("Learning material recommendation pipeline completed successfully");
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Learning material recommendation pipeline failed");
+			}
 
-            await Task.Delay(TimeSpan.FromMinutes(6), stoppingToken);
-        }
-    }
+			await Task.Delay(TimeSpan.FromMinutes(6), stoppingToken);
+		}
+	}
 }

@@ -1,7 +1,3 @@
-﻿using Ardalis.Result;
-using MediatR;
+﻿namespace MentorSync.Scheduling.Features.Booking.UpdatePending;
 
-namespace MentorSync.Scheduling.Features.Booking.UpdatePending;
-
-public sealed record UpdatePendingBookingsCommand() : IRequest<Result<int>>;
-
+public sealed record UpdatePendingBookingsCommand() : ICommand<int>;

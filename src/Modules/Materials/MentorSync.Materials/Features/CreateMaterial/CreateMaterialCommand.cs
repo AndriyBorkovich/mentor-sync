@@ -1,26 +1,24 @@
-using Ardalis.Result;
-using MediatR;
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace MentorSync.Materials.Features.CreateMaterial;
 
-public record CreateMaterialCommand : IRequest<Result<CreateMaterialResponse>>
+public sealed record CreateMaterialCommand : ICommand<CreateMaterialResponse>
 {
-    [Required]
-    [StringLength(200)]
-    public string Title { get; init; }
+	[Required]
+	[StringLength(200)]
+	public string Title { get; init; }
 
-    [StringLength(2000)]
-    public string Description { get; init; }
+	[StringLength(2000)]
+	public string Description { get; init; }
 
-    [Required]
-    public MaterialType Type { get; init; }
+	[Required]
+	public MaterialType Type { get; init; }
 
-    public string ContentMarkdown { get; init; }
+	public string ContentMarkdown { get; init; }
 
-    [Required]
-    public int MentorId { get; init; }
+	[Required]
+	public int MentorId { get; init; }
 
-    public List<string> Tags { get; init; } = new();
+	public IReadOnlyList<string> Tags { get; init; } = [];
 }

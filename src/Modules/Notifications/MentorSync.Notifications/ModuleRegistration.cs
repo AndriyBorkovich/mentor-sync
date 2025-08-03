@@ -9,23 +9,35 @@ namespace MentorSync.Notifications;
 
 public static class ModuleRegistration
 {
-    public static void AddNotificationsModule(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddSignalR(c =>
-        {
-            c.EnableDetailedErrors = true;
-        });
+	public static void AddNotificationsModule(this IHostApplicationBuilder builder)
+	{
+		builder.Services.AddSignalR();
 
-        builder.AddMongoDBClient("mongodb");
-        builder.Services.Configure<MongoSettings>(
-           builder.Configuration.GetSection(nameof(MongoSettings)));
-        builder.Services.AddScoped<NotificationsDbContext>();
+		AddDatabase(builder);
 
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
-        builder.Services.AddEndpoints(typeof(NotificationsDbContext).Assembly);
+		AddEndpoints(builder.Services);
 
-        builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
-        builder.Services.AddSingleton<IOutboxProcessor, EmailOutboxProcessor>();
-        builder.Services.AddHostedService<EmailSendingJob>();
-    }
+		AddBackgroundJobs(builder);
+	}
+
+	private static void AddDatabase(IHostApplicationBuilder builder)
+	{
+		builder.AddMongoDBClient("mongodb");
+		builder.Services.Configure<MongoSettings>(
+		   builder.Configuration.GetSection(nameof(MongoSettings)));
+		builder.Services.AddScoped<NotificationsDbContext>();
+	}
+
+	private static void AddEndpoints(IServiceCollection services)
+	{
+		services.AddHandlers(typeof(ModuleRegistration).Assembly);
+		services.AddEndpoints(typeof(NotificationsDbContext).Assembly);
+	}
+
+	private static void AddBackgroundJobs(IHostApplicationBuilder builder)
+	{
+		builder.Services.AddSingleton<IEmailSender, AzureEmailSender>();
+		builder.Services.AddSingleton<IOutboxProcessor, EmailOutboxProcessor>();
+		builder.Services.AddHostedService<EmailSendingJob>();
+	}
 }

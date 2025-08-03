@@ -1,6 +1,3 @@
-﻿using Ardalis.Result;
-using MediatR;
+﻿namespace MentorSync.Users.Features.ForgotPassword;
 
-namespace MentorSync.Users.Features.ForgotPassword;
-
-public sealed record ForgotPasswordCommand(string Email, string BaseUrl) : IRequest<Result<string>>;
+public sealed record ForgotPasswordCommand(string Email, string BaseUrl) : ICommand<string>;

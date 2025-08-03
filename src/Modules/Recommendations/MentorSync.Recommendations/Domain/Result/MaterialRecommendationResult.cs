@@ -5,5 +5,5 @@ namespace MentorSync.Recommendations.Domain.Result;
 /// </summary>
 public sealed class MaterialRecommendationResult : BaseRecommendationResult
 {
-    public int MaterialId { get; set; }
+	public int MaterialId { get; set; }
 }

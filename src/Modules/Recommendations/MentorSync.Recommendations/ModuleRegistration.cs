@@ -13,45 +13,45 @@ namespace MentorSync.Recommendations;
 
 public static class ModuleRegistration
 {
-    public static void AddRecommendationsModule(this IHostApplicationBuilder builder)
-    {
-        AddDatabase(builder);
+	public static void AddRecommendationsModule(this IHostApplicationBuilder builder)
+	{
+		AddDatabase(builder);
 
-        AddEndpoints(builder.Services);
+		AddEndpoints(builder.Services);
 
-        AddBackgroundJobs(builder.Services);
-    }
+		AddBackgroundJobs(builder.Services);
+	}
 
-    private static void AddDatabase(IHostApplicationBuilder builder)
-        => builder.AddNpgsqlDbContext<RecommendationsDbContext>(
-                connectionName: GeneralConstants.DatabaseName,
-                configureSettings: c => c.DisableTracing = true,
-                configureDbContextOptions: opt =>
-                {
-                    opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Recommendations));
-                });
+	private static void AddDatabase(IHostApplicationBuilder builder)
+		=> builder.AddNpgsqlDbContext<RecommendationsDbContext>(
+				connectionName: GeneralConstants.DatabaseName,
+				configureSettings: c => c.DisableTracing = true,
+				configureDbContextOptions: opt =>
+					opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Recommendations)));
 
-    private static void AddEndpoints(IServiceCollection services)
-    {
-        services.AddValidatorsFromAssembly(typeof(ModuleRegistration).Assembly);
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ModuleRegistration).Assembly));
-        services.AddEndpoints(typeof(RecommendationsDbContext).Assembly);
-    }
+	private static void AddEndpoints(IServiceCollection services)
+	{
+		var assembly = typeof(ModuleRegistration).Assembly;
 
-    private static void AddBackgroundJobs(this IServiceCollection services)
-    {
-        // Mentor recommendation services
-        services.AddKeyedScoped<IInteractionAggregator, MentorInteractionAggregator>(ServicesConstants.MentorsKey);
-        services.AddKeyedScoped<ICollaborativeTrainer, MentorCollaborativeTrainer>(ServicesConstants.MentorsKey);
-        services.AddKeyedScoped<IHybridScorer, MentorHybridScorer>(ServicesConstants.MentorsKey);
+		services.AddValidatorsFromAssembly(assembly);
+		services.AddHandlers(assembly);
+		services.AddEndpoints(assembly);
+	}
 
-        // Learning material recommendation services
-        services.AddKeyedScoped<IInteractionAggregator, MaterialInteractionAggregator>(ServicesConstants.MaterialsKey);
-        services.AddKeyedScoped<ICollaborativeTrainer, MaterialCollaborativeTrainer>(ServicesConstants.MaterialsKey);
-        services.AddKeyedScoped<IHybridScorer, MaterialHybridScorer>(ServicesConstants.MaterialsKey);
+	private static void AddBackgroundJobs(this IServiceCollection services)
+	{
+		// Mentor recommendation services
+		services.AddKeyedScoped<IInteractionAggregator, MentorInteractionAggregator>(ServicesConstants.MentorsKey);
+		services.AddKeyedScoped<ICollaborativeTrainer, MentorCollaborativeTrainer>(ServicesConstants.MentorsKey);
+		services.AddKeyedScoped<IHybridScorer, MentorHybridScorer>(ServicesConstants.MentorsKey);
 
-        // recommendation pipelines
-        services.AddHostedService<MentorRecommendationPipeline>();
-        services.AddHostedService<MaterialRecommendationPipeline>();
-    }
+		// Learning material recommendation services
+		services.AddKeyedScoped<IInteractionAggregator, MaterialInteractionAggregator>(ServicesConstants.MaterialsKey);
+		services.AddKeyedScoped<ICollaborativeTrainer, MaterialCollaborativeTrainer>(ServicesConstants.MaterialsKey);
+		services.AddKeyedScoped<IHybridScorer, MaterialHybridScorer>(ServicesConstants.MaterialsKey);
+
+		// recommendation pipelines
+		services.AddHostedService<MentorRecommendationPipeline>();
+		services.AddHostedService<MaterialRecommendationPipeline>();
+	}
 }

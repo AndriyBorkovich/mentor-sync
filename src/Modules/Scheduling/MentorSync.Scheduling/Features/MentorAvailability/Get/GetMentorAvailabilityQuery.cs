@@ -1,19 +1,16 @@
-using Ardalis.Result;
-using MediatR;
-
 namespace MentorSync.Scheduling.Features.MentorAvailability.Get;
 
 public sealed record GetMentorAvailabilityQuery(
-    int MentorId,
-    DateTimeOffset StartDate,
-    DateTimeOffset EndDate) : IRequest<Result<MentorAvailabilityResult>>;
+	int MentorId,
+	DateTimeOffset StartDate,
+	DateTimeOffset EndDate) : IQuery<MentorAvailabilityResult>;
 
 public sealed record MentorAvailabilityResult(
-    int MentorId,
-    List<AvailabilitySlot> Slots);
+	int MentorId,
+	IReadOnlyList<AvailabilitySlot> Slots);
 
 public sealed record AvailabilitySlot(
-    int Id,
-    DateTimeOffset Start,
-    DateTimeOffset End,
-    bool IsBooked);
+	int Id,
+	DateTimeOffset Start,
+	DateTimeOffset End,
+	bool IsBooked);

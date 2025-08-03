@@ -1,6 +1,3 @@
-﻿using Ardalis.Result;
-using MediatR;
+﻿namespace MentorSync.Notifications.Features.GetAllMessages;
 
-namespace MentorSync.Notifications.Features.GetAllMessages;
-
-public sealed record GetAllMessagesQuery : IRequest<Result<List<GetAllMessagesResponse>>>;
+public sealed record GetAllMessagesQuery : IQuery<List<GetAllMessagesResponse>>;

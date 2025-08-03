@@ -4,5 +4,5 @@ namespace MentorSync.Scheduling.Contracts;
 
 public interface IBookingService
 {
-    Task<List<BookingModel>> GetAllBookingsAsync(CancellationToken cancellationToken = default);
+	Task<IReadOnlyList<BookingModel>> GetAllBookingsAsync(CancellationToken cancellationToken = default);
 }

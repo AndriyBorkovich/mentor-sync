@@ -1,11 +1,8 @@
-using Ardalis.Result;
-using MediatR;
-
 namespace MentorSync.Materials.Features.AddTags;
 
-public record AddTagsToMaterialCommand : IRequest<Result<AddTagsResponse>>
+public sealed record AddTagsToMaterialCommand : ICommand<AddTagsResponse>
 {
-    public int MaterialId { get; init; }
-    public List<string> TagNames { get; init; } = new();
-    public int MentorId { get; init; } // To verify ownership
+	public int MaterialId { get; init; }
+	public IReadOnlyList<string> TagNames { get; init; } = [];
+	public int MentorId { get; init; } // To verify ownership
 }

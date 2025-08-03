@@ -5,6 +5,5 @@
 /// </summary>
 public interface ICollaborativeTrainer
 {
-    Task TrainAsync(CancellationToken cancellationToken);
+	Task TrainAsync(CancellationToken cancellationToken);
 }
-

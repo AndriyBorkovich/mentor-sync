@@ -2,6 +2,6 @@
 
 public sealed class MaterialReview : BaseReview
 {
-    public int MaterialId { get; set; }
-    public int ReviewerId { get; set; }
+	public int MaterialId { get; set; }
+	public int ReviewerId { get; set; }
 }

@@ -1,14 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.0" />
+    <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.1" />
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dc0fc8e3-3a05-42e5-bc00-c18ccb8b4bd0</UserSecretsId>
         <IsAspireProject>true</IsAspireProject>
-        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,6 +22,13 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\MentorSync.API\MentorSync.API.csproj" />
       <ProjectReference Include="..\..\src\MentorSync.MigrationService\MentorSync.MigrationService.csproj" />
+      <ProjectReference Include="..\..\src\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" IsAspireProjectResource="False" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />
+      <PackageReference Update="Roslynator.Analyzers" Version="4.13.1" />
+      <PackageReference Update="SonarAnalyzer.CSharp" Version="10.14.0.120626" />
     </ItemGroup>
 
 </Project>

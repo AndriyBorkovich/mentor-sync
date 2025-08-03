@@ -1,13 +1,13 @@
-using MentorSync.SharedKernel.CommonEntities;
+using MentorSync.SharedKernel.CommonEntities.Enums;
 
 namespace MentorSync.Users.Features.Common.Responses;
 
 public sealed record MenteeProfileResponse(int Id,
-                                           string Bio,
-                                           string Position,
-                                           string Company,
-                                           Industry Industries,
-                                           List<string> Skills,
-                                           List<string> ProgrammingLanguages,
-                                           List<string> LearningGoals,
-                                           int MenteeId);
+										   string Bio,
+										   string Position,
+										   string Company,
+										   Industry Industries,
+										   IReadOnlyList<string> Skills,
+										   IReadOnlyList<string> ProgrammingLanguages,
+										   IReadOnlyList<string> LearningGoals,
+										   int MenteeId);

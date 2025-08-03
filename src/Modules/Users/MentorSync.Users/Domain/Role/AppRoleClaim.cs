@@ -4,5 +4,5 @@ namespace MentorSync.Users.Domain.Role;
 
 public sealed class AppRoleClaim : IdentityRoleClaim<int>
 {
-    public AppRole Role { get; set; }
+	public AppRole Role { get; set; }
 }

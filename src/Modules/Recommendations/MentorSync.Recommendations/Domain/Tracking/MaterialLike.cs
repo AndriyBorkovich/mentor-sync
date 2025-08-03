@@ -5,8 +5,8 @@ namespace MentorSync.Recommendations.Domain.Tracking;
 /// </summary>
 public sealed class MaterialLike
 {
-    public int Id { get; set; }
-    public int MenteeId { get; set; }
-    public int MaterialId { get; set; }
-    public DateTime LikedAt { get; set; } = DateTime.UtcNow;
+	public int Id { get; set; }
+	public int MenteeId { get; set; }
+	public int MaterialId { get; set; }
+	public DateTime LikedAt { get; set; } = DateTime.UtcNow;
 }

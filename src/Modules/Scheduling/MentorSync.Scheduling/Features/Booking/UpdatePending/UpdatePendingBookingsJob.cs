@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -11,31 +10,31 @@ namespace MentorSync.Scheduling.Features.Booking.UpdatePending;
 /// <param name="logger">Logger</param>
 /// <param name="serviceProvider">Service provider</param>
 public sealed class UpdatePendingBookingsJob(
-    ILogger<UpdatePendingBookingsJob> logger,
-    IServiceProvider serviceProvider)
-        : BackgroundService
+	ILogger<UpdatePendingBookingsJob> logger,
+	IServiceProvider serviceProvider)
+		: BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                using var scope = serviceProvider.CreateScope();
-                var sender = scope.ServiceProvider.GetRequiredService<ISender>();
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+	{
+		while (!stoppingToken.IsCancellationRequested)
+		{
+			try
+			{
+				await using var scope = serviceProvider.CreateAsyncScope();
+				var sender = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                var updatedCount =  await sender.Send(new UpdatePendingBookingsCommand(), stoppingToken);
-                if (updatedCount.IsSuccess && updatedCount.Value > 0)
-                {
-                    logger.LogInformation("{Count} pending bookings updated successfully.", updatedCount.Value);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error updating pending bookings");
-            }
+				var updatedCount = await sender.SendCommandAsync<UpdatePendingBookingsCommand, int>(new(), stoppingToken);
+				if (updatedCount.IsSuccess && updatedCount.Value > 0)
+				{
+					logger.LogInformation("{Count} pending bookings updated successfully.", updatedCount.Value);
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Error updating pending bookings");
+			}
 
-            await Task.Delay(TimeSpan.FromMinutes(3), stoppingToken);
-        }
-    }
+			await Task.Delay(TimeSpan.FromMinutes(3), stoppingToken);
+		}
+	}
 }

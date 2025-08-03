@@ -7,8 +7,8 @@ namespace MentorSync.Materials.Contracts.Services;
 /// </summary>
 public interface ILearningMaterialsService
 {
-    /// <summary>
-    /// Get all learning materials for recommendation processing.
-    /// </summary>
-    Task<List<LearningMaterialModel>> GetAllMaterialsAsync(CancellationToken cancellationToken = default);
+	/// <summary>
+	/// Get all learning materials for recommendation processing.
+	/// </summary>
+	Task<List<LearningMaterialModel>> GetAllMaterialsAsync(CancellationToken cancellationToken = default);
 }
