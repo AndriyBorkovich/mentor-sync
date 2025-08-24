@@ -12,8 +12,10 @@ public class EditMentorProfileCommandHandler(UsersDbContext db)
 	public async Task<Result<MentorProfileResponse>> Handle(EditMentorProfileCommand request, CancellationToken cancellationToken = default)
 	{
 		var entity = await db.MentorProfiles.FirstOrDefaultAsync(mp => mp.Id == request.Id, cancellationToken: cancellationToken);
-		if (entity == null)
+		if (entity is null)
+		{
 			return Result.NotFound($"MentorProfile {request.Id} not found.");
+		}
 
 		entity.UpdateFrom(request);
 		await db.SaveChangesAsync(cancellationToken);

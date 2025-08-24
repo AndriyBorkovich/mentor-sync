@@ -16,7 +16,8 @@ public sealed class CheckBookmarkEndpoint : IEndpoint
 		app.MapGet("/recommendations/bookmarks/check/{mentorId:int}", async (
 			[FromRoute] int mentorId,
 			IMediator mediator,
-			HttpContext httpContext) =>
+			HttpContext httpContext,
+			CancellationToken cancellationToken) =>
 		{
 			var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var menteeId))
@@ -25,7 +26,7 @@ public sealed class CheckBookmarkEndpoint : IEndpoint
 			}
 
 			var query = new CheckBookmarkQuery(menteeId, mentorId);
-			var result = await mediator.SendQueryAsync<CheckBookmarkQuery, CheckBookmarkResult>(query, httpContext.RequestAborted);
+			var result = await mediator.SendQueryAsync<CheckBookmarkQuery, CheckBookmarkResult>(query, cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

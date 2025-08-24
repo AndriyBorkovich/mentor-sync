@@ -8,7 +8,7 @@ public sealed record GetChatParticipantsQuery(int UserId) : IQuery<List<GetChatP
 public sealed class GetChatParticipantsHandler(IUserService userService)
 	: IQueryHandler<GetChatParticipantsQuery, List<GetChatParticipantsResponse>>
 {
-	public async Task<Result<List<GetChatParticipantsResponse>>> Handle(GetChatParticipantsQuery request, CancellationToken cancellationToken)
+	public async Task<Result<List<GetChatParticipantsResponse>>> Handle(GetChatParticipantsQuery request, CancellationToken cancellationToken = default)
 	{
 		var users = await userService.GetAllUsersExceptAsync(request.UserId);
 

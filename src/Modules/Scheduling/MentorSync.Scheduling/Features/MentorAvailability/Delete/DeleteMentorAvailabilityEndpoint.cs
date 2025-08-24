@@ -15,13 +15,14 @@ public sealed class DeleteMentorAvailabilityEndpoint : IEndpoint
 		app.MapDelete("/scheduling/mentors/{mentorId:int}/availability/{availabilityId:int}", async (
 			[FromRoute] int mentorId,
 			[FromRoute] int availabilityId,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 		{
 			var command = new DeleteMentorAvailabilityCommand(
 				mentorId,
 				availabilityId);
 
-			var result = await mediator.SendCommandAsync<DeleteMentorAvailabilityCommand, string>(command);
+			var result = await mediator.SendCommandAsync<DeleteMentorAvailabilityCommand, string>(command, cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

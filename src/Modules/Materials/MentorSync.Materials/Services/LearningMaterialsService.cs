@@ -9,17 +9,17 @@ internal sealed class LearningMaterialsService(MaterialsDbContext dbContext) : I
 {
 	public Task<List<LearningMaterialModel>> GetAllMaterialsAsync(CancellationToken cancellationToken = default)
 	{
-		var result = dbContext.LearningMaterials
+		return dbContext.LearningMaterials
+			.AsNoTracking()
 			.Select(m => new LearningMaterialModel
 			{
 				Id = m.Id,
 				Title = m.Title,
 				Description = m.Description,
 				Type = m.Type,
-				CreatedAt = m.CreatedAt
+				CreatedAt = m.CreatedAt,
+				Tags = m.Tags.ConvertAll(t => t.Name),
 			})
 			.ToListAsync(cancellationToken);
-
-		return result;
 	}
 }

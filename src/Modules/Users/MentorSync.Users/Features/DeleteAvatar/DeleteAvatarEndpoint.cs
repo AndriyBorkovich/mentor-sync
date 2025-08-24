@@ -13,9 +13,10 @@ public sealed class DeleteAvatarEndpoint : IEndpoint
 	{
 		app.MapDelete("/users/{id:int}/avatar", async (
 				int id,
-				IMediator mediator) =>
+				IMediator mediator,
+				CancellationToken cancellationToken) =>
 		{
-			var result = await mediator.SendCommandAsync<DeleteAvatarCommand, string>(new DeleteAvatarCommand(id));
+			var result = await mediator.SendCommandAsync<DeleteAvatarCommand, string>(new DeleteAvatarCommand(id), cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

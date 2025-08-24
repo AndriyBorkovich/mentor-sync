@@ -10,11 +10,12 @@ public sealed class GetMentorUpcomingSessionsEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet("scheduling/mentors/{id}/upcoming-sessions", async (
+		app.MapGet("scheduling/mentors/{id:int}/upcoming-sessions", async (
 			int id,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
-				var result = await mediator.SendQueryAsync<GetMentorUpcomingSessionsQuery, MentorUpcomingSessionsResponse>(new(id));
+				var result = await mediator.SendQueryAsync<GetMentorUpcomingSessionsQuery, MentorUpcomingSessionsResponse>(new(id), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

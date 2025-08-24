@@ -16,7 +16,8 @@ public sealed class UploadMaterialAttachmentEndpoint : IEndpoint
 			int materialId,
 			IFormFile file,
 			IMediator mediator,
-			HttpContext httpContext) =>
+			HttpContext httpContext,
+			CancellationToken cancellationToken) =>
 			{
 				var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 				if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var mentorId))
@@ -31,7 +32,7 @@ public sealed class UploadMaterialAttachmentEndpoint : IEndpoint
 					MentorId = mentorId
 				};
 
-				var result = await mediator.SendCommandAsync<UploadMaterialAttachmentCommand, UploadAttachmentResponse>(command);
+				var result = await mediator.SendCommandAsync<UploadMaterialAttachmentCommand, UploadAttachmentResponse>(command, cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

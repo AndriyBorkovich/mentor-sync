@@ -2,51 +2,43 @@
 
 namespace MentorSync.SharedKernel.Extensions;
 
-public static partial class EnumFormatter
+public static class EnumFormatter
 {
+	private static readonly (Industry, string)[] _industryMappings =
+		[
+			(Industry.WebDevelopment, "Веб розробка"),
+			(Industry.DataScience, "Наука даних"),
+			(Industry.CyberSecurity, "Кібербезпека"),
+			(Industry.CloudComputing, "Хмарні обчислення"),
+			(Industry.DevOps, "DevOps"),
+			(Industry.GameDevelopment, "Розробка ігор"),
+			(Industry.ItSupport, "IT підтримка"),
+			(Industry.ArtificialIntelligence, "Штучний інтелект"),
+			(Industry.Blockchain, "Блокчейн"),
+			(Industry.Networking, "Мережі"),
+			(Industry.UxUiDesign, "UX/UI дизайн"),
+			(Industry.EmbeddedSystems, "Вбудовані системи"),
+			(Industry.ItConsulting, "IT консалтинг"),
+			(Industry.DatabaseAdministration, "Адміністрування баз даних"),
+			(Industry.ProjectManagement, "Управління проектами"),
+			(Industry.MobileDevelopment, "Мобільна розробка"),
+			(Industry.LowCodeNoCode, "Low-code/No-code"),
+			(Industry.QualityControlAssurance, "Контроль якості/тестування"),
+			(Industry.MachineLearning, "Машинне навчання")
+		];
+
 	public static string GetCategories(this Industry industries)
 	{
+
 		var categories = new List<string>();
+		foreach (var (industry, name) in _industryMappings)
+		{
+			if ((industries & industry) == industry)
+			{
+				categories.Add(name);
+			}
+		}
 
-		if ((industries & Industry.WebDevelopment) == Industry.WebDevelopment)
-			categories.Add("Веб розробка");
-		if ((industries & Industry.DataScience) == Industry.DataScience)
-			categories.Add("Наука даних");
-		if ((industries & Industry.CyberSecurity) == Industry.CyberSecurity)
-			categories.Add("Кібербезпека");
-		if ((industries & Industry.CloudComputing) == Industry.CloudComputing)
-			categories.Add("Хмарні обчислення");
-		if ((industries & Industry.DevOps) == Industry.DevOps)
-			categories.Add("DevOps");
-		if ((industries & Industry.GameDevelopment) == Industry.GameDevelopment)
-			categories.Add("Розробка ігор");
-		if ((industries & Industry.ItSupport) == Industry.ItSupport)
-			categories.Add("IT підтримка");
-		if ((industries & Industry.ArtificialIntelligence) == Industry.ArtificialIntelligence)
-			categories.Add("Штучний інтелект");
-		if ((industries & Industry.Blockchain) == Industry.Blockchain)
-			categories.Add("Блокчейн");
-		if ((industries & Industry.Networking) == Industry.Networking)
-			categories.Add("Мережі");
-		if ((industries & Industry.UxUiDesign) == Industry.UxUiDesign)
-			categories.Add("UX/UI дизайн");
-		if ((industries & Industry.EmbeddedSystems) == Industry.EmbeddedSystems)
-			categories.Add("Вбудовані системи");
-		if ((industries & Industry.ItConsulting) == Industry.ItConsulting)
-			categories.Add("IT консалтинг");
-		if ((industries & Industry.DatabaseAdministration) == Industry.DatabaseAdministration)
-			categories.Add("Адміністрування баз даних");
-		if ((industries & Industry.ProjectManagement) == Industry.ProjectManagement)
-			categories.Add("Проєктний менеджемент");
-		if ((industries & Industry.MobileDevelopment) == Industry.MobileDevelopment)
-			categories.Add("Мобільна розробка");
-		if ((industries & Industry.LowCodeNoCode) == Industry.LowCodeNoCode)
-			categories.Add("Low/No кодування");
-		if ((industries & Industry.QualityControlAssurance) == Industry.QualityControlAssurance)
-			categories.Add("QA/QC");
-		if ((industries & Industry.MachineLearning) == Industry.MachineLearning)
-			categories.Add("Машинне навчання");
-
-		return categories.Count > 0 ? string.Join(", ", categories) : "Інше";
+		return string.Join(", ", categories);
 	}
 }

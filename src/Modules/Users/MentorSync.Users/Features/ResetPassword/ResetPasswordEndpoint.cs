@@ -13,9 +13,10 @@ public sealed class ResetPasswordEndpoint : IEndpoint
 	{
 		app.MapPost("/users/reset-password", async (
 			ResetPasswordCommand command,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 		{
-			var result = await mediator.SendCommandAsync<ResetPasswordCommand, string>(command);
+			var result = await mediator.SendCommandAsync<ResetPasswordCommand, string>(command, cancellationToken);
 			return result.DecideWhatToReturn();
 		})
 		.WithTags(TagsConstants.Users)

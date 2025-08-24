@@ -16,7 +16,8 @@ public sealed class CreateBookingEndpoint : IEndpoint
 		app.MapPost("/scheduling/bookings", async (
 			[FromBody] CreateBookingRequest request,
 			IMediator mediator,
-			HttpContext httpContext) =>
+			HttpContext httpContext,
+			CancellationToken cancellationToken) =>
 		{
 			// Get the mentee ID from the current user
 			var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
@@ -32,7 +33,7 @@ public sealed class CreateBookingEndpoint : IEndpoint
 				request.Start,
 				request.End);
 
-			var result = await mediator.SendCommandAsync<CreateBookingCommand, CreateBookingResult>(command, httpContext.RequestAborted);
+			var result = await mediator.SendCommandAsync<CreateBookingCommand, CreateBookingResult>(command, cancellationToken);
 			return result.DecideWhatToReturn();
 		})
 		.WithTags(TagsConstants.Scheduling)

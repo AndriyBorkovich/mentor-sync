@@ -13,9 +13,10 @@ public sealed class GetMaterialByIdEndpoint : IEndpoint
 	{
 		app.MapGet("materials/{id}", async (
 			int id,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
-				var result = await mediator.SendQueryAsync<GetMaterialByIdQuery, MaterialResponse>(new GetMaterialByIdQuery(id));
+				var result = await mediator.SendQueryAsync<GetMaterialByIdQuery, MaterialResponse>(new (id), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

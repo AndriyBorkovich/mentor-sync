@@ -83,7 +83,7 @@ public static class ContainerNames
 
 public static class ProgrammingLanguages
 {
-	public static List<string> Values { get; } = [
+	public static IReadOnlyList<string> Values { get; } = [
 		"JavaScript",
 		"TypeScript",
 		"Python",

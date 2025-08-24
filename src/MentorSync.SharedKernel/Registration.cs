@@ -9,7 +9,7 @@ public static class Registration
 {
 	public static void AddSharedServices(this IHostApplicationBuilder builder)
 	{
-		builder.AddAzureBlobClient("files-blobs");
+		builder.AddAzureBlobServiceClient("files-blobs");
 
 		builder.Services.AddMediator();
 

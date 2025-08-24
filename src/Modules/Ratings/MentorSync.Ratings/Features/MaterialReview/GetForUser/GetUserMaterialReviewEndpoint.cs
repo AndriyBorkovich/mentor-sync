@@ -11,13 +11,14 @@ public sealed class GetUserMaterialReviewEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet("ratings/materials/{materialId}/user/{userId}/review", async (
+		app.MapGet("ratings/materials/{materialId:int}/user/{userId:int}/review", async (
 			int materialId,
 			int userId,
-			IMediator sender) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
 				var query = new GetUserMaterialReviewQuery(materialId, userId);
-				var result = await sender.SendQueryAsync<GetUserMaterialReviewQuery, UserMaterialReviewResponse>(query);
+				var result = await mediator.SendQueryAsync<GetUserMaterialReviewQuery, UserMaterialReviewResponse>(query, cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

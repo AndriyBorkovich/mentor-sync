@@ -15,9 +15,10 @@ public sealed class RefreshTokenEndpoint : IEndpoint
 	{
 		app.MapPost("/users/refresh-token", async (
 			RefreshTokenCommand command,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 		{
-			var result = await mediator.SendCommandAsync<RefreshTokenCommand, AuthResponse>(command);
+			var result = await mediator.SendCommandAsync<RefreshTokenCommand, AuthResponse>(command, cancellationToken);
 			return result.DecideWhatToReturn();
 		})
 		.WithTags(TagsConstants.Users)

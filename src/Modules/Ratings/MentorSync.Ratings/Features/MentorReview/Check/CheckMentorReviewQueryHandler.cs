@@ -10,7 +10,7 @@ public sealed class CheckMentorReviewQueryHandler(
 {
 	public async Task<Result<CheckMentorReviewResponse>> Handle(
 		CheckMentorReviewQuery query,
-		CancellationToken cancellationToken)
+		CancellationToken cancellationToken = default)
 	{
 		var existingReview = await dbContext.MentorReviews
 				.AsNoTracking()

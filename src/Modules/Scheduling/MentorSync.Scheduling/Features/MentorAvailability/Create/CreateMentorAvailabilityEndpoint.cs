@@ -15,7 +15,8 @@ public sealed class CreateMentorAvailabilityEndpoint : IEndpoint
 		app.MapPost("/scheduling/mentors/{mentorId:int}/availability", async (
 			[FromRoute] int mentorId,
 			[FromBody] CreateMentorAvailabilityRequest request,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 		{
 			var command = new CreateMentorAvailabilityCommand(
 				mentorId,
@@ -23,7 +24,7 @@ public sealed class CreateMentorAvailabilityEndpoint : IEndpoint
 				request.End);
 
 			var result = await mediator
-							   .SendCommandAsync<CreateMentorAvailabilityCommand, CreateMentorAvailabilityResult>(command);
+							   .SendCommandAsync<CreateMentorAvailabilityCommand, CreateMentorAvailabilityResult>(command, cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

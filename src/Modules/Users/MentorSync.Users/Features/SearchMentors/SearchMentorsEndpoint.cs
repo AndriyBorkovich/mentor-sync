@@ -23,7 +23,8 @@ public sealed class SearchMentorsEndpoint : IEndpoint
 			[FromQuery] double? maxRating,
 			[FromQuery] int pageNumber,
 			[FromQuery] int pageSize,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
 				var industryEnum = industry.HasValue ? (Industry?)industry.Value : null;
 				var programmingLanguagesList = programmingLanguages?.ToList();
@@ -36,13 +37,13 @@ public sealed class SearchMentorsEndpoint : IEndpoint
 					minRating,
 					maxRating,
 					pageNumber,
-					pageSize));
+					pageSize), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})
 			.WithTags(TagsConstants.Users)
 			.WithDescription("Search mentors with filters")
 			.Produces<List<MentorSearchResponse>>(StatusCodes.Status200OK)
-			.AllowAnonymous();
+			.RequireAuthorization(PolicyConstants.AdminMenteeMix);
 	}
 }

@@ -16,8 +16,8 @@ public sealed class UpdatePendingBookingsCommandHandler(SchedulingDbContext sche
 		var updated = await schedulingDbContext.Bookings
 			.Where(b => (b.Status == BookingStatus.Pending || b.Status == BookingStatus.Confirmed) && b.Start < now)
 			.ExecuteUpdateAsync(b => b
-				.SetProperty(b => b.Status, BookingStatus.NoShow)
-				.SetProperty(b => b.UpdatedAt, now),
+				.SetProperty(booking => booking.Status, BookingStatus.NoShow)
+				.SetProperty(booking => booking.UpdatedAt, now),
 				cancellationToken);
 
 		return Result.Success(updated, $"Updated {updated} pending bookings to NoShow status.");
