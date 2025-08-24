@@ -16,14 +16,14 @@ public sealed class UpdateMaterialReviewEndpoint : IEndpoint
 		app.MapPut("ratings/reviews/material", async (
 			IMediator mediator,
 			[FromBody] UpdateMaterialReviewCommand request,
-			CancellationToken ct) =>
+			CancellationToken cancellationToken) =>
 		{
-			var result = await mediator.SendCommandAsync<UpdateMaterialReviewCommand, string>(request, ct);
+			var result = await mediator.SendCommandAsync<UpdateMaterialReviewCommand, string>(request, cancellationToken);
 			return result.DecideWhatToReturn();
 		})
 		.WithTags(TagsConstants.Ratings)
 		.WithDescription("Updates an existing review for a material")
-		.Produces<Result>(StatusCodes.Status200OK)
+		.Produces<string>(StatusCodes.Status200OK)
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorMenteeMix);
 	}

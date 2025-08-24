@@ -13,9 +13,12 @@ public sealed class LoginEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("/users/login", async (LoginCommand command, IMediator mediator) =>
+		app.MapPost("/users/login", async (
+				LoginCommand command,
+				IMediator mediator,
+				CancellationToken cancellationToken) =>
 			{
-				var result = await mediator.SendCommandAsync<LoginCommand, AuthResponse>(command);
+				var result = await mediator.SendCommandAsync<LoginCommand, AuthResponse>(command, cancellationToken);
 				return result.DecideWhatToReturn();
 			})
 			.WithTags(TagsConstants.Users)

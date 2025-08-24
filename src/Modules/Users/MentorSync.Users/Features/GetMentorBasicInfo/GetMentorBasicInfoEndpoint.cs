@@ -11,11 +11,12 @@ public sealed class GetMentorBasicInfoEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet("users/mentors/{id}/basic-info", async (
+		app.MapGet("users/mentors/{id:int}/basic-info", async (
 			int id,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
-				var result = await mediator.SendQueryAsync<GetMentorBasicInfoQuery, MentorBasicInfoResponse>(new GetMentorBasicInfoQuery(id));
+				var result = await mediator.SendQueryAsync<GetMentorBasicInfoQuery, MentorBasicInfoResponse>(new GetMentorBasicInfoQuery(id), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

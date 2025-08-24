@@ -11,9 +11,12 @@ public sealed class ToggleActiveUserEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("/users/{userId:int}/active", async (int userId, IMediator mediator) =>
+		app.MapPost("/users/{userId:int}/active", async (
+				int userId,
+				IMediator mediator,
+				CancellationToken cancellationToken) =>
 		{
-			var result = await mediator.SendCommandAsync<ToggleActiveUserCommand, string>(new ToggleActiveUserCommand(userId));
+			var result = await mediator.SendCommandAsync<ToggleActiveUserCommand, string>(new (userId), cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

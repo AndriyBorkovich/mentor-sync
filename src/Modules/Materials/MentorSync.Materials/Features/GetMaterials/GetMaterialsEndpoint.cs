@@ -19,9 +19,9 @@ public sealed class GetMaterialsEndpoint : IEndpoint
 			string sortBy,
 			int pageNumber,
 			int pageSize,
-			IMediator sender) =>
+			IMediator mediator) =>
 			{
-				var result = await sender.SendQueryAsync<GetMaterialsQuery, MaterialsResponse>(new GetMaterialsQuery(
+				var result = await mediator.SendQueryAsync<GetMaterialsQuery, MaterialsResponse>(new (
 					search,
 					types?.ToList(),
 					tags?.ToList(),

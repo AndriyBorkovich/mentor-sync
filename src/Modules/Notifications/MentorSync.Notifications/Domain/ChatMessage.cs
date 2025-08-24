@@ -28,7 +28,7 @@ public sealed class ChatMessage
 
 	/// <summary>
 	/// Timestamp of when the message was created
-	/// </summary> 
+	/// </summary>
 	[BsonElement("CreatedAt")]
 	[BsonRepresentation(BsonType.DateTime)]
 	public DateTime CreatedAt { get; set; }

@@ -23,7 +23,7 @@ public sealed class GetRecommendedMaterialsEndpoint : IEndpoint
 			[FromQuery] int? pageSize,
 			IMediator sender,
 			HttpContext httpContext,
-			CancellationToken ct) =>
+			CancellationToken cancellationToken) =>
 		{
 			var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
@@ -38,7 +38,7 @@ public sealed class GetRecommendedMaterialsEndpoint : IEndpoint
 					tags?.ToList() ?? [],
 					type,
 					pageNumber ?? 1,
-					pageSize ?? 10), ct);
+					pageSize ?? 10), cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

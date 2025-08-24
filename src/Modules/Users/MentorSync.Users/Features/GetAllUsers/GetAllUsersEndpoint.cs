@@ -15,10 +15,11 @@ public sealed class GetAllUsersEndpoint : IEndpoint
 		app.MapGet("users", async (
 			[FromQuery] string role,
 			[FromQuery] bool? isActive,
-			IMediator mediator)
+			IMediator mediator,
+			CancellationToken cancellationToken)
 				=>
 			{
-				var result = await mediator.SendQueryAsync<GetAllUsersQuery, List<UserShortResponse>>(new(role, isActive));
+				var result = await mediator.SendQueryAsync<GetAllUsersQuery, List<UserShortResponse>>(new(role, isActive), cancellationToken);
 				return result.DecideWhatToReturn();
 			})
 			.WithTags(TagsConstants.Users)

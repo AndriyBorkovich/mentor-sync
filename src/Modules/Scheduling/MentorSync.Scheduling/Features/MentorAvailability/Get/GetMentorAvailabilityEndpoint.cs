@@ -16,7 +16,8 @@ public sealed class GetMentorAvailabilityEndpoint : IEndpoint
 			[FromRoute] int mentorId,
 			[FromQuery] DateTime startDate,
 			[FromQuery] DateTime endDate,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 		{
 			var start = startDate != default
 				? new DateTimeOffset(startDate)
@@ -27,7 +28,7 @@ public sealed class GetMentorAvailabilityEndpoint : IEndpoint
 				: start.AddDays(7).AddSeconds(-1);
 
 			var query = new GetMentorAvailabilityQuery(mentorId, start, end);
-			var result = await mediator.SendQueryAsync<GetMentorAvailabilityQuery, MentorAvailabilityResult>(query);
+			var result = await mediator.SendQueryAsync<GetMentorAvailabilityQuery, MentorAvailabilityResult>(query, cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

@@ -12,9 +12,10 @@ public sealed class GetMentorMaterialsEndpoint : IEndpoint
 	{
 		app.MapGet("materials/mentors/{id}/materials", async (
 			int id,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
-				var result = await mediator.SendQueryAsync<GetMentorMaterialsQuery, MentorMaterialsResponse>(new GetMentorMaterialsQuery(id));
+				var result = await mediator.SendQueryAsync<GetMentorMaterialsQuery, MentorMaterialsResponse>(new (id), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

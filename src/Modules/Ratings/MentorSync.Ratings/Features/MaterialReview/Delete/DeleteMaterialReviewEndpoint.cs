@@ -12,14 +12,15 @@ public sealed class DeleteMaterialReviewEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapDelete("ratings/materials/reviews/{reviewId}", async (
+		app.MapDelete("ratings/materials/reviews/{reviewId:int}", async (
 			int reviewId,
 			[FromQuery] int userId,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
 				var command = new DeleteMaterialReviewCommand(reviewId, userId);
 
-				var result = await mediator.SendCommandAsync<DeleteMaterialReviewCommand, string>(command);
+				var result = await mediator.SendCommandAsync<DeleteMaterialReviewCommand, string>(command, cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

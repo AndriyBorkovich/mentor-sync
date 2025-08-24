@@ -23,9 +23,12 @@ public sealed class RegisterEndpoint : IEndpoint
 	/// <param name="app">The endpoint route builder used to configure the API endpoint.</param>
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("users/register", async (RegisterCommand request, IMediator mediator) =>
+		app.MapPost("users/register", async (
+				RegisterCommand request,
+				IMediator mediator,
+				CancellationToken cancellationToken) =>
 		{
-			var result = await mediator.SendCommandAsync<RegisterCommand, CreatedEntityResponse>(request);
+			var result = await mediator.SendCommandAsync<RegisterCommand, CreatedEntityResponse>(request, cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

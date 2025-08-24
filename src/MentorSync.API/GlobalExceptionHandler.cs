@@ -9,18 +9,26 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
 	public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
 	{
 		var problemDetails = new ProblemDetails();
-		if (exception is ValidationException fluentException)
+		switch (exception)
 		{
-			problemDetails.Title = "one or more validation errors occurred.";
-			problemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";
-			httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+			case ValidationException fluentException:
+				{
+					problemDetails.Title = "one or more validation errors occurred.";
+					problemDetails.Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";
+					httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-			var validationErrors = fluentException.Errors.Select(error => error.ErrorMessage).ToList();
-			problemDetails.Extensions.Add("errors", validationErrors);
-		}
-		else
-		{
-			problemDetails.Title = exception.Message;
+					var validationErrors = fluentException.Errors.Select(error => error.ErrorMessage).ToList();
+					problemDetails.Extensions.Add("errors", validationErrors);
+					break;
+				}
+			case OperationCanceledException:
+				problemDetails.Title = "Operation was cancelled";
+				problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8";
+				httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+				break;
+			default:
+				problemDetails.Title = exception.Message;
+				break;
 		}
 
 		logger.LogError(exception, "{ProblemDetailsTitle}", problemDetails.Title);

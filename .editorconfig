@@ -110,6 +110,9 @@ dotnet_diagnostic.S6966.severity = error
 # type must match file name
 dotnet_diagnostic.MA0048.severity = none
 
+# Trailing comma in multi-line initializers
+dotnet_diagnostic.MA0007.severity = none
+
 # Types: use var
 csharp_style_var_for_built_in_types = true:error
 csharp_style_var_when_type_is_apparent = false:none

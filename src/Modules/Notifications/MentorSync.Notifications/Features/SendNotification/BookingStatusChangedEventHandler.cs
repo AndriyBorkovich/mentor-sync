@@ -10,7 +10,7 @@ public sealed class BookingStatusChangedEventHandler(
 	IHubContext<NotificationHub> hubContext,
 	ILogger<BookingStatusChangedEventHandler> logger) : INotificationHandler<BookingStatusChangedEvent>
 {
-	public async Task HandleAsync(BookingStatusChangedEvent notification, CancellationToken cancellationToken)
+	public async Task HandleAsync(BookingStatusChangedEvent notification, CancellationToken cancellationToken = default)
 	{
 		try
 		{

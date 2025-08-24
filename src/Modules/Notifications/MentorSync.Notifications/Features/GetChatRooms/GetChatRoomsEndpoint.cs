@@ -12,7 +12,10 @@ public sealed class GetChatRoomsEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet("chat/rooms", async (IMediator mediator, HttpContext httpContext) =>
+		app.MapGet("chat/rooms", async (
+			IMediator mediator,
+			HttpContext httpContext,
+			CancellationToken cancellationToken) =>
 			{
 				var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 				if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
@@ -20,7 +23,7 @@ public sealed class GetChatRoomsEndpoint : IEndpoint
 					return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
 				}
 
-				var result = await mediator.SendQueryAsync<GetChatRoomsQuery, List<GetChatRoomsResponse>>(new GetChatRoomsQuery(userId), httpContext.RequestAborted);
+				var result = await mediator.SendQueryAsync<GetChatRoomsQuery, List<GetChatRoomsResponse>>(new GetChatRoomsQuery(userId), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

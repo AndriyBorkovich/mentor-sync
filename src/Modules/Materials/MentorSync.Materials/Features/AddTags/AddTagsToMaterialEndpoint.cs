@@ -16,7 +16,8 @@ public sealed class AddTagsToMaterialEndpoint : IEndpoint
 			int materialId,
 			AddTagsRequest request,
 			IMediator mediator,
-			HttpContext httpContext) =>
+			HttpContext httpContext,
+			CancellationToken cancellationToken) =>
 			{
 				var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 				if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var mentorId))
@@ -31,7 +32,7 @@ public sealed class AddTagsToMaterialEndpoint : IEndpoint
 					MentorId = mentorId
 				};
 
-				var result = await mediator.SendCommandAsync<AddTagsToMaterialCommand, AddTagsResponse>(command);
+				var result = await mediator.SendCommandAsync<AddTagsToMaterialCommand, AddTagsResponse>(command, cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

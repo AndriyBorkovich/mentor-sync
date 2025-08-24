@@ -119,7 +119,7 @@ public static class ModuleRegistration
 					ValidIssuer = jwtOptions.Issuer,
 					ValidAudience = jwtOptions.Audience,
 					IssuerSigningKey = new SymmetricSecurityKey(
-						Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+						Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
 				};
 
 				options.Events = new JwtBearerEvents
@@ -143,7 +143,7 @@ public static class ModuleRegistration
 						else
 						{
 							// Extract token from Authorization header (Bearer token)
-							var token = authorization.Replace("Bearer ", string.Empty);
+							var token = authorization.Replace("Bearer ", string.Empty, StringComparison.Ordinal);
 							if (!string.IsNullOrEmpty(token))
 							{
 								context.Token = token;
@@ -154,13 +154,6 @@ public static class ModuleRegistration
 					},
 				};
 			});
-
-		// TODO: implement google authentication on frontend
-		// .AddGoogle(options =>
-		// {
-		//     options.ClientId = configuration["Authentication:Google:ClientId"]!;
-		//     options.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
-		// });
 
 		services.AddScoped<IJwtTokenService, JwtTokenService>();
 

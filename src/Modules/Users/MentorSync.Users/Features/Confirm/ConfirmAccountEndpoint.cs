@@ -12,9 +12,13 @@ public sealed class ConfirmAccountEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet("/users/confirm", async ([FromQuery] string email, [FromQuery] string token, IMediator mediator) =>
+		app.MapGet("/users/confirm", async (
+				[FromQuery] string email,
+				[FromQuery] string token,
+				IMediator mediator,
+				CancellationToken cancellationToken) =>
 		{
-			var result = await mediator.SendCommandAsync<ConfirmAccountCommand, string>(new ConfirmAccountCommand(email, token));
+			var result = await mediator.SendCommandAsync<ConfirmAccountCommand, string>(new ConfirmAccountCommand(email, token), cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

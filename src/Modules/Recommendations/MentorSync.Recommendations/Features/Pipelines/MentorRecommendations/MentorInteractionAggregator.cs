@@ -1,8 +1,11 @@
-﻿using MentorSync.Ratings.Contracts.Services;
+﻿using MentorSync.Ratings.Contracts.Models;
+using MentorSync.Ratings.Contracts.Services;
 using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Domain.Interaction;
+using MentorSync.Recommendations.Domain.Tracking;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Scheduling.Contracts;
+using MentorSync.Scheduling.Contracts.Models;
 using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -32,9 +35,20 @@ public sealed class MentorInteractionAggregator(
 		var bookings = await bookingService.GetAllBookingsAsync(cancellationToken);
 		logger.LogInformation("Loaded {Count} bookings", bookings.Count);
 
-		// Use a dictionary with default value of 0 for new keys
 		var interactionScores = new Dictionary<(int menteeId, int mentorId), float>();
 
+		AddScores(viewEvents, bookmarks, mentorReviews, bookings, interactionScores);
+
+		var savedChanges = await ProcessScoresAsync(interactionScores, cancellationToken);
+		logger.LogInformation("ETL completed. Saved {Count} changes to the database", savedChanges);
+	}
+
+	private void AddScores(List<MentorViewEvent> viewEvents,
+		List<MentorBookmark> bookmarks,
+		IReadOnlyList<MentorReviewResult> mentorReviews,
+		IReadOnlyList<BookingModel> bookings,
+		Dictionary<(int menteeId, int mentorId), float> interactionScores)
+	{
 		foreach (var view in viewEvents)
 		{
 			AddScore((view.MenteeId, view.MentorId), 1);
@@ -63,18 +77,15 @@ public sealed class MentorInteractionAggregator(
 			AddScore((booking.MenteeId, booking.MentorId), scoreChange);
 		}
 
-		// Helper method to safely get or set a value
+		return;
+
 		void AddScore((int menteeId, int mentorId) key, float scoreToAdd)
 		{
 			try
 			{
-				if (interactionScores.ContainsKey(key))
+				if (!interactionScores.TryAdd(key, scoreToAdd))
 				{
 					interactionScores[key] += scoreToAdd;
-				}
-				else
-				{
-					interactionScores[key] = scoreToAdd;
 				}
 			}
 			catch (Exception ex)
@@ -82,13 +93,15 @@ public sealed class MentorInteractionAggregator(
 				logger.LogError(ex, "Error processing score for mentee {MenteeId} and mentor {MentorId}", key.menteeId, key.mentorId);
 			}
 		}
+	}
 
-		foreach (var kvp in interactionScores)
+	private async Task<int> ProcessScoresAsync(Dictionary<(int menteeId, int mentorId), float> interactionScores, CancellationToken cancellationToken)
+	{
+		foreach (var (key, score) in interactionScores)
 		{
 			try
 			{
-				var (menteeId, mentorId) = kvp.Key;
-				var score = kvp.Value;
+				var (menteeId, mentorId) = key;
 
 				var existing = await db.MenteeMentorInteractions
 					.FirstOrDefaultAsync(x => x.MenteeId == menteeId && x.MentorId == mentorId, cancellationToken);
@@ -112,12 +125,11 @@ public sealed class MentorInteractionAggregator(
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex, "Error updating interaction score for pair ({MenteeId}, {MentorId})", kvp.Key.menteeId, kvp.Key.mentorId);
-				// Continue processing other records despite error
+				logger.LogError(ex, "Error updating interaction score for pair ({MenteeId}, {MentorId})", key.menteeId, key.mentorId);
 			}
 		}
 
 		var savedChanges = await db.SaveChangesAsync(cancellationToken);
-		logger.LogInformation("ETL completed. Saved {Count} changes to the database", savedChanges);
+		return savedChanges;
 	}
 }

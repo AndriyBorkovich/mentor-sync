@@ -16,7 +16,8 @@ public sealed class DeleteBookmarkEndpoint : IEndpoint
 		app.MapDelete("/recommendations/bookmarks/{mentorId:int}", async (
 			[FromRoute] int mentorId,
 			IMediator mediator,
-			HttpContext httpContext) =>
+			HttpContext httpContext,
+			CancellationToken cancellationToken) =>
 		{
 			var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var menteeId))
@@ -24,7 +25,7 @@ public sealed class DeleteBookmarkEndpoint : IEndpoint
 				return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
 			}
 
-			var result = await mediator.SendCommandAsync<DeleteBookmarkCommand, string>(new(menteeId, mentorId), httpContext.RequestAborted);
+			var result = await mediator.SendCommandAsync<DeleteBookmarkCommand, string>(new(menteeId, mentorId), cancellationToken);
 
 			return result.DecideWhatToReturn();
 		})

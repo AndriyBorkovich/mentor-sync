@@ -14,7 +14,8 @@ public sealed class CreateMaterialEndpoint : IEndpoint
 	{
 		app.MapPost("materials", async (
 			CreateMaterialRequest request,
-			IMediator sender) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
 				var command = new CreateMaterialCommand
 				{
@@ -26,7 +27,7 @@ public sealed class CreateMaterialEndpoint : IEndpoint
 					Tags = request.Tags
 				};
 
-				var result = await sender.SendCommandAsync<CreateMaterialCommand, CreateMaterialResponse>(command);
+				var result = await mediator.SendCommandAsync<CreateMaterialCommand, CreateMaterialResponse>(command, cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

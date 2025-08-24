@@ -12,7 +12,11 @@ public sealed class InitiateChatEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("chat/initiate", async (InitiateChatRequest request, IMediator mediator, HttpContext httpContext) =>
+		app.MapPost("chat/initiate", async (
+			InitiateChatRequest request,
+			IMediator mediator,
+			HttpContext httpContext,
+			CancellationToken cancellationToken) =>
 			{
 				var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 				if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
@@ -20,7 +24,7 @@ public sealed class InitiateChatEndpoint : IEndpoint
 					return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
 				}
 
-				var result = await mediator.SendCommandAsync<InitiateChatCommand, InitiateChatResponse>(new InitiateChatCommand(userId, request.RecipientId), httpContext.RequestAborted);
+				var result = await mediator.SendCommandAsync<InitiateChatCommand, InitiateChatResponse>(new InitiateChatCommand(userId, request.RecipientId), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

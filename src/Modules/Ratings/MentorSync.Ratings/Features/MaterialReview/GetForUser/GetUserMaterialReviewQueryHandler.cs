@@ -8,7 +8,8 @@ public sealed class GetUserMaterialReviewQueryHandler(
 	RatingsDbContext dbContext)
 	: IQueryHandler<GetUserMaterialReviewQuery, UserMaterialReviewResponse>
 {
-	public async Task<Result<UserMaterialReviewResponse>> Handle(GetUserMaterialReviewQuery request, CancellationToken cancellationToken)
+	public async Task<Result<UserMaterialReviewResponse>> Handle(
+		GetUserMaterialReviewQuery request, CancellationToken cancellationToken = default)
 	{
 		var review = await dbContext.MaterialReviews
 				 .Where(mr => mr.MaterialId == request.MaterialId && mr.ReviewerId == request.UserId)

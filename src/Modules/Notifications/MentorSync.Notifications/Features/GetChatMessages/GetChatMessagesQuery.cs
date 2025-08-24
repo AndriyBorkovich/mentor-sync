@@ -11,7 +11,7 @@ public sealed record GetChatMessagesQuery(string RoomId, int UserId) : IQuery<Li
 public sealed class GetChatMessagesHandler(NotificationsDbContext dbContext)
 	: IQueryHandler<GetChatMessagesQuery, List<GetChatMessagesResponse>>
 {
-	public async Task<Result<List<GetChatMessagesResponse>>> Handle(GetChatMessagesQuery request, CancellationToken cancellationToken)
+	public async Task<Result<List<GetChatMessagesResponse>>> Handle(GetChatMessagesQuery request, CancellationToken cancellationToken = default)
 	{
 		var roomObjectId = ObjectId.Parse(request.RoomId);
 		var userId = request.UserId;

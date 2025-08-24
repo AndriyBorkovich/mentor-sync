@@ -12,10 +12,11 @@ public sealed class CreateMaterialReviewEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("ratings/materials/{materialId}/reviews", async (
+		app.MapPost("ratings/materials/{materialId:int}/reviews", async (
 			int materialId,
 			[FromBody] CreateMaterialReviewRequest request,
-			IMediator mediator) =>
+			IMediator mediator,
+			CancellationToken cancellationToken) =>
 			{
 				var command = new CreateMaterialReviewCommand(
 					materialId,
@@ -23,7 +24,7 @@ public sealed class CreateMaterialReviewEndpoint : IEndpoint
 					request.Rating,
 					request.ReviewText);
 
-				var result = await mediator.SendCommandAsync<CreateMaterialReviewCommand, CreateMaterialReviewResponse>(command);
+				var result = await mediator.SendCommandAsync<CreateMaterialReviewCommand, CreateMaterialReviewResponse>(command, cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

@@ -11,9 +11,9 @@ public sealed class GetAllMessagesEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapGet("notifications", async (IMediator mediator) =>
+		app.MapGet("notifications", async (IMediator mediator, CancellationToken cancellationToken) =>
 			{
-				var result = await mediator.SendQueryAsync<GetAllMessagesQuery, List<GetAllMessagesResponse>>(new GetAllMessagesQuery());
+				var result = await mediator.SendQueryAsync<GetAllMessagesQuery, List<GetAllMessagesResponse>>(new (), cancellationToken);
 
 				return result.DecideWhatToReturn();
 			})

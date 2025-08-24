@@ -30,37 +30,52 @@ public sealed class MaterialInteractionAggregator(
 
 		// Add scores for different interaction types
 		foreach (var view in viewEvents)
+		{
 			AddScore((view.MenteeId, view.MaterialId), 1);
+		}
 
 		foreach (var like in likes)
+		{
 			AddScore((like.MenteeId, like.MaterialId), 2);
+		}
 
 		foreach (var rating in materialRatings)
+		{
 			AddScore((rating.MenteeId, rating.MaterialId), rating.Rating);
+		}
+
+		// Update database with aggregated scores
+		await ProcessScoresAsync(interactionScores, cancellationToken);
+
+		var savedChanges = await db.SaveChangesAsync(cancellationToken);
+		logger.LogInformation("Learning materials ETL completed. Saved {Count} changes to the database", savedChanges);
+
+		return;
 
 		// Helper method to safely get or set a value
 		void AddScore((int menteeId, int materialId) key, float scoreToAdd)
 		{
 			try
 			{
-				if (interactionScores.ContainsKey(key))
+				if (!interactionScores.TryAdd(key, scoreToAdd))
+				{
 					interactionScores[key] += scoreToAdd;
-				else
-					interactionScores[key] = scoreToAdd;
+				}
 			}
 			catch (Exception ex)
 			{
 				logger.LogError(ex, "Error processing score for mentee {MenteeId} and material {MaterialId}", key.menteeId, key.materialId);
 			}
 		}
+	}
 
-		// Update database with aggregated scores
-		foreach (var kvp in interactionScores)
+	private async Task ProcessScoresAsync(Dictionary<(int menteeId, int materialId), float> interactionScores, CancellationToken cancellationToken)
+	{
+		foreach (var (key, score) in interactionScores)
 		{
 			try
 			{
-				var (menteeId, materialId) = kvp.Key;
-				var score = kvp.Value;
+				var (menteeId, materialId) = key;
 
 				var existing = await db.MenteeMaterialInteractions
 					.FirstOrDefaultAsync(x => x.MenteeId == menteeId && x.MaterialId == materialId, cancellationToken);
@@ -84,11 +99,8 @@ public sealed class MaterialInteractionAggregator(
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex, "Error updating interaction score for pair ({MenteeId}, {MaterialId})", kvp.Key.menteeId, kvp.Key.materialId);
+				logger.LogError(ex, "Error updating interaction score for pair ({MenteeId}, {MaterialId})", key.menteeId, key.materialId);
 			}
 		}
-
-		var savedChanges = await db.SaveChangesAsync(cancellationToken);
-		logger.LogInformation("Learning materials ETL completed. Saved {Count} changes to the database", savedChanges);
 	}
 }

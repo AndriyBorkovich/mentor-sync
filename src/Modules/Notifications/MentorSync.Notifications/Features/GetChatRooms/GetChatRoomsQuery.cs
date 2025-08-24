@@ -10,7 +10,7 @@ public sealed record GetChatRoomsQuery(int UserId) : IQuery<List<GetChatRoomsRes
 public sealed class GetChatRoomsHandler(NotificationsDbContext dbContext)
 	: IQueryHandler<GetChatRoomsQuery, List<GetChatRoomsResponse>>
 {
-	public async Task<Result<List<GetChatRoomsResponse>>> Handle(GetChatRoomsQuery request, CancellationToken cancellationToken)
+	public async Task<Result<List<GetChatRoomsResponse>>> Handle(GetChatRoomsQuery request, CancellationToken cancellationToken = default)
 	{
 		var userId = request.UserId;
 		var filter = Builders<ChatRoom>.Filter.Or(

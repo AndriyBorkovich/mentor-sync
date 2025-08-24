@@ -9,7 +9,8 @@ public sealed class GetMaterialReviewsQueryHandler(
 	RatingsDbContext dbContext)
 	: IQueryHandler<GetMaterialReviewsQuery, MaterialReviewsResponse>
 {
-	public async Task<Result<MaterialReviewsResponse>> Handle(GetMaterialReviewsQuery request, CancellationToken cancellationToken)
+	public async Task<Result<MaterialReviewsResponse>> Handle(
+		GetMaterialReviewsQuery request, CancellationToken cancellationToken = default)
 	{
 		var reviews = await dbContext.Database.SqlQuery<MaterialReviewEntityDto>(
 			$"""
