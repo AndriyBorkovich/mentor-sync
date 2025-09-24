@@ -10,9 +10,9 @@
       },
       "Aspire.Azure.Storage.Blobs": {
         "type": "Direct",
-        "requested": "[9.4.0, )",
-        "resolved": "9.4.0",
-        "contentHash": "DRikVxIsKOPx4hhjByAVnnkANDrhsvMVrZ/QrgNAJfj8QoOZvE2sD0JeOgnN7df653sA8HWploLo1yfSpUikOA==",
+        "requested": "[9.4.2, )",
+        "resolved": "9.4.2",
+        "contentHash": "jnTGteDJgwwhMLOs/LHpVXtAOnUyTvYaqqzTk9SdS+ds3uv+3BR+i4QpIEUqy5cvvddrxfdDdxm3fH2LWH83HA==",
         "dependencies": {
           "AspNetCore.HealthChecks.Azure.Storage.Blobs": "9.0.0",
           "Azure.Core": "1.47.0",
