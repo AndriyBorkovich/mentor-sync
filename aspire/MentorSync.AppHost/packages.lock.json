@@ -171,13 +171,13 @@
       },
       "Aspire.Hosting.MongoDB": {
         "type": "Direct",
-        "requested": "[9.4.0, )",
-        "resolved": "9.4.0",
-        "contentHash": "Fpt7lM7+YmUAZa+SBS997/So2rYIthVSfjXnBtKGmpP/SPOjgxBhJZo3MdKqqgSlo8Qn8+6f+dBNjieFfzYI8A==",
+        "requested": "[9.4.2, )",
+        "resolved": "9.4.2",
+        "contentHash": "fYyd+sgbJnnoOO510oGm1dIPfdgma17BUff82vdXFCoUn6ECJ09Y/4lfVw64oAFQscVfrid7rAhwX8J+PpOfLA==",
         "dependencies": {
           "AspNetCore.HealthChecks.MongoDb": "9.0.0",
           "AspNetCore.HealthChecks.Uris": "9.0.0",
-          "Aspire.Hosting": "9.4.0",
+          "Aspire.Hosting": "9.4.2",
           "Google.Protobuf": "3.31.1",
           "Grpc.AspNetCore": "2.71.0",
           "Grpc.Net.ClientFactory": "2.71.0",
