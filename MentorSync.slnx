@@ -1,40 +1,41 @@
 <Solution>
-  <Folder Name="/aspire/">
-    <Project Path="aspire/MentorSync.AppHost/MentorSync.AppHost.csproj" />
-    <Project Path="aspire/MentorSync.ServiceDefaults/MentorSync.ServiceDefaults.csproj" />
-  </Folder>
-  <Folder Name="/Solution Items/">
-    <File Path=".editorconfig" />
-    <File Path="Directory.build.props" />
-  </Folder>
-  <Folder Name="/src/">
-    <Project Path="src/MentorSync.API/MentorSync.API.csproj" />
-    <Project Path="src/MentorSync.MigrationService/MentorSync.MigrationService.csproj" />
-    <Project Path="src/MentorSync.SharedKernel/MentorSync.SharedKernel.csproj" />
-  </Folder>
-  <Folder Name="/src/Modules/" />
-  <Folder Name="/src/Modules/Materials/">
-    <Project Path="src/Modules/Materials/MentorSync.Materials.Contracts/MentorSync.Materials.Contracts.csproj" />
-    <Project Path="src/Modules/Materials/MentorSync.Materials/MentorSync.Materials.csproj" />
-  </Folder>
-  <Folder Name="/src/Modules/Notifications/">
-    <Project Path="src/Modules/Notifications/MentorSync.Notifications.Contracts/MentorSync.Notifications.Contracts.csproj" />
-    <Project Path="src/Modules/Notifications/MentorSync.Notifications/MentorSync.Notifications.csproj" />
-  </Folder>
-  <Folder Name="/src/Modules/Ratings/">
-    <Project Path="src/Modules/Ratings/MentorSync.Ratings.Contracts/MentorSync.Ratings.Contracts.csproj" />
-    <Project Path="src/Modules/Ratings/MentorSync.Ratings/MentorSync.Ratings.csproj" />
-  </Folder>
-  <Folder Name="/src/Modules/Recommendations/">
-    <Project Path="src/Modules/Recommendations/MentorSync.Recommendations/MentorSync.Recommendations.csproj" />
-  </Folder>
-  <Folder Name="/src/Modules/Scheduling/">
-    <Project Path="src/Modules/Scheduling/MentorSync.Scheduling.Contracts/MentorSync.Scheduling.Contracts.csproj" />
-    <Project Path="src/Modules/Scheduling/MentorSync.Scheduling/MentorSync.Scheduling.csproj" />
-  </Folder>
-  <Folder Name="/src/Modules/Users/">
-    <Project Path="src/Modules/Users/MentorSync.Users.Contracts/MentorSync.Users.Contracts.csproj" />
-    <Project Path="src/Modules/Users/MentorSync.Users/MentorSync.Users.csproj" />
-  </Folder>
-  <Folder Name="/tests/" />
+	<Folder Name="/aspire/">
+		<Project Path="aspire/MentorSync.AppHost/MentorSync.AppHost.csproj" />
+		<Project Path="aspire/MentorSync.ServiceDefaults/MentorSync.ServiceDefaults.csproj" />
+	</Folder>
+	<Folder Name="/Solution Items/">
+		<File Path=".editorconfig" />
+		<File Path="Directory.build.props" />
+		<File Path="Directory.Packages.props"/>
+	</Folder>
+	<Folder Name="/src/">
+		<Project Path="src/MentorSync.API/MentorSync.API.csproj" />
+		<Project Path="src/MentorSync.MigrationService/MentorSync.MigrationService.csproj" />
+		<Project Path="src/MentorSync.SharedKernel/MentorSync.SharedKernel.csproj" />
+	</Folder>
+	<Folder Name="/src/Modules/" />
+	<Folder Name="/src/Modules/Materials/">
+		<Project Path="src/Modules/Materials/MentorSync.Materials.Contracts/MentorSync.Materials.Contracts.csproj" />
+		<Project Path="src/Modules/Materials/MentorSync.Materials/MentorSync.Materials.csproj" />
+	</Folder>
+	<Folder Name="/src/Modules/Notifications/">
+		<Project Path="src/Modules/Notifications/MentorSync.Notifications.Contracts/MentorSync.Notifications.Contracts.csproj" />
+		<Project Path="src/Modules/Notifications/MentorSync.Notifications/MentorSync.Notifications.csproj" />
+	</Folder>
+	<Folder Name="/src/Modules/Ratings/">
+		<Project Path="src/Modules/Ratings/MentorSync.Ratings.Contracts/MentorSync.Ratings.Contracts.csproj" />
+		<Project Path="src/Modules/Ratings/MentorSync.Ratings/MentorSync.Ratings.csproj" />
+	</Folder>
+	<Folder Name="/src/Modules/Recommendations/">
+		<Project Path="src/Modules/Recommendations/MentorSync.Recommendations/MentorSync.Recommendations.csproj" />
+	</Folder>
+	<Folder Name="/src/Modules/Scheduling/">
+		<Project Path="src/Modules/Scheduling/MentorSync.Scheduling.Contracts/MentorSync.Scheduling.Contracts.csproj" />
+		<Project Path="src/Modules/Scheduling/MentorSync.Scheduling/MentorSync.Scheduling.csproj" />
+	</Folder>
+	<Folder Name="/src/Modules/Users/">
+		<Project Path="src/Modules/Users/MentorSync.Users.Contracts/MentorSync.Users.Contracts.csproj" />
+		<Project Path="src/Modules/Users/MentorSync.Users/MentorSync.Users.csproj" />
+	</Folder>
+	<Folder Name="/tests/" />
 </Solution>
