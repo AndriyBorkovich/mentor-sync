@@ -5,7 +5,7 @@
 namespace MentorSync.Users.Data.Migrations
 {
 	/// <inheritdoc />
-	public partial class MoveBioFromAppUserToProfilesTables : Migration
+	public sealed partial class MoveBioFromAppUserToProfilesTables : Migration
 	{
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)

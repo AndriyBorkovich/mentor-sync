@@ -1,6 +1,5 @@
 using Ardalis.Result;
 using MentorSync.Materials.Data;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.Users.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +10,7 @@ public sealed class GetMaterialsQueryHandler(
 	IMentorProfileService mentorProfileService)
 		: IQueryHandler<GetMaterialsQuery, MaterialsResponse>
 {
-	public async Task<Result<MaterialsResponse>> Handle(GetMaterialsQuery request, CancellationToken cancellationToken)
+	public async Task<Result<MaterialsResponse>> Handle(GetMaterialsQuery request, CancellationToken cancellationToken = default)
 	{
 		var query = dbContext.LearningMaterials.AsNoTracking();
 

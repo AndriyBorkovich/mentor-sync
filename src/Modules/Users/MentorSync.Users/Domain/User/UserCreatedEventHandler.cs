@@ -13,9 +13,10 @@ public sealed class UserCreatedEventHandler(
 	IMediator mediator,
 	ILogger<UserCreatedEventHandler> logger) : INotificationHandler<UserCreatedEvent>
 {
-	public async Task HandleAsync(UserCreatedEvent notification, CancellationToken cancellationToken)
+	public async Task HandleAsync(UserCreatedEvent notification, CancellationToken cancellationToken = default)
 	{
-		var userManager = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+		await using var scope = serviceProvider.CreateAsyncScope();
+		var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 		var id = notification.UserId;
 		var user = await userManager.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
 		if (user is null)

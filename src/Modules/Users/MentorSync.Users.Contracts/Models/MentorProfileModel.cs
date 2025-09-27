@@ -1,6 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-
-namespace MentorSync.Users.Contracts.Models;
+﻿namespace MentorSync.Users.Contracts.Models;
 
 public sealed class MentorProfileModel
 {

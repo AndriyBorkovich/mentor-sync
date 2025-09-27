@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +28,7 @@ public sealed class CreateMentorViewEventEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Recommendations)
 		.WithDescription("Record a mentor view event for the current user.")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
 	}

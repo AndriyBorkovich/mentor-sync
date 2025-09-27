@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +20,7 @@ public sealed class ToggleActiveUserEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Activates/deactivates specified user")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminOnly);
 	}

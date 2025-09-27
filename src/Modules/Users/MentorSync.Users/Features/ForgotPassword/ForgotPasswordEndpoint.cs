@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +24,7 @@ public sealed class ForgotPasswordEndpoint : IEndpoint
 		.AllowAnonymous()
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Initiate forgot password process for user (send email)")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.ProducesProblem(StatusCodes.Status409Conflict);
 	}

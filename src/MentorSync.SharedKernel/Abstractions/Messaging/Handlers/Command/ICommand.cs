@@ -1,4 +1,4 @@
-﻿namespace MentorSync.SharedKernel.Abstractions.Messaging;
+﻿namespace MentorSync.SharedKernel.Abstractions.Messaging.Handlers.Command;
 
 /// <summary>
 /// Represents a command that produces a response of type <typeparamref name="TResponse"/>.

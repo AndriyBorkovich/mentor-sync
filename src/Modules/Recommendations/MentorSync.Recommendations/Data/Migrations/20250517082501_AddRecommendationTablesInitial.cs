@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MentorSync.Recommendations.Data.Migrations
 {
 	/// <inheritdoc />
-	public partial class AddRecommendationTablesInitial : Migration
+	public sealed partial class AddRecommendationTablesInitial : Migration
 	{
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)

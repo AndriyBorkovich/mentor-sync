@@ -24,6 +24,40 @@ public sealed class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContext
 
 		builder.HasDefaultSchema(SchemaConstants.Users);
 
+		ConfigureIdentityTables(builder);
+
+		// Configure one-to-one relationship between MenteeProfile and AppUser
+		builder.Entity<MenteeProfile>()
+			.HasOne(mp => mp.User)
+			.WithOne()
+			.HasForeignKey<MenteeProfile>(mp => mp.MenteeId)
+			.OnDelete(DeleteBehavior.Cascade);
+
+		// Configure one-to-one relationship between MentorProfile and AppUser
+		builder.Entity<MentorProfile>()
+			.HasOne(mp => mp.User)
+			.WithOne()
+			.HasForeignKey<MentorProfile>(mp => mp.MentorId)
+			.OnDelete(DeleteBehavior.Cascade);
+	}
+
+	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+	{
+		var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+		// dispatch events only if save was successful
+		var entitiesWithEvents = ChangeTracker.Entries<IHaveDomainEvents>()
+			.Select(e => e.Entity)
+			.Where(e => e.DomainEvents.Any())
+			.ToArray();
+
+		await dispatcher.DispatchAsync(entitiesWithEvents);
+
+		return result;
+	}
+
+	private static void ConfigureIdentityTables(ModelBuilder builder)
+	{
 		// reconfigure base Identity tables
 		builder.Entity<AppUser>(b =>
 		{
@@ -74,34 +108,5 @@ public sealed class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContext
 		builder.Entity<AppRoleClaim>().ToTable("RoleClaims");
 		builder.Entity<AppUserClaim>().ToTable("UserClaims");
 		builder.Entity<AppUserLogin>().ToTable("UserLogins");
-
-		// Configure one-to-one relationship between MenteeProfile and AppUser
-		builder.Entity<MenteeProfile>()
-			.HasOne(mp => mp.User)
-			.WithOne()
-			.HasForeignKey<MenteeProfile>(mp => mp.MenteeId)
-			.OnDelete(DeleteBehavior.Cascade);
-
-		// Configure one-to-one relationship between MentorProfile and AppUser
-		builder.Entity<MentorProfile>()
-			.HasOne(mp => mp.User)
-			.WithOne()
-			.HasForeignKey<MentorProfile>(mp => mp.MentorId)
-			.OnDelete(DeleteBehavior.Cascade);
-	}
-
-	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-	{
-		var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-		// dispatch events only if save was successful
-		var entitiesWithEvents = ChangeTracker.Entries<IHaveDomainEvents>()
-			.Select(e => e.Entity)
-			.Where(e => e.DomainEvents.Any())
-			.ToArray();
-
-		await dispatcher.DispatchAsync(entitiesWithEvents);
-
-		return result;
 	}
 }

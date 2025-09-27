@@ -45,15 +45,4 @@ public sealed class CreateMaterialReviewCommandHandler(
 
 		return Result.Success(new CreateMaterialReviewResponse(review.Id));
 	}
-
-	/*private async Task<bool> ValidateReviewerAsync(int materialId, int reviewerId, CancellationToken cancellationToken)
-    {
-
-        // TODO: Implement logic to check if the reviewer is the mentor who created the material.
-        // Check if the reviewer is the mentor who created the material
-        // This would require a query to the Materials DbContext, but since we don't have direct access,
-        // we'll assume there's a service or another way to check this in a real implementation.
-        // For now we'll just return true, indicating it's valid.
-        return true;
-    } */
 }

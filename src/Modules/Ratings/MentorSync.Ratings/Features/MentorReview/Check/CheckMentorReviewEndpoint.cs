@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -31,7 +29,7 @@ public sealed class CheckMentorReviewEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Ratings)
 		.WithDescription("Checks if the current mentee has already reviewed a mentor")
-		.Produces<CheckMentorReviewResponse>(StatusCodes.Status200OK)
+		.Produces<CheckMentorReviewResponse>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
 	}

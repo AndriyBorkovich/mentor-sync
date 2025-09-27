@@ -1,8 +1,6 @@
 using System.Security.Claims;
 using MentorSync.Scheduling.Features.GetUserBookings.Common;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -30,7 +28,7 @@ public sealed class GetMenteeBookingsEndpoint : IEndpoint
 		})
 		.WithTags("Scheduling")
 		.WithDescription("Gets all bookings for a mentee")
-		.Produces<UserBookingsResponse>(StatusCodes.Status200OK)
+		.Produces<UserBookingsResponse>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
 	}

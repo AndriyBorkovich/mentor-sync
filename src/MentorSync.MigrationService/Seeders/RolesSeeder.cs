@@ -10,13 +10,13 @@ public static class RolesSeeder
 	{
 		var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
 
-		await CreateRole(Roles.Admin);
-		await CreateRole(Roles.Mentor);
-		await CreateRole(Roles.Mentee);
+		await TryToCreateRoleAsync(Roles.Admin);
+		await TryToCreateRoleAsync(Roles.Mentor);
+		await TryToCreateRoleAsync(Roles.Mentee);
 
 		return;
 
-		async Task CreateRole(string roleName)
+		async Task TryToCreateRoleAsync(string roleName)
 		{
 			var appRole = await roleManager.FindByNameAsync(roleName);
 

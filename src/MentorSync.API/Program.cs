@@ -1,6 +1,5 @@
 using MentorSync.API.Extensions;
 using MentorSync.ServiceDefaults;
-using MentorSync.SharedKernel.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

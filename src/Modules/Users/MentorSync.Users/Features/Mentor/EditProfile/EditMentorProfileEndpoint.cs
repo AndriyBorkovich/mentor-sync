@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +21,7 @@ public sealed class EditMentorProfileEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Mentors)
 		.WithDescription("Edit mentor profile")
-		.Produces<MentorProfileResponse>(StatusCodes.Status200OK)
+		.Produces<MentorProfileResponse>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMentorMix);
 	}

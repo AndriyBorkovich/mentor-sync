@@ -10,7 +10,7 @@ public sealed class GetMaterialByIdQueryHandler(
 	IMentorProfileService mentorProfileService)
 		: IQueryHandler<GetMaterialByIdQuery, MaterialResponse>
 {
-	public async Task<Result<MaterialResponse>> Handle(GetMaterialByIdQuery request, CancellationToken cancellationToken)
+	public async Task<Result<MaterialResponse>> Handle(GetMaterialByIdQuery request, CancellationToken cancellationToken = default)
 	{
 		var material = await dbContext.LearningMaterials
 				.AsNoTracking()

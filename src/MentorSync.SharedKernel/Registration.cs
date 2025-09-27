@@ -1,4 +1,4 @@
-﻿using MentorSync.SharedKernel.Extensions;
+﻿using MentorSync.SharedKernel.Abstractions.DomainEvents;
 using MentorSync.SharedKernel.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

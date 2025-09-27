@@ -1,6 +1,6 @@
 ﻿using Ardalis.Result;
 
-namespace MentorSync.SharedKernel.Abstractions.Messaging;
+namespace MentorSync.SharedKernel.Abstractions.Messaging.Handlers;
 
 public interface IPipelineBehavior<in TInput, TOutput>
 {

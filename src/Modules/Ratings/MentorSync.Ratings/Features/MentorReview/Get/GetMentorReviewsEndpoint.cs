@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +20,7 @@ public sealed class GetMentorReviewsEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Ratings)
 			.WithDescription("Gets reviews for a mentor")
-			.Produces<MentorReviewsResponse>(StatusCodes.Status200OK)
+			.Produces<MentorReviewsResponse>()
 			.Produces(StatusCodes.Status404NotFound)
 			.AllowAnonymous();
 	}

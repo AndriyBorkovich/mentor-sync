@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -27,7 +25,7 @@ public sealed class UploadAvatarEndpoint : IEndpoint
             Replaces existing image if it exists.
             """)
 		.Accepts<IFormFile>("multipart/form-data")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly)
 		.DisableAntiforgery();

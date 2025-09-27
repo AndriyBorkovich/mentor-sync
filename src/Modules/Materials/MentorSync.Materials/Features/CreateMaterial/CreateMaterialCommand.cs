@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace MentorSync.Materials.Features.CreateMaterial;

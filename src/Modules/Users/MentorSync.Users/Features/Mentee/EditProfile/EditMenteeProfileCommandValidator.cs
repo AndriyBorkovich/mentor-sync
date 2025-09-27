@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace MentorSync.Users.Features.Mentee.EditProfile;
 
-public class EditMenteeProfileCommandValidator : AbstractValidator<EditMenteeProfileCommand>
+public sealed class EditMenteeProfileCommandValidator : AbstractValidator<EditMenteeProfileCommand>
 {
 	public EditMenteeProfileCommandValidator()
 	{

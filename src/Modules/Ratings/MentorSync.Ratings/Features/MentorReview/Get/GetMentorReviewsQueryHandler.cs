@@ -5,16 +5,16 @@ using MentorReviewEntityDto = MentorSync.Ratings.Features.MentorReview.Get.Mento
 
 namespace MentorSync.Ratings.Features.MentorReview.Get;
 
-public class GetMentorReviewsQueryHandler(
+public sealed class GetMentorReviewsQueryHandler(
 	RatingsDbContext dbContext)
 	: IQueryHandler<GetMentorReviewsQuery, MentorReviewsResponse>
 {
-	public async Task<Result<MentorReviewsResponse>> Handle(GetMentorReviewsQuery request, CancellationToken cancellationToken)
+	public async Task<Result<MentorReviewsResponse>> Handle(GetMentorReviewsQuery request, CancellationToken cancellationToken = default)
 	{
 		var reviews = await dbContext.Database
 			.SqlQuery<MentorReviewEntityDto>(
 				$"""
-                SELECT 
+                SELECT
                 mr."Id",
                 mr."Rating",
                 mr."ReviewText" AS "Comment",

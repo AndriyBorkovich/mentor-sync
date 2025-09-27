@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MentorSync.Ratings.Data.Migrations;
 
 /// <inheritdoc />
-public partial class AddReviewsInitial : Migration
+public sealed partial class AddReviewsInitial : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)

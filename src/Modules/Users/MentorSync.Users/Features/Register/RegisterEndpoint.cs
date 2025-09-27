@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +33,7 @@ public sealed class RegisterEndpoint : IEndpoint
 		.AllowAnonymous()
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Register new user")
-		.Produces<CreatedEntityResponse>(StatusCodes.Status200OK)
+		.Produces<CreatedEntityResponse>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.ProducesProblem(StatusCodes.Status409Conflict);
 	}

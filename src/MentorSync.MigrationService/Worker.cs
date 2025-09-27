@@ -20,17 +20,13 @@ public sealed class Worker(
 	private static readonly ActivitySource _activitySource = new(ActivitySourceName);
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		using var activity = _activitySource.StartActivity("Migrating database", ActivityKind.Client);
+		using var activity = _activitySource.StartActivity(ActivityKind.Client);
 
 		try
 		{
-			using var scope = serviceProvider.CreateScope();
+			await using var scope = serviceProvider.CreateAsyncScope();
 
-			/*CleanDbContext<UsersDbContext>(scope.ServiceProvider);
-            CleanDbContext<SchedulingDbContext>(scope.ServiceProvider);           
-            CleanDbContext<MaterialsDbContext>(scope.ServiceProvider);           
-            CleanDbContext<RatingsDbContext>(scope.ServiceProvider);           
-            CleanDbContext<RecommendationsDbContext>(scope.ServiceProvider);*/
+			// CleanDatabase(scope.ServiceProvider);
 
 			await MigrateAsync<UsersDbContext>(
 				scope.ServiceProvider,
@@ -69,7 +65,16 @@ public sealed class Worker(
 		hostApplicationLifetime.StopApplication();
 	}
 
-	public static void CleanDbContext<T>(IServiceProvider serviceProvider)
+	private static void CleanDatabase(IServiceProvider serviceProvider)
+	{
+		CleanDbContext<UsersDbContext>(serviceProvider);
+		CleanDbContext<SchedulingDbContext>(serviceProvider);
+		CleanDbContext<MaterialsDbContext>(serviceProvider);
+		CleanDbContext<RatingsDbContext>(serviceProvider);
+		CleanDbContext<RecommendationsDbContext>(serviceProvider);
+	}
+
+	private static void CleanDbContext<T>(IServiceProvider serviceProvider)
 		where T : DbContext
 	{
 		using var scope = serviceProvider.CreateScope();
@@ -113,6 +118,6 @@ public sealed class Worker(
 		where T : DbContext
 	{
 		var strategy = dbContext.Database.CreateExecutionStrategy();
-		await strategy.ExecuteAsync(async () => await dbContext.Database.MigrateAsync(cancellationToken));
+		await strategy.ExecuteAsync(async () => await dbContext.Database.MigrateAsync(cancellationToken)).ConfigureAwait(false);
 	}
 }

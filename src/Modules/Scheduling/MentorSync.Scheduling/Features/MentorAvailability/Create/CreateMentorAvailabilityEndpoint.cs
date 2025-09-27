@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,9 +28,9 @@ public sealed class CreateMentorAvailabilityEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Scheduling)
 		.WithDescription("Creates a new availability slot for a mentor")
-		.Produces<CreateMentorAvailabilityResult>(StatusCodes.Status200OK)
-		.Produces(StatusCodes.Status400BadRequest)
-		.Produces(StatusCodes.Status403Forbidden)
+		.Produces<CreateMentorAvailabilityResult>()
+		.ProducesProblem(StatusCodes.Status400BadRequest)
+		.ProducesProblem(StatusCodes.Status403Forbidden)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorOnly);
 	}
 }

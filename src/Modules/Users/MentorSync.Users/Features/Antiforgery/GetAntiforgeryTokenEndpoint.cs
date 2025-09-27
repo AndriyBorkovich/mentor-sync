@@ -1,5 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +18,7 @@ public sealed class GetAntiforgeryTokenEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Generate antiforgery token")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.RequireAuthorization();
 	}
 }

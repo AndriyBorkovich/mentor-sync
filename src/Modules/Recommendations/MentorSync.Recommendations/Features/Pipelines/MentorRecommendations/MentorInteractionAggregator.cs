@@ -6,7 +6,6 @@ using MentorSync.Recommendations.Domain.Tracking;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Scheduling.Contracts;
 using MentorSync.Scheduling.Contracts.Models;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MentorSync.Scheduling.Data.Migrations;
 
 /// <inheritdoc />
-public partial class AddSchedulingTablesInitial : Migration
+public sealed partial class AddSchedulingTablesInitial : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)

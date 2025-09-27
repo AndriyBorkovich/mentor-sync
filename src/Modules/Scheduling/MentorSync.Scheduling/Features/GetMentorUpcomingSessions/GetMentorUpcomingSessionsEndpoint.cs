@@ -1,5 +1,3 @@
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,7 +19,7 @@ public sealed class GetMentorUpcomingSessionsEndpoint : IEndpoint
 			})
 			.WithTags("Scheduling")
 			.WithDescription("Gets upcoming sessions for a mentor")
-			.Produces<MentorUpcomingSessionsResponse>(StatusCodes.Status200OK)
+			.Produces<MentorUpcomingSessionsResponse>()
 			.Produces(StatusCodes.Status404NotFound)
 			.AllowAnonymous();
 	}

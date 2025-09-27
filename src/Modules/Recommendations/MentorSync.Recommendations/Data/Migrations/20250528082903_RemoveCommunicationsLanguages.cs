@@ -5,7 +5,7 @@
 namespace MentorSync.Recommendations.Data.Migrations;
 
 /// <inheritdoc />
-public partial class RemoveCommunicationsLanguages : Migration
+public sealed partial class RemoveCommunicationsLanguages : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)

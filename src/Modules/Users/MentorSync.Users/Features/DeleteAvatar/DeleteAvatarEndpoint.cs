@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +20,7 @@ public sealed class DeleteAvatarEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Delete user profile image")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly)
 		.DisableAntiforgery();

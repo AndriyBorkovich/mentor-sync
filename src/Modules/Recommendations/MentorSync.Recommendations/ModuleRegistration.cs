@@ -4,7 +4,6 @@ using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 using MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

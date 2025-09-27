@@ -1,5 +1,3 @@
-using MentorSync.SharedKernel.CommonEntities.Enums;
-
 namespace MentorSync.Users.Features.SearchMentors;
 
 public sealed class MentorSearchResultDto

@@ -1,5 +1,4 @@
 ﻿using MentorSync.SharedKernel.Abstractions.DomainEvents;
-using MentorSync.SharedKernel.Abstractions.Messaging;
 
 namespace MentorSync.MigrationService;
 

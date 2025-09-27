@@ -24,9 +24,10 @@
     <ProjectReference Include="..\..\Users\MentorSync.Users.Contracts\MentorSync.Users.Contracts.csproj" />
     <ProjectReference Include="..\MentorSync.Ratings.Contracts\MentorSync.Ratings.Contracts.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Data\Migrations\" />
+		<Compile Remove="Data\Migrations\*.cs" />
+	</ItemGroup>
   <ItemGroup>
     <PackageReference Update="Meziantou.Analyzer" Version="2.0.210" />
     <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />

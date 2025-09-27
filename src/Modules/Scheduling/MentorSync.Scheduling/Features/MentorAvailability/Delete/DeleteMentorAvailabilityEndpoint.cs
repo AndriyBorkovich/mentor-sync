@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,10 +26,8 @@ public sealed class DeleteMentorAvailabilityEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Scheduling)
 		.WithDescription("Deletes an availability slot for a mentor")
-		.Produces<string>(StatusCodes.Status200OK)
-		.Produces(StatusCodes.Status400BadRequest)
-		.Produces(StatusCodes.Status403Forbidden)
-		.Produces(StatusCodes.Status404NotFound)
+		.Produces<string>()
+		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorOnly);
 	}
 }

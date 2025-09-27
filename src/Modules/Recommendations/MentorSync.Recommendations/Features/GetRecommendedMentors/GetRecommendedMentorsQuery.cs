@@ -1,7 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities;
-using MentorSync.SharedKernel.CommonEntities.Enums;
-
-namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
+﻿namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
 /// <summary>
 /// Query to get recommended mentors for the currently logged-in mentee

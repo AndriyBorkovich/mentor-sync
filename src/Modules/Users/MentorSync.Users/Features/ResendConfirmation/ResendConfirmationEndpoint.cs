@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

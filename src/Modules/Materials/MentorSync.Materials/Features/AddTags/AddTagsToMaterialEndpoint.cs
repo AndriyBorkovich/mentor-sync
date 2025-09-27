@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -38,7 +36,7 @@ public sealed class AddTagsToMaterialEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Materials)
 			.WithDescription("Adds tags to an existing learning material")
-			.Produces<AddTagsResponse>(StatusCodes.Status200OK)
+			.Produces<AddTagsResponse>()
 			.ProducesProblem(StatusCodes.Status400BadRequest)
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status404NotFound);

@@ -8,7 +8,9 @@ public sealed class GetMentorMaterialsQueryHandler(
 	MaterialsDbContext dbContext)
 		: IQueryHandler<GetMentorMaterialsQuery, MentorMaterialsResponse>
 {
-	public async Task<Result<MentorMaterialsResponse>> Handle(GetMentorMaterialsQuery request, CancellationToken cancellationToken)
+	public async Task<Result<MentorMaterialsResponse>> Handle(
+		GetMentorMaterialsQuery request,
+		CancellationToken cancellationToken = default)
 	{
 		var materials = await dbContext.LearningMaterials
 				.Where(lm => lm.MentorId == request.MentorId)

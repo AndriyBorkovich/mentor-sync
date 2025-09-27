@@ -2,7 +2,6 @@
 using MentorSync.Materials.Data;
 using MentorSync.Materials.Services;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +24,7 @@ public sealed class DeleteMaterialReviewEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Ratings)
 			.WithDescription("Deletes a review for a learning material")
-			.Produces<string>(StatusCodes.Status200OK)
+			.Produces<string>()
 			.ProducesProblem(StatusCodes.Status204NoContent)
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.ProducesProblem(StatusCodes.Status404NotFound);

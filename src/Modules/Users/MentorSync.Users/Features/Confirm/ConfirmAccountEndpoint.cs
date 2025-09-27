@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +23,7 @@ public sealed class ConfirmAccountEndpoint : IEndpoint
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Confirm user account by sending email with token")
 		.AllowAnonymous()
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status400BadRequest);
 	}
 }

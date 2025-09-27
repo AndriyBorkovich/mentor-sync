@@ -1,6 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-
-namespace MentorSync.Materials.Domain;
+﻿namespace MentorSync.Materials.Domain;
 
 public sealed class LearningMaterial
 {

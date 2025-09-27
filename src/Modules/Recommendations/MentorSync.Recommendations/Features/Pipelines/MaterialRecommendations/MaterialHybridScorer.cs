@@ -5,7 +5,6 @@ using MentorSync.Recommendations.Domain.Result;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Recommendations.Infrastructure.MachineLearning.Input;
 using MentorSync.Recommendations.Infrastructure.MachineLearning.Output;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Contracts.Models;
 using MentorSync.Users.Contracts.Services;
 using Microsoft.EntityFrameworkCore;

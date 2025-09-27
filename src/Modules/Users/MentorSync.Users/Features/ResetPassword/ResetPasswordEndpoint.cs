@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +20,7 @@ public sealed class ResetPasswordEndpoint : IEndpoint
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Reset password for user")
 		.AllowAnonymous()
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.ProducesProblem(StatusCodes.Status409Conflict);
 	}

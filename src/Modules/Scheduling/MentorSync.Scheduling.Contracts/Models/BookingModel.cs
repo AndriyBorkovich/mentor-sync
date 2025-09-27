@@ -1,6 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-
-namespace MentorSync.Scheduling.Contracts.Models;
+﻿namespace MentorSync.Scheduling.Contracts.Models;
 
 public sealed class BookingModel
 {

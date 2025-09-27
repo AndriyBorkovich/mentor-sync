@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MentorSync.SharedKernel.Abstractions.Messaging;
+namespace MentorSync.SharedKernel.Abstractions.Messaging.Handlers;
 
 public sealed class Mediator(IServiceProvider provider) : IMediator
 {

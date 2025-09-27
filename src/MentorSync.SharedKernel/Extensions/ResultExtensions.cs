@@ -19,7 +19,7 @@ public static class ResultExtensions
 				statusCode: StatusCodes.Status400BadRequest,
 				title: "Validation Error",
 				detail: "One or more validation errors occurred.",
-				extensions: new Dictionary<string, object>
+				extensions: new Dictionary<string, object> (StringComparer.OrdinalIgnoreCase)
 				{
 					["errors"] = result.ValidationErrors,
 				}),
@@ -62,7 +62,7 @@ public static class ResultExtensions
 				statusCode: StatusCodes.Status400BadRequest,
 				title: "Validation Error",
 				detail: "One or more validation errors occurred.",
-				extensions: new Dictionary<string, object>
+				extensions: new Dictionary<string, object> (StringComparer.OrdinalIgnoreCase)
 				{
 					["validationErrors"] = result.ValidationErrors
 				}),

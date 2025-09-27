@@ -1,8 +1,5 @@
 ﻿using Ardalis.Result;
 using MentorSync.Recommendations.Data;
-using MentorSync.SharedKernel.CommonEntities;
-using MentorSync.SharedKernel.CommonEntities.Enums;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;

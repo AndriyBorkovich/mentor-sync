@@ -1,7 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.CommonEntities.Enums;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -33,7 +30,7 @@ public sealed class CreateMaterialEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Materials)
 			.WithDescription("Creates a new learning material")
-			.Produces<CreateMaterialResponse>(StatusCodes.Status200OK)
+			.Produces<CreateMaterialResponse>()
 			.ProducesProblem(StatusCodes.Status400BadRequest)
 			.ProducesProblem(StatusCodes.Status403Forbidden)
 			.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorOnly);

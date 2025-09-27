@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +20,7 @@ public sealed class GetMaterialByIdEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Materials)
 			.WithDescription("Gets a specific learning material by ID")
-			.Produces<MaterialResponse>(StatusCodes.Status200OK)
+			.Produces<MaterialResponse>()
 			.Produces(StatusCodes.Status404NotFound)
 			.AllowAnonymous();
 	}

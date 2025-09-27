@@ -1,6 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-
-namespace MentorSync.Scheduling.Domain;
+﻿namespace MentorSync.Scheduling.Domain;
 
 public sealed class Booking
 {

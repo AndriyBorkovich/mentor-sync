@@ -1,4 +1,5 @@
 ﻿namespace MentorSync.Recommendations.Domain.Interaction;
+
 public class BaseInteraction
 {
 	public int Id { get; set; }

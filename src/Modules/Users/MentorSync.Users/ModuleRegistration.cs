@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;

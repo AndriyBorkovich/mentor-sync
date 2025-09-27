@@ -49,7 +49,7 @@ var mongodb = mongo.AddDatabase("mongodb");
 var csKeyVault = builder.AddParameter("cs-keyvault", secret: true);
 /*var communicationService = */
 builder.AddBicepTemplate(name: "communication-service", "../bicep-templates/communication-service.module.bicep")
-								  .WithParameter(name: "isProd", false)
+								  .WithParameter(name: "isProd", value: false)
 								  .WithParameter("communicationServiceName", "cs-mentorsync-dev")
 								  .WithParameter("emailServiceName", "es-mentorsync-dev")
 								  .WithParameter("keyVaultName", csKeyVault);
@@ -81,7 +81,7 @@ builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scrip
 	.WaitFor(api)
 	.WithEnvironment("BROWSER", "none")
 	.WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
-	.WithHttpEndpoint(env: "VITE_PORT", port: uiPort)
+	.WithHttpEndpoint(port: uiPort, env: "VITE_PORT")
 	.WithExternalHttpEndpoints()
 	.WithNpmPackageInstallation()
 	.PublishAsDockerFile();

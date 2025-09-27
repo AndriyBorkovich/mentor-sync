@@ -4,8 +4,6 @@ namespace MentorSync.SharedKernel.Services;
 
 public sealed class ChannelDomainEventsDispatcher(IPublisher<DomainEvent> publisher) : IDomainEventsDispatcher
 {
-	private readonly IPublisher<DomainEvent> _publisher = publisher;
-
 	public async Task DispatchAsync(IEnumerable<IHaveDomainEvents> entitiesWithEvents)
 	{
 		foreach (var entity in entitiesWithEvents)
@@ -16,7 +14,7 @@ public sealed class ChannelDomainEventsDispatcher(IPublisher<DomainEvent> publis
 
 			foreach (var @event in events)
 			{
-				await _publisher.PublishAsync(@event);
+				await publisher.PublishAsync(@event);
 			}
 		}
 	}

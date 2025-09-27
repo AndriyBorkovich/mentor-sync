@@ -11,7 +11,7 @@ public sealed class DeleteMentorAvailabilityCommandHandler(
 		: ICommandHandler<DeleteMentorAvailabilityCommand, string>
 {
 
-	public async Task<Result<string>> Handle(DeleteMentorAvailabilityCommand request, CancellationToken cancellationToken)
+	public async Task<Result<string>> Handle(DeleteMentorAvailabilityCommand request, CancellationToken cancellationToken = default)
 	{
 		var availability = await dbContext.MentorAvailabilities
 			.FirstOrDefaultAsync(a => a.Id == request.AvailabilityId && a.MentorId == request.MentorId, cancellationToken);

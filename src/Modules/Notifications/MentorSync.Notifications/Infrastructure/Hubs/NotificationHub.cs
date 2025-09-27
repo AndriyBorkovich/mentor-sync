@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace MentorSync.Notifications.Infrastructure.Hubs;
 
 [Authorize]
-public class NotificationHub(NotificationsDbContext dbContext) : Hub
+public sealed class NotificationHub(NotificationsDbContext dbContext) : Hub
 {
 	public async Task SendNotification(string user, string message)
 	{

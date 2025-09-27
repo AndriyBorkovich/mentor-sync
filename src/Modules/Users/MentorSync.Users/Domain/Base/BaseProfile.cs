@@ -1,5 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MentorSync.Users.Domain.Base;
 

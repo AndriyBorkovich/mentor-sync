@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -24,7 +22,7 @@ public sealed class GetUserMaterialReviewEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Ratings)
 			.WithDescription("Gets a user's review for a specific learning material")
-			.Produces<UserMaterialReviewResponse>(StatusCodes.Status200OK)
+			.Produces<UserMaterialReviewResponse>()
 			.ProducesProblem(StatusCodes.Status404NotFound)
 			.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorMenteeMix);
 	}

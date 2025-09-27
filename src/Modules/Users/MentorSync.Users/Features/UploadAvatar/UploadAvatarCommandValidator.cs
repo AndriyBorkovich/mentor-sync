@@ -16,7 +16,7 @@ public sealed class UploadAvatarCommandValidator : AbstractValidator<UploadAvata
 			.WithMessage("File is required.")
 			.Must(file => file.Length > 0)
 			.WithMessage("File must not be empty.")
-			.Must(file => file.ContentType == "image/png" || file.ContentType == "image/jpeg")
+			.Must(file => string.Equals(file.ContentType, "image/png", StringComparison.OrdinalIgnoreCase) || string.Equals(file.ContentType, "image/jpeg", StringComparison.OrdinalIgnoreCase))
 			.WithMessage("File must be a png or jpeg image.");
 	}
 }

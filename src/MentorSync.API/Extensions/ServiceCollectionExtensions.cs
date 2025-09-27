@@ -1,4 +1,5 @@
-﻿using MentorSync.Materials;
+﻿using System.Globalization;
+using MentorSync.Materials;
 using MentorSync.Notifications;
 using MentorSync.Ratings;
 using MentorSync.Recommendations;
@@ -17,20 +18,18 @@ namespace MentorSync.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddEndpointsMetadata(this IServiceCollection services)
+	public static void AddEndpointsMetadata(this IServiceCollection services)
 	{
 		services.AddEndpointsApiExplorer();
 		services.AddSwaggerGen(SwaggerConfiguration.Configure);
-
-		return services;
 	}
-	public static IServiceCollection AddCustomSerilog(this IServiceCollection services, IConfiguration configuration)
+
+	public static void AddCustomSerilog(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddSerilog((_, lc) => lc.ReadFrom.Configuration(configuration));
-
-		return services;
 	}
-	public static IServiceCollection AddExceptionHandling(this IServiceCollection services)
+
+	public static void AddExceptionHandling(this IServiceCollection services)
 	{
 		services.AddProblemDetails(options =>
 			options.CustomizeProblemDetails = ctx =>
@@ -41,17 +40,10 @@ public static class ServiceCollectionExtensions
 		);
 
 		services.AddExceptionHandler<GlobalExceptionHandler>();
-
-		return services;
 	}
 
-	public static IServiceCollection AddCustomCorsPolicy(this IServiceCollection services)
+	public static void AddCustomCorsPolicy(this IServiceCollection services)
 	{
-		// get allowed origins from configuration
-		//var allowedOrigins = services.BuildServiceProvider()
-		//    .GetRequiredService<IConfiguration>()
-		//    .GetSection("AllowedHosts")
-		//    .Get<string>();
 		services.AddCors(options =>
 		{
 			options.AddPolicy(CorsPolicyNames.All,
@@ -62,11 +54,9 @@ public static class ServiceCollectionExtensions
 								.AllowAnyMethod()
 								.AllowCredentials());
 		});
-
-		return services;
 	}
 
-	public static IServiceCollection AddGlobalRateLimiting(this IServiceCollection services)
+	public static void AddGlobalRateLimiting(this IServiceCollection services)
 	{
 		services.AddRateLimiter(options =>
 		{
@@ -94,7 +84,7 @@ public static class ServiceCollectionExtensions
 			{
 				if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
 				{
-					context.HttpContext.Response.Headers.RetryAfter = retryAfter.TotalSeconds.ToString();
+					context.HttpContext.Response.Headers.RetryAfter = retryAfter.TotalSeconds.ToString(CultureInfo.InvariantCulture);
 				}
 
 				context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
@@ -109,16 +99,16 @@ public static class ServiceCollectionExtensions
 				await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken);
 			};
 
+			return;
+
 			static string GetPartitionKey(HttpContext httpContext)
 			{
 				return httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
 			}
 		});
-
-		return services;
 	}
 
-	public static IServiceCollection ConfigureJsonOptions(this IServiceCollection services)
+	public static void ConfigureJsonOptions(this IServiceCollection services)
 	{
 		services.ConfigureHttpJsonOptions(opts =>
 		{
@@ -136,8 +126,6 @@ public static class ServiceCollectionExtensions
 			options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
 			options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 		});
-
-		return services;
 	}
 
 	public static void AddApplicationModules(this IHostApplicationBuilder builder)

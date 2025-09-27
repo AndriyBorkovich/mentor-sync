@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,7 +9,7 @@ public sealed class ConfirmBookingEndpoint : IEndpoint
 {
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("scheduling/bookings/{bookingId}/confirm", async (
+		app.MapPost("scheduling/bookings/{bookingId:int}/confirm", async (
 			int bookingId,
 			IMediator mediator,
 			CancellationToken ct) =>
@@ -22,7 +20,7 @@ public sealed class ConfirmBookingEndpoint : IEndpoint
 		})
 		.WithTags("Scheduling")
 		.WithDescription("Confirms a pending booking")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorOnly);
 	}

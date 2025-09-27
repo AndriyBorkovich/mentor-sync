@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+		<Compile Remove="Data\Migrations\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Meziantou.Analyzer" Version="2.0.210" />

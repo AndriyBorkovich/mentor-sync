@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MentorSync.Users.Data.Migrations
 {
 	/// <inheritdoc />
-	public partial class AddMentorAndMenteeProfilesTables : Migration
+	public sealed partial class AddMentorAndMenteeProfilesTables : Migration
 	{
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)

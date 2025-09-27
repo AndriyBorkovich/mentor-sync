@@ -16,21 +16,9 @@ public sealed class AddTagsToMaterialCommandHandler(
 			.Include(m => m.Tags)
 			.FirstOrDefaultAsync(m => m.Id == request.MaterialId, cancellationToken);
 
-		if (material == null)
+		if (!IsRequestValid(request, material, out var errorResult))
 		{
-			return Result.NotFound($"Material with id {request.MaterialId} not found");
-		}
-
-		// Verify ownership if MentorId is provided (not 0)
-		if (request.MentorId != 0 && material.MentorId != request.MentorId)
-		{
-			return Result.Forbidden("You do not have permission to add tags to this material");
-		}
-
-		// Check if tags are empty
-		if (request.TagNames == null || request.TagNames.Count == 0)
-		{
-			return Result.Error("At least one tag name must be provided");
+			return errorResult;
 		}
 
 		// Filter out duplicate tag names
@@ -45,8 +33,6 @@ public sealed class AddTagsToMaterialCommandHandler(
 			.Where(t => uniqueTagNames.Contains(t.Name.ToLower()))
 			.ToDictionaryAsync(t => t.Name.ToLower(), t => t, cancellationToken);
 
-		// Create a list to track new tags added
-		var addedTags = new List<Tag>();
 
 		// Process each tag
 		foreach (var tagName in uniqueTagNames)
@@ -55,10 +41,9 @@ public sealed class AddTagsToMaterialCommandHandler(
 			if (existingTagsDict.TryGetValue(tagName.ToLower(), out var existingTag))
 			{
 				// Check if the material already has this tag
-				if (!material.Tags.Any(t => t.Id == existingTag.Id))
+				if (material.Tags.TrueForAll(t => t.Id != existingTag.Id))
 				{
 					material.Tags.Add(existingTag);
-					addedTags.Add(existingTag);
 				}
 			}
 			else
@@ -67,7 +52,6 @@ public sealed class AddTagsToMaterialCommandHandler(
 				var newTag = new Tag { Name = tagName };
 				dbContext.Tags.Add(newTag);
 				material.Tags.Add(newTag);
-				addedTags.Add(newTag);
 			}
 		}
 
@@ -85,5 +69,29 @@ public sealed class AddTagsToMaterialCommandHandler(
 		};
 
 		return Result.Success(response);
+	}
+
+	private static bool IsRequestValid(AddTagsToMaterialCommand request, LearningMaterial material, out Result<AddTagsResponse> result)
+	{
+		if (material is null)
+		{
+			result = Result.NotFound($"Material with id {request.MaterialId} not found");
+			return false;
+		}
+
+		if (request.MentorId != 0 && material.MentorId != request.MentorId)
+		{
+			result = Result.Forbidden("You do not have permission to add tags to this material");
+			return false;
+		}
+
+		if (request.TagNames is null || request.TagNames.Count == 0)
+		{
+			result = Result.Error("At least one tag name must be provided");
+			return false;
+		}
+
+		result = null;
+		return true;
 	}
 }

@@ -1,9 +1,6 @@
 using Ardalis.Result;
 using MentorSync.Users.Data;
-using MentorSync.SharedKernel.Extensions;
-using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 
 namespace MentorSync.Users.Features.SearchMentors;
 

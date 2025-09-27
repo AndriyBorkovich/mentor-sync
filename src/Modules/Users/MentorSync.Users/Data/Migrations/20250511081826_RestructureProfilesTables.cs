@@ -5,7 +5,7 @@
 namespace MentorSync.Users.Data.Migrations;
 
 /// <inheritdoc />
-public partial class RestructureProfilesTables : Migration
+public sealed partial class RestructureProfilesTables : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)

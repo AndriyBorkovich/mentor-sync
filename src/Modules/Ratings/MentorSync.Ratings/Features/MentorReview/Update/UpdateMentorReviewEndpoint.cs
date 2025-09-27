@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -37,7 +35,7 @@ public sealed class UpdateMentorReviewEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Ratings)
 		.WithDescription("Updates an existing review for a mentor")
-		.Produces<UpdateMentorReviewResponse>(StatusCodes.Status200OK)
+		.Produces<UpdateMentorReviewResponse>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.ProducesProblem(StatusCodes.Status403Forbidden)

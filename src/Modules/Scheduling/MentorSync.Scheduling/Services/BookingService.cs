@@ -1,7 +1,6 @@
 ﻿using MentorSync.Scheduling.Contracts;
 using MentorSync.Scheduling.Contracts.Models;
 using MentorSync.Scheduling.Data;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Services;

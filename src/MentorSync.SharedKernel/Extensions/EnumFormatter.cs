@@ -1,6 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-
-namespace MentorSync.SharedKernel.Extensions;
+﻿namespace MentorSync.SharedKernel.Extensions;
 
 public static class EnumFormatter
 {

@@ -5,7 +5,7 @@
 namespace MentorSync.Users.Data.Migrations
 {
 	/// <inheritdoc />
-	public partial class AddCompanyAndPositionColumnsToProfiles : Migration
+	public sealed partial class AddCompanyAndPositionColumnsToProfiles : Migration
 	{
 		/// <inheritdoc />
 		protected override void Up(MigrationBuilder migrationBuilder)

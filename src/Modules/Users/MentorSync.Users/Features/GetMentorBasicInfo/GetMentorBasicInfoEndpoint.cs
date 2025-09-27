@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +20,7 @@ public sealed class GetMentorBasicInfoEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Mentors)
 			.WithDescription("Gets basic profile information for a mentor")
-			.Produces<MentorBasicInfoResponse>(StatusCodes.Status200OK)
+			.Produces<MentorBasicInfoResponse>()
 			.Produces(StatusCodes.Status404NotFound)
 			.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
 	}

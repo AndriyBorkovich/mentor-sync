@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -37,7 +35,7 @@ public sealed class CreateMentorReviewEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Ratings)
 		.WithDescription("Creates a new review for a mentor")
-		.Produces<CreateMentorReviewResponse>(StatusCodes.Status200OK)
+		.Produces<CreateMentorReviewResponse>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
 	}

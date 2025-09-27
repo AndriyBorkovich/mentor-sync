@@ -1,6 +1,5 @@
 ﻿using Bogus;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Mentee;
 using MentorSync.Users.Domain.User;
@@ -386,7 +385,7 @@ public static class MenteesSeeder
 				{
 					// Pick 1-3 skills they don't have yet but want to learn
 					var skillsToLearn = industrySkills
-						.Except(menteeProfile.Skills)
+						.Except(menteeProfile.Skills, StringComparer.OrdinalIgnoreCase)
 						.OrderBy(_ => faker.Random.Int())
 						.Take(faker.Random.Int(1, 3));
 
@@ -401,7 +400,7 @@ public static class MenteesSeeder
 				{
 					// Pick 0-2 languages they don't know yet but want to learn
 					var languagesToLearn = industryLanguages
-						.Except(menteeProfile.ProgrammingLanguages)
+						.Except(menteeProfile.ProgrammingLanguages, StringComparer.OrdinalIgnoreCase)
 						.OrderBy(_ => faker.Random.Int())
 						.Take(faker.Random.Int(0, 2));
 

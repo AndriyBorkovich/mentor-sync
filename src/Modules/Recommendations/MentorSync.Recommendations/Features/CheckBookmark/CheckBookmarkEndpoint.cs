@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +30,7 @@ public sealed class CheckBookmarkEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Recommendations)
 		.WithDescription("Checks if a mentor is bookmarked by the current mentee.")
-		.Produces<CheckBookmarkResult>(StatusCodes.Status200OK)
+		.Produces<CheckBookmarkResult>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
 	}

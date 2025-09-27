@@ -5,7 +5,6 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
-    <File Path="CustomDictionary.xml" />
     <File Path="Directory.build.props" />
   </Folder>
   <Folder Name="/src/">
@@ -15,22 +14,22 @@
   </Folder>
   <Folder Name="/src/Modules/" />
   <Folder Name="/src/Modules/Materials/">
-    <Project Path="src/Modules/Materials/MentorSync.Materials.Contracts/MentorSync.Materials.Contracts.csproj" Id="642c82ee-fece-43b4-9207-7b2999ef0822" />
-    <Project Path="src/Modules/Materials/MentorSync.Materials/MentorSync.Materials.csproj" Id="dd6b7668-764f-40f9-b1fe-9cad0a883eea" />
+    <Project Path="src/Modules/Materials/MentorSync.Materials.Contracts/MentorSync.Materials.Contracts.csproj" />
+    <Project Path="src/Modules/Materials/MentorSync.Materials/MentorSync.Materials.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Notifications/">
     <Project Path="src/Modules/Notifications/MentorSync.Notifications.Contracts/MentorSync.Notifications.Contracts.csproj" />
     <Project Path="src/Modules/Notifications/MentorSync.Notifications/MentorSync.Notifications.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Ratings/">
-    <Project Path="src/Modules/Ratings/MentorSync.Ratings.Contracts/MentorSync.Ratings.Contracts.csproj" Id="a1c7c33e-13d0-46ee-b10a-3f060b9b3da5" />
+    <Project Path="src/Modules/Ratings/MentorSync.Ratings.Contracts/MentorSync.Ratings.Contracts.csproj" />
     <Project Path="src/Modules/Ratings/MentorSync.Ratings/MentorSync.Ratings.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Recommendations/">
     <Project Path="src/Modules/Recommendations/MentorSync.Recommendations/MentorSync.Recommendations.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Scheduling/">
-    <Project Path="src/Modules/Scheduling/MentorSync.Scheduling.Contracts/MentorSync.Scheduling.Contracts.csproj" Id="261e281b-9317-46e6-bc61-e5a8f55d079e" />
+    <Project Path="src/Modules/Scheduling/MentorSync.Scheduling.Contracts/MentorSync.Scheduling.Contracts.csproj" />
     <Project Path="src/Modules/Scheduling/MentorSync.Scheduling/MentorSync.Scheduling.csproj" />
   </Folder>
   <Folder Name="/src/Modules/Users/">

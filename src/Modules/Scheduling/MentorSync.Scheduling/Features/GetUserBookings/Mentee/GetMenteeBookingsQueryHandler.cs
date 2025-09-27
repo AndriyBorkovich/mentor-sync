@@ -13,7 +13,7 @@ public sealed class GetMenteeBookingsQueryHandler(
 	{
 		var bookings = await dbContext.Database.SqlQuery<BookingDto>(
 			$"""
-            SELECT 
+            SELECT
             b."Id",
             b."MentorId",
             mentor."UserName" AS "MentorName",

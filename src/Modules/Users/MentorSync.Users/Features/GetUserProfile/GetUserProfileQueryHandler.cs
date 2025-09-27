@@ -1,7 +1,6 @@
 using Ardalis.Result;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

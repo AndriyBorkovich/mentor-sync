@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace MentorSync.Materials.Features.UploadMaterialAttachment;
 
-public record UploadMaterialAttachmentCommand : ICommand<UploadAttachmentResponse>
+public sealed record UploadMaterialAttachmentCommand : ICommand<UploadAttachmentResponse>
 {
 	public int MaterialId { get; init; }
 	public IFormFile File { get; init; }

@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +21,7 @@ public sealed class RefreshTokenEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Users)
 		.AllowAnonymous()
-		.Produces<AuthResponse>(StatusCodes.Status200OK)
+		.Produces<AuthResponse>()
 		.Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 	}
 }

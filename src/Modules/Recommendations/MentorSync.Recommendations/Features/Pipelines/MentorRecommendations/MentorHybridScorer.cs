@@ -8,7 +8,6 @@ using MentorSync.Users.Contracts.Models;
 using MentorSync.Users.Contracts.Services;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Recommendations.Domain.Result;
-using MentorSync.SharedKernel.Extensions;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 
@@ -79,30 +78,35 @@ public sealed class MentorHybridScorer(
 
 	private static float CalculateCBFScore(MenteePreferences pref, MentorProfileModel mentor)
 	{
+		if (mentor is null)
+		{
+			return 0;
+		}
+
 		float score = 0;
 		var preferredLanguages = pref?.DesiredProgrammingLanguages ?? [];
 		var mentorLanguages = mentor?.ProgrammingLanguages ?? [];
-		score += preferredLanguages.Intersect(mentorLanguages).Count() * 2;
+		score += preferredLanguages.Intersect(mentorLanguages, StringComparer.OrdinalIgnoreCase).Count() * 2;
 
 		var preferredSkills = pref?.DesiredSkills ?? [];
 		var mentorSkills = mentor?.Skills ?? [];
-		score += preferredSkills.Intersect(mentorSkills).Count() * 1.25f;
+		score += preferredSkills.Intersect(mentorSkills, StringComparer.OrdinalIgnoreCase).Count() * 1.25f;
 
-		var hasIndustryMatch = pref?.DesiredIndustries.GetCategories().Split(',').Intersect(mentor?.Industry.GetCategories().Split(','), StringComparer.OrdinalIgnoreCase).Any();
+		var hasIndustryMatch = pref?.DesiredIndustries.GetCategories().Split(',').Intersect(mentor.Industry.GetCategories().Split(','), StringComparer.OrdinalIgnoreCase).Any();
 
-		if (pref is not null && hasIndustryMatch.HasValue && hasIndustryMatch.Value)
+		if (pref is not null && hasIndustryMatch.Value)
 		{
 			score += 3;
 		}
 
-		if (pref is not null && mentor?.ExperienceYears >= pref.MinMentorExperienceYears)
+		if (pref is not null && mentor.ExperienceYears >= pref.MinMentorExperienceYears)
 		{
 			score++;
 		}
 
 		if (pref?.DesiredSkills != null)
 		{
-			var matchedSkills = pref.DesiredSkills.Intersect(mentor.Skills).Count();
+			var matchedSkills = pref.DesiredSkills.Intersect(mentor.Skills, StringComparer.OrdinalIgnoreCase).Count();
 			score += matchedSkills * 0.75f;
 		}
 

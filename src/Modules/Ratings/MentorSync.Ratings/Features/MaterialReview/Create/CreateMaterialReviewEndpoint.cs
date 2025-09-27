@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +28,7 @@ public sealed class CreateMaterialReviewEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Ratings)
 			.WithDescription("Creates a new review for a learning material")
-			.Produces<CreateMaterialReviewResponse>(StatusCodes.Status200OK)
+			.Produces<CreateMaterialReviewResponse>()
 			.ProducesProblem(StatusCodes.Status400BadRequest)
 			.ProducesProblem(StatusCodes.Status403Forbidden);
 	}

@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +29,7 @@ public sealed class CreateBookmarkEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Recommendations)
 		.WithDescription("This endpoint allows a mentee to bookmark a mentor for future reference.")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.Produces(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.AdminMenteeMix);
 	}

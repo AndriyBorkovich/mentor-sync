@@ -1,5 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-using MentorSync.Users.Domain.Enums;
+﻿using MentorSync.Users.Domain.Enums;
 using MentorSync.Users.Features.Common.Responses;
 
 namespace MentorSync.Users.Features.Mentor.CreateProfile;

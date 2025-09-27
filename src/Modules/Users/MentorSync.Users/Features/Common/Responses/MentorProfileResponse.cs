@@ -1,6 +1,4 @@
-﻿using MentorSync.SharedKernel.CommonEntities.Enums;
-
-namespace MentorSync.Users.Features.Common.Responses;
+﻿namespace MentorSync.Users.Features.Common.Responses;
 
 public sealed record MentorProfileResponse(int Id,
 										   Industry Industries,

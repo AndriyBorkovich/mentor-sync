@@ -10,14 +10,14 @@ public sealed class DomainEventProcessor(
 	IServiceProvider sp,
 	ILogger<DomainEventProcessor> logger) : BackgroundService
 {
-	protected override async Task ExecuteAsync(CancellationToken ct)
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
-		while (!ct.IsCancellationRequested)
+		while (!stoppingToken.IsCancellationRequested)
 		{
 			try
 			{
 				logger.LogInformation("Processing of events started");
-				await foreach (var domainEvent in pubSub.Reader.ReadAllAsync(ct))
+				await foreach (var domainEvent in pubSub.Reader.ReadAllAsync(stoppingToken))
 				{
 					var eventType = domainEvent.GetType();
 					logger.LogInformation("Processing domain event: {EventType}", eventType);
@@ -29,13 +29,19 @@ public sealed class DomainEventProcessor(
 						{
 							// dynamic dispatch to HandleAsync(T, CancellationToken)
 							dynamic dynHandler = handler;
-							await dynHandler.HandleAsync((dynamic)domainEvent, ct);
+							if (dynHandler is not null)
+							{
+								await dynHandler.HandleAsync((dynamic)domainEvent, stoppingToken);
+							}
 						}
 						catch (Exception ex)
 						{
-							logger.LogError(ex,
-								"Error in handler {Handler} for event {Event}",
-								handler.GetType().Name, eventType.Name);
+							if (handler is not null)
+							{
+								logger.LogError(ex,
+									"Error in handler {Handler} for event {Event}",
+									handler.GetType().Name, eventType.Name);
+							}
 						}
 					}
 				}
@@ -51,7 +57,7 @@ public sealed class DomainEventProcessor(
 			finally
 			{
 				logger.LogInformation("Processing of events finished. Waiting for 5 sec..");
-				await Task.Delay(TimeSpan.FromSeconds(5), ct);
+				await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
 			}
 		}
 	}

@@ -1,7 +1,4 @@
-using Ardalis.Result;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +20,7 @@ public sealed class UpdateMaterialReviewEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Ratings)
 		.WithDescription("Updates an existing review for a material")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status400BadRequest)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorMenteeMix);
 	}

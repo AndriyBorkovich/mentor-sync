@@ -1,6 +1,5 @@
 using Ardalis.Result;
 using MentorSync.Recommendations.Data;
-using MentorSync.SharedKernel.CommonEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMaterials;

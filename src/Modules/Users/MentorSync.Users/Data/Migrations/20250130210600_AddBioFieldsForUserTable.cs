@@ -5,7 +5,7 @@
 namespace MentorSync.Users.Data.Migrations;
 
 /// <inheritdoc />
-public partial class AddBioFieldsForUserTable : Migration
+public sealed partial class AddBioFieldsForUserTable : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)

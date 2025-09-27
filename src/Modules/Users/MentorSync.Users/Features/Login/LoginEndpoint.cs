@@ -1,6 +1,4 @@
 ﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +22,7 @@ public sealed class LoginEndpoint : IEndpoint
 			.WithTags(TagsConstants.Users)
 			.WithDescription("Login user with its credentials")
 			.AllowAnonymous()
-			.Produces<AuthResponse>(StatusCodes.Status200OK)
+			.Produces<AuthResponse>()
 			.Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 	}
 }

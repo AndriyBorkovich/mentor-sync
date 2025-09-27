@@ -1,6 +1,6 @@
 ﻿using Ardalis.Result;
 
-namespace MentorSync.SharedKernel.Abstractions.Messaging;
+namespace MentorSync.SharedKernel.Abstractions.Messaging.Handlers.Query;
 
 public interface IQueryHandler<in TQuery, TResponse>
 	where TQuery : IQuery<TResponse>

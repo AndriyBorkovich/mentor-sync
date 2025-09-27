@@ -1,6 +1,5 @@
 using Ardalis.Result;
 using MentorSync.Scheduling.Data;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
@@ -15,23 +14,25 @@ public sealed class GetMentorUpcomingSessionsQueryHandler(
 
 		var sessions = await dbContext.Database
 			.SqlQuery<SessionInfo>(
-			$@"
-                SELECT 
-                b.""Id"",
-                'Сесія з ' || u.""UserName"" AS ""Title"",
-                'Mentoring Session' AS ""Description"",
-                b.""Start"" AS ""StartTime"",
-                b.""End"" AS ""EndTime"",
-                CAST(b.""Status"" AS varchar) AS ""Status"",
-                u.""UserName"" AS ""MenteeName"",
-                u.""ProfileImageUrl"" AS ""MenteeImage""
-                FROM scheduling.""Bookings"" b
-                INNER JOIN users.""Users"" u ON b.""MenteeId"" = u.""Id""
-                WHERE 
-                b.""MentorId"" = {request.MentorId}
-                AND b.""Status"" = {BookingStatus.Pending.ToString()}
-                ORDER BY b.""Start""
-                OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY")
+				$"""
+
+				                 SELECT
+				                 b."Id",
+				                 'Сесія з ' || u."UserName" AS "Title",
+				                 'Mentoring Session' AS "Description",
+				                 b."Start" AS "StartTime",
+				                 b."End" AS "EndTime",
+				                 CAST(b."Status" AS varchar) AS "Status",
+				                 u."UserName" AS "MenteeName",
+				                 u."ProfileImageUrl" AS "MenteeImage"
+				                 FROM scheduling."Bookings" b
+				                 INNER JOIN users."Users" u ON b."MenteeId" = u."Id"
+				                 WHERE
+				                 b."MentorId" = {request.MentorId}
+				                 AND b."Status" = {nameof(BookingStatus.Pending)}
+				                 ORDER BY b."Start"
+				                 OFFSET 0 ROWS FETCH NEXT 5 ROWS ONLY
+				 """)
 			.Where(s => s.StartTime > now)
 			.ToListAsync(cancellationToken);
 

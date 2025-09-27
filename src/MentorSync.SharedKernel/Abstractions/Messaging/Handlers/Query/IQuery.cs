@@ -1,4 +1,4 @@
-﻿namespace MentorSync.SharedKernel.Abstractions.Messaging;
+﻿namespace MentorSync.SharedKernel.Abstractions.Messaging.Handlers.Query;
 
 /// <summary>
 /// A marker interface for queries in the CQRS pattern.

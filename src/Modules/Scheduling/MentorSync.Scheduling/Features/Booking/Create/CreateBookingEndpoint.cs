@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +36,7 @@ public sealed class CreateBookingEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Scheduling)
 		.WithDescription("Creates a new booking for a mentoring session")
-		.Produces<CreateBookingResult>(StatusCodes.Status200OK)
+		.Produces<CreateBookingResult>()
 		.Produces(StatusCodes.Status400BadRequest)
 		.Produces(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);

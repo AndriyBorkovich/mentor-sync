@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -30,7 +28,7 @@ public sealed class GetUserProfileEndpoint : IEndpoint
 		.WithTags(TagsConstants.Users)
 		.WithDescription("Get user profile information including related mentee/mentor profile")
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly)
-		.Produces<UserProfileResponse>(StatusCodes.Status200OK)
+		.Produces<UserProfileResponse>()
 		.ProducesProblem(StatusCodes.Status404NotFound);
 	}
 }

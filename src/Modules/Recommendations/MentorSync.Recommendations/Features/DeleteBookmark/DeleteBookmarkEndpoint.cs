@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +29,7 @@ public sealed class DeleteBookmarkEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Recommendations)
 		.WithDescription("Deletes a mentor bookmark by its unique identifier.")
-		.Produces<string>(StatusCodes.Status200OK)
+		.Produces<string>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
 	}

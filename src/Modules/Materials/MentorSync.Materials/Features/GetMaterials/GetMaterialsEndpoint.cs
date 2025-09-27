@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +32,7 @@ public sealed class GetMaterialsEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Materials)
 			.WithDescription("Gets learning materials with filtering and pagination")
-			.Produces<MaterialsResponse>(StatusCodes.Status200OK)
+			.Produces<MaterialsResponse>()
 			.ProducesProblem(StatusCodes.Status400BadRequest)
 			.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorMenteeMix);
 	}

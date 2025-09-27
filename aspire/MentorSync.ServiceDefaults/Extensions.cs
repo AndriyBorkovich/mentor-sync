@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
@@ -64,8 +63,8 @@ public static class Extensions
 			{
 				tracing.AddSource(builder.Environment.ApplicationName)
 					.AddAspNetCoreInstrumentation(t =>
-						t.Filter = (HttpContext httpContext) => !(httpContext.Request.Path.StartsWithSegments("/health")
-							  || httpContext.Request.Path.StartsWithSegments("/alive")))
+						t.Filter = httpContext => !(httpContext.Request.Path.StartsWithSegments("/health", StringComparison.OrdinalIgnoreCase)
+						                              || httpContext.Request.Path.StartsWithSegments("/alive", StringComparison.OrdinalIgnoreCase)))
 					.AddHttpClientInstrumentation()
 					.AddEntityFrameworkCoreInstrumentation()
 					.AddNpgsql()

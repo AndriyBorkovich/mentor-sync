@@ -1,7 +1,8 @@
 ﻿using System.Threading.Channels;
 
 namespace MentorSync.SharedKernel.Abstractions.Messaging.Notifications;
-public class ChannelPubSub<T> : IPublisher<T>
+
+public sealed class ChannelPubSub<T> : IPublisher<T>
 	where T : INotification
 {
 	// Unbounded so publishers never block

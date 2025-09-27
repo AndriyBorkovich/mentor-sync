@@ -6,23 +6,19 @@ namespace MentorSync.API.Extensions;
 
 public static class AppBuilderExtensions
 {
-	public static IApplicationBuilder UseAuth(this IApplicationBuilder app)
+	public static void UseAuth(this IApplicationBuilder app)
 	{
 		app.UseAuthentication();
 		app.UseAuthorization();
-
-		return app;
 	}
 
-	public static IApplicationBuilder UseCustomSwagger(this IApplicationBuilder app)
+	public static void UseCustomSwagger(this IApplicationBuilder app)
 	{
 		app.UseSwagger();
 		app.UseSwaggerUI();
-
-		return app;
 	}
 
-	public static IApplicationBuilder UseCustomSerilog(this IApplicationBuilder app)
+	public static void UseCustomSerilog(this IApplicationBuilder app)
 	{
 		app.UseSerilogRequestLogging(options =>
 		{
@@ -35,13 +31,11 @@ public static class AppBuilderExtensions
 				diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
 			};
 		});
-		return app;
 	}
 
-	public static IApplicationBuilder UseCustomCorsPolicy(this IApplicationBuilder app)
+	public static void UseCustomCorsPolicy(this IApplicationBuilder app)
 	{
 		app.UseCors(CorsPolicyNames.All);
-		return app;
 	}
 
 	public static void MapHubs(this WebApplication app)

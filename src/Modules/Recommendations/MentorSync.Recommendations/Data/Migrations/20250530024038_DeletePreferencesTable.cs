@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MentorSync.Recommendations.Data.Migrations;
 
 /// <inheritdoc />
-public partial class DeletePreferencesTable : Migration
+public sealed partial class DeletePreferencesTable : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)

@@ -3,6 +3,7 @@ using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
 using MentorSync.Scheduling.Data;
 using MentorSync.SharedKernel;
+using MentorSync.SharedKernel.Abstractions.DomainEvents;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;
@@ -26,6 +27,8 @@ public static class DependencyInjectionExtensions
 		AddDbContext<MaterialsDbContext>(SchemaConstants.Materials);
 		AddDbContext<RatingsDbContext>(SchemaConstants.Ratings);
 		AddDbContext<RecommendationsDbContext>(SchemaConstants.Recommendations);
+
+		return;
 
 		void AddDbContext<T>(string schemaName)
 			where T : DbContext

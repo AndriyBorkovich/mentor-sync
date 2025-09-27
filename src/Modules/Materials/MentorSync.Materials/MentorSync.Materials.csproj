@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+		<Compile Remove="Data\Migrations\*.cs" />
   </ItemGroup>
 
   <ItemGroup>

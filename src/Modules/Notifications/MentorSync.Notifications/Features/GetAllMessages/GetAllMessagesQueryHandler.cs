@@ -11,7 +11,7 @@ public sealed class GetAllMessagesQueryHandler(NotificationsDbContext dbContext)
 {
 	public async Task<Result<List<GetAllMessagesResponse>>> Handle(
 		GetAllMessagesQuery request,
-		CancellationToken cancellationToken)
+		CancellationToken cancellationToken = default)
 	{
 		var filter = Builders<EmailOutbox>.Filter.Empty;
 		var messages = await dbContext.EmailOutboxes.Find(filter).ToListAsync(cancellationToken: cancellationToken);

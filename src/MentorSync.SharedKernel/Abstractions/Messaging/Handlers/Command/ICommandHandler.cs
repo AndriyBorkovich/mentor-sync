@@ -1,6 +1,6 @@
 ﻿using Ardalis.Result;
 
-namespace MentorSync.SharedKernel.Abstractions.Messaging;
+namespace MentorSync.SharedKernel.Abstractions.Messaging.Handlers.Command;
 
 /// <summary>
 /// Defines a contract for handling commands of a specified type and producing a response.

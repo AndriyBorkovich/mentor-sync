@@ -1,8 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.CommonEntities.Enums;
-using MentorSync.SharedKernel.CommonEntities;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +39,7 @@ public sealed class SearchMentorsEndpoint : IEndpoint
 			})
 			.WithTags(TagsConstants.Users)
 			.WithDescription("Search mentors with filters")
-			.Produces<List<MentorSearchResponse>>(StatusCodes.Status200OK)
+			.Produces<List<MentorSearchResponse>>()
 			.RequireAuthorization(PolicyConstants.AdminMenteeMix);
 	}
 }

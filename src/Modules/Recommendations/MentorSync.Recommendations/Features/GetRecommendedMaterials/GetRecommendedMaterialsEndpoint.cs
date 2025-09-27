@@ -1,9 +1,5 @@
 using System.Security.Claims;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.CommonEntities;
-using MentorSync.SharedKernel.CommonEntities.Enums;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +40,7 @@ public sealed class GetRecommendedMaterialsEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Recommendations)
 		.WithDescription("Get recommended learning materials for the currently logged-in mentee with filtering options")
-		.Produces<PaginatedList<RecommendedMaterialResponse>>(StatusCodes.Status200OK)
+		.Produces<PaginatedList<RecommendedMaterialResponse>>()
 		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MenteeOnly);
 	}

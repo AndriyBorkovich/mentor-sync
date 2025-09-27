@@ -1,5 +1,3 @@
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,7 +19,7 @@ public sealed class GetMentorMaterialsEndpoint : IEndpoint
 			})
 			.WithTags("Materials")
 			.WithDescription("Gets learning materials provided by a mentor")
-			.Produces<MentorMaterialsResponse>(StatusCodes.Status200OK)
+			.Produces<MentorMaterialsResponse>()
 			.Produces(StatusCodes.Status404NotFound)
 			.AllowAnonymous();
 	}

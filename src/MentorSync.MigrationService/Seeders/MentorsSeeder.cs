@@ -1,6 +1,5 @@
 ﻿using Bogus;
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Enums;
 using MentorSync.Users.Domain.Mentor;
@@ -214,7 +213,8 @@ public static class MentorsSeeder
 			// Random skills for the bio that are different from each other
 			var skill1 = f.Random.ArrayElement(skillsList.ToArray());
 			var skill2 = f.Random.ArrayElement(skillsList.Where(s => !string.Equals(s, skill1, StringComparison.OrdinalIgnoreCase)).ToArray());
-			var focusArea = f.Random.ArrayElement(skillsList.Where(s => !string.Equals(s, skill1, StringComparison.OrdinalIgnoreCase) && s != skill2).ToArray());
+			var focusArea = f.Random.ArrayElement(skillsList.Where(s => !string.Equals(s, skill1, StringComparison.OrdinalIgnoreCase) && !
+				string.Equals(s, skill2, StringComparison.OrdinalIgnoreCase)).ToArray());
 
 			// Format the template with the values
 			return string.Format(f.Random.ArrayElement(mentorBioTemplates),
@@ -321,7 +321,7 @@ public static class MentorsSeeder
 					mentorProfile.Skills = [.. faker.PickRandom(skillsList, faker.Random.Int(3, 5))];
 				}
 
-				// Set company name - more senior positions (containing "Senior", "Lead", "Manager", "Architect", etc.) 
+				// Set company name - more senior positions (containing "Senior", "Lead", "Manager", "Architect", etc.)
 				// are more likely to be from well-known companies
 				var isSeniorPosition = mentorProfile.Position.Contains("Senior") ||
 									   mentorProfile.Position.Contains("Lead") ||

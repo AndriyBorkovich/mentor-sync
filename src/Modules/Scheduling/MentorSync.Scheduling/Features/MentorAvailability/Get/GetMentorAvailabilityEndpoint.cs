@@ -1,6 +1,4 @@
 using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.Endpoints;
-using MentorSync.SharedKernel.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,8 +32,8 @@ public sealed class GetMentorAvailabilityEndpoint : IEndpoint
 		})
 		.WithTags(TagsConstants.Scheduling)
 		.WithDescription("Gets availability slots for a mentor within a date range")
-		.Produces<MentorAvailabilityResult>(StatusCodes.Status200OK)
-		.Produces(StatusCodes.Status404NotFound)
+		.Produces<MentorAvailabilityResult>()
+		.ProducesProblem(StatusCodes.Status404NotFound)
 		.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorMenteeMix);
 	}
 }

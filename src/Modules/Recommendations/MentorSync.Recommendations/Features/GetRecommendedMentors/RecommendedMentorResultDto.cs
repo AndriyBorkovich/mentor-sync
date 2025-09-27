@@ -1,5 +1,3 @@
-using MentorSync.SharedKernel.CommonEntities.Enums;
-
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
 /// <summary>

@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
 using MentorSync.Scheduling.Data;
-using MentorSync.SharedKernel.CommonEntities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.Booking.UpdatePending;

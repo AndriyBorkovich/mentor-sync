@@ -9,7 +9,7 @@ public sealed class UserActiveStatusChangeEventHandler(
 	ILogger<UserActiveStatusChangeEventHandler> logger)
 	: INotificationHandler<UserActiveStatusChageEvent>
 {
-	public async Task HandleAsync(UserActiveStatusChageEvent notification, CancellationToken cancellationToken)
+	public async Task HandleAsync(UserActiveStatusChageEvent notification, CancellationToken cancellationToken = default)
 	{
 		var emailCommand = new SendEmailCommand()
 		{

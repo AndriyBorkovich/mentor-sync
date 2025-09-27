@@ -5,7 +5,7 @@
 namespace MentorSync.Users.Data.Migrations;
 
 /// <inheritdoc />
-public partial class CorrectRelationBetweenProfilesAndUser : Migration
+public sealed partial class CorrectRelationBetweenProfilesAndUser : Migration
 {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder)
