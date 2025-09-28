@@ -1,5 +1,8 @@
 ﻿namespace MentorSync.SharedKernel.Extensions;
 
+/// <summary>
+/// Utility class for formatting enum values to localized strings
+/// </summary>
 public static class EnumFormatter
 {
 	private static readonly (Industry, string)[] _industryMappings =
@@ -25,6 +28,11 @@ public static class EnumFormatter
 			(Industry.MachineLearning, "Машинне навчання")
 		];
 
+	/// <summary>
+	/// Gets localized category names for the specified industries
+	/// </summary>
+	/// <param name="industries">The industry flags to format</param>
+	/// <returns>A comma-separated string of localized industry names</returns>
 	public static string GetCategories(this Industry industries)
 	{
 
