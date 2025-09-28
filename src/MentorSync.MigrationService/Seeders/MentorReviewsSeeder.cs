@@ -161,7 +161,9 @@ public static class MentorReviewsSeeder
 
 				reviews.Add(review);
 			}
-		}        // Add all reviews to the context and save
+		}
+
+		// Add all reviews to the context and save
 		ratingsContext.MentorReviews.AddRange(reviews);
 		await ratingsContext.SaveChangesAsync();
 

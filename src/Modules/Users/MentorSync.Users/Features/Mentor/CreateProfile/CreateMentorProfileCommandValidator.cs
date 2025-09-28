@@ -24,12 +24,12 @@ public sealed class CreateMentorProfileCommandValidator : AbstractValidator<Crea
 
 		RuleFor(x => x.Skills)
 			.NotNull()
-			.Must(list => list.Count >= 1 && list.Count <= 20)
+			.Must(list => list.Count is >= 1 and <= 20)
 			.WithMessage("Skills must contain between 1 and 20 items.");
 
 		RuleFor(x => x.ProgrammingLanguages)
 			.NotNull()
-			.Must(list => list.Count >= 1 && list.Count <= 10)
+			.Must(list => list.Count is >= 1 and <= 10)
 			.WithMessage("Programming languages must contain between 1 and 10 items.");
 
 		RuleFor(x => x.ExperienceYears)

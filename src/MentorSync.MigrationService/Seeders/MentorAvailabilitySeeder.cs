@@ -61,7 +61,7 @@ public static class MentorAvailabilitySeeder
 				var currentDate = seedStartDate.AddDays(day);
 
 				// Skip weekends (Saturday = 6, Sunday = 0)
-				if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
+				if (currentDate.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
 				{
 					continue;
 				}

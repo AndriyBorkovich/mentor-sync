@@ -113,6 +113,11 @@ dotnet_diagnostic.MA0048.severity = none
 # Trailing comma in multi-line initializers
 dotnet_diagnostic.MA0007.severity = none
 
+#empty interfaces
+dotnet_diagnostic.CA1040.severity = none
+
+# Consider calling ConfigureAwait on the awaited task
+dotnet_diagnostic.CA2007.severity = none
 # Types: use var
 csharp_style_var_for_built_in_types = true:error
 csharp_style_var_when_type_is_apparent = false:none
