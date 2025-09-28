@@ -11,13 +11,32 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MentorSync.MigrationService;
 
+/// <summary>
+/// Background service that handles database migrations and seeding for all modules
+/// </summary>
+/// <param name="serviceProvider">Service provider for accessing database contexts</param>
+/// <param name="logger">Logger for migration activities</param>
+/// <param name="hostApplicationLifetime">Host application lifetime for stopping the service</param>
 public sealed class Worker(
 	IServiceProvider serviceProvider,
 	ILogger<Worker> logger,
 	IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
 {
+	/// <summary>
+	/// Activity source name for tracing migration operations
+	/// </summary>
 	public const string ActivitySourceName = "Migrations";
+
+	/// <summary>
+	/// Activity source for tracing migration operations
+	/// </summary>
 	private static readonly ActivitySource _activitySource = new(ActivitySourceName);
+
+	/// <summary>
+	/// Executes the migration and seeding process for all database contexts
+	/// </summary>
+	/// <param name="stoppingToken">Cancellation token for stopping the operation</param>
+	/// <returns>A task representing the asynchronous operation</returns>
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		using var activity = _activitySource.StartActivity(ActivityKind.Client);
@@ -65,6 +84,10 @@ public sealed class Worker(
 		hostApplicationLifetime.StopApplication();
 	}
 
+	/// <summary>
+	/// Cleans all database contexts by deleting their databases
+	/// </summary>
+	/// <param name="serviceProvider">Service provider for accessing database contexts</param>
 	private static void CleanDatabase(IServiceProvider serviceProvider)
 	{
 		CleanDbContext<UsersDbContext>(serviceProvider);
@@ -74,6 +97,11 @@ public sealed class Worker(
 		CleanDbContext<RecommendationsDbContext>(serviceProvider);
 	}
 
+	/// <summary>
+	/// Cleans a specific database context by deleting its database
+	/// </summary>
+	/// <typeparam name="T">The type of database context to clean</typeparam>
+	/// <param name="serviceProvider">Service provider for accessing the database context</param>
 	private static void CleanDbContext<T>(IServiceProvider serviceProvider)
 		where T : DbContext
 	{
@@ -83,6 +111,14 @@ public sealed class Worker(
 		context.Database.EnsureDeleted();
 	}
 
+	/// <summary>
+	/// Migrates a specific database context and runs post-migration seeding steps
+	/// </summary>
+	/// <typeparam name="T">The type of database context to migrate</typeparam>
+	/// <param name="sp">Service provider for accessing the database context</param>
+	/// <param name="cancellationToken">Cancellation token for the operation</param>
+	/// <param name="postMigrationSteps">Optional post-migration seeding steps to execute</param>
+	/// <returns>A task representing the asynchronous migration operation</returns>
 	private static async Task MigrateAsync<T>(
 		IServiceProvider sp,
 		CancellationToken cancellationToken,
@@ -99,6 +135,13 @@ public sealed class Worker(
 		}
 	}
 
+	/// <summary>
+	/// Ensures the database exists for the specified context
+	/// </summary>
+	/// <typeparam name="T">The type of database context</typeparam>
+	/// <param name="dbContext">The database context to ensure exists</param>
+	/// <param name="cancellationToken">Cancellation token for the operation</param>
+	/// <returns>A task representing the asynchronous operation</returns>
 	private static async Task EnsureDatabaseAsync<T>(T dbContext, CancellationToken cancellationToken)
 		where T : DbContext
 	{
@@ -114,6 +157,13 @@ public sealed class Worker(
 		});
 	}
 
+	/// <summary>
+	/// Runs database migrations for the specified context
+	/// </summary>
+	/// <typeparam name="T">The type of database context</typeparam>
+	/// <param name="dbContext">The database context to migrate</param>
+	/// <param name="cancellationToken">Cancellation token for the operation</param>
+	/// <returns>A task representing the asynchronous operation</returns>
 	private static async Task RunMigrationAsync<T>(T dbContext, CancellationToken cancellationToken)
 		where T : DbContext
 	{
