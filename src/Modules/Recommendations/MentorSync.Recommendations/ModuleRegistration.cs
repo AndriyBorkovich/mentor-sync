@@ -10,8 +10,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace MentorSync.Recommendations;
 
+/// <summary>
+/// Registration module for Recommendations domain services and dependencies
+/// </summary>
 public static class ModuleRegistration
 {
+	/// <summary>
+	/// Registers all Recommendations module services including database context, endpoints, and recommendation pipelines
+	/// </summary>
+	/// <param name="builder">The host application builder to configure</param>
 	public static void AddRecommendationsModule(this IHostApplicationBuilder builder)
 	{
 		AddDatabase(builder);
@@ -21,6 +28,10 @@ public static class ModuleRegistration
 		AddBackgroundJobs(builder.Services);
 	}
 
+	/// <summary>
+	/// Configures the PostgreSQL database context for the Recommendations module
+	/// </summary>
+	/// <param name="builder">The host application builder</param>
 	private static void AddDatabase(IHostApplicationBuilder builder)
 		=> builder.AddNpgsqlDbContext<RecommendationsDbContext>(
 				connectionName: GeneralConstants.DatabaseName,
@@ -28,6 +39,10 @@ public static class ModuleRegistration
 				configureDbContextOptions: opt =>
 					opt.UseNpgsql(b => b.MigrationsHistoryTable(GeneralConstants.DefaultMigrationsTableName, SchemaConstants.Recommendations)));
 
+	/// <summary>
+	/// Registers endpoints, validators, and handlers for the Recommendations module
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
 	private static void AddEndpoints(IServiceCollection services)
 	{
 		var assembly = typeof(ModuleRegistration).Assembly;
@@ -37,6 +52,10 @@ public static class ModuleRegistration
 		services.AddEndpoints(assembly);
 	}
 
+	/// <summary>
+	/// Registers background job services for recommendation generation including collaborative filtering and hybrid scoring
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
 	private static void AddBackgroundJobs(this IServiceCollection services)
 	{
 		// Mentor recommendation services
