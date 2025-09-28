@@ -1,5 +1,5 @@
-﻿using MentorSync.Scheduling.Contracts;
-using MentorSync.Scheduling.Contracts.Models;
+﻿using MentorSync.Scheduling.Contracts.Models;
+using MentorSync.Scheduling.Contracts.Services;
 using MentorSync.Scheduling.Data;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,4 +1,5 @@
 <Project>
+
 	<PropertyGroup>
 		<Description>MentorSync is an app to connect mentor and mentees</Description>
 		<Authors>Andrii Borkovych</Authors>
@@ -18,6 +19,8 @@
 		<AnalysisMode>All</AnalysisMode>
 		<!--<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors> -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PublishDocumentationFile>true</PublishDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -55,4 +58,5 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
+
 </Project>

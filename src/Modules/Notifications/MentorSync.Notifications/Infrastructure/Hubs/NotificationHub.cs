@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Domain;
-using MongoDB.Bson;
-using System.Security.Claims;
-using MongoDB.Driver;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Infrastructure.Hubs;
 

@@ -1,5 +1,5 @@
 ﻿using Ardalis.Result;
-using MentorSync.Notifications.Contracts;
+using MentorSync.Notifications.Contracts.Models;
 using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Domain;
 using MongoDB.Bson;

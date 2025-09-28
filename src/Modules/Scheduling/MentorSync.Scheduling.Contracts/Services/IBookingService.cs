@@ -1,6 +1,6 @@
 ﻿using MentorSync.Scheduling.Contracts.Models;
 
-namespace MentorSync.Scheduling.Contracts;
+namespace MentorSync.Scheduling.Contracts.Services;
 
 public interface IBookingService
 {

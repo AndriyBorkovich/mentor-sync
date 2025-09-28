@@ -1,4 +1,4 @@
-﻿namespace MentorSync.Notifications.Contracts;
+﻿namespace MentorSync.Notifications.Contracts.Models;
 
 public sealed class SendBookingStatusChangedNotificationCommand : ICommand<bool>
 {

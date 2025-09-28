@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MentorSync.Scheduling.Contracts;
+using MentorSync.Scheduling.Contracts.Services;
 using MentorSync.Scheduling.Data;
 using MentorSync.Scheduling.Features.Booking.UpdatePending;
 using MentorSync.Scheduling.Services;

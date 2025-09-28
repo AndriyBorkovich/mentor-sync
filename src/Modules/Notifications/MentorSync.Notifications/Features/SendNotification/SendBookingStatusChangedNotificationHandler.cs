@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Ardalis.Result;
-using MentorSync.Notifications.Contracts;
+using MentorSync.Notifications.Contracts.Models;
 using MentorSync.Notifications.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;

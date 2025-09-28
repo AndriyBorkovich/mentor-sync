@@ -1,5 +1,6 @@
+using System.Globalization;
 using Ardalis.Result;
-using MentorSync.Notifications.Contracts;
+using MentorSync.Notifications.Contracts.Models;
 using MentorSync.Scheduling.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,7 +59,7 @@ public sealed class CancelBookingCommandHandler(
 		await mediator.SendCommandAsync<SendBookingStatusChangedNotificationCommand, bool>(
 			new SendBookingStatusChangedNotificationCommand
 			{
-				UserId = recipientId.ToString(),
+				UserId = recipientId.ToString(CultureInfo.InvariantCulture),
 				Notification = new BookingStatusChangedNotification(
 					BookingId: booking.Id,
 					NewStatus: booking.Status.ToString(),

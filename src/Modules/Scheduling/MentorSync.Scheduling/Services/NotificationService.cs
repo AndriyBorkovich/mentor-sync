@@ -1,4 +1,5 @@
-using MentorSync.Notifications.Contracts;
+using System.Globalization;
+using MentorSync.Notifications.Contracts.Models;
 using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Scheduling.Services;
@@ -44,12 +45,13 @@ public sealed class NotificationService(
 			await publisher.PublishAsync(
 				new BookingStatusChangedEvent(
 					notification,
-					recipientId.ToString()
+					recipientId.ToString(CultureInfo.InvariantCulture)
 			));
 		}
 		catch (Exception ex)
 		{
-			logger.LogError(ex, "Failed to send notification:");
+			logger.LogError(ex, "Failed to send notification");
+			throw;
 		}
 	}
 }

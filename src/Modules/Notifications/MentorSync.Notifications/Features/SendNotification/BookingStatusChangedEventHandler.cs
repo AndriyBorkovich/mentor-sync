@@ -1,5 +1,5 @@
 using System.Text.Json;
-using MentorSync.Notifications.Contracts;
+using MentorSync.Notifications.Contracts.Models;
 using MentorSync.Notifications.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
@@ -21,6 +21,7 @@ public sealed class BookingStatusChangedEventHandler(
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "Failed to send booking status changed notification via SignalR");
+			throw;
 		}
 	}
 }

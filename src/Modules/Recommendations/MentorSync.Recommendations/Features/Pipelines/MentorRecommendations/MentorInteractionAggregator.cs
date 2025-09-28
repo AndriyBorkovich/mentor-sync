@@ -4,8 +4,8 @@ using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Domain.Interaction;
 using MentorSync.Recommendations.Domain.Tracking;
 using MentorSync.Recommendations.Features.Pipelines.Base;
-using MentorSync.Scheduling.Contracts;
 using MentorSync.Scheduling.Contracts.Models;
+using MentorSync.Scheduling.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

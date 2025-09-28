@@ -1,4 +1,4 @@
-﻿using MentorSync.Notifications.Contracts;
+﻿using MentorSync.Notifications.Contracts.Models;
 using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;

@@ -1,20 +1,20 @@
 ﻿using System.Text;
 using MentorSync.SharedKernel;
+using MentorSync.Users.Contracts.Services;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Infrastructure;
+using MentorSync.Users.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authorization;
-using MentorSync.Users.Contracts.Services;
-using MentorSync.Users.Services;
 
 namespace MentorSync.Users;
 

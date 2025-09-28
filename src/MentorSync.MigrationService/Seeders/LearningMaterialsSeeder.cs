@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Bogus;
 using MentorSync.Materials.Data;
 using MentorSync.Materials.Domain;
@@ -7,7 +8,6 @@ using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Domain.Tracking;
 using MentorSync.Users.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Immutable;
 
 namespace MentorSync.MigrationService.Seeders;
 

@@ -1,18 +1,18 @@
 ﻿using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using MentorSync.Materials;
 using MentorSync.Notifications;
 using MentorSync.Ratings;
 using MentorSync.Recommendations;
+using MentorSync.Scheduling;
 using MentorSync.SharedKernel;
 using MentorSync.Users;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.Mvc;
-using MentorSync.Scheduling;
 
 namespace MentorSync.API.Extensions;
 
