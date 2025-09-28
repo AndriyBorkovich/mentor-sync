@@ -7,8 +7,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace MentorSync.SharedKernel.Extensions;
 
+/// <summary>
+/// Extension methods for endpoint registration and mapping
+/// </summary>
 public static class EndpointExtensions
 {
+	/// <summary>
+	/// Registers all endpoint implementations from the specified assembly
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
+	/// <param name="assembly">The assembly to scan for endpoint implementations</param>
+	/// <returns>The service collection for method chaining</returns>
 	public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
 	{
 		var serviceDescriptors = assembly
@@ -23,6 +32,12 @@ public static class EndpointExtensions
 		return services;
 	}
 
+	/// <summary>
+	/// Maps all registered endpoints to the application route builder
+	/// </summary>
+	/// <param name="app">The web application to configure</param>
+	/// <param name="routeGroupBuilder">Optional route group builder for organizing endpoints</param>
+	/// <returns>The application builder for method chaining</returns>
 	public static IApplicationBuilder MapEndpoints(this WebApplication app, RouteGroupBuilder routeGroupBuilder = null)
 	{
 		var endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();

@@ -16,19 +16,35 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MentorSync.API.Extensions;
 
+/// <summary>
+/// Extension methods for service collection configuration
+/// </summary>
 public static class ServiceCollectionExtensions
 {
+	/// <summary>
+	/// Configures API endpoint metadata services including Swagger
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
 	public static void AddEndpointsMetadata(this IServiceCollection services)
 	{
 		services.AddEndpointsApiExplorer();
 		services.AddSwaggerGen(SwaggerConfiguration.Configure);
 	}
 
+	/// <summary>
+	/// Configures Serilog logging services
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
+	/// <param name="configuration">The application configuration</param>
 	public static void AddCustomSerilog(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddSerilog((_, lc) => lc.ReadFrom.Configuration(configuration));
 	}
 
+	/// <summary>
+	/// Configures global exception handling services
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
 	public static void AddExceptionHandling(this IServiceCollection services)
 	{
 		services.AddProblemDetails(options =>
@@ -42,6 +58,10 @@ public static class ServiceCollectionExtensions
 		services.AddExceptionHandler<GlobalExceptionHandler>();
 	}
 
+	/// <summary>
+	/// Configures CORS policy services
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
 	public static void AddCustomCorsPolicy(this IServiceCollection services)
 	{
 		services.AddCors(options =>
@@ -56,6 +76,15 @@ public static class ServiceCollectionExtensions
 		});
 	}
 
+	/// <summary>
+	/// Configures global rate limiting services to prevent abuse
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
+	/// <example>
+	/// <code>
+	/// services.AddGlobalRateLimiting();
+	/// </code>
+	/// </example>
 	public static void AddGlobalRateLimiting(this IServiceCollection services)
 	{
 		services.AddRateLimiter(options =>
@@ -108,6 +137,10 @@ public static class ServiceCollectionExtensions
 		});
 	}
 
+	/// <summary>
+	/// Configures JSON serialization options for consistent API responses
+	/// </summary>
+	/// <param name="services">The service collection to configure</param>
 	public static void ConfigureJsonOptions(this IServiceCollection services)
 	{
 		services.ConfigureHttpJsonOptions(opts =>
@@ -128,6 +161,10 @@ public static class ServiceCollectionExtensions
 		});
 	}
 
+	/// <summary>
+	/// Registers all application modules with the host builder
+	/// </summary>
+	/// <param name="builder">The host application builder</param>
 	public static void AddApplicationModules(this IHostApplicationBuilder builder)
 	{
 		builder.AddSharedServices();
@@ -140,8 +177,14 @@ public static class ServiceCollectionExtensions
 	}
 }
 
+/// <summary>
+/// Internal configuration class for Swagger/OpenAPI documentation
+/// </summary>
 static file class SwaggerConfiguration
 {
+	/// <summary>
+	/// Gets the JWT Bearer authentication scheme for OpenAPI
+	/// </summary>
 	private static OpenApiSecurityScheme BearerScheme => new()
 	{
 		In = ParameterLocation.Header,
@@ -157,6 +200,9 @@ static file class SwaggerConfiguration
 		}
 	};
 
+	/// <summary>
+	/// Gets the antiforgery token scheme for OpenAPI
+	/// </summary>
 	private static OpenApiSecurityScheme AntiforgeryScheme => new()
 	{
 		In = ParameterLocation.Header,
@@ -170,6 +216,10 @@ static file class SwaggerConfiguration
 		}
 	};
 
+	/// <summary>
+	/// Configures Swagger generation options
+	/// </summary>
+	/// <param name="option">The Swagger generation options to configure</param>
 	public static void Configure(SwaggerGenOptions option)
 	{
 		option.ResolveConflictingActions(apiDesc => apiDesc.First());

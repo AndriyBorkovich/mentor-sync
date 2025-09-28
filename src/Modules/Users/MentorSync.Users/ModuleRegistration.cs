@@ -18,8 +18,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MentorSync.Users;
 
+/// <summary>
+/// Registration module for Users domain services, authentication, and dependencies
+/// </summary>
 public static class ModuleRegistration
 {
+	/// <summary>
+	/// Registers all Users module services including database, identity, authentication, and endpoints
+	/// </summary>
+	/// <param name="builder">The host application builder to configure</param>
 	public static void AddUsersModule(this IHostApplicationBuilder builder)
 	{
 		AddDatabase(builder);

@@ -8,19 +8,41 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Infrastructure.Hubs;
 
+/// <summary>
+/// SignalR hub for real-time notifications and chat functionality
+/// </summary>
+/// <param name="dbContext">The notifications database context</param>
 [Authorize]
 public sealed class NotificationHub(NotificationsDbContext dbContext) : Hub
 {
+	/// <summary>
+	/// Sends a notification to a specific user
+	/// </summary>
+	/// <param name="user">The target user identifier</param>
+	/// <param name="message">The notification message</param>
+	/// <returns>A task representing the asynchronous operation</returns>
 	public async Task SendNotification(string user, string message)
 	{
 		await Clients.User(user).SendAsync("ReceiveNotification", message, cancellationToken: Context.ConnectionAborted);
 	}
 
+	/// <summary>
+	/// Sends a booking status change notification to a specific user
+	/// </summary>
+	/// <param name="userId">The target user identifier</param>
+	/// <param name="notificationJson">The notification data in JSON format</param>
+	/// <returns>A task representing the asynchronous operation</returns>
 	public async Task SendBookingStatusChanged(string userId, string notificationJson)
 	{
 		await Clients.User(userId).SendAsync("BookingStatusChanged", notificationJson, cancellationToken: Context.ConnectionAborted);
 	}
 
+	/// <summary>
+	/// Sends a chat message to a recipient
+	/// </summary>
+	/// <param name="recipientId">The recipient user identifier</param>
+	/// <param name="content">The message content</param>
+	/// <returns>A task representing the asynchronous operation</returns>
 	public async Task SendChatMessage(int recipientId, string content)
 	{
 		var senderId = GetUserId();

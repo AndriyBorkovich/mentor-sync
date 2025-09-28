@@ -5,8 +5,21 @@ using Microsoft.Extensions.Hosting;
 
 namespace MentorSync.SharedKernel;
 
+/// <summary>
+/// Provides registration methods for shared services used across the application
+/// </summary>
 public static class Registration
 {
+	/// <summary>
+	/// Registers all shared services including Azure Blob Storage, MediatR, and domain event processing
+	/// </summary>
+	/// <param name="builder">The host application builder to configure</param>
+	/// <example>
+	/// <code>
+	/// var builder = WebApplication.CreateBuilder(args);
+	/// builder.AddSharedServices();
+	/// </code>
+	/// </example>
 	public static void AddSharedServices(this IHostApplicationBuilder builder)
 	{
 		builder.AddAzureBlobServiceClient("files-blobs");

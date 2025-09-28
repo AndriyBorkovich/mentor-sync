@@ -4,8 +4,23 @@ using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace MentorSync.SharedKernel.Extensions;
 
+/// <summary>
+/// Extension methods for converting Ardalis.Result types to ASP.NET Core HTTP responses
+/// </summary>
 public static class ResultExtensions
 {
+	/// <summary>
+	/// Converts a Result&lt;T&gt; to an appropriate HTTP response
+	/// </summary>
+	/// <typeparam name="T">The type of the result value</typeparam>
+	/// <param name="result">The result to convert</param>
+	/// <returns>An HTTP result appropriate for the result status</returns>
+	/// <example>
+	/// <code>
+	/// var result = Result&lt;User&gt;.Success(user);
+	/// return result.DecideWhatToReturn(); // Returns 200 OK with user data
+	/// </code>
+	/// </example>
 	public static IResult DecideWhatToReturn<T>(this Result<T> result)
 	{
 		return result.Status switch
@@ -49,6 +64,11 @@ public static class ResultExtensions
 		};
 	}
 
+	/// <summary>
+	/// Converts a Result to an appropriate HTTP response
+	/// </summary>
+	/// <param name="result">The result to convert</param>
+	/// <returns>An HTTP result appropriate for the result status</returns>
 	public static IResult DecideWhatToReturn(this Result result)
 	{
 		return result.Status switch

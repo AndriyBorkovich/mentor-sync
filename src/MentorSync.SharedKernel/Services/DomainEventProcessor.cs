@@ -5,11 +5,22 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.SharedKernel.Services;
 
+/// <summary>
+/// Background service that processes domain events from a channel-based publisher
+/// </summary>
+/// <param name="pubSub">The channel publisher-subscriber for domain events</param>
+/// <param name="sp">Service provider for resolving event handlers</param>
+/// <param name="logger">Logger for event processing activities</param>
 public sealed class DomainEventProcessor(
 	ChannelPubSub<DomainEvent> pubSub,
 	IServiceProvider sp,
 	ILogger<DomainEventProcessor> logger) : BackgroundService
 {
+	/// <summary>
+	/// Executes the background service, continuously processing domain events
+	/// </summary>
+	/// <param name="stoppingToken">Token to signal when the service should stop</param>
+	/// <returns>A task representing the asynchronous operation</returns>
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		while (!stoppingToken.IsCancellationRequested)

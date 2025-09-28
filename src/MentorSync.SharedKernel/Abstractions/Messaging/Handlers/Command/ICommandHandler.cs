@@ -13,6 +13,12 @@ namespace MentorSync.SharedKernel.Abstractions.Messaging.Handlers.Command;
 public interface ICommandHandler<in TCommand, TResponse>
 	where TCommand : ICommand<TResponse>
 {
+	/// <summary>
+	/// Handles the specified command and returns a result
+	/// </summary>
+	/// <param name="command">The command to handle</param>
+	/// <param name="cancellationToken">Cancellation token for the operation</param>
+	/// <returns>A task containing the result of handling the command</returns>
 	Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken = default);
 }
 
@@ -26,5 +32,11 @@ public interface ICommandHandler<in TCommand, TResponse>
 public interface ICommandHandler<in TCommand>
 	where TCommand : ICommand
 {
+	/// <summary>
+	/// Handles the specified command and returns a result indicating success or failure
+	/// </summary>
+	/// <param name="command">The command to handle</param>
+	/// <param name="cancellationToken">Cancellation token for the operation</param>
+	/// <returns>A task containing the result of handling the command</returns>
 	Task<Result> Handle(TCommand command, CancellationToken cancellationToken = default);
 }

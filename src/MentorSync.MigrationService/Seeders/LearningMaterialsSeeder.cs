@@ -11,8 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.MigrationService.Seeders;
 
+/// <summary>
+/// Seeder class for populating the database with learning materials and related data
+/// </summary>
 public static class LearningMaterialsSeeder
 {
+	/// <summary>
+	/// Predefined programming topics with titles, descriptions, and tags for seeding learning materials
+	/// </summary>
 	private static readonly ImmutableList<(string Title, string Description, string[] Tags)> _programmingTopics =
 		ImmutableList.Create(
 			("Understanding SOLID Principles", "A comprehensive guide to SOLID principles in modern software development",
@@ -77,6 +83,12 @@ public static class LearningMaterialsSeeder
 				new[] { "security", "api", "authentication" })
 		);
 
+	/// <summary>
+	/// Seeds the database with learning materials, material reviews, and related tracking data
+	/// </summary>
+	/// <param name="serviceProvider">Service provider for accessing database contexts</param>
+	/// <param name="logger">Logger for seeding activities</param>
+	/// <returns>A task representing the asynchronous seeding operation</returns>
 	public static async Task SeedAsync(IServiceProvider serviceProvider, ILogger logger)
 	{
 		await using var scope = serviceProvider.CreateAsyncScope();
@@ -194,6 +206,13 @@ public static class LearningMaterialsSeeder
 			likes.Count);
 	}
 
+	/// <summary>
+	/// Generates realistic markdown content for learning materials using fake data
+	/// </summary>
+	/// <param name="faker">Faker instance for generating realistic content</param>
+	/// <param name="title">Title of the learning material</param>
+	/// <param name="description">Description of the learning material</param>
+	/// <returns>Generated markdown content as a string</returns>
 	private static string GenerateMarkdownContent(Faker faker, string title, string description)
 	{
 		var keyPoints = new[]
@@ -275,6 +294,13 @@ Thank you for reading this guide about {title}. Apply these concepts in your pro
 ---
 *Дата останнього оновлення: {faker.Date.Recent():MMMM d, yyyy}*";
 	}
+
+	/// <summary>
+	/// Generates realistic review comments for learning materials based on rating
+	/// </summary>
+	/// <param name="faker">Faker instance for generating realistic content</param>
+	/// <param name="rating">Rating score (1-5) to determine comment tone</param>
+	/// <returns>Generated review comment in Ukrainian language</returns>
 	private static string GenerateReviewComment(Faker faker, int rating)
 	{
 		// Ukrainian positive points for material reviews
