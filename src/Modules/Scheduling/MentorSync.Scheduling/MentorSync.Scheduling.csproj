@@ -1,38 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
-     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
-    <PackageReference Include="System.Text.Json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" />
-    <ProjectReference Include="..\MentorSync.Scheduling.Contracts\MentorSync.Scheduling.Contracts.csproj" />
-    <ProjectReference Include="..\..\Users\MentorSync.Users.Contracts\MentorSync.Users.Contracts.csproj" />
-    <ProjectReference Include="..\..\Notifications\MentorSync.Notifications.Contracts\MentorSync.Notifications.Contracts.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-  </ItemGroup>
 
-  <ItemGroup>
-    
-    
-    
-    
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" />
+		<ProjectReference Include="..\MentorSync.Scheduling.Contracts\MentorSync.Scheduling.Contracts.csproj" />
+		<ProjectReference Include="..\..\Users\MentorSync.Users.Contracts\MentorSync.Users.Contracts.csproj" />
+		<ProjectReference Include="..\..\Notifications\MentorSync.Notifications.Contracts\MentorSync.Notifications.Contracts.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Data\Migrations\" />
+	</ItemGroup>
 </Project>

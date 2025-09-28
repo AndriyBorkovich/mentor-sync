@@ -1,35 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.5" />
 
-    <Sdk Name="Aspire.AppHost.Sdk" Version="9.5" />
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<UserSecretsId>dc0fc8e3-3a05-42e5-bc00-c18ccb8b4bd0</UserSecretsId>
+		<IsAspireProject>true</IsAspireProject>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <UserSecretsId>dc0fc8e3-3a05-42e5-bc00-c18ccb8b4bd0</UserSecretsId>
-        <IsAspireProject>true</IsAspireProject>
-    </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.AppHost" />
+		<PackageReference Include="Aspire.Hosting.Azure" />
+		<PackageReference Include="Aspire.Hosting.Azure.PostgreSQL" />
+		<PackageReference Include="Aspire.Hosting.Azure.Storage" />
+		<PackageReference Include="Aspire.Hosting.MongoDB" />
+		<PackageReference Include="Aspire.Hosting.NodeJs" />
+		<PackageReference Include="CommunityToolkit.Aspire.Hosting.NodeJS.Extensions" />
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Aspire.Hosting.AppHost" />
-        <PackageReference Include="Aspire.Hosting.Azure" />
-        <PackageReference Include="Aspire.Hosting.Azure.PostgreSQL" />
-        <PackageReference Include="Aspire.Hosting.Azure.Storage" />
-        <PackageReference Include="Aspire.Hosting.MongoDB" />
-        <PackageReference Include="Aspire.Hosting.NodeJs" />
-        <PackageReference Include="CommunityToolkit.Aspire.Hosting.NodeJS.Extensions" />
-        <PackageReference Include="System.Text.Json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\MentorSync.API\MentorSync.API.csproj" />
-      <ProjectReference Include="..\..\src\MentorSync.MigrationService\MentorSync.MigrationService.csproj" />
-      <ProjectReference Include="..\..\src\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" IsAspireProjectResource="False" />
-    </ItemGroup>
-
-    <ItemGroup>
-
-
-
-
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\MentorSync.API\MentorSync.API.csproj" />
+		<ProjectReference Include="..\..\src\MentorSync.MigrationService\MentorSync.MigrationService.csproj" />
+		<ProjectReference Include="..\..\src\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" IsAspireProjectResource="False" />
+	</ItemGroup>
 
 </Project>

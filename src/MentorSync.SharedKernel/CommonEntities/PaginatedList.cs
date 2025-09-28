@@ -2,7 +2,7 @@ namespace MentorSync.SharedKernel.CommonEntities;
 
 public sealed class PaginatedList<T>
 {
-	public List<T> Items { get; set; } = [];
+	public IReadOnlyList<T> Items { set; get; }
 	public int PageNumber { get; set; }
 	public int PageSize { get; set; }
 	public int TotalCount { get; set; }

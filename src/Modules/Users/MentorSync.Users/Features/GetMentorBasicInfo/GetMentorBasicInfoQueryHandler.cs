@@ -48,7 +48,6 @@ public sealed class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext) : I
                     WHERE ""MentorId"" = {request.MentorId}"
 		).FirstOrDefaultAsync(cancellationToken);
 
-
 		var response = new MentorBasicInfoResponse
 		{
 			Id = mentorInfo.Id,

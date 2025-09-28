@@ -33,7 +33,6 @@ public sealed class AddTagsToMaterialCommandHandler(
 			.Where(t => uniqueTagNames.Contains(t.Name.ToLower()))
 			.ToDictionaryAsync(t => t.Name.ToLower(), t => t, cancellationToken);
 
-
 		// Process each tag
 		foreach (var tagName in uniqueTagNames)
 		{

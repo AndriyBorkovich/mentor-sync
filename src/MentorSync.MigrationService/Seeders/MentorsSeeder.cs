@@ -103,7 +103,9 @@ public static class MentorsSeeder
 			.RuleFor(u => u.PhoneNumberConfirmed, true)
 			.RuleFor(u => u.ProfileImageUrl, f => f.Internet.Avatar())
 			.RuleFor(u => u.IsActive, true)
-			.RuleFor(u => u.Country, f => f.Address.Country()); var skillsList = new List<string>
+			.RuleFor(u => u.Country, f => f.Address.Country());
+
+		var skillsList = new List<string>
 		{
             // Original skills
             "Docker", "Kubernetes", "AWS", "Azure",

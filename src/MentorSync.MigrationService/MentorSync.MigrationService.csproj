@@ -1,34 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>dotnet-MentorSync.MigrationService-312706a7-fd0e-47e1-b9cb-fbadbad55b5c</UserSecretsId>
-        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    </PropertyGroup>
+	<PropertyGroup>
+		<UserSecretsId>dotnet-MentorSync.MigrationService-312706a7-fd0e-47e1-b9cb-fbadbad55b5c</UserSecretsId>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
-        <PackageReference Include="Bogus" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" />
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" />
-        <PackageReference Include="OpenTelemetry.Api" />
-        <PackageReference Include="System.Text.Json" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="Bogus" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" />
+		<PackageReference Include="OpenTelemetry.Api" />
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj" />
-      <ProjectReference Include="..\Modules\Materials\MentorSync.Materials\MentorSync.Materials.csproj" />
-      <ProjectReference Include="..\Modules\Ratings\MentorSync.Ratings\MentorSync.Ratings.csproj" />
-      <ProjectReference Include="..\Modules\Recommendations\MentorSync.Recommendations\MentorSync.Recommendations.csproj" />
-      <ProjectReference Include="..\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
-      <ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\Modules\Materials\MentorSync.Materials\MentorSync.Materials.csproj" />
+		<ProjectReference Include="..\Modules\Ratings\MentorSync.Ratings\MentorSync.Ratings.csproj" />
+		<ProjectReference Include="..\Modules\Recommendations\MentorSync.Recommendations\MentorSync.Recommendations.csproj" />
+		<ProjectReference Include="..\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
+		<ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
+	</ItemGroup>
 
-    <ItemGroup>
-      
-      
-      
-      
-    </ItemGroup>
 </Project>

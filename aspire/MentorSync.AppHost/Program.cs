@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Extensions.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -73,7 +74,7 @@ var api = builder.AddProject<Projects.MentorSync_API>("api")
 	.WithReference(mongodb)
 	.WaitFor(mongodb)
 	.WithEnvironment("ConnectionStrings__EmailService", smtpConnectionString)
-	.WithEnvironment(name: "UI_PORT", value: uiPort.ToString());
+	.WithEnvironment(name: "UI_PORT", value: uiPort.ToString(CultureInfo.InvariantCulture));
 
 // React + vite UI project
 builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scriptName: "dev")
@@ -86,4 +87,4 @@ builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scrip
 	.WithNpmPackageInstallation()
 	.PublishAsDockerFile();
 
-await builder.Build().RunAsync();
+await builder.Build().RunAsync().ConfigureAwait(false);

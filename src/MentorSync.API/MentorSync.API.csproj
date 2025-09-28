@@ -1,38 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>f917fbb1-0cb0-40c3-976c-a80a5e2ad6d0</UserSecretsId>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" />
-    <PackageReference Include="Serilog" />
-    <PackageReference Include="Serilog.AspNetCore" />
-    <PackageReference Include="Serilog.Sinks.Console" />
-    <PackageReference Include="Serilog.Sinks.OpenTelemetry" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Text.Json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" />
-    <ProjectReference Include="..\Modules\Materials\MentorSync.Materials\MentorSync.Materials.csproj" />
-    <ProjectReference Include="..\Modules\Notifications\MentorSync.Notifications\MentorSync.Notifications.csproj" />
-    <ProjectReference Include="..\Modules\Ratings\MentorSync.Ratings\MentorSync.Ratings.csproj" />
-    <ProjectReference Include="..\Modules\Recommendations\MentorSync.Recommendations\MentorSync.Recommendations.csproj" />
-    <ProjectReference Include="..\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
-    <ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    
-    
-    
-    
-  </ItemGroup>
+
+	<PropertyGroup>
+		<UserSecretsId>f917fbb1-0cb0-40c3-976c-a80a5e2ad6d0</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" />
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="Serilog.AspNetCore" />
+		<PackageReference Include="Serilog.Sinks.Console" />
+		<PackageReference Include="Serilog.Sinks.OpenTelemetry" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Text.Json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\aspire\MentorSync.ServiceDefaults\MentorSync.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" />
+		<ProjectReference Include="..\Modules\Materials\MentorSync.Materials\MentorSync.Materials.csproj" />
+		<ProjectReference Include="..\Modules\Notifications\MentorSync.Notifications\MentorSync.Notifications.csproj" />
+		<ProjectReference Include="..\Modules\Ratings\MentorSync.Ratings\MentorSync.Ratings.csproj" />
+		<ProjectReference Include="..\Modules\Recommendations\MentorSync.Recommendations\MentorSync.Recommendations.csproj" />
+		<ProjectReference Include="..\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
+		<ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
+	</ItemGroup>
+
 </Project>
