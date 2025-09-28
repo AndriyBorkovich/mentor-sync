@@ -21,7 +21,7 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
 	/// <code>
 	/// // This handler automatically processes:
 	/// // - ValidationException -> 400 Bad Request with validation errors
-	/// // - OperationCanceledException -> 409 Conflict  
+	/// // - OperationCanceledException -> 409 Conflict
 	/// // - Other exceptions -> 500 Internal Server Error
 	/// </code>
 	/// </example>
