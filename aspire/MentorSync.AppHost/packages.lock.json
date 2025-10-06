@@ -171,13 +171,13 @@
       },
       "Aspire.Hosting.MongoDB": {
         "type": "Direct",
-        "requested": "[9.5.0, )",
-        "resolved": "9.5.0",
-        "contentHash": "rN6NhfUHvPjEmdAKj5vKizjXcnvW2smFqzeq6zaGflw2Fx+JQ4+vgGEMx3poNS5bi+MUsUao25+t/sMLDpBl1g==",
+        "requested": "[9.5.1, )",
+        "resolved": "9.5.1",
+        "contentHash": "S1nwwkZhyLNrXvmwSFPAmzcFPh4Ir1dLnJ3vY3+hpdbWJDnoNEPug8IvKEQD8rN2OV82NruRj2qZEi4JsQ3K+g==",
         "dependencies": {
           "AspNetCore.HealthChecks.MongoDb": "9.0.0",
           "AspNetCore.HealthChecks.Uris": "9.0.0",
-          "Aspire.Hosting": "9.5.0",
+          "Aspire.Hosting": "9.5.1",
           "DnsClient": "1.8.0",
           "Google.Protobuf": "3.32.0",
           "Grpc.AspNetCore": "2.71.0",
@@ -284,8 +284,8 @@
       },
       "Aspire.Hosting": {
         "type": "Transitive",
-        "resolved": "9.5.0",
-        "contentHash": "Gp+fpt4yXxQpcp+s5Jx9YwMbk1WR8QA+5CvPod4Npf2Ot4i5K0cQz1S2e1QKXl0uC/P2ZfEysNl7YoNxIWlZmw==",
+        "resolved": "9.5.1",
+        "contentHash": "il7frwManbUV/ZnQXkgcYxULO/Nct0C3bGHuNFDxBroWE5Q9FShqcARfmLDHJvKDsiN1+SLc67ySpKY+rQrpzg==",
         "dependencies": {
           "AspNetCore.HealthChecks.Uris": "9.0.0",
           "Google.Protobuf": "3.32.0",
