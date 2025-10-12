@@ -4,9 +4,9 @@
     "net9.0": {
       "Aspire.MongoDB.Driver.v3": {
         "type": "Direct",
-        "requested": "[9.5.0, )",
-        "resolved": "9.5.0",
-        "contentHash": "6qe3VyiE7ywNuuXeT5PNIBFRjmFwvbZVfxYL++7/qrVDv+OwOPWjahrpewUEIzWdXMGYwzYOt9G3kU8CvnqoCg==",
+        "requested": "[9.5.1, )",
+        "resolved": "9.5.1",
+        "contentHash": "xDV0O6fPgEoTJer5JDeIiK+3DNEv+W9hKyD9HhkBybAJ36AHthX6GOQLbqOSGbU0yTGTbFLjo/UHdTHKcYEZkw==",
         "dependencies": {
           "AspNetCore.HealthChecks.MongoDb": "9.0.0",
           "DnsClient": "1.8.0",
@@ -25,18 +25,18 @@
       },
       "Azure.Communication.Email": {
         "type": "Direct",
-        "requested": "[1.1.0-beta.2, )",
-        "resolved": "1.1.0-beta.2",
-        "contentHash": "lg+H79nIMfPKdspwttHYZrWxd/zti6GyyCvU1YSQUsggVu7b4IjdT/6yR0TwNSlEXBFsbIxFeQn9AQf2hRmWZA==",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "yR0QWbrvM/RvOxrkFWaPqzltAiF/MGoVhjm++UkEpXvN00Brc/LevJXeg2BUVbIucoxx+kKW7HTAzGKspFh8Vg==",
         "dependencies": {
-          "Azure.Core": "1.43.0"
+          "Azure.Core": "1.49.0"
         }
       },
       "Meziantou.Analyzer": {
         "type": "Direct",
-        "requested": "[2.0.221, )",
-        "resolved": "2.0.221",
-        "contentHash": "NwSwKqhCvkXCbyYRiQZ8fJ82lWA8Fd+ySYyetiekZfDs9qOKEaY4pAdWw91qGkh9WI+/dp4uBpSpNTm3Me8PrQ=="
+        "requested": "[2.0.224, )",
+        "resolved": "2.0.224",
+        "contentHash": "k/OES22CzAJL9yg3A82ffelWXkN3iETgAyHZNcfKQ5Th7yP47yDcrl99qpGSRXepnAMNsayyiFXjremLSNX9DQ=="
       },
       "Microsoft.CodeAnalysis.NetAnalyzers": {
         "type": "Direct",
@@ -46,9 +46,9 @@
       },
       "Roslynator.Analyzers": {
         "type": "Direct",
-        "requested": "[4.14.0, )",
-        "resolved": "4.14.0",
-        "contentHash": "AEWQMrb1rcmjv9FGzrwYSBb4INhDhsauS+wwTumG0wq8N1Il+CIQHqUZJ7bt0zYJEA1qXSqgpg8Fgwc88WrR/Q=="
+        "requested": "[4.14.1, )",
+        "resolved": "4.14.1",
+        "contentHash": "yMSjze/xMYDF6PCE60/ULWx0tttNyKAndw2KijNxbKil0FX8nvDeEneDZGma8Uifk17RlfZqIXxf1mmBmhRHjg=="
       },
       "SonarAnalyzer.CSharp": {
         "type": "Direct",
@@ -76,11 +76,11 @@
       },
       "Azure.Core": {
         "type": "Transitive",
-        "resolved": "1.47.3",
-        "contentHash": "u/uCNtUWT+Q/Is7/PAMy3KP9kq5vY5klRnyAvRxO/kEa5OnV3/X5lHlCajNANC7vmej6jAqceqLBJNO/VyCKzg==",
+        "resolved": "1.49.0",
+        "contentHash": "wmY5VEEVTBJN+8KVB6qSVZYDCMpHs1UXooOijx/NH7OsMtK92NlxhPBpPyh4cR+07R/zyDGvA5+Fss4TpwlO+g==",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "8.0.0",
-          "System.ClientModel": "1.6.1",
+          "System.ClientModel": "1.7.0",
           "System.Memory.Data": "8.0.1"
         }
       },
@@ -376,8 +376,8 @@
       },
       "System.ClientModel": {
         "type": "Transitive",
-        "resolved": "1.6.1",
-        "contentHash": "xcHHhDqB5MnOOY8yIn64Vzp6gtBEs6k5J1hluG04CrShSvQNXOx4PSDs7wJiXLDidlY/FZJmxJdKTKskyJwjvw==",
+        "resolved": "1.7.0",
+        "contentHash": "NKKA3/O6B7PxmtIzOifExHdfoWthy3AD4EZ1JfzcZU8yGZTbYrK1qvXsHUL/1yQKKqWSKgIR1Ih/yf2gOaHc4w==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
           "System.Memory.Data": "8.0.1"
@@ -433,7 +433,7 @@
         "type": "Project",
         "dependencies": {
           "Ardalis.Result": "[10.1.0, )",
-          "Aspire.Azure.Storage.Blobs": "[9.5.0, )",
+          "Aspire.Azure.Storage.Blobs": "[9.5.1, )",
           "FluentValidation": "[12.0.0, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.0.0, )",
           "Scrutor": "[6.1.0, )"
@@ -453,9 +453,9 @@
       },
       "Aspire.Azure.Storage.Blobs": {
         "type": "CentralTransitive",
-        "requested": "[9.5.0, )",
-        "resolved": "9.5.0",
-        "contentHash": "YfUqLlBNvbLXrAC6U7+WJ0Z5z1AVu+9UxsmKovTp9NO5woOQdO1Lxdonfen/k9d4CFXyS0RNShbNj6aGaj8L6Q==",
+        "requested": "[9.5.1, )",
+        "resolved": "9.5.1",
+        "contentHash": "k/Tr/JTDZv/4z8IFNJriPqD/mQoUxxZCnjDUhqAb515JqCyJX8xa6Ov/8q/EhHOarP9TWbgzFc+JHaoFd1PJfA==",
         "dependencies": {
           "AspNetCore.HealthChecks.Azure.Storage.Blobs": "9.0.0",
           "Azure.Core": "1.47.3",
@@ -492,7 +492,7 @@
       },
       "OpenTelemetry.Api": {
         "type": "CentralTransitive",
-        "requested": "[1.12.0, )",
+        "requested": "[1.13.1, )",
         "resolved": "1.9.0",
         "contentHash": "Xz8ZvM1Lm0m7BbtGBnw2JlPo++YKyMp08zMK5p0mf+cIi5jeMt2+QsYu9X6YEAbjCxBQYwEak5Z8sY6Ig2WcwQ==",
         "dependencies": {
@@ -501,7 +501,7 @@
       },
       "OpenTelemetry.Extensions.Hosting": {
         "type": "CentralTransitive",
-        "requested": "[1.12.0, )",
+        "requested": "[1.13.1, )",
         "resolved": "1.9.0",
         "contentHash": "QBQPrKDVCXxTBE+r8tgjmFNKKHi4sKyczmip2XGUcjy8kk3quUNhttnjiMqC4sU50Hemmn4i5752Co26pnKe3A==",
         "dependencies": {
