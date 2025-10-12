@@ -255,7 +255,7 @@ public static class ProgrammingLanguages
 		"Scala",
 		"Elixir",
 		"Perl",
-		"Powelshell",
+		"Powershell",
 		"F#",
 		"Shell Scripting",
 		"HTML",

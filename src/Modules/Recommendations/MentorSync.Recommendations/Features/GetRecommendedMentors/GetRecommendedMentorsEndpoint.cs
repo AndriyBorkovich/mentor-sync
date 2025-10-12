@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +6,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
+/// <summary>
+/// Endpoint to get recommended mentors for the currently logged-in mentee
+/// </summary>
 public sealed class GetRecommendedMentorsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("/recommendations/mentors", async (

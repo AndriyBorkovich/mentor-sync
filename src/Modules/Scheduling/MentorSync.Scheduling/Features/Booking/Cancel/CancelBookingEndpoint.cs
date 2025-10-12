@@ -1,13 +1,16 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Scheduling.Features.Booking.Cancel;
 
+/// <summary>
+/// Endpoint to cancel a booking
+/// </summary>
 public sealed class CancelBookingEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("scheduling/bookings/{bookingId}/cancel", async (

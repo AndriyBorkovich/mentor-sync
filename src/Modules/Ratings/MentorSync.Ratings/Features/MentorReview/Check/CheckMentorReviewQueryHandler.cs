@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Features.MentorReview.Check;
 
+/// <summary>
+/// Query handler for checking if a mentee has reviewed a specific mentor.
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class CheckMentorReviewQueryHandler(
 	RatingsDbContext dbContext)
 	: IQueryHandler<CheckMentorReviewQuery, CheckMentorReviewResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<CheckMentorReviewResponse>> Handle(
 		CheckMentorReviewQuery query,
 		CancellationToken cancellationToken = default)

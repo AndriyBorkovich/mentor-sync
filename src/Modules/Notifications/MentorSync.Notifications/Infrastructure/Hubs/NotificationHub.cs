@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 using MentorSync.Notifications.Data;
 using MentorSync.Notifications.Domain;
@@ -71,11 +72,15 @@ public sealed class NotificationHub(NotificationsDbContext dbContext) : Hub
 			isRead = message.IsRead,
 		};
 
-		await Clients.User(recipientId.ToString()).SendAsync("ReceiveChatMessage", messageDto, cancellationToken: Context.ConnectionAborted);
+		await Clients.User(recipientId.ToString(CultureInfo.InvariantCulture)).SendAsync("ReceiveChatMessage", messageDto, cancellationToken: Context.ConnectionAborted);
 
 		await Clients.Caller.SendAsync("MessageSent", messageDto, cancellationToken: Context.ConnectionAborted);
 	}
 
+	/// <summary>
+	/// Marks a specific message as read and notifies the sender
+	/// </summary>
+	/// <param name="messageId"></param>
 	public async Task MarkMessageAsRead(string messageId)
 	{
 		var userId = GetUserId();
@@ -96,11 +101,14 @@ public sealed class NotificationHub(NotificationsDbContext dbContext) : Hub
 
 			if (message != null)
 			{
-				await Clients.User(message.SenderId.ToString()).SendAsync("MessageRead", messageId, cancellationToken: Context.ConnectionAborted);
+				await Clients.User(message.SenderId.ToString(CultureInfo.InvariantCulture)).SendAsync("MessageRead", messageId, cancellationToken: Context.ConnectionAborted);
 			}
 		}
 	}
 
+	/// <summary>
+	/// Handles a new client connection by adding them to their user-specific group
+	/// </summary>
 	public override async Task OnConnectedAsync()
 	{
 		var userId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);

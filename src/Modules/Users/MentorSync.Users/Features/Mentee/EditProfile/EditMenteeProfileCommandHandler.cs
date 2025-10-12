@@ -6,9 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.Mentee.EditProfile;
 
+/// <summary>
+/// Handler for <see cref="EditMenteeProfileCommand"/>
+/// </summary>
+/// <param name="db">Database context</param>
 public sealed class EditMenteeProfileCommandHandler(UsersDbContext db)
 	: ICommandHandler<EditMenteeProfileCommand, MenteeProfileResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MenteeProfileResponse>> Handle(EditMenteeProfileCommand request, CancellationToken cancellationToken = default)
 	{
 		var entity = await db.MenteeProfiles.FirstOrDefaultAsync(mp => mp.Id == request.Id, cancellationToken: cancellationToken);

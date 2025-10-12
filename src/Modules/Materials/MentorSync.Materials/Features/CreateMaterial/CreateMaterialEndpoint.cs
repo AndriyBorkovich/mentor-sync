@@ -1,12 +1,15 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Materials.Features.CreateMaterial;
 
+/// <summary>
+/// Endpoint for creating a new learning material
+/// </summary>
 public sealed class CreateMaterialEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("materials", async (

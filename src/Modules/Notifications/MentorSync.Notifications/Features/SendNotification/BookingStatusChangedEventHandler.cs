@@ -6,10 +6,16 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Notifications.Features.SendNotification;
 
+/// <summary>
+/// Event handler for booking status change notifications
+/// </summary>
+/// <param name="hubContext"></param>
+/// <param name="logger"></param>
 public sealed class BookingStatusChangedEventHandler(
 	IHubContext<NotificationHub> hubContext,
 	ILogger<BookingStatusChangedEventHandler> logger) : INotificationHandler<BookingStatusChangedEvent>
 {
+	/// <inheritdoc />
 	public async Task HandleAsync(BookingStatusChangedEvent notification, CancellationToken cancellationToken = default)
 	{
 		try

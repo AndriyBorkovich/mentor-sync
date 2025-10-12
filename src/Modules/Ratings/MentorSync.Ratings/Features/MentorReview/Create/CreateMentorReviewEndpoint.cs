@@ -1,13 +1,16 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Ratings.Features.MentorReview.Create;
 
+/// <summary>
+/// Endpoint to create a new mentor review
+/// </summary>
 public sealed class CreateMentorReviewEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("ratings/reviews/mentor", async (

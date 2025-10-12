@@ -5,11 +5,17 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Recommendations.Features.CreateMentorViewEvent;
 
+/// <summary>
+/// Handler for creating a new mentor view event
+/// </summary>
+/// <param name="dbContext">Database context</param>
+/// <param name="logger">Logger</param>
 public sealed class CreateMentorViewEventCommandHandler(
 	RecommendationsDbContext dbContext,
 	ILogger<CreateMentorViewEventCommandHandler> logger)
 		: ICommandHandler<CreateMentorViewEventCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(
 		CreateMentorViewEventCommand request, CancellationToken cancellationToken = default)
 	{

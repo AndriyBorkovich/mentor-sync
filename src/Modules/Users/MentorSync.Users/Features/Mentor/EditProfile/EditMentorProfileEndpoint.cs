@@ -1,5 +1,4 @@
-﻿using MentorSync.SharedKernel;
-using MentorSync.Users.Features.Common.Responses;
+﻿using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +6,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.Mentor.EditProfile;
 
+/// <summary>
+/// Endpoint for editing a mentor profile
+/// </summary>
 public sealed class EditMentorProfileEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPut("/mentors/profile", async (

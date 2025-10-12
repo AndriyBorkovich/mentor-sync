@@ -118,6 +118,22 @@ dotnet_diagnostic.CA1040.severity = none
 
 # Consider calling ConfigureAwait on the awaited task
 dotnet_diagnostic.CA2007.severity = none
+
+# Logger delegate parameters
+dotnet_diagnotic.CA1848.severity = none
+
+# Unused member in interface
+dotnet_diagnostic.S2326.severity = none
+
+# Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = none
+
+# reserved keywords
+dotnet_diagnostic.CA1716.severity = none
+
+# Uri properties should not be strings
+dotnet_diagnostic.CA1056.severity = none
+
 # Types: use var
 csharp_style_var_for_built_in_types = true:error
 csharp_style_var_when_type_is_apparent = false:none

@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MentorSync.Users.Infrastructure;
 
+/// <inheritdoc />
 public sealed class JwtTokenService(
 	IOptions<JwtOptions> jwtOptions,
 	UserManager<AppUser> userManager)
@@ -16,6 +18,7 @@ public sealed class JwtTokenService(
 {
 	private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
+	/// <inheritdoc />
 	public async Task<TokenResult> GenerateToken(AppUser user)
 	{
 		var signingCredentials = GetSigningCredentials();
@@ -30,6 +33,7 @@ public sealed class JwtTokenService(
 			tokenOptions.ValidTo);
 	}
 
+	/// <inheritdoc />
 	public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
 	{
 		var tokenValidationParameters = new TokenValidationParameters
@@ -53,7 +57,7 @@ public sealed class JwtTokenService(
 			if (securityToken is not JwtSecurityToken jwtSecurityToken ||
 				!jwtSecurityToken.Header.Alg.Equals(
 					SecurityAlgorithms.HmacSha256,
-					StringComparison.InvariantCultureIgnoreCase))
+					StringComparison.OrdinalIgnoreCase))
 			{
 				return null;
 			}
@@ -85,7 +89,7 @@ public sealed class JwtTokenService(
 	{
 		var claims = new List<Claim>
 		{
-			new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+			new(ClaimTypes.NameIdentifier, user.Id.ToString(CultureInfo.InvariantCulture)),
 			new(ClaimTypes.Email, user.Email!),
 			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 			new(ClaimTypes.Name, user.UserName!),

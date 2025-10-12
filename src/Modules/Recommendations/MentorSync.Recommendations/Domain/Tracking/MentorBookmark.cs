@@ -5,6 +5,9 @@
 /// </summary>
 public sealed class MentorBookmark
 {
+	/// <summary>
+	/// Unique identifier for the bookmark event.
+	/// </summary>
 	public int Id { get; set; }
 	/// <summary>
 	/// The ID of the mentee who performed the bookmark.

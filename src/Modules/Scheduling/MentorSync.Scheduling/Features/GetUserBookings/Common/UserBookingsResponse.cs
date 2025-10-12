@@ -1,22 +1,12 @@
 namespace MentorSync.Scheduling.Features.GetUserBookings.Common;
 
+/// <summary>
+/// Response containing a list of bookings for a user
+/// </summary>
 public sealed class UserBookingsResponse
 {
+	/// <summary>
+	/// List of bookings associated with the user
+	/// </summary>
 	public IReadOnlyList<BookingDto> Bookings { get; set; } = [];
-}
-
-public sealed class BookingDto
-{
-	public int Id { get; set; }
-	public int MentorId { get; set; }
-	public string MentorName { get; set; } = string.Empty;
-	public string MentorImage { get; set; }
-	public int MenteeId { get; set; }
-	public string MenteeName { get; set; } = string.Empty;
-	public string MenteeImage { get; set; }
-	public DateTimeOffset Start { get; set; }
-	public DateTimeOffset End { get; set; }
-	public string Status { get; set; } = string.Empty;
-	public DateTimeOffset CreatedAt { get; set; }
-	public DateTimeOffset UpdatedAt { get; set; }
 }

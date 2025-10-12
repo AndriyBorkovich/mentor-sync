@@ -6,11 +6,17 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Features.ToggleActiveStatus;
 
+/// <summary>
+/// Command handler for toggling a user's active status
+/// </summary>
+/// <param name="usersDbContext">Database context</param>
+/// <param name="logger">Logger</param>
 public sealed class ToggleActiveUserCommandHandler(
 	UsersDbContext usersDbContext,
 	ILogger<ToggleActiveUserCommandHandler> logger)
 	: ICommandHandler<ToggleActiveUserCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(ToggleActiveUserCommand request, CancellationToken cancellationToken = default)
 	{
 		var user = await usersDbContext.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
@@ -28,7 +34,7 @@ public sealed class ToggleActiveUserCommandHandler(
 				user.IsActive = !user.IsActive;
 				usersDbContext.Update(user);
 
-				user.RaiseDomainEvent(new UserActiveStatusChageEvent(user.Email, user.IsActive));
+				user.RaiseDomainEvent(new UserActiveStatusChangedEvent(user.Email, user.IsActive));
 
 				await usersDbContext.SaveChangesAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);

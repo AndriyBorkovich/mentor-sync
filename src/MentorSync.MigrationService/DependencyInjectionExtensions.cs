@@ -2,7 +2,6 @@
 using MentorSync.Ratings.Data;
 using MentorSync.Recommendations.Data;
 using MentorSync.Scheduling.Data;
-using MentorSync.SharedKernel;
 using MentorSync.SharedKernel.Abstractions.DomainEvents;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
@@ -12,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.MigrationService;
 
-public static class DependencyInjectionExtensions
+internal static class DependencyInjectionExtensions
 {
 	public static void AddMockEventDispatcher(this IServiceCollection services)
 	{

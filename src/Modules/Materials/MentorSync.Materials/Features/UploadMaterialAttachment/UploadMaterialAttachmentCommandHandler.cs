@@ -3,11 +3,15 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using MentorSync.Materials.Data;
 using MentorSync.Materials.Domain;
-using MentorSync.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Features.UploadMaterialAttachment;
 
+/// <summary>
+/// Handler for processing the <see cref="UploadMaterialAttachmentCommand"/>
+/// </summary>
+/// <param name="dbContext">Database context</param>
+/// <param name="blobServiceClient">Service for file upload</param>
 public sealed class UploadMaterialAttachmentCommandHandler(
 	MaterialsDbContext dbContext,
 	BlobServiceClient blobServiceClient)
@@ -16,6 +20,7 @@ public sealed class UploadMaterialAttachmentCommandHandler(
 	private readonly BlobContainerClient _attachmentsContainer
 		= blobServiceClient.GetBlobContainerClient(ContainerNames.MaterialsAttachments);
 
+	/// <inheritdoc />
 	public async Task<Result<UploadAttachmentResponse>> Handle(UploadMaterialAttachmentCommand request, CancellationToken cancellationToken = default)
 	{
 		// Validate material exists and belongs to mentor
@@ -38,7 +43,7 @@ public sealed class UploadMaterialAttachmentCommandHandler(
 
 		var blobClient = _attachmentsContainer.GetBlobClient(blobFileName);
 
-		using (var stream = request.File.OpenReadStream())
+		await using (var stream = request.File.OpenReadStream())
 		{
 			await blobClient.UploadAsync(stream, new BlobUploadOptions
 			{

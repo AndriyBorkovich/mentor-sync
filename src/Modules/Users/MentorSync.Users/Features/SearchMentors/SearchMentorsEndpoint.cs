@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.SearchMentors;
 
+/// <summary>
+/// Endpoint to search for mentors with various filters
+/// </summary>
 public sealed class SearchMentorsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("users/mentors/search", async (

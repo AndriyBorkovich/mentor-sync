@@ -1,16 +1,19 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Ratings.Features.MentorReview.Delete;
 
+/// <summary>
+/// Endpoint for deleting a mentor review
+/// </summary>
 public sealed class DeleteMentorReviewEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapDelete("ratings/reviews/mentor/{reviewId}", async (
+		app.MapDelete("ratings/reviews/mentor/{reviewId:int}", async (
 			int reviewId,
 			HttpContext httpContext,
 			IMediator mediator,

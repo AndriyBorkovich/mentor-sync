@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Features.MaterialReview.Create;
 
+/// <summary>
+/// Handler for creating a new material review
+/// </summary>
+/// <param name="dbContext"></param>
 public sealed class CreateMaterialReviewCommandHandler(
 	RatingsDbContext dbContext)
 	: ICommandHandler<CreateMaterialReviewCommand, CreateMaterialReviewResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<CreateMaterialReviewResponse>> Handle(
 		CreateMaterialReviewCommand request, CancellationToken cancellationToken = default)
 	{

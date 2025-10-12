@@ -7,7 +7,6 @@ using MentorSync.Notifications;
 using MentorSync.Ratings;
 using MentorSync.Recommendations;
 using MentorSync.Scheduling;
-using MentorSync.SharedKernel;
 using MentorSync.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -19,7 +18,7 @@ namespace MentorSync.API.Extensions;
 /// <summary>
 /// Extension methods for service collection configuration
 /// </summary>
-public static class ServiceCollectionExtensions
+internal static class ServiceCollectionExtensions
 {
 	/// <summary>
 	/// Configures API endpoint metadata services including Swagger

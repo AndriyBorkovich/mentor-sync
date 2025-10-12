@@ -1,5 +1,4 @@
 ﻿using MentorSync.Notifications.Contracts.Models;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Domain.User;
 
+/// <summary>
+/// Handles the event when a new user is created by sending a welcome email with a confirmation link.
+/// </summary>
+/// <param name="serviceProvider">Service provider</param>
+/// <param name="mediator">Mediator</param>
+/// <param name="logger">Logger</param>
 public sealed class UserCreatedEventHandler(
 	IServiceProvider serviceProvider,
 	IMediator mediator,
 	ILogger<UserCreatedEventHandler> logger) : INotificationHandler<UserCreatedEvent>
 {
+	/// <inheritdoc />
 	public async Task HandleAsync(UserCreatedEvent notification, CancellationToken cancellationToken = default)
 	{
 		await using var scope = serviceProvider.CreateAsyncScope();

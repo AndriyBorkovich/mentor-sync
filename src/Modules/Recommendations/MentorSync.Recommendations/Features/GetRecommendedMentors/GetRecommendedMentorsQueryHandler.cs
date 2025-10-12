@@ -1,13 +1,19 @@
-﻿using Ardalis.Result;
+﻿using System.Globalization;
+using Ardalis.Result;
 using MentorSync.Recommendations.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMentors;
 
+/// <summary>
+/// Handler for retrieving recommended mentors based on various filters and pagination.
+/// </summary>
+/// <param name="recommendationsContext">The database context for recommendations.</param>
 public sealed class GetRecommendedMentorsQueryHandler(
 	RecommendationsDbContext recommendationsContext)
 		: IQueryHandler<GetRecommendedMentorsQuery, PaginatedList<RecommendedMentorResponse>>
 {
+	/// <inheritdoc />
 	public async Task<Result<PaginatedList<RecommendedMentorResponse>>> Handle(
 		GetRecommendedMentorsQuery request, CancellationToken cancellationToken = default)
 	{
@@ -36,7 +42,7 @@ public sealed class GetRecommendedMentorsQueryHandler(
 
 		if (!string.IsNullOrWhiteSpace(request.SearchTerm))
 		{
-			var pattern = $"%{request.SearchTerm.ToLower()}%";
+			var pattern = $"%{request.SearchTerm}%";
 			mentorsQuery = mentorsQuery
 				.Where(m => EF.Functions.ILike(m.Name, pattern) ||
 							EF.Functions.ILike(m.Title, pattern) ||
@@ -91,7 +97,7 @@ public sealed class GetRecommendedMentorsQueryHandler(
 
 		var mentors = await mentorsQuery.ToListAsync(cancellationToken);
 
-		if (mentors == null || mentors.Count == 0)
+		if (mentors.Count == 0)
 		{
 			return Result.NotFound("No recommended mentors found on this page");
 		}
@@ -128,6 +134,6 @@ public sealed class GetRecommendedMentorsQueryHandler(
 			return [];
 		}
 
-		return [.. skills.Select((skill, index) => new RecommendedSkillResponse(index.ToString(), skill))];
+		return [.. skills.Select((skill, index) => new RecommendedSkillResponse(index.ToString(CultureInfo.InvariantCulture), skill))];
 	}
 }

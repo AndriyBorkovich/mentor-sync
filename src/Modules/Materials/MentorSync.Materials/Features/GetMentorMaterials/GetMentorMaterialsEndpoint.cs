@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Materials.Features.GetMentorMaterials;
 
+/// <summary>
+/// Endpoint for getting learning materials provided by a specific mentor
+/// </summary>
 public sealed class GetMentorMaterialsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("materials/mentors/{id}/materials", async (

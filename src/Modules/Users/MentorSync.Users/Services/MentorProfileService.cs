@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Services;
 
+/// <inheritdoc />
 public sealed class MentorProfileService(UsersDbContext usersDbContext) : IMentorProfileService
 {
+	/// <inheritdoc />
 	public async Task<IEnumerable<MentorProfileModel>> GetAllMentorsAsync(params int[] mentorIds)
 	{
 		var query = usersDbContext.MentorProfiles.AsNoTracking();
@@ -24,7 +26,7 @@ public sealed class MentorProfileService(UsersDbContext usersDbContext) : IMento
 				ExperienceYears = x.ExperienceYears,
 				Industry = x.Industries,
 				Position = x.Position,
-				Skills = x.Skills
+				Skills = x.Skills.ToList()
 			})
 			.ToListAsync();
 

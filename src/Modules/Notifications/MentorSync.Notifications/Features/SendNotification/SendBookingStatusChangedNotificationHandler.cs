@@ -7,11 +7,17 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Notifications.Features.SendNotification;
 
+/// <summary>
+/// Handler for sending booking status changed notifications via SignalR
+/// </summary>
+/// <param name="hubContext"></param>
+/// <param name="logger"></param>
 public sealed class SendBookingStatusChangedNotificationHandler(
 	IHubContext<NotificationHub> hubContext,
 	ILogger<SendBookingStatusChangedNotificationHandler> logger)
 		: ICommandHandler<SendBookingStatusChangedNotificationCommand, bool>
 {
+	/// <inheritdoc />
 	public async Task<Result<bool>> Handle(
 		SendBookingStatusChangedNotificationCommand request, CancellationToken cancellationToken = default)
 	{

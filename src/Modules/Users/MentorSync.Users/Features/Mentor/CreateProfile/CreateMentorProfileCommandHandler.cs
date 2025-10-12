@@ -6,9 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.Mentor.CreateProfile;
 
+/// <summary>
+/// Handler for <see cref="CreateMentorProfileCommand"/>
+/// </summary>
+/// <param name="db">Database context</param>
 public sealed class CreateMentorProfileCommandHandler(UsersDbContext db)
 	: ICommandHandler<CreateMentorProfileCommand, MentorProfileResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MentorProfileResponse>> Handle(CreateMentorProfileCommand request, CancellationToken cancellationToken = default)
 	{
 		var profileExists = await db.MentorProfiles

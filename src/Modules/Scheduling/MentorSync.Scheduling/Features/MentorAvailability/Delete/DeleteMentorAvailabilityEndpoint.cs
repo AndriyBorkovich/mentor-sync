@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Scheduling.Features.MentorAvailability.Delete;
 
+/// <summary>
+/// Endpoint to delete a mentor's availability slot
+/// </summary>
 public sealed class DeleteMentorAvailabilityEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapDelete("/scheduling/mentors/{mentorId:int}/availability/{availabilityId:int}", async (

@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Features.MaterialReview.Delete;
 
+/// <summary>
+/// Handler for deleting a material review
+/// </summary>
+/// <param name="dbContext"></param>
 public sealed class DeleteMaterialReviewCommandHandler(
 	RatingsDbContext dbContext)
 	: ICommandHandler<DeleteMaterialReviewCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(DeleteMaterialReviewCommand request, CancellationToken cancellationToken = default)
 	{
 		var review = await dbContext.MaterialReviews

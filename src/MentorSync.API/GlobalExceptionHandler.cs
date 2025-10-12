@@ -8,7 +8,7 @@ namespace MentorSync.API;
 /// Global exception handler for the MentorSync API that provides consistent error responses
 /// </summary>
 /// <param name="logger">Logger for exception handling events</param>
-public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
 	/// <summary>
 	/// Attempts to handle the exception and generate an appropriate HTTP response

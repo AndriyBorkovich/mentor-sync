@@ -1,12 +1,15 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Ratings.Features.MaterialReview.Get;
 
+/// <summary>
+/// Endpoint to get all reviews for a specific learning material
+/// </summary>
 public sealed class GetMaterialReviewsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("ratings/materials/{id:int}/reviews", async (

@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Features.MaterialReview.GetForUser;
 
+/// <summary>
+/// Query handler for retrieving a user's review of a specific learning material.
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetUserMaterialReviewQueryHandler(
 	RatingsDbContext dbContext)
 	: IQueryHandler<GetUserMaterialReviewQuery, UserMaterialReviewResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<UserMaterialReviewResponse>> Handle(
 		GetUserMaterialReviewQuery request, CancellationToken cancellationToken = default)
 	{

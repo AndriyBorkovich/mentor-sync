@@ -7,9 +7,9 @@ namespace MentorSync.Materials.Services;
 
 internal sealed class LearningMaterialsService(MaterialsDbContext dbContext) : ILearningMaterialsService
 {
-	public Task<List<LearningMaterialModel>> GetAllMaterialsAsync(CancellationToken cancellationToken = default)
+	public async Task<IEnumerable<LearningMaterialModel>> GetAllMaterialsAsync(CancellationToken cancellationToken = default)
 	{
-		return dbContext.LearningMaterials
+		return await dbContext.LearningMaterials
 			.AsNoTracking()
 			.Select(m => new LearningMaterialModel
 			{
@@ -18,7 +18,7 @@ internal sealed class LearningMaterialsService(MaterialsDbContext dbContext) : I
 				Description = m.Description,
 				Type = m.Type,
 				CreatedAt = m.CreatedAt,
-				Tags = m.Tags.ConvertAll(t => t.Name),
+				Tags = m.Tags.Select(t => t.Name).ToList(),
 			})
 			.ToListAsync(cancellationToken);
 	}

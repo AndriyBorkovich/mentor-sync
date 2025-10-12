@@ -5,10 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Features.AddTags;
 
+/// <summary>
+/// Command handler for adding tags to a learning material
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class AddTagsToMaterialCommandHandler(
 	MaterialsDbContext dbContext)
 		: ICommandHandler<AddTagsToMaterialCommand, AddTagsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<AddTagsResponse>> Handle(AddTagsToMaterialCommand request, CancellationToken cancellationToken = default)
 	{
 		// Validate that material exists and belongs to mentor
@@ -26,21 +31,22 @@ public sealed class AddTagsToMaterialCommandHandler(
 			.Select(t => t.Trim())
 			.Where(t => !string.IsNullOrWhiteSpace(t))
 			.Distinct(StringComparer.OrdinalIgnoreCase)
+			.Select(t => t.ToUpperInvariant())
 			.ToList();
 
 		// Get existing tags from db
 		var existingTagsDict = await dbContext.Tags
-			.Where(t => uniqueTagNames.Contains(t.Name.ToLower()))
-			.ToDictionaryAsync(t => t.Name.ToLower(), t => t, cancellationToken);
+			.Where(t => uniqueTagNames.Contains(t.Name.ToUpper()))
+			.ToDictionaryAsync(t => t.Name.ToUpperInvariant(), t => t, cancellationToken);
 
 		// Process each tag
 		foreach (var tagName in uniqueTagNames)
 		{
 			// Check if tag already exists in the database
-			if (existingTagsDict.TryGetValue(tagName.ToLower(), out var existingTag))
+			if (existingTagsDict.TryGetValue(tagName.ToUpperInvariant(), out var existingTag))
 			{
 				// Check if the material already has this tag
-				if (material.Tags.TrueForAll(t => t.Id != existingTag.Id))
+				if (material.Tags.All(t => t.Id != existingTag.Id))
 				{
 					material.Tags.Add(existingTag);
 				}

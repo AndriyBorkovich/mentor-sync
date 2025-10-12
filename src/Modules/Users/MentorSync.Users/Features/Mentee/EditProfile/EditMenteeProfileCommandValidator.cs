@@ -2,8 +2,14 @@ using FluentValidation;
 
 namespace MentorSync.Users.Features.Mentee.EditProfile;
 
+/// <summary>
+/// Validator for <see cref="EditMenteeProfileCommand"/>
+/// </summary>
 public sealed class EditMenteeProfileCommandValidator : AbstractValidator<EditMenteeProfileCommand>
 {
+	/// <summary>
+	/// Initializes a new instance of the <see cref="EditMenteeProfileCommandValidator"/> class.
+	/// </summary>
 	public EditMenteeProfileCommandValidator()
 	{
 		RuleFor(x => x.Id).GreaterThan(0);

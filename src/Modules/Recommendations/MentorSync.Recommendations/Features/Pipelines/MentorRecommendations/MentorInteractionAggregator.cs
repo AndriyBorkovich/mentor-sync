@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 
+/// <inheritdoc />
 public sealed class MentorInteractionAggregator(
 	RecommendationsDbContext db,
 	IMentorReviewService mentorReviewService,
@@ -18,6 +19,7 @@ public sealed class MentorInteractionAggregator(
 	ILogger<MentorInteractionAggregator> logger)
 	: IInteractionAggregator
 {
+	/// <inheritdoc />
 	public async Task RunAsync(CancellationToken cancellationToken)
 	{
 		logger.LogInformation("Running ETL...");

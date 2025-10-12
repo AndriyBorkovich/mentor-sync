@@ -5,5 +5,8 @@ namespace MentorSync.Recommendations.Domain.Result;
 /// </summary>
 public sealed class MaterialRecommendationResult : BaseRecommendationResult
 {
+	/// <summary>
+	/// Gets or sets the identifier of the learning material.
+	/// </summary>
 	public int MaterialId { get; set; }
 }

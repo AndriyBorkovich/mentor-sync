@@ -7,12 +7,14 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 
+/// <inheritdoc />
 public sealed class MaterialInteractionAggregator(
 	RecommendationsDbContext db,
 	IMaterialReviewService materialReviewService,
 	ILogger<MaterialInteractionAggregator> logger)
 		: IInteractionAggregator
 {
+	/// <inheritdoc />
 	public async Task RunAsync(CancellationToken cancellationToken)
 	{
 		logger.LogInformation("Running ETL for learning materials...");

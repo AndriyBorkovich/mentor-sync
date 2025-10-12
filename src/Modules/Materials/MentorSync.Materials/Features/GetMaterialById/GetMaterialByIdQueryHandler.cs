@@ -5,11 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Features.GetMaterialById;
 
+/// <summary>
+/// Handler for processing the <see cref="GetMaterialByIdQuery"/>
+/// </summary>
+/// <param name="dbContext">Database context</param>
+/// <param name="mentorProfileService">Service of mentor profiles</param>
 public sealed class GetMaterialByIdQueryHandler(
 	MaterialsDbContext dbContext,
 	IMentorProfileService mentorProfileService)
 		: IQueryHandler<GetMaterialByIdQuery, MaterialResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MaterialResponse>> Handle(GetMaterialByIdQuery request, CancellationToken cancellationToken = default)
 	{
 		var material = await dbContext.LearningMaterials

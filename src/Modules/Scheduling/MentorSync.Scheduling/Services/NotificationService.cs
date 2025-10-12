@@ -4,8 +4,22 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Scheduling.Services;
 
+/// <summary>
+/// Service to send notifications
+/// </summary>
 public interface INotificationService
 {
+	/// <summary>
+	/// Send notification when booking status changes
+	/// </summary>
+	/// <param name="bookingId">Booking ID</param>
+	/// <param name="status">New status</param>
+	/// <param name="title">Booking title</param>
+	/// <param name="startTime">Booking start time</param>
+	/// <param name="endTime">Booking end time</param>
+	/// <param name="recipientId">Recipient user ID</param>
+	/// <param name="message">Optional custom message</param>
+	/// <returns>A task that represents the asynchronous operation</returns>
 	Task SendBookingStatusChangedNotificationAsync(
 		int bookingId,
 		string status,
@@ -16,10 +30,12 @@ public interface INotificationService
 		string message = null);
 }
 
+/// <inheritdoc />
 public sealed class NotificationService(
 	IPublisher<BookingStatusChangedEvent> publisher,
 	ILogger<NotificationService> logger) : INotificationService
 {
+	/// <inheritdoc />
 	public async Task SendBookingStatusChangedNotificationAsync(
 		int bookingId,
 		string status,

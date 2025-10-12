@@ -6,9 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.GetAllUsers;
 
+/// <summary>
+/// Query handler for retrieving all users with optional filtering by role and active status
+/// </summary>
+/// <param name="userManager">User manager</param>
 public sealed class GetAllUsersQueryHandler(UserManager<AppUser> userManager)
 	: IQueryHandler<GetAllUsersQuery, List<UserShortResponse>>
 {
+	/// <inheritdoc />
 	public async Task<Result<List<UserShortResponse>>> Handle(
 		GetAllUsersQuery request, CancellationToken cancellationToken = default)
 	{

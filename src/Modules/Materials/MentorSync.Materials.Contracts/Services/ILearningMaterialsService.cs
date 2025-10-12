@@ -10,5 +10,5 @@ public interface ILearningMaterialsService
 	/// <summary>
 	/// Get all learning materials for recommendation processing.
 	/// </summary>
-	Task<List<LearningMaterialModel>> GetAllMaterialsAsync(CancellationToken cancellationToken = default);
+	Task<IEnumerable<LearningMaterialModel>> GetAllMaterialsAsync(CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Ratings.Features.MaterialReview.Delete;
 
+/// <summary>
+/// Endpoint for deleting a material review
+/// </summary>
 public sealed class DeleteMaterialReviewEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapDelete("ratings/materials/reviews/{reviewId:int}", async (

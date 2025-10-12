@@ -2,8 +2,14 @@
 
 namespace MentorSync.Users.Features.UploadAvatar;
 
+/// <summary>
+/// Validator for <see cref="UploadAvatarCommand"/>
+/// </summary>
 public sealed class UploadAvatarCommandValidator : AbstractValidator<UploadAvatarCommand>
 {
+	/// <summary>
+	/// Initializes a new instance of the <see cref="UploadAvatarCommandValidator"/> class.
+	/// </summary>
 	public UploadAvatarCommandValidator()
 	{
 		RuleFor(x => x.UserId)

@@ -38,5 +38,5 @@ public sealed class LearningMaterialModel
 	/// <summary>
 	/// Gets or sets the list of tags associated with this learning material
 	/// </summary>
-	public List<string> Tags { get; set; } = [];
+	public ICollection<string> Tags { get; set; } = [];
 }

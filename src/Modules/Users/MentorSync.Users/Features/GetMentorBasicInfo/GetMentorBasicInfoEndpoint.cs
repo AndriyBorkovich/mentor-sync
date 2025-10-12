@@ -1,12 +1,15 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.GetMentorBasicInfo;
 
+/// <summary>
+/// Endpoint to get basic profile information for a mentor
+/// </summary>
 public sealed class GetMentorBasicInfoEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("users/mentors/{id:int}/basic-info", async (

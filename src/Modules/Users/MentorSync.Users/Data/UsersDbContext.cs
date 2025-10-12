@@ -1,5 +1,4 @@
-﻿using MentorSync.SharedKernel;
-using MentorSync.SharedKernel.Abstractions.DomainEvents;
+﻿using MentorSync.SharedKernel.Abstractions.DomainEvents;
 using MentorSync.Users.Domain.Mentee;
 using MentorSync.Users.Domain.Mentor;
 using MentorSync.Users.Domain.Role;
@@ -9,15 +8,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Data;
 
+/// <summary>
+/// Database context for Users module, including identity and user profiles
+/// </summary>
+/// <param name="dispatcher">Dispatcher for domain events</param>
+/// <param name="options">Database context options</param>
 public sealed class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContextOptions<UsersDbContext> options) :
 	IdentityDbContext<
 		AppUser, AppRole, int,
 		AppUserClaim, AppUserRole, AppUserLogin,
 		AppRoleClaim, AppUserToken>(options)
 {
+	/// <summary>
+	/// Users in the system
+	/// </summary>
 	public DbSet<MentorProfile> MentorProfiles { get; set; }
+	/// <summary>
+	/// Mentee profiles in the system
+	/// </summary>
 	public DbSet<MenteeProfile> MenteeProfiles { get; set; }
 
+	/// <inheritdoc />
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);
@@ -41,6 +52,7 @@ public sealed class UsersDbContext(IDomainEventsDispatcher dispatcher, DbContext
 			.OnDelete(DeleteBehavior.Cascade);
 	}
 
+	/// <inheritdoc />
 	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
 	{
 		var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

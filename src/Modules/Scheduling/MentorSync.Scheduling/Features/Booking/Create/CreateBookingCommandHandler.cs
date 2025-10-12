@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.Booking.Create;
 
+/// <summary>
+/// Handler for creating a new booking
+/// </summary>
+/// <param name="dbContext">Database contet</param>
 public sealed class CreateBookingCommandHandler(
 	SchedulingDbContext dbContext)
 	: ICommandHandler<CreateBookingCommand, CreateBookingResult>
 {
+	/// <inheritdoc />
 	public async Task<Result<CreateBookingResult>> Handle(
 		CreateBookingCommand request,
 		CancellationToken cancellationToken = default)

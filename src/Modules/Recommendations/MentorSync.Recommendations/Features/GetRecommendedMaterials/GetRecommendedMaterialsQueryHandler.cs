@@ -4,15 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMaterials;
 
+/// <summary>
+/// Handler for getting recommended materials for a mentee
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetRecommendedMaterialsQueryHandler(
-	RecommendationsDbContext recommendationsContext)
+	RecommendationsDbContext dbContext)
 		: IQueryHandler<GetRecommendedMaterialsQuery, PaginatedList<RecommendedMaterialResponse>>
 {
+	/// <inheritdoc />
 	public async Task<Result<PaginatedList<RecommendedMaterialResponse>>> Handle(
 		GetRecommendedMaterialsQuery request, CancellationToken cancellationToken = default)
 	{
 		var menteeId = request.MenteeId;
-		var materialsQuery = recommendationsContext.Database
+		var materialsQuery = dbContext.Database
 			.SqlQuery<RecommendedMaterialResultDto>($"""
 
                 SELECT DISTINCT ON (lm."Id", lm."Title")

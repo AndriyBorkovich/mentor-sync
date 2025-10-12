@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using MentorSync.SharedKernel;
 
 namespace MentorSync.Users.Features.Register;
 

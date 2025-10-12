@@ -5,5 +5,8 @@
 /// </summary>
 public sealed class MentorRecommendationResult : BaseRecommendationResult
 {
+	/// <summary>
+	/// Gets or sets the mentee identifier.
+	/// </summary>
 	public int MentorId { get; set; }
 }

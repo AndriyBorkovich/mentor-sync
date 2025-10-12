@@ -1,4 +1,5 @@
-﻿using MentorSync.Recommendations.Data;
+﻿using System.Globalization;
+using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Recommendations.Infrastructure.MachineLearning.Input;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,16 @@ using Microsoft.ML.Trainers;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 
+/// <summary>
+/// Trains a collaborative filtering model for mentor recommendations using ML.NET
+/// </summary>
+/// <param name="db">Database context</param>
+/// <param name="logger">Logger</param>
 public sealed class MentorCollaborativeTrainer(RecommendationsDbContext db, ILogger<MentorCollaborativeTrainer> logger) : ICollaborativeTrainer
 {
 	private readonly MLContext _mlContext = new();
 
+	/// <inheritdoc />
 	public async Task TrainAsync(CancellationToken cancellationToken)
 	{
 		logger.LogInformation("Training collaborative model...");
@@ -37,8 +44,8 @@ public sealed class MentorCollaborativeTrainer(RecommendationsDbContext db, ILog
 
 		var mlData = _mlContext.Data.LoadFromEnumerable(data.Select(x => new MenteeMentorRatingData
 		{
-			MenteeId = x.MenteeId.ToString(),
-			MentorId = x.MentorId.ToString(),
+			MenteeId = x.MenteeId.ToString(CultureInfo.InvariantCulture),
+			MentorId = x.MentorId.ToString(CultureInfo.InvariantCulture),
 			Label = x.Score
 		}));
 

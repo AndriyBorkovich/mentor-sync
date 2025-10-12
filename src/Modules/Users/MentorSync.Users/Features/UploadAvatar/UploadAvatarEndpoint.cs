@@ -1,12 +1,15 @@
-﻿using MentorSync.SharedKernel;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.UploadAvatar;
 
+/// <summary>
+/// Endpoint to upload user profile image
+/// </summary>
 public sealed class UploadAvatarEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("/users/{id:int}/avatar", async (

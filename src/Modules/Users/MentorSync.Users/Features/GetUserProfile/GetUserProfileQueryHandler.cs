@@ -6,11 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.GetUserProfile;
 
+/// <summary>
+/// Query handler for retrieving a user's profile
+/// </summary>
+/// <param name="userManager">Identity manager</param>
+/// <param name="usersDbContext">Database context</param>
 public sealed class GetUserProfileQueryHandler(
 	UserManager<AppUser> userManager,
 	UsersDbContext usersDbContext)
 	: IQueryHandler<GetUserProfileQuery, UserProfileResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<UserProfileResponse>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken = default)
 	{
 		var user = await userManager.Users
@@ -49,9 +55,9 @@ public sealed class GetUserProfileQueryHandler(
 					menteeProfile.Position,
 					menteeProfile.Company,
 					menteeProfile.Industries.GetCategories(),
-					menteeProfile.Skills,
-					menteeProfile.ProgrammingLanguages,
-					menteeProfile.LearningGoals)
+					menteeProfile.Skills?.ToList() ?? [],
+					menteeProfile.ProgrammingLanguages?.ToList() ?? [],
+					menteeProfile.LearningGoals?.ToList() ?? [])
 				: null,
 			MentorProfile: mentorProfile != null
 				? new MentorProfileInfo(
@@ -60,8 +66,8 @@ public sealed class GetUserProfileQueryHandler(
 					mentorProfile.Position,
 					mentorProfile.Company,
 					mentorProfile.Industries.GetCategories(),
-					mentorProfile.Skills,
-					mentorProfile.ProgrammingLanguages,
+					mentorProfile.Skills?.ToList() ?? [],
+					mentorProfile.ProgrammingLanguages?.ToList() ?? [],
 					mentorProfile.ExperienceYears)
 				: null
 		);

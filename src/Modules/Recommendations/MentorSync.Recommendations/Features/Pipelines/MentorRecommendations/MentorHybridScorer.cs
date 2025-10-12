@@ -1,4 +1,5 @@
-﻿using MentorSync.Recommendations.Data;
+﻿using System.Globalization;
+using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Domain.Result;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Recommendations.Infrastructure.MachineLearning.Input;
@@ -11,6 +12,7 @@ using Microsoft.ML;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
 
+/// <inheritdoc />
 public sealed class MentorHybridScorer(
 	RecommendationsDbContext db,
 	IMenteeProfileService menteeProfileService,
@@ -19,6 +21,7 @@ public sealed class MentorHybridScorer(
 {
 	private readonly MLContext _mlContext = new();
 
+	/// <inheritdoc />
 	public async Task GenerateRecommendationsAsync(CancellationToken cancellationToken)
 	{
 		var model = _mlContext.Model.Load(ServicesConstants.MentorModelFile, out _);
@@ -35,12 +38,12 @@ public sealed class MentorHybridScorer(
 			{
 				var cfScore = engine.Predict(new MenteeMentorRatingData
 				{
-					MenteeId = preferences.MenteeId.ToString(),
-					MentorId = mentor.Id.ToString()
+					MenteeId = preferences.MenteeId.ToString(CultureInfo.InvariantCulture),
+					MentorId = mentor.Id.ToString(CultureInfo.InvariantCulture)
 				}).Score;
 
 				var normalizedCfScore = float.IsNaN(cfScore) ? 0 : cfScore;
-				var cbfScore = CalculateCBFScore(preferences, mentor);
+				var cbfScore = CalculateCbfScore(preferences, mentor);
 				var finalScore = (normalizedCfScore * 0.7f) + (cbfScore * 0.3f);
 
 				var existingResult = await db.MentorRecommendationResults
@@ -76,7 +79,7 @@ public sealed class MentorHybridScorer(
 		logger.LogInformation("Hybrid recommendations saved.");
 	}
 
-	private static float CalculateCBFScore(MenteePreferences pref, MentorProfileModel mentor)
+	private static float CalculateCbfScore(MenteePreferences pref, MentorProfileModel mentor)
 	{
 		if (mentor is null)
 		{
@@ -85,11 +88,11 @@ public sealed class MentorHybridScorer(
 
 		float score = 0;
 		var preferredLanguages = pref?.DesiredProgrammingLanguages ?? [];
-		var mentorLanguages = mentor?.ProgrammingLanguages ?? [];
+		var mentorLanguages = mentor.ProgrammingLanguages ?? [];
 		score += preferredLanguages.Intersect(mentorLanguages, StringComparer.OrdinalIgnoreCase).Count() * 2;
 
 		var preferredSkills = pref?.DesiredSkills ?? [];
-		var mentorSkills = mentor?.Skills ?? [];
+		var mentorSkills = mentor.Skills ?? [];
 		score += preferredSkills.Intersect(mentorSkills, StringComparer.OrdinalIgnoreCase).Count() * 1.25f;
 
 		var hasIndustryMatch = pref?.DesiredIndustries.GetCategories().Split(',').Intersect(mentor.Industry.GetCategories().Split(','), StringComparer.OrdinalIgnoreCase).Any();

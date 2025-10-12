@@ -5,13 +5,19 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Scheduling.Features.MentorAvailability.Delete;
 
+/// <summary>
+/// Command handler to delete a mentor availability
+/// </summary>
+/// <param name="dbContext">Database context</param>
+/// <param name="logger">Logger</param>
 public sealed class DeleteMentorAvailabilityCommandHandler(
 	SchedulingDbContext dbContext,
 	ILogger<DeleteMentorAvailabilityCommandHandler> logger)
 		: ICommandHandler<DeleteMentorAvailabilityCommand, string>
 {
-
-	public async Task<Result<string>> Handle(DeleteMentorAvailabilityCommand request, CancellationToken cancellationToken = default)
+	/// <inheritdoc />
+	public async Task<Result<string>> Handle(
+		DeleteMentorAvailabilityCommand request, CancellationToken cancellationToken = default)
 	{
 		var availability = await dbContext.MentorAvailabilities
 			.FirstOrDefaultAsync(a => a.Id == request.AvailabilityId && a.MentorId == request.MentorId, cancellationToken);

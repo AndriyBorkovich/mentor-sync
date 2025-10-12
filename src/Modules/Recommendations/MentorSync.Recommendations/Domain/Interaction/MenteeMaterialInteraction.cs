@@ -5,5 +5,8 @@ namespace MentorSync.Recommendations.Domain.Interaction;
 /// </summary>
 public sealed class MenteeMaterialInteraction : BaseInteraction
 {
+	/// <summary>
+	/// Identifier of the learning material
+	/// </summary>
 	public int MaterialId { get; set; }
 }

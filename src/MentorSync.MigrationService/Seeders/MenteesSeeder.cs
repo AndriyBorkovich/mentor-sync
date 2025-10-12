@@ -1,5 +1,4 @@
 ﻿using Bogus;
-using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Mentee;
 using MentorSync.Users.Domain.User;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.MigrationService.Seeders;
 
-public static class MenteesSeeder
+internal static class MenteesSeeder
 {
 	public static async Task SeedAsync(IServiceProvider serviceProvider, ILogger<Worker> logger)
 	{
@@ -333,13 +332,13 @@ public static class MenteesSeeder
 					if (faker.Random.Bool(0.6f))
 					{
 						// Add junior prefixes or modify the title to sound more junior
-						var juniorPrefixes = new[] { "Junior ", "Entry-Level ", "Associate ", "Trainee ", "" };
+						var juniorPrefixes = new[] { "Junior ", "Entry-Level ", "Associate ", "Trainee ", string.Empty };
 
 						// Make position more junior by replacing senior terms
-						position = position.Replace("Senior ", "");
-						position = position.Replace("Lead ", "");
-						position = position.Replace("Manager", "Specialist");
-						position = position.Replace("Architect", "Developer");
+						position = position.Replace("Senior ", string.Empty, StringComparison.OrdinalIgnoreCase);
+						position = position.Replace("Lead ", string.Empty, StringComparison.OrdinalIgnoreCase);
+						position = position.Replace("Manager", "Specialist", StringComparison.OrdinalIgnoreCase);
+						position = position.Replace("Architect", "Developer", StringComparison.OrdinalIgnoreCase);
 
 						// Add junior prefix
 						position = faker.PickRandom(juniorPrefixes) + position;

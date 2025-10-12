@@ -5,8 +5,14 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Notifications.Infrastructure.Emails;
 
+/// <summary>
+/// Email sender implementation using Azure Communication Services
+/// </summary>
+/// <param name="configuration">Service to access config</param>
+/// <param name="logger">Logger</param>
 public sealed class AzureEmailSender(IConfiguration configuration, ILogger<AzureEmailSender> logger) : IEmailSender
 {
+	/// <inheritdoc />
 	public async Task SendAsync(string to, string from, string subject, string body)
 	{
 		var connectionString = configuration.GetConnectionString("EmailService");

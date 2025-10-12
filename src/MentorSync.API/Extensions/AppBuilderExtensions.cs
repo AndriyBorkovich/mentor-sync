@@ -1,5 +1,4 @@
 ﻿using MentorSync.Notifications.Infrastructure.Hubs;
-using MentorSync.SharedKernel;
 using Serilog;
 
 namespace MentorSync.API.Extensions;
@@ -7,7 +6,7 @@ namespace MentorSync.API.Extensions;
 /// <summary>
 /// Extension methods for configuring the application builder pipeline
 /// </summary>
-public static class AppBuilderExtensions
+internal static class AppBuilderExtensions
 {
 	/// <summary>
 	/// Configures authentication and authorization middleware

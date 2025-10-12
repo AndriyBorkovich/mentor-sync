@@ -1,12 +1,15 @@
-﻿using MentorSync.SharedKernel;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.ResetPassword;
 
+/// <summary>
+/// Endpoint to reset a user's password
+/// </summary>
 public sealed class ResetPasswordEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("/users/reset-password", async (

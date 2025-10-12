@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Features.MentorReview.Delete;
 
+/// <summary>
+/// Handler for deleting a mentor review
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class DeleteMentorReviewCommandHandler(
 	RatingsDbContext dbContext)
 	: ICommandHandler<DeleteMentorReviewCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(
 		DeleteMentorReviewCommand command,
 		CancellationToken cancellationToken = default)

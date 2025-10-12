@@ -1,5 +1,8 @@
 namespace MentorSync.Users.Features.Common.Responses;
 
+/// <summary>
+/// Response model for mentee profile
+/// </summary>
 public sealed record MenteeProfileResponse(int Id,
 										   string Bio,
 										   string Position,

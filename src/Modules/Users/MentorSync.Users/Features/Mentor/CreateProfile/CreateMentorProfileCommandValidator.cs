@@ -2,8 +2,14 @@
 
 namespace MentorSync.Users.Features.Mentor.CreateProfile;
 
+/// <summary>
+/// Validator for <see cref="CreateMentorProfileCommand"/>
+/// </summary>
 public sealed class CreateMentorProfileCommandValidator : AbstractValidator<CreateMentorProfileCommand>
 {
+	/// <summary>
+	/// Initializes a new instance of the <see cref="CreateMentorProfileCommandValidator"/> class.
+	/// </summary>
 	public CreateMentorProfileCommandValidator()
 	{
 		RuleFor(x => x.MentorId)

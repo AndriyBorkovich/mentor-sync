@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
 using MentorSync.Notifications.Contracts.Models;
-using MentorSync.SharedKernel;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -8,12 +7,19 @@ using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Features.ForgotPassword;
 
+/// <summary>
+/// Handler for <see cref="ForgotPasswordCommand"/>
+/// </summary>
+/// <param name="userManager">User manager</param>
+/// <param name="mediator">Mediator for sending commands</param>
+/// <param name="logger">Logger instance</param>
 public sealed class ForgotPasswordCommandHandler(
 	UserManager<AppUser> userManager,
 	IMediator mediator,
 	ILogger<ForgotPasswordCommandHandler> logger)
 	: ICommandHandler<ForgotPasswordCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken = default)
 	{
 		var user = await userManager.FindByEmailAsync(request.Email);

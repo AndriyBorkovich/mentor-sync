@@ -2,7 +2,6 @@
 using MentorSync.Ratings.Contracts.Services;
 using MentorSync.Ratings.Data;
 using MentorSync.Ratings.Services;
-using MentorSync.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

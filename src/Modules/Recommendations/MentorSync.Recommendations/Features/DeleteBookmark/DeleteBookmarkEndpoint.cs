@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +6,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Recommendations.Features.DeleteBookmark;
 
+/// <summary>
+/// Endpoint for deleting a bookmark for a mentor by the current mentee
+/// </summary>
 public sealed class DeleteBookmarkEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapDelete("/recommendations/bookmarks/{mentorId:int}", async (
@@ -18,7 +21,7 @@ public sealed class DeleteBookmarkEndpoint : IEndpoint
 			CancellationToken cancellationToken) =>
 		{
 			var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var menteeId))
+			if (userIdClaim is null || !int.TryParse(userIdClaim.Value, out var menteeId))
 			{
 				return Results.Problem("User ID not found or invalid", statusCode: StatusCodes.Status400BadRequest);
 			}

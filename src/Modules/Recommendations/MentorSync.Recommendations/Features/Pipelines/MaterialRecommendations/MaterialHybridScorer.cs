@@ -13,6 +13,7 @@ using Microsoft.ML;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 
+/// <inheritdoc />
 public sealed class MaterialHybridScorer(
 	RecommendationsDbContext db,
 	IMenteeProfileService menteeProfileService,
@@ -21,6 +22,7 @@ public sealed class MaterialHybridScorer(
 {
 	private readonly MLContext _mlContext = new();
 
+	/// <inheritdoc />
 	public async Task GenerateRecommendationsAsync(CancellationToken cancellationToken)
 	{
 		var model = _mlContext.Model.Load("material_model.zip", out _);
@@ -97,7 +99,7 @@ public sealed class MaterialHybridScorer(
 		score += matchingTopics * 2;
 
 		// Check if material is in one of mentee's programming languages
-		if (material.Tags.Exists(tag => preferences.DesiredProgrammingLanguages.Contains(tag, StringComparer.OrdinalIgnoreCase)))
+		if (material.Tags.Any(tag => preferences.DesiredProgrammingLanguages.Contains(tag, StringComparer.OrdinalIgnoreCase)))
 		{
 			score += 2;
 		}

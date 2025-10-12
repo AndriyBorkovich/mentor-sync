@@ -1,13 +1,16 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Ratings.Features.MentorReview.Check;
 
+/// <summary>
+/// Endpoint to check if the current mentee has already reviewed a mentor
+/// </summary>
 public sealed class CheckMentorReviewEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("ratings/reviews/mentor/{mentorId}/check", async (

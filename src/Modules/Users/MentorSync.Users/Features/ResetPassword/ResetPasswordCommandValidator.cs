@@ -2,8 +2,14 @@
 
 namespace MentorSync.Users.Features.ResetPassword;
 
+/// <summary>
+/// Validator for <see cref="ResetPasswordCommand"/>
+/// </summary>
 public sealed class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordCommand>
 {
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ResetPasswordCommandValidator"/> class.
+	/// </summary>
 	public ResetPasswordCommandValidator()
 	{
 		RuleFor(c => c.Email)

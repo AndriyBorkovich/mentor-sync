@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.MentorAvailability.Get;
 
+/// <summary>
+/// Handler for retrieving mentor availability within a specified date range
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetMentorAvailabilityQueryHandler(
 	SchedulingDbContext dbContext)
 	: IQueryHandler<GetMentorAvailabilityQuery, MentorAvailabilityResult>
 {
+	/// <inheritdoc />
 	public async Task<Result<MentorAvailabilityResult>> Handle(
 		GetMentorAvailabilityQuery request,
 		CancellationToken cancellationToken = default)

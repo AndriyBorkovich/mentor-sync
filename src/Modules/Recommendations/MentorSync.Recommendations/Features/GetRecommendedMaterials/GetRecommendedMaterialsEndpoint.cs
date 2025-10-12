@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +6,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Recommendations.Features.GetRecommendedMaterials;
 
+/// <summary>
+/// Endpoint for getting recommended learning materials for the currently logged-in mentee with filtering options
+/// </summary>
 public sealed class GetRecommendedMaterialsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("/recommendations/materials", async (

@@ -1,19 +1,29 @@
 ﻿using MentorSync.Ratings.Domain;
-using MentorSync.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Data;
 
+/// <summary>
+/// Database context for the Ratings module
+/// </summary>
+/// <param name="options">Context Options</param>
 public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options) : DbContext(options)
 {
+	/// <summary>
+	/// Reviews for mentors
+	/// </summary>
 	public DbSet<MentorReview> MentorReviews { get; set; }
+	/// <summary>
+	/// Reviews for learning materials
+	/// </summary>
 	public DbSet<MaterialReview> MaterialReviews { get; set; }
 
+	/// <inheritdoc />
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.HasDefaultSchema(SchemaConstants.Ratings);
 
-		const int ReviewTextMaxLength = 2000;
+		const int reviewTextMaxLength = 2000;
 
 		modelBuilder.Entity<MentorReview>(entity =>
 		{
@@ -27,7 +37,7 @@ public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options)
 			entity.Property(e => e.Rating)
 				  .IsRequired();
 			entity.Property(e => e.ReviewText)
-				  .HasMaxLength(ReviewTextMaxLength);
+				  .HasMaxLength(reviewTextMaxLength);
 			entity.Property(e => e.CreatedAt)
 				.HasColumnType("timestamp with time zone")
 				.HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -54,7 +64,7 @@ public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options)
 			entity.Property(e => e.Rating)
 				  .IsRequired();
 			entity.Property(e => e.ReviewText)
-				  .HasMaxLength(ReviewTextMaxLength);
+				  .HasMaxLength(reviewTextMaxLength);
 			entity.Property(e => e.CreatedAt)
 				.HasColumnType("timestamp with time zone")
 				.HasDefaultValueSql("CURRENT_TIMESTAMP")

@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +6,15 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Recommendations.Features.CreateBookmark;
 
+/// <summary>
+/// Endpoint for creating a bookmark for a mentor by the current mentee
+/// </summary>
 public sealed class CreateBookmarkEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("/recommendations/bookmark/{mentorId}", async (
+		app.MapPost("/recommendations/bookmark/{mentorId:int}", async (
 			[FromRoute] int mentorId,
 			IMediator mediator,
 			HttpContext httpContext,

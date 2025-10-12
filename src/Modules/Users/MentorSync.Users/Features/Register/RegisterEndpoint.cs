@@ -1,5 +1,4 @@
-﻿using MentorSync.SharedKernel;
-using MentorSync.Users.Features.Common.Responses;
+﻿using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -15,10 +14,7 @@ namespace MentorSync.Users.Features.Register;
 /// </remarks>
 public sealed class RegisterEndpoint : IEndpoint
 {
-	/// <summary>
-	/// Maps the registration endpoint to the application's routing configuration.
-	/// </summary>
-	/// <param name="app">The endpoint route builder used to configure the API endpoint.</param>
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("users/register", async (

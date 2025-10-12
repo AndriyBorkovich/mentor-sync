@@ -6,9 +6,14 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.GetAllMessages;
 
+/// <summary>
+/// Handler for retrieving all email messages from the outbox
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetAllMessagesQueryHandler(NotificationsDbContext dbContext)
 	: IQueryHandler<GetAllMessagesQuery, List<GetAllMessagesResponse>>
 {
+	/// <inheritdoc />
 	public async Task<Result<List<GetAllMessagesResponse>>> Handle(
 		GetAllMessagesQuery request,
 		CancellationToken cancellationToken = default)

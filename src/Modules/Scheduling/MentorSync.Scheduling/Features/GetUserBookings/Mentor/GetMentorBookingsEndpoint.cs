@@ -1,14 +1,17 @@
 using System.Security.Claims;
 using MentorSync.Scheduling.Features.GetUserBookings.Common;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Scheduling.Features.GetUserBookings.Mentor;
 
+/// <summary>
+/// Endpoint to get all bookings for a mentor
+/// </summary>
 public sealed class GetMentorBookingsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("scheduling/mentor/bookings", async (

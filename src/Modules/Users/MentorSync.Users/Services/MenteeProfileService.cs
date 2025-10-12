@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Services;
 
+/// <summary>
+/// Service for retrieving mentee profile information
+/// </summary>
+/// <param name="usersDbContext">Database context</param>
 public sealed class MenteeProfileService(UsersDbContext usersDbContext) : IMenteeProfileService
 {
+	/// <inheritdoc />
 	public async Task<UserBasicInfoModel> GetMenteeInfo(int menteeId)
 	{
 		return await usersDbContext.Users
@@ -20,6 +25,7 @@ public sealed class MenteeProfileService(UsersDbContext usersDbContext) : IMente
 						.FirstOrDefaultAsync(u => u.Id == menteeId);
 	}
 
+	/// <inheritdoc />
 	public async Task<IReadOnlyList<MenteePreferences>> GetMenteesPreferences()
 	{
 		var rnd = new Random();
@@ -28,11 +34,11 @@ public sealed class MenteeProfileService(UsersDbContext usersDbContext) : IMente
 			.Select(m => new MenteePreferences
 			{
 				MenteeId = m.MenteeId,
-				DesiredProgrammingLanguages = m.ProgrammingLanguages,
+				DesiredProgrammingLanguages = m.ProgrammingLanguages.ToList(),
 				DesiredIndustries = m.Industries,
 				MinMentorExperienceYears = rnd.Next(1, 7),
 				Position = m.Position,
-				DesiredSkills = m.Skills,
+				DesiredSkills = m.Skills.ToList(),
 			}).ToListAsync();
 	}
 }

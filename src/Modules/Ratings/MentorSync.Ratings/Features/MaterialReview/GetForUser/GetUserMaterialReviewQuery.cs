@@ -1,4 +1,6 @@
 namespace MentorSync.Ratings.Features.MaterialReview.GetForUser;
 
-public sealed record GetUserMaterialReviewQuery(int MaterialId, int UserId)
-	: IQuery<UserMaterialReviewResponse>;
+/// <summary>
+/// Query to get a user's review for a specific learning material
+/// </summary>
+public sealed record GetUserMaterialReviewQuery(int MaterialId, int UserId) : IQuery<UserMaterialReviewResponse>;

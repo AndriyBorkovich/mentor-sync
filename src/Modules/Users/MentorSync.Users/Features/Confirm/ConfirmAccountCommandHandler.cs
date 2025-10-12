@@ -5,10 +5,15 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.Users.Features.Confirm;
 
+/// <summary>
+/// Command handler for confirming a user's account
+/// </summary>
+/// <param name="userManager">Identity manager</param>
 public sealed class ConfirmAccountCommandHandler(
 	UserManager<AppUser> userManager)
 	: ICommandHandler<ConfirmAccountCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(ConfirmAccountCommand request, CancellationToken cancellationToken = default)
 	{
 		var user = await userManager.FindByEmailAsync(request.Email);

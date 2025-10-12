@@ -5,10 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Features.CreateMaterial;
 
+/// <summary>
+/// Handler for processing the <see cref="CreateMaterialCommand"/>
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class CreateMaterialCommandHandler(
 	MaterialsDbContext dbContext)
 		: ICommandHandler<CreateMaterialCommand, CreateMaterialResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<CreateMaterialResponse>> Handle(CreateMaterialCommand request, CancellationToken cancellationToken = default)
 	{
 		var material = new LearningMaterial

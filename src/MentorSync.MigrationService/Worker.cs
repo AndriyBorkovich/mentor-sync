@@ -17,7 +17,7 @@ namespace MentorSync.MigrationService;
 /// <param name="serviceProvider">Service provider for accessing database contexts</param>
 /// <param name="logger">Logger for migration activities</param>
 /// <param name="hostApplicationLifetime">Host application lifetime for stopping the service</param>
-public sealed class Worker(
+internal sealed class Worker(
 	IServiceProvider serviceProvider,
 	ILogger<Worker> logger,
 	IHostApplicationLifetime hostApplicationLifetime) : BackgroundService

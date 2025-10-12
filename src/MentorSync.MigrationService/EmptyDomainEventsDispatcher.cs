@@ -2,7 +2,7 @@
 
 namespace MentorSync.MigrationService;
 
-public sealed class EmptyDomainEventsDispatcher : IDomainEventsDispatcher
+internal sealed class EmptyDomainEventsDispatcher : IDomainEventsDispatcher
 {
 	public Task DispatchAsync(IEnumerable<IHaveDomainEvents> entitiesWithEvents) => Task.CompletedTask;
 }

@@ -4,9 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Recommendations.Features.DeleteBookmark;
 
+/// <summary>
+/// Handler for deleting a bookmark
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class DeleteBookmarkCommandHandler(
 	RecommendationsDbContext dbContext) : ICommandHandler<DeleteBookmarkCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(DeleteBookmarkCommand request, CancellationToken cancellationToken = default)
 	{
 		var bookmark = await dbContext.MentorBookmarks

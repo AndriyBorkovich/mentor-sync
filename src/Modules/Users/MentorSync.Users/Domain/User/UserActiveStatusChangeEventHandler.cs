@@ -1,15 +1,20 @@
 ﻿using MentorSync.Notifications.Contracts.Models;
-using MentorSync.SharedKernel;
 using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Domain.User;
 
+/// <summary>
+/// Handles the event when a user's active status changes by sending an email notification.
+/// </summary>
+/// <param name="mediator">Mediator</param>
+/// <param name="logger">Logger</param>
 public sealed class UserActiveStatusChangeEventHandler(
 	IMediator mediator,
 	ILogger<UserActiveStatusChangeEventHandler> logger)
-	: INotificationHandler<UserActiveStatusChageEvent>
+	: INotificationHandler<UserActiveStatusChangedEvent>
 {
-	public async Task HandleAsync(UserActiveStatusChageEvent notification, CancellationToken cancellationToken = default)
+	/// <inheritdoc />
+	public async Task HandleAsync(UserActiveStatusChangedEvent notification, CancellationToken cancellationToken = default)
 	{
 		var emailCommand = new SendEmailCommand()
 		{

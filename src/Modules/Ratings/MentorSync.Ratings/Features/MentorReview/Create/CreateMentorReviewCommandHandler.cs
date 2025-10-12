@@ -5,10 +5,15 @@ using MentorReviewEntity = MentorSync.Ratings.Domain.MentorReview;
 
 namespace MentorSync.Ratings.Features.MentorReview.Create;
 
+/// <summary>
+/// Handler for creating a new mentor review
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class CreateMentorReviewCommandHandler(
 	RatingsDbContext dbContext)
 	: ICommandHandler<CreateMentorReviewCommand, CreateMentorReviewResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<CreateMentorReviewResponse>> Handle(
 		CreateMentorReviewCommand command,
 		CancellationToken cancellationToken = default)

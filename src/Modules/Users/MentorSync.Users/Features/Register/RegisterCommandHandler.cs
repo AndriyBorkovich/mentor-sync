@@ -21,6 +21,7 @@ public sealed class RegisterCommandHandler(
 	ILogger<RegisterCommandHandler> logger)
 	: ICommandHandler<RegisterCommand, CreatedEntityResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<CreatedEntityResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken = default)
 	{
 		var existingUser = await userManager.FindByEmailAsync(command.Email);

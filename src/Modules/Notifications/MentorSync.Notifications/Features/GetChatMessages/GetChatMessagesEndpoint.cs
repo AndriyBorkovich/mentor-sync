@@ -1,13 +1,16 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Notifications.Features.GetChatMessages;
 
+/// <summary>
+/// Endpoint for retrieving chat messages for a specific room
+/// </summary>
 public sealed class GetChatMessagesEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("chat/messages/{roomId}", async (

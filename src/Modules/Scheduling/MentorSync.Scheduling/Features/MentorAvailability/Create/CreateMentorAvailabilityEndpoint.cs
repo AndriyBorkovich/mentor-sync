@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Scheduling.Features.MentorAvailability.Create;
 
+/// <summary>
+/// Endpoint to create a new availability slot for a mentor
+/// </summary>
 public sealed class CreateMentorAvailabilityEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("/scheduling/mentors/{mentorId:int}/availability", async (

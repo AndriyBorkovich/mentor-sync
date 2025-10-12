@@ -5,10 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Infrastructure;
 
+/// <summary>
+/// Requirement to ensure the user is active
+/// </summary>
 public sealed class ActiveUserRequirement : IAuthorizationRequirement;
 
+/// <summary>
+/// Authorization handler to check if the user is active
+/// </summary>
+/// <param name="usersDbContext">Database context</param>
 public sealed class ActiveUserAuthHandler(UsersDbContext usersDbContext) : AuthorizationHandler<ActiveUserRequirement>
 {
+	/// <inheritdoc />
 	protected override async Task HandleRequirementAsync(
 		AuthorizationHandlerContext context,
 		ActiveUserRequirement requirement)

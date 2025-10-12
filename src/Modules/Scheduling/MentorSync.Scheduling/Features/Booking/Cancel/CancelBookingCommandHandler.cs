@@ -6,11 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.Booking.Cancel;
 
+/// <summary>
+/// Handler for cancelling a booking.
+/// </summary>
+/// <param name="dbContext">Database context</param>
+/// <param name="mediator">Mediator for separation</param>
 public sealed class CancelBookingCommandHandler(
 	SchedulingDbContext dbContext,
 	IMediator mediator)
 	: ICommandHandler<CancelBookingCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(
 		CancelBookingCommand request, CancellationToken cancellationToken = default)
 	{
@@ -52,6 +58,14 @@ public sealed class CancelBookingCommandHandler(
 
 		await dbContext.SaveChangesAsync(cancellationToken);
 
+		await SendNotificationAsync(request, booking, cancellationToken);
+
+		return Result.Success($"Booking {request.BookingId} cancelled successfully");
+	}
+
+	private async Task SendNotificationAsync(CancelBookingCommand request, Domain.Booking booking,
+		CancellationToken cancellationToken)
+	{
 		// Send notification to other user (if mentor cancels, notify student and vice versa)
 		var recipientId = request.UserId == booking.MentorId ? booking.MenteeId : booking.MentorId;
 
@@ -71,7 +85,5 @@ public sealed class CancelBookingCommandHandler(
 					Message: "A booking has been cancelled"
 				),
 			}, cancellationToken);
-
-		return Result.Success($"Booking {request.BookingId} cancelled successfully");
 	}
 }

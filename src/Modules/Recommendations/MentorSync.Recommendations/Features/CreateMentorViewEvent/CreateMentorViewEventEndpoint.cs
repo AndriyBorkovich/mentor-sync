@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +6,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Recommendations.Features.CreateMentorViewEvent;
 
+/// <summary>
+/// Endpoint for creating a mentor view event
+/// </summary>
 public sealed class CreateMentorViewEventEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("/recommendations/view-mentor/{mentorId}", async (

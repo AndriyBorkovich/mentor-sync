@@ -1,5 +1,4 @@
-﻿using MentorSync.SharedKernel;
-using MentorSync.Users.Features.Common.Responses;
+﻿using MentorSync.Users.Features.Common.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +6,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.Refresh;
 
+/// <summary>
+/// Endpoint to refresh JWT tokens
+/// </summary>
 public sealed class RefreshTokenEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("/users/refresh-token", async (

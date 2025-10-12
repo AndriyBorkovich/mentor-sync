@@ -5,9 +5,15 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.InitiateChat;
 
+/// <summary>
+/// Handler for initiating a chat between two users
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class InitiateChatCommandHandler(NotificationsDbContext dbContext) : ICommandHandler<InitiateChatCommand, InitiateChatResponse>
 {
-	public async Task<Result<InitiateChatResponse>> Handle(InitiateChatCommand request, CancellationToken cancellationToken = default)
+	/// <inheritdoc />
+	public async Task<Result<InitiateChatResponse>> Handle(
+		InitiateChatCommand request, CancellationToken cancellationToken = default)
 	{
 		if (request.SenderId == request.RecipientId)
 		{

@@ -14,6 +14,7 @@ public sealed class UpdatePendingBookingsJob(
 	IServiceProvider serviceProvider)
 		: BackgroundService
 {
+	/// <inheritdoc />
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		while (!stoppingToken.IsCancellationRequested)
@@ -21,9 +22,9 @@ public sealed class UpdatePendingBookingsJob(
 			try
 			{
 				await using var scope = serviceProvider.CreateAsyncScope();
-				var sender = scope.ServiceProvider.GetRequiredService<IMediator>();
+				var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-				var updatedCount = await sender.SendCommandAsync<UpdatePendingBookingsCommand, int>(new(), stoppingToken);
+				var updatedCount = await mediator.SendCommandAsync<UpdatePendingBookingsCommand, int>(new(), stoppingToken);
 				if (updatedCount.IsSuccess && updatedCount.Value > 0)
 				{
 					logger.LogInformation("{Count} pending bookings updated successfully.", updatedCount.Value);

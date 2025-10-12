@@ -12,13 +12,14 @@ public sealed class MentorRecommendationPipeline(
 	IServiceProvider serviceProvider, ILogger<MentorRecommendationPipeline> logger)
 	: BackgroundService
 {
+	/// <inheritdoc />
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		logger.LogInformation("Mentor recommendation pipeline started.");
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			using var scope = serviceProvider.CreateScope();
+			await using var scope = serviceProvider.CreateAsyncScope();
 
 			try
 			{

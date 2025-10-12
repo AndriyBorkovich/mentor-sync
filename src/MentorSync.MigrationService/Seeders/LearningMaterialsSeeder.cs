@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using Bogus;
 using MentorSync.Materials.Data;
 using MentorSync.Materials.Domain;
@@ -14,7 +15,7 @@ namespace MentorSync.MigrationService.Seeders;
 /// <summary>
 /// Seeder class for populating the database with learning materials and related data
 /// </summary>
-public static class LearningMaterialsSeeder
+internal static class LearningMaterialsSeeder
 {
 	/// <summary>
 	/// Predefined programming topics with titles, descriptions, and tags for seeding learning materials
@@ -241,58 +242,60 @@ public static class LearningMaterialsSeeder
 			"Use meaningful naming conventions"
 		};
 
-		return $@"# {title}
+		return $$"""
+		         # {{title}}
 
-## Introduction
+		         ## Introduction
 
-{description}. This comprehensive guide will help you understand and implement these concepts effectively in your projects.
+		         {{description}}. This comprehensive guide will help you understand and implement these concepts effectively in your projects.
 
-### Key Points
+		         ### Key Points
 
-{string.Join("\n", faker.PickRandom(keyPoints, faker.Random.Int(4, 6)).Select(point => $"- {point}"))}
+		         {{string.Join('\n', faker.PickRandom(keyPoints, faker.Random.Int(4, 6)).Select(point => $"- {point}"))}}
 
-## Main Content
+		         ## Main Content
 
-{faker.Lorem.Paragraphs(3)}
+		         {{faker.Lorem.Paragraphs(3)}}
 
-### Real-World Scenarios
+		         ### Real-World Scenarios
 
-{faker.Lorem.Paragraph()}
+		         {{faker.Lorem.Paragraph()}}
 
-### Code Example
+		         ### Code Example
 
-```csharp
-public class {faker.Hacker.Noun()}Service
-{{
-    private readonly I{faker.Hacker.Noun()}Repository _{faker.Hacker.Verb()}Repository;
+		         ```csharp
+		         public class {{faker.Hacker.Noun()}}Service
+		         {
+		             private readonly I{{faker.Hacker.Noun()}}Repository _{{faker.Hacker.Verb()}}Repository;
 
-    public async Task<Result> {faker.Hacker.Verb()}Async({faker.Hacker.Noun()} request)
-    {{
-        // Implementation details
-        var result = await _{faker.Hacker.Verb()}Repository.{faker.Hacker.Verb()}Async(request);
-        return Result.Success(result);
-    }}
-}}
-```
+		             public async Task<Result> {{faker.Hacker.Verb()}}Async({{faker.Hacker.Noun()}} request)
+		             {
+		                 // Implementation details
+		                 var result = await _{{faker.Hacker.Verb()}}Repository.{{faker.Hacker.Verb()}}Async(request);
+		                 return Result.Success(result);
+		             }
+		         }
+		         ```
 
-## Best Practices
+		         ## Best Practices
 
-{string.Join('\n', faker.PickRandom(bestPractices, faker.Random.Int(4, 6)).Select((practice, i) => $"{i + 1}. {practice}"))}
+		         {{string.Join('\n', faker.PickRandom(bestPractices, faker.Random.Int(4, 6)).Select((practice, i) => $"{(i + 1).ToString(CultureInfo.InvariantCulture)}. {practice}"))}}
 
-## Implementation Considerations
+		         ## Implementation Considerations
 
-{faker.Lorem.Paragraph()}
+		         {{faker.Lorem.Paragraph()}}
 
-## Common Pitfalls
+		         ## Common Pitfalls
 
-{faker.Lorem.Paragraph()}
+		         {{faker.Lorem.Paragraph()}}
 
-## Conclusion
+		         ## Conclusion
 
-Thank you for reading this guide about {title}. Apply these concepts in your projects to write better, more maintainable code.
+		         Thank you for reading this guide about {{title}}. Apply these concepts in your projects to write better, more maintainable code.
 
----
-*Дата останнього оновлення: {faker.Date.Recent():MMMM d, yyyy}*";
+		         ---
+		         *Дата останнього оновлення: {{faker.Date.Recent():MMMM d, yyyy}}*
+		         """;
 	}
 
 	/// <summary>
@@ -341,9 +344,9 @@ Thank you for reading this guide about {title}. Apply these concepts in your pro
 
 		return rating switch
 		{
-			5 => $"{faker.PickRandom(positivePoints)}! {faker.PickRandom(positivePoints).ToLower()}. Дуже рекомендую!",
-			4 => $"{faker.PickRandom(positivePoints)}. Але {faker.PickRandom(improvements).ToLower()}.",
-			3 => $"Непоганий матеріал, але {faker.PickRandom(improvements).ToLower()}. Також {faker.PickRandom(improvements).ToLower()}.",
+			5 => $"{faker.PickRandom(positivePoints)}! {faker.PickRandom(positivePoints)}. Дуже рекомендую!",
+			4 => $"{faker.PickRandom(positivePoints)}. Але {faker.PickRandom(improvements)}.",
+			3 => $"Непоганий матеріал, але {faker.PickRandom(improvements)}. Також {faker.PickRandom(improvements)}.",
 			2 => $"{faker.PickRandom(negativePoints)}. Потрібно доопрацювати.",
 			_ => $"{faker.PickRandom(negativePoints)}. Не рекомендую.",
 		};

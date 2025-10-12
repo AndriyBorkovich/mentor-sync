@@ -1,13 +1,16 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Notifications.Features.GetChatParticipants;
 
+/// <summary>
+/// Endpoint for retrieving chat participants for the authenticated user
+/// </summary>
 public sealed class GetChatParticipantsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("chat/participants", async (
@@ -26,7 +29,7 @@ public sealed class GetChatParticipantsEndpoint : IEndpoint
 				return result.DecideWhatToReturn();
 			})
 			.WithTags(TagsConstants.Notifications)
-			.Produces<List<GetChatParticipantsResponse>>(StatusCodes.Status200OK)
+			.Produces<List<GetChatParticipantsResponse>>()
 			.ProducesProblem(StatusCodes.Status400BadRequest)
 			.RequireAuthorization(PolicyConstants.ActiveUserOnly, PolicyConstants.MentorMenteeMix);
 	}

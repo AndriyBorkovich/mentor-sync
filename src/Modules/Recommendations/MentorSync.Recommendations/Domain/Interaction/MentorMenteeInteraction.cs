@@ -5,5 +5,8 @@
 /// </summary>
 public sealed class MentorMenteeInteraction : BaseInteraction
 {
+	/// <summary>
+	/// The identifier of the mentee.
+	/// </summary>
 	public int MentorId { get; set; }
 }

@@ -3,9 +3,14 @@ using MentorSync.Users.Contracts.Services;
 
 namespace MentorSync.Notifications.Features.GetChatParticipants;
 
+/// <summary>
+/// Handler for retrieving chat participants excluding the requesting user
+/// </summary>
+/// <param name="userService"></param>
 public sealed class GetChatParticipantsHandler(IUserService userService)
 	: IQueryHandler<GetChatParticipantsQuery, List<GetChatParticipantsResponse>>
 {
+	/// <inheritdoc />
 	public async Task<Result<List<GetChatParticipantsResponse>>> Handle(
 		GetChatParticipantsQuery request,
 		CancellationToken cancellationToken = default)

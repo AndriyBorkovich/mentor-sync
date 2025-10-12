@@ -38,5 +38,5 @@ public sealed class MentorProfileModel
 	/// <summary>
 	/// Gets or sets the list of skills the mentor possesses
 	/// </summary>
-	public List<string> Skills { get; set; }
+	public IReadOnlyList<string> Skills { get; set; }
 }

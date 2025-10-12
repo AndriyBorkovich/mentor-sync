@@ -1,85 +1,104 @@
 ﻿using MentorSync.Materials.Domain;
-using MentorSync.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Data;
 
+/// <inheritdoc />
 public sealed class MaterialsDbContext(DbContextOptions<MaterialsDbContext> options) : DbContext(options)
 {
+	/// <summary>
+	/// Learning materials available in the system
+	/// </summary>
 	public DbSet<LearningMaterial> LearningMaterials { get; set; }
+	/// <summary>
+	/// Tags that can be associated with learning materials
+	/// </summary>
 	public DbSet<Tag> Tags { get; set; }
+	/// <summary>
+	/// Attachments associated with learning materials
+	/// </summary>
 	public DbSet<MaterialAttachment> MaterialAttachments { get; set; }
 
+	/// <inheritdoc />
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.HasDefaultSchema(SchemaConstants.Materials);
 
-		modelBuilder.Entity<LearningMaterial>(entity =>
-		{
-			entity.HasKey(e => e.Id);
+		ConfigureLearningMaterial(modelBuilder);
 
-			entity.Property(e => e.Title)
-				  .IsRequired()
-				  .HasMaxLength(200);
+		ConfigureTag(modelBuilder);
 
-			entity.Property(e => e.Description)
-				  .HasMaxLength(2000);
+		ConfigureMaterialAttachment(modelBuilder);
+	}
 
-			entity.Property(e => e.ContentMarkdown)
-				  .HasColumnType("text");
-
-			entity.Property(e => e.Type)
-				  .IsRequired();
-
-			entity.Property(e => e.MentorId)
-				  .IsRequired();
-
-			entity.Property(e => e.CreatedAt)
-				  .HasDefaultValueSql("CURRENT_TIMESTAMP")
-				  .ValueGeneratedOnAdd();
-
-			entity.Property(e => e.UpdatedAt)
-				  .HasDefaultValueSql("CURRENT_TIMESTAMP")
-				  .ValueGeneratedOnUpdate();
-
-			entity.HasIndex(e => e.Title);
-		});
-
-		modelBuilder.Entity<Tag>(entity =>
-		{
-			entity.HasKey(e => e.Id);
-			entity.Property(e => e.Name)
-				  .IsRequired()
-				  .HasMaxLength(25);
-
-			entity.Property(e => e.Description)
-				  .HasMaxLength(100);
-
-			entity.HasIndex(e => e.Name);
-		});
-
-		modelBuilder.Entity<MaterialAttachment>(entity =>
+	private static void ConfigureMaterialAttachment(ModelBuilder modelBuilder)
+		=> modelBuilder.Entity<MaterialAttachment>(entity =>
 		{
 			entity.HasKey(e => e.Id);
 
 			entity.Property(e => e.MaterialId)
-				  .IsRequired();
+				.IsRequired();
 
 			entity.Property(e => e.FileName)
-				  .IsRequired()
-				  .HasMaxLength(255);
+				.IsRequired()
+				.HasMaxLength(255);
 
 			entity.Property(e => e.BlobUri)
-				  .IsRequired()
-				  .HasMaxLength(2000);
+				.IsRequired()
+				.HasMaxLength(2000);
 
 			entity.Property(e => e.ContentType)
-				  .HasMaxLength(100);
+				.HasMaxLength(100);
 
 			entity.Property(e => e.UploadedAt)
-				  .HasDefaultValueSql("CURRENT_TIMESTAMP")
-				  .ValueGeneratedOnAdd();
+				.HasDefaultValueSql("CURRENT_TIMESTAMP")
+				.ValueGeneratedOnAdd();
 		});
-	}
+
+	private static void ConfigureTag(ModelBuilder modelBuilder)
+		=> modelBuilder.Entity<Tag>(entity =>
+		{
+			entity.HasKey(e => e.Id);
+			entity.Property(e => e.Name)
+				.IsRequired()
+				.HasMaxLength(25);
+
+			entity.Property(e => e.Description)
+				.HasMaxLength(100);
+
+			entity.HasIndex(e => e.Name);
+		});
+
+	private static void ConfigureLearningMaterial(ModelBuilder modelBuilder)
+		=> modelBuilder.Entity<LearningMaterial>(entity =>
+		{
+			entity.HasKey(e => e.Id);
+
+			entity.Property(e => e.Title)
+				.IsRequired()
+				.HasMaxLength(200);
+
+			entity.Property(e => e.Description)
+				.HasMaxLength(2000);
+
+			entity.Property(e => e.ContentMarkdown)
+				.HasColumnType("text");
+
+			entity.Property(e => e.Type)
+				.IsRequired();
+
+			entity.Property(e => e.MentorId)
+				.IsRequired();
+
+			entity.Property(e => e.CreatedAt)
+				.HasDefaultValueSql("CURRENT_TIMESTAMP")
+				.ValueGeneratedOnAdd();
+
+			entity.Property(e => e.UpdatedAt)
+				.HasDefaultValueSql("CURRENT_TIMESTAMP")
+				.ValueGeneratedOnUpdate();
+
+			entity.HasIndex(e => e.Title);
+		});
 }
 

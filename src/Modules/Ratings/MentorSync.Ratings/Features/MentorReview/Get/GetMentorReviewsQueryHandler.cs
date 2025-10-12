@@ -5,10 +5,15 @@ using MentorReviewEntityDto = MentorSync.Ratings.Features.MentorReview.Get.Mento
 
 namespace MentorSync.Ratings.Features.MentorReview.Get;
 
+/// <summary>
+/// Query handler for retrieving reviews for a specific mentor.
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetMentorReviewsQueryHandler(
 	RatingsDbContext dbContext)
 	: IQueryHandler<GetMentorReviewsQuery, MentorReviewsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MentorReviewsResponse>> Handle(GetMentorReviewsQuery request, CancellationToken cancellationToken = default)
 	{
 		var reviews = await dbContext.Database

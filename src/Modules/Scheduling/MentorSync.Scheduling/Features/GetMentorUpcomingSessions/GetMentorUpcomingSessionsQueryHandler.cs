@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
 
+/// <summary>
+/// Handler for retrieving a mentor's upcoming sessions
+/// </summary>
+/// <param name="dbContext"></param>
 public sealed class GetMentorUpcomingSessionsQueryHandler(
 	SchedulingDbContext dbContext)
 	: IQueryHandler<GetMentorUpcomingSessionsQuery, MentorUpcomingSessionsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MentorUpcomingSessionsResponse>> Handle(GetMentorUpcomingSessionsQuery request, CancellationToken cancellationToken = default)
 	{
 		var now = DateTimeOffset.UtcNow;

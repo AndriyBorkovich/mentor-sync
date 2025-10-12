@@ -5,11 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Features.GetMaterials;
 
+/// <summary>
+/// Handler for <see cref="GetMaterialsQuery"/>
+/// </summary>
+/// <param name="dbContext">Database context</param>
+/// <param name="mentorProfileService">Service for mentor profile</param>
 public sealed class GetMaterialsQueryHandler(
 	MaterialsDbContext dbContext,
 	IMentorProfileService mentorProfileService)
 		: IQueryHandler<GetMaterialsQuery, MaterialsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MaterialsResponse>> Handle(GetMaterialsQuery request, CancellationToken cancellationToken = default)
 	{
 		var query = dbContext.LearningMaterials.AsNoTracking();
@@ -45,11 +51,11 @@ public sealed class GetMaterialsQueryHandler(
 
 		var totalCount = await query.CountAsync(cancellationToken);
 
-		query = request.SortBy?.ToLower() switch
+		query = request.SortBy?.ToUpperInvariant() switch
 		{
-			"oldest" => query.OrderBy(m => m.CreatedAt),
-			"title" => query.OrderBy(m => m.Title),
-			"title_desc" => query.OrderByDescending(m => m.Title),
+			"OLDEST" => query.OrderBy(m => m.CreatedAt),
+			"TITLE" => query.OrderBy(m => m.Title),
+			"TITLE_DESC" => query.OrderByDescending(m => m.Title),
 			_ => query.OrderByDescending(m => m.CreatedAt) // Default is newest first
 		};
 

@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +6,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Recommendations.Features.CheckBookmark;
 
+/// <summary>
+/// Endpoint for checking if a mentor is bookmarked by the current mentee
+/// </summary>
 public sealed class CheckBookmarkEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("/recommendations/bookmarks/check/{mentorId:int}", async (

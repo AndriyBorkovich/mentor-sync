@@ -3,7 +3,6 @@ using MentorSync.Scheduling.Contracts.Services;
 using MentorSync.Scheduling.Data;
 using MentorSync.Scheduling.Features.Booking.UpdatePending;
 using MentorSync.Scheduling.Services;
-using MentorSync.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

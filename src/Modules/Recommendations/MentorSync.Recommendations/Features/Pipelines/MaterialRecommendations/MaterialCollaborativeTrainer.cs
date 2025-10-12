@@ -1,3 +1,4 @@
+using System.Globalization;
 using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Recommendations.Infrastructure.MachineLearning.Input;
@@ -8,12 +9,14 @@ using Microsoft.ML.Trainers;
 
 namespace MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 
+/// <inheritdoc />
 public sealed class MaterialCollaborativeTrainer(
 	RecommendationsDbContext db,
 	ILogger<MaterialCollaborativeTrainer> logger) : ICollaborativeTrainer
 {
 	private readonly MLContext _mlContext = new();
 
+	/// <inheritdoc />
 	public async Task TrainAsync(CancellationToken cancellationToken)
 	{
 		logger.LogInformation("Training collaborative model for learning materials...");
@@ -39,8 +42,8 @@ public sealed class MaterialCollaborativeTrainer(
 
 		var mlData = _mlContext.Data.LoadFromEnumerable(data.Select(x => new MenteeMaterialRatingData
 		{
-			MenteeId = x.MenteeId.ToString(),
-			MaterialId = x.MaterialId.ToString(),
+			MenteeId = x.MenteeId.ToString(CultureInfo.InvariantCulture),
+			MaterialId = x.MaterialId.ToString(CultureInfo.InvariantCulture),
 			Label = x.Score
 		}));
 

@@ -1,5 +1,8 @@
 ﻿namespace MentorSync.Recommendations.Features.Pipelines.Base;
 
+/// <summary>
+/// Constants for services used in the recommendation pipelines
+/// </summary>
 internal static class ServicesConstants
 {
 	public const string MentorsKey = "Mentor";

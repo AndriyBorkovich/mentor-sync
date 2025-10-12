@@ -15,13 +15,18 @@ public sealed class ChannelDomainEventsDispatcher(IPublisher<DomainEvent> publis
 	/// <returns>A task representing the asynchronous operation</returns>
 	public async Task DispatchAsync(IEnumerable<IHaveDomainEvents> entitiesWithEvents)
 	{
-		foreach (var entity in entitiesWithEvents)
+		if (entitiesWithEvents == null)
+		{
+			return;
+		}
+
+		foreach ( var entity in entitiesWithEvents )
 		{
 			// grab & clear first so handlers can’t re-raise the same event
 			var events = entity.DomainEvents.ToList();
 			entity.ClearDomainEvents();
 
-			foreach (var @event in events)
+			foreach ( var @event in events )
 			{
 				await publisher.PublishAsync(@event);
 			}

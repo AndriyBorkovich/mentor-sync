@@ -14,17 +14,17 @@ public sealed class PaginatedList<T>
 	/// <summary>
 	/// Gets or sets the current page number (1-based)
 	/// </summary>
-	public int PageNumber { get; set; }
+	public int PageNumber { get; init; }
 
 	/// <summary>
 	/// Gets or sets the number of items per page
 	/// </summary>
-	public int PageSize { get; set; }
+	public int PageSize { get; init; }
 
 	/// <summary>
 	/// Gets or sets the total number of items across all pages
 	/// </summary>
-	public int TotalCount { get; set; }
+	public int TotalCount { get; init; }
 
 	/// <summary>
 	/// Gets a value indicating whether there is a next page available

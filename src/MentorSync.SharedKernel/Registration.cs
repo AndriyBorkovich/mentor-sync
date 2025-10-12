@@ -22,6 +22,11 @@ public static class Registration
 	/// </example>
 	public static void AddSharedServices(this IHostApplicationBuilder builder)
 	{
+		if (builder == null)
+		{
+			return;
+		}
+
 		builder.AddAzureBlobServiceClient("files-blobs");
 
 		builder.Services.AddMediator();
@@ -30,7 +35,6 @@ public static class Registration
 		builder.Services.AddSingleton(typeof(IPublisher<>), typeof(ChannelPubSub<>));
 
 		builder.Services.AddSingleton<IDomainEventsDispatcher, ChannelDomainEventsDispatcher>();
-
 		builder.Services.AddHostedService<DomainEventProcessor>();
 	}
 }

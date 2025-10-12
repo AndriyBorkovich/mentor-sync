@@ -18,18 +18,21 @@ public static class EndpointExtensions
 	/// <param name="services">The service collection to configure</param>
 	/// <param name="assembly">The assembly to scan for endpoint implementations</param>
 	/// <returns>The service collection for method chaining</returns>
-	public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
+	public static void AddEndpoints(this IServiceCollection services, Assembly assembly)
 	{
+		if (assembly == null)
+		{
+			return;
+		}
+
 		var serviceDescriptors = assembly
 			.DefinedTypes
 			.Where(type => type is { IsAbstract: false, IsInterface: false } &&
-						   type.IsAssignableTo(typeof(IEndpoint)))
+			               type.IsAssignableTo(typeof(IEndpoint)))
 			.Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type))
 			.ToArray();
 
 		services.TryAddEnumerable(serviceDescriptors);
-
-		return services;
 	}
 
 	/// <summary>
@@ -38,8 +41,13 @@ public static class EndpointExtensions
 	/// <param name="app">The web application to configure</param>
 	/// <param name="routeGroupBuilder">Optional route group builder for organizing endpoints</param>
 	/// <returns>The application builder for method chaining</returns>
-	public static IApplicationBuilder MapEndpoints(this WebApplication app, RouteGroupBuilder routeGroupBuilder = null)
+	public static void MapEndpoints(this WebApplication app, RouteGroupBuilder routeGroupBuilder = null)
 	{
+		if (app == null)
+		{
+			return;
+		}
+
 		var endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
 
 		IEndpointRouteBuilder builder = routeGroupBuilder is null ? app : routeGroupBuilder;
@@ -48,8 +56,6 @@ public static class EndpointExtensions
 		{
 			endpoint.MapEndpoint(builder);
 		}
-
-		return app;
 	}
 
 	/// <summary>

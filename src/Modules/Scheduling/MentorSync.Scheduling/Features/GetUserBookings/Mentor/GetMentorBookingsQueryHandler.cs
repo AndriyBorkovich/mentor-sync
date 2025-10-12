@@ -5,10 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.GetUserBookings.Mentor;
 
+/// <summary>
+/// Query handler to get bookings for a specific mentor
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetMentorBookingsQueryHandler(
 	SchedulingDbContext dbContext)
 	: IQueryHandler<GetMentorBookingsQuery, UserBookingsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<UserBookingsResponse>> Handle(GetMentorBookingsQuery request, CancellationToken cancellationToken = default)
 	{
 		// Use raw SQL to fetch bookings with mentor and mentee names from Users table
@@ -16,7 +21,7 @@ public sealed class GetMentorBookingsQueryHandler(
 		var bookings = await dbContext.Database
 			.SqlQuery<BookingDto>(
 				$"""
-                SELECT 
+                SELECT
                 b."Id",
                 b."MentorId",
                 mentor."UserName" AS "MentorName",

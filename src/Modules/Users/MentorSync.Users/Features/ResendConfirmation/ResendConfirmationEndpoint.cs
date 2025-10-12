@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MentorSync.SharedKernel;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -8,8 +7,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.ResendConfirmation;
 
+/// <summary>
+/// Endpoint to resend confirmation email to user
+/// </summary>
 public sealed class ResendConfirmationEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("/users/reconfirm", async (

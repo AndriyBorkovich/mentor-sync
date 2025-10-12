@@ -2,12 +2,18 @@ using Ardalis.Result;
 using MentorSync.Scheduling.Data;
 using Microsoft.EntityFrameworkCore;
 using MentorAvailabilityEntity = MentorSync.Scheduling.Domain.MentorAvailability;
+
 namespace MentorSync.Scheduling.Features.MentorAvailability.Create;
 
+/// <summary>
+/// Command handler for creating mentor availability
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class CreateMentorAvailabilityCommandHandler(
 	SchedulingDbContext dbContext)
 	: ICommandHandler<CreateMentorAvailabilityCommand, CreateMentorAvailabilityResult>
 {
+	/// <inheritdoc />
 	public async Task<Result<CreateMentorAvailabilityResult>> Handle(
 		CreateMentorAvailabilityCommand request,
 		CancellationToken cancellationToken = default)

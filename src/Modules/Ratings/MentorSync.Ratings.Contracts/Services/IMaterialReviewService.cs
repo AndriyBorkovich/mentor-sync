@@ -2,6 +2,9 @@
 
 namespace MentorSync.Ratings.Contracts.Services;
 
+/// <summary>
+/// Service for managing material reviews
+/// </summary>
 public interface IMaterialReviewService
 {
 	/// <summary>

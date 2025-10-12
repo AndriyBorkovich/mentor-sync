@@ -13,13 +13,14 @@ public sealed class MaterialRecommendationPipeline(
 	ILogger<MaterialRecommendationPipeline> logger)
 	: BackgroundService
 {
+	/// <inheritdoc />
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		logger.LogInformation("Learning material recommendation pipeline started.");
 
 		while (!stoppingToken.IsCancellationRequested)
 		{
-			using var scope = serviceProvider.CreateScope();
+			await using var scope = serviceProvider.CreateAsyncScope();
 
 			try
 			{

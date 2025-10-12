@@ -2,8 +2,14 @@ using FluentValidation;
 
 namespace MentorSync.Users.Features.Mentee.CreateProfile;
 
+/// <summary>
+/// Validator for <see cref="CreateMenteeProfileCommand"/>
+/// </summary>
 public sealed class CreateMenteeProfileCommandValidator : AbstractValidator<CreateMenteeProfileCommand>
 {
+	/// <summary>
+	/// Initializes a new instance of the <see cref="CreateMenteeProfileCommandValidator"/> class.
+	/// </summary>
 	public CreateMenteeProfileCommandValidator()
 	{
 		RuleFor(x => x.MenteeId)

@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Services;
 
+/// <inheritdoc />
 public sealed class UserService(UsersDbContext usersDbContext) : IUserService
 {
+	/// <inheritdoc />
 	public async Task<IList<UserBasicInfoModel>> GetAllUsersExceptAsync(int userId)
 	{
 		return await usersDbContext.Users

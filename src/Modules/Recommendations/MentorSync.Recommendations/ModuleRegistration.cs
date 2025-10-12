@@ -3,7 +3,6 @@ using MentorSync.Recommendations.Data;
 using MentorSync.Recommendations.Features.Pipelines.Base;
 using MentorSync.Recommendations.Features.Pipelines.MaterialRecommendations;
 using MentorSync.Recommendations.Features.Pipelines.MentorRecommendations;
-using MentorSync.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +20,11 @@ public static class ModuleRegistration
 	/// <param name="builder">The host application builder to configure</param>
 	public static void AddRecommendationsModule(this IHostApplicationBuilder builder)
 	{
+		if ( builder == null )
+		{
+			return;
+		}
+
 		AddDatabase(builder);
 
 		AddEndpoints(builder.Services);

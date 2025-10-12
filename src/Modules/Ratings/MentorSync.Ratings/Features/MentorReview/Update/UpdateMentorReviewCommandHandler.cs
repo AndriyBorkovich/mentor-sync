@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Features.MentorReview.Update;
 
+/// <summary>
+/// Command handler for updating a mentor review.
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class UpdateMentorReviewCommandHandler(
 	RatingsDbContext dbContext)
 	: ICommandHandler<UpdateMentorReviewCommand, UpdateMentorReviewResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<UpdateMentorReviewResponse>> Handle(
 		UpdateMentorReviewCommand command,
 		CancellationToken cancellationToken = default)

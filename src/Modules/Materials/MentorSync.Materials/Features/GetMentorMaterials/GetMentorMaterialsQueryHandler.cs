@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Materials.Features.GetMentorMaterials;
 
+/// <summary>
+/// Handler for processing the <see cref="GetMentorMaterialsQuery"/>
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetMentorMaterialsQueryHandler(
 	MaterialsDbContext dbContext)
 		: IQueryHandler<GetMentorMaterialsQuery, MentorMaterialsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MentorMaterialsResponse>> Handle(
 		GetMentorMaterialsQuery request,
 		CancellationToken cancellationToken = default)

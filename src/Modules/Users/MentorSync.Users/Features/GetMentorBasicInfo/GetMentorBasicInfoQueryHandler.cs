@@ -1,3 +1,4 @@
+using System.Globalization;
 using Ardalis.Result;
 using MentorSync.Users.Data;
 using MentorSync.Users.Extensions;
@@ -5,10 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.GetMentorBasicInfo;
 
+/// <summary>
+/// Helper record to hold mentor ratings data
+/// </summary>
 internal sealed record MentorRatingsData(double Average, int Count);
 
+/// <summary>
+/// Query handler to get basic mentor information
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext) : IQueryHandler<GetMentorBasicInfoQuery, MentorBasicInfoResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MentorBasicInfoResponse>> Handle(GetMentorBasicInfoQuery request, CancellationToken cancellationToken = default)
 	{
 		// Join User and MentorProfile to get basic mentor information
@@ -60,11 +69,11 @@ public sealed class GetMentorBasicInfoQueryHandler(UsersDbContext dbContext) : I
 			Category = mentorInfo.Industries.GetCategories(),
 			Bio = mentorInfo.Bio,
 			Availability = mentorInfo.Availability.ToReadableString(),
-			ProgrammingLanguages = mentorInfo.ProgrammingLanguages ?? [],
+			ProgrammingLanguages = mentorInfo.ProgrammingLanguages?.ToList() ?? [],
 			Skills = [.. mentorInfo.Skills
 				.Select((skill, index) => new MentorSkillDto
 				{
-					Id = index.ToString(),
+					Id = index.ToString(CultureInfo.InvariantCulture),
 					Name = skill
 				})]
 		};

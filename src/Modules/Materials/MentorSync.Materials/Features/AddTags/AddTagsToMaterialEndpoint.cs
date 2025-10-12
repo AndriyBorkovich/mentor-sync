@@ -1,13 +1,16 @@
 using System.Security.Claims;
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Materials.Features.AddTags;
 
+/// <summary>
+/// Endpoint for adding tags to an existing learning material
+/// </summary>
 public sealed class AddTagsToMaterialEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("materials/{materialId}/tags", async (

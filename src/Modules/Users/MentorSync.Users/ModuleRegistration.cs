@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using MentorSync.SharedKernel;
 using MentorSync.Users.Contracts.Services;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Role;
@@ -118,8 +117,8 @@ public static class ModuleRegistration
 				options.SaveToken = true;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateIssuer = false,
-					ValidateAudience = false,
+					ValidateIssuer = true,
+					ValidateAudience = true,
 					ValidateLifetime = true,
 					ValidateIssuerSigningKey = false,
 					ValidIssuer = jwtOptions.Issuer,

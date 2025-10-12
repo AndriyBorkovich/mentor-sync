@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Materials.Features.GetMaterials;
 
+/// <summary>
+/// Endpoint for retrieving learning materials with filtering and pagination
+/// </summary>
 public sealed class GetMaterialsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("materials", async (

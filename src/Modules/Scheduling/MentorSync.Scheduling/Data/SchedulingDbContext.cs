@@ -1,14 +1,21 @@
 ﻿using MentorSync.Scheduling.Domain;
-using MentorSync.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Data;
 
+/// <inheritdoc />
 public sealed class SchedulingDbContext(DbContextOptions<SchedulingDbContext> options) : DbContext(options)
 {
+	/// <summary>
+	/// Mentor availabilities
+	/// </summary>
 	public DbSet<MentorAvailability> MentorAvailabilities { get; set; }
+	/// <summary>
+	/// Bookings
+	/// </summary>
 	public DbSet<Booking> Bookings { get; set; }
 
+	/// <inheritdoc />
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.HasDefaultSchema(SchemaConstants.Scheduling);

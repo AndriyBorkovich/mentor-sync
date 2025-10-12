@@ -5,12 +5,22 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.GetChatRooms;
 
+/// <summary>
+/// Query to retrieve chat rooms for a specific user
+/// </summary>
+/// <param name="UserId">User identifier</param>
 public sealed record GetChatRoomsQuery(int UserId) : IQuery<List<GetChatRoomsResponse>>;
 
+/// <summary>
+/// Handler for retrieving chat rooms for a specific user
+/// </summary>
+/// <param name="dbContext"></param>
 public sealed class GetChatRoomsHandler(NotificationsDbContext dbContext)
 	: IQueryHandler<GetChatRoomsQuery, List<GetChatRoomsResponse>>
 {
-	public async Task<Result<List<GetChatRoomsResponse>>> Handle(GetChatRoomsQuery request, CancellationToken cancellationToken = default)
+	/// <inheritdoc />
+	public async Task<Result<List<GetChatRoomsResponse>>> Handle(
+		GetChatRoomsQuery request, CancellationToken cancellationToken = default)
 	{
 		var userId = request.UserId;
 		var filter = Builders<ChatRoom>.Filter.Or(

@@ -1,13 +1,24 @@
-﻿using MentorSync.SharedKernel;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.ForgotPassword;
 
+/// <summary>
+/// Endpoint for initiating the forgot password process for a user by sending a reset email.
+/// </summary>
+/// <example>
+/// <code>
+/// POST /users/forgot-password
+/// {
+///     "email": "user@example.com"
+/// }
+/// </code>
+/// </example>
 public sealed class ForgotPasswordEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("/users/forgot-password", async (

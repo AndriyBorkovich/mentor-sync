@@ -27,7 +27,7 @@ public sealed record CreateMaterialCommand : ICommand<CreateMaterialResponse>
 	public MaterialType Type { get; init; }
 
 	/// <summary>
-	/// Gets the content in markdown format
+	/// Gets the content in markdown (.md)
 	/// </summary>
 	public string ContentMarkdown { get; init; }
 

@@ -1,5 +1,4 @@
 ﻿using Ardalis.Result;
-using MentorSync.SharedKernel;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
@@ -11,6 +10,24 @@ using Microsoft.Extensions.Options;
 
 namespace MentorSync.Users.Features.Login;
 
+/// <summary>
+/// Handles user login commands, authenticating users and generating JWT tokens.
+/// </summary>
+/// <param name="userManager">The user manager for <see cref="AppUser"/> operations.</param>
+/// <param name="signInManager">The sign-in manager for handling authentication.</param>
+/// <param name="usersDbContext">The database context for user-related data.</param>
+/// <param name="jwtTokenService">The service for generating JWT tokens.</param>
+/// <param name="jwtOptions">The JWT configuration options.</param>
+/// <param name="logger">The logger instance for logging events.</param>
+/// <remarks>
+/// This handler validates user credentials, issues access and refresh tokens, and determines onboarding requirements.
+/// </remarks>
+/// <example>
+/// <code>
+/// var handler = new LoginCommandHandler(userManager, signInManager, dbContext, jwtTokenService, jwtOptions, logger);
+/// var result = await handler.Handle(new LoginCommand("user@email.com", "password"));
+/// </code>
+/// </example>
 public sealed class LoginCommandHandler(
 	UserManager<AppUser> userManager,
 	SignInManager<AppUser> signInManager,
@@ -20,6 +37,7 @@ public sealed class LoginCommandHandler(
 	ILogger<LoginCommandHandler> logger)
 	: ICommandHandler<LoginCommand, AuthResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<AuthResponse>> Handle(LoginCommand command, CancellationToken cancellationToken = default)
 	{
 		var user = await userManager.FindByEmailAsync(command.Email);

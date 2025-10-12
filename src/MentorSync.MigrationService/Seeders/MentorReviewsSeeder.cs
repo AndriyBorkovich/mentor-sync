@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.MigrationService.Seeders;
 
-public static class MentorReviewsSeeder
+internal static class MentorReviewsSeeder
 {
 	public static async Task SeedAsync(IServiceProvider serviceProvider, ILogger<Worker> logger)
 	{
@@ -134,7 +134,7 @@ public static class MentorReviewsSeeder
 				{
 					var detail = faker.PickRandom(positiveDetails);
 					var template = faker.PickRandom(positiveReviewTemplates);
-					reviewText = string.Format(template, detail);
+					reviewText = string.Format(template, detail, StringComparison.InvariantCultureIgnoreCase);
 				}
 				else if (rating == 3)
 				{

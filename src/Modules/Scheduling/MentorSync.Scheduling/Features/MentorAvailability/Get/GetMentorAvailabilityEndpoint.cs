@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Scheduling.Features.MentorAvailability.Get;
 
+/// <summary>
+/// Endpoint to get availability slots for a mentor within a date range
+/// </summary>
 public sealed class GetMentorAvailabilityEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("/scheduling/mentors/{mentorId:int}/availability", async (

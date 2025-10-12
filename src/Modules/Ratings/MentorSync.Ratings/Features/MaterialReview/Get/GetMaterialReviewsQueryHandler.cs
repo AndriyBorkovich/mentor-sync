@@ -5,10 +5,15 @@ using MaterialReviewEntityDto = MentorSync.Ratings.Features.MaterialReview.Get.M
 
 namespace MentorSync.Ratings.Features.MaterialReview.Get;
 
+/// <summary>
+/// Handler for <see cref="GetMaterialReviewsQuery"/>
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetMaterialReviewsQueryHandler(
 	RatingsDbContext dbContext)
 	: IQueryHandler<GetMaterialReviewsQuery, MaterialReviewsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<MaterialReviewsResponse>> Handle(
 		GetMaterialReviewsQuery request, CancellationToken cancellationToken = default)
 	{

@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Ratings.Features.MaterialReview.Update;
 
+/// <summary>
+/// Command to update a material review
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class UpdateMaterialReviewCommandHandler(
 	RatingsDbContext dbContext)
 	: ICommandHandler<UpdateMaterialReviewCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(UpdateMaterialReviewCommand request, CancellationToken cancellationToken = default)
 	{
 		var review = await dbContext.MaterialReviews

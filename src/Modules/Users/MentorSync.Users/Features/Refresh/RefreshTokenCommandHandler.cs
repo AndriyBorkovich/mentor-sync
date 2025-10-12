@@ -9,6 +9,31 @@ using Microsoft.Extensions.Options;
 
 namespace MentorSync.Users.Features.Refresh;
 
+/// <summary>
+/// Handles the refresh token command, validating the provided tokens and issuing new access and refresh tokens if valid.
+/// </summary>
+/// <param name="userManager">
+/// The <see cref="UserManager{TUser}"/> instance for managing user data.
+/// </param>
+/// <param name="jwtTokenService">
+/// The <see cref="IJwtTokenService"/> used for JWT operations.
+/// </param>
+/// <param name="jwtOptions">
+/// The <see cref="JwtOptions"/> configuration for JWT settings.
+/// </param>
+/// <param name="logger">
+/// The <see cref="ILogger{TCategoryName}"/> for logging operations.
+/// </param>
+/// <remarks>
+/// This handler validates the expired access token and refresh token, checks user existence and token validity,
+/// and issues new tokens if all checks pass.
+/// </remarks>
+/// <example>
+/// <code>
+/// var handler = new RefreshTokenCommandHandler(userManager, jwtTokenService, jwtOptions, logger);
+/// var result = await handler.Handle(new RefreshTokenCommand(accessToken, refreshToken));
+/// </code>
+/// </example>
 public sealed class RefreshTokenCommandHandler(
 	UserManager<AppUser> userManager,
 	IJwtTokenService jwtTokenService,
@@ -18,6 +43,7 @@ public sealed class RefreshTokenCommandHandler(
 {
 	private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
+	/// <inheritdoc />
 	public async Task<Result<AuthResponse>> Handle(
 		RefreshTokenCommand command,
 		CancellationToken cancellationToken = default)

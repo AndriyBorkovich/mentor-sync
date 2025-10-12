@@ -1,12 +1,18 @@
-﻿using Ardalis.Result;
+﻿using System.Globalization;
+using Ardalis.Result;
 using Azure.Storage.Blobs;
-using MentorSync.SharedKernel;
 using MentorSync.Users.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace MentorSync.Users.Features.DeleteAvatar;
 
+/// <summary>
+/// Handler for deleting a user's avatar
+/// </summary>
+/// <param name="blobServiceClient">Azure blob service</param>
+/// <param name="userManager">Identity manager</param>
+/// <param name="logger">Logger</param>
 public sealed class DeleteAvatarCommandHandler(
 	BlobServiceClient blobServiceClient,
 	UserManager<AppUser> userManager,
@@ -15,9 +21,10 @@ public sealed class DeleteAvatarCommandHandler(
 {
 	private readonly BlobContainerClient _avatarsContainer = blobServiceClient.GetBlobContainerClient(ContainerNames.Avatars);
 
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(DeleteAvatarCommand request, CancellationToken cancellationToken = default)
 	{
-		var user = await userManager.FindByIdAsync(request.UserId.ToString());
+		var user = await userManager.FindByIdAsync(request.UserId.ToString(CultureInfo.InvariantCulture));
 		if (user is null)
 		{
 			return Result.NotFound($"User {request.UserId} not found.");

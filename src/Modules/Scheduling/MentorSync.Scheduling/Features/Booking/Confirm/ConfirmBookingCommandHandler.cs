@@ -6,11 +6,17 @@ using BookingStatus = MentorSync.SharedKernel.CommonEntities.Enums.BookingStatus
 
 namespace MentorSync.Scheduling.Features.Booking.Confirm;
 
+/// <summary>
+/// Handles the confirmation of a booking request
+/// </summary>
+/// <param name="dbContext">Database context</param>
+/// <param name="notificationService">Notification service</param>
 public sealed class ConfirmBookingCommandHandler(
 	SchedulingDbContext dbContext,
 	INotificationService notificationService)
 	: ICommandHandler<ConfirmBookingCommand, string>
 {
+	/// <inheritdoc />
 	public async Task<Result<string>> Handle(ConfirmBookingCommand request, CancellationToken cancellationToken = default)
 	{
 		var booking = await dbContext.Bookings

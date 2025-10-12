@@ -5,5 +5,8 @@ namespace MentorSync.Recommendations.Domain.Tracking;
 /// </summary>
 public sealed class MaterialViewEvent : BaseViewEvent
 {
+	/// <summary>
+	/// Identifier of the material being viewed.
+	/// </summary>
 	public int MaterialId { get; set; }
 }

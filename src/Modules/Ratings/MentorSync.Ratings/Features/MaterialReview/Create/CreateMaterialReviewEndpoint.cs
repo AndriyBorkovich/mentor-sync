@@ -1,4 +1,3 @@
-using MentorSync.SharedKernel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Ratings.Features.MaterialReview.Create;
 
+/// <summary>
+/// Endpoint for creating a new material review
+/// </summary>
 public sealed class CreateMaterialReviewEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPost("ratings/materials/{materialId:int}/reviews", async (
@@ -33,5 +36,3 @@ public sealed class CreateMaterialReviewEndpoint : IEndpoint
 			.ProducesProblem(StatusCodes.Status403Forbidden);
 	}
 }
-
-public sealed record CreateMaterialReviewRequest(int ReviewerId, int Rating, string ReviewText);

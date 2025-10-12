@@ -9,7 +9,7 @@ namespace MentorSync.MigrationService.Seeders;
 /// <summary>
 /// Seeds mentor availability slots based on mentor profiles
 /// </summary>
-public static class MentorAvailabilitySeeder
+internal static class MentorAvailabilitySeeder
 {
 	public static async Task SeedAsync(IServiceProvider serviceProvider, ILogger<Worker> logger)
 	{

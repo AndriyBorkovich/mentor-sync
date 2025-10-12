@@ -1,10 +1,9 @@
-﻿using MentorSync.SharedKernel;
-using MentorSync.Users.Domain.Role;
+﻿using MentorSync.Users.Domain.Role;
 using Microsoft.AspNetCore.Identity;
 
 namespace MentorSync.MigrationService.Seeders;
 
-public static class RolesSeeder
+internal static class RolesSeeder
 {
 	public static async Task SeedAsync(IServiceProvider serviceProvider)
 	{

@@ -5,10 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Scheduling.Features.GetUserBookings.Mentee;
 
+/// <summary>
+/// Query handler to get bookings for a specific mentee
+/// </summary>
+/// <param name="dbContext"></param>
 public sealed class GetMenteeBookingsQueryHandler(
 	SchedulingDbContext dbContext)
 	: IQueryHandler<GetMenteeBookingsQuery, UserBookingsResponse>
 {
+	/// <inheritdoc />
 	public async Task<Result<UserBookingsResponse>> Handle(GetMenteeBookingsQuery request, CancellationToken cancellationToken = default)
 	{
 		var bookings = await dbContext.Database.SqlQuery<BookingDto>(

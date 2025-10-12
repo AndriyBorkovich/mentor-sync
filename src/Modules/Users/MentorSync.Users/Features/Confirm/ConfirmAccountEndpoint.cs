@@ -1,13 +1,16 @@
-﻿using MentorSync.SharedKernel;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Users.Features.Confirm;
 
+/// <summary>
+/// Endpoint to confirm a user account using email and token
+/// </summary>
 public sealed class ConfirmAccountEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("/users/confirm", async (

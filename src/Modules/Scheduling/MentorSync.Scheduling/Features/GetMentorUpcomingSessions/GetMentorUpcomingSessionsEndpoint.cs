@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace MentorSync.Scheduling.Features.GetMentorUpcomingSessions;
 
+/// <summary>
+/// Endpoint to get upcoming sessions for a mentor
+/// </summary>
 public sealed class GetMentorUpcomingSessionsEndpoint : IEndpoint
 {
+	/// <inheritdoc />
 	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapGet("scheduling/mentors/{id:int}/upcoming-sessions", async (

@@ -29,6 +29,7 @@
 		<Using Include="System.Threading.Tasks" />
 		<Using Include="System.Collections.Generic" />
 		<Using Include="System.Linq" />
+		<Using Include="MentorSync.SharedKernel" />
 		<Using Include="MentorSync.SharedKernel.Abstractions.Endpoints" />
 		<Using Include="MentorSync.SharedKernel.Abstractions.Messaging" />
 		<Using Include="MentorSync.SharedKernel.Abstractions.Messaging.Notifications" />

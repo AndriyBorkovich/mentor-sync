@@ -8,6 +8,12 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.SendEmail;
 
+/// <summary>
+/// Processes unsent emails from the outbox and sends them
+/// </summary>
+/// <param name="emailSender">Email sender service</param>
+/// <param name="serviceProvider">Service provider</param>
+/// <param name="logger">Logger</param>
 public sealed class EmailOutboxProcessor(
 	IEmailSender emailSender,
 	IServiceProvider serviceProvider,
@@ -20,7 +26,7 @@ public sealed class EmailOutboxProcessor(
 	/// <returns></returns>
 	public async Task CheckForEmailsToSend()
 	{
-		using var scope = serviceProvider.CreateScope();
+		await using var scope = serviceProvider.CreateAsyncScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
 		var filter = Builders<EmailOutbox>.Filter.Eq(entity => entity.DateTimeUtcProcessed, null);
 		var unsentEmails = await dbContext.EmailOutboxes.Find(filter).ToListAsync();

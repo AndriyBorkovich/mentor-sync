@@ -1,13 +1,19 @@
+using System.Globalization;
 using Ardalis.Result;
 using MentorSync.Users.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace MentorSync.Users.Features.SearchMentors;
 
+/// <summary>
+/// Handler for searching mentors based on various criteria
+/// </summary>
+/// <param name="usersDbContext">Database context</param>
 public sealed class SearchMentorsQueryHandler(
 	UsersDbContext usersDbContext)
 	: IQueryHandler<SearchMentorsQuery, PaginatedList<MentorSearchResponse>>
 {
+	/// <inheritdoc />
 	public async Task<Result<PaginatedList<MentorSearchResponse>>> Handle(SearchMentorsQuery request, CancellationToken cancellationToken = default)
 	{
 		var mentorsQuery = usersDbContext.Database
@@ -27,13 +33,47 @@ public sealed class SearchMentorsQueryHandler(
                 INNER JOIN users.""MentorProfiles"" mp ON u.""Id"" = mp.""MentorId""
                 LEFT JOIN ratings.""MentorReviews"" mr ON mp.""MentorId"" = mr.""MentorId""");
 
+		mentorsQuery = ApplyFilters(request, mentorsQuery);
+		mentorsQuery = mentorsQuery.OrderByDescending(m => m.Rating);
+
+		var totalCount = await mentorsQuery.CountAsync(cancellationToken);
+
+		mentorsQuery = mentorsQuery
+			.Skip((request.PageNumber - 1) * request.PageSize)
+			.Take(request.PageSize);
+
+		var mentors = await mentorsQuery.ToListAsync(cancellationToken);
+		var items = mentors.ConvertAll(m => new MentorSearchResponse(
+			m.Id,
+			m.Name,
+			m.Title,
+			m.Rating,
+			ConvertSkillsToList(m.Skills),
+			m.ProfileImage,
+			m.ExperienceYears,
+			m.Industries.GetCategories()
+		));
+
+		var result = new PaginatedList<MentorSearchResponse>
+		{
+			Items = items,
+			PageNumber = request.PageNumber,
+			PageSize = request.PageSize,
+			TotalCount = totalCount
+		};
+
+		return Result.Success(result);
+	}
+
+	private static IQueryable<MentorSearchResultDto> ApplyFilters(SearchMentorsQuery request, IQueryable<MentorSearchResultDto> mentorsQuery)
+	{
 		if (!string.IsNullOrWhiteSpace(request.SearchTerm))
 		{
-			var pattern = $"%{request.SearchTerm.ToLower()}%";
+			var pattern = $"%{request.SearchTerm}%";
 			mentorsQuery = mentorsQuery
 				.Where(m => EF.Functions.ILike(m.Name, pattern) ||
-							EF.Functions.ILike(m.Title, pattern) ||
-							m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
+				            EF.Functions.ILike(m.Title, pattern) ||
+				            m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
 		}
 
 		if (request.ProgrammingLanguages != null && request.ProgrammingLanguages.Count != 0)
@@ -67,40 +107,11 @@ public sealed class SearchMentorsQueryHandler(
 			mentorsQuery = mentorsQuery.Where(m => m.Rating <= request.MaxRating.Value);
 		}
 
-		mentorsQuery = mentorsQuery.Where(m => m.IsActive);
-		mentorsQuery = mentorsQuery.OrderByDescending(m => m.Rating);
-
-		var totalCount = await mentorsQuery.CountAsync(cancellationToken);
-
-		mentorsQuery = mentorsQuery
-			.Skip((request.PageNumber - 1) * request.PageSize)
-			.Take(request.PageSize);
-
-		var mentors = await mentorsQuery.ToListAsync(cancellationToken);
-		var items = mentors.ConvertAll(m => new MentorSearchResponse(
-			m.Id,
-			m.Name,
-			m.Title,
-			m.Rating,
-			ConvertSkillsToList(m.Skills),
-			m.ProfileImage,
-			m.ExperienceYears,
-			m.Industries.GetCategories()
-		));
-
-		var result = new PaginatedList<MentorSearchResponse>
-		{
-			Items = items,
-			PageNumber = request.PageNumber,
-			PageSize = request.PageSize,
-			TotalCount = totalCount
-		};
-
-		return Result.Success(result);
+		return mentorsQuery.Where(m => m.IsActive);
 	}
 
 	private static List<SkillResponse> ConvertSkillsToList(string[] skills)
 	{
-		return [.. skills.Select((skill, index) => new SkillResponse(index.ToString(), skill))];
+		return [.. skills.Select((skill, index) => new SkillResponse(index.ToString(CultureInfo.InvariantCulture), skill))];
 	}
 }

@@ -2,8 +2,16 @@ using MentorSync.Users.Domain.Enums;
 
 namespace MentorSync.Users.Extensions;
 
+/// <summary>
+/// Extension methods for formatting enum values to readable strings.
+/// </summary>
 public static class EnumFormatter
 {
+	/// <summary>
+	/// Converts an Availability enum value to a human-readable string.
+	/// </summary>
+	/// <param name="availability">Extended enum</param>
+	/// <returns>Formatted string</returns>
 	public static string ToReadableString(this Availability availability)
 	{
 		if (availability == Availability.None)

@@ -18,12 +18,12 @@ public sealed class MenteePreferences
 	/// <summary>
 	/// Gets or sets the list of programming languages the mentee wants to learn
 	/// </summary>
-	public List<string> DesiredProgrammingLanguages { get; set; } = default!;
+	public IReadOnlyList<string> DesiredProgrammingLanguages { get; set; } = default!;
 
 	/// <summary>
 	/// Gets or sets the skills the mentee wants to develop
 	/// </summary>
-	public List<string> DesiredSkills { get; set; } = default!;
+	public IReadOnlyList<string> DesiredSkills { get; set; } = default!;
 
 	/// <summary>
 	/// Gets or sets the position the mentee is targeting

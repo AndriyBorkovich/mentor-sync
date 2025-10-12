@@ -1,3 +1,6 @@
 ﻿namespace MentorSync.Users.Features.DeleteAvatar;
 
-public sealed record class DeleteAvatarCommand(int UserId) : ICommand<string>;
+/// <summary>
+/// Command to delete a user's avatar
+/// </summary>
+public sealed record DeleteAvatarCommand(int UserId) : ICommand<string>;

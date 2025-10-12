@@ -6,11 +6,21 @@ using MongoDB.Driver;
 
 namespace MentorSync.Notifications.Features.GetChatMessages;
 
+/// <summary>
+/// Query to get all chat messages in a specific room for a user
+/// </summary>
+/// <param name="RoomId">Chat room identifier</param>
+/// <param name="UserId">User identifier</param>
 public sealed record GetChatMessagesQuery(string RoomId, int UserId) : IQuery<List<GetChatMessagesResponse>>;
 
+/// <summary>
+/// Handler for processing GetChatMessagesQuery
+/// </summary>
+/// <param name="dbContext">Database context</param>
 public sealed class GetChatMessagesHandler(NotificationsDbContext dbContext)
 	: IQueryHandler<GetChatMessagesQuery, List<GetChatMessagesResponse>>
 {
+	/// <inheritdoc />
 	public async Task<Result<List<GetChatMessagesResponse>>> Handle(GetChatMessagesQuery request, CancellationToken cancellationToken = default)
 	{
 		var roomObjectId = ObjectId.Parse(request.RoomId);
