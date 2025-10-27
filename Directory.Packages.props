@@ -19,7 +19,7 @@
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.NodeJS.Extensions" Version="9.8.0" />
     <PackageVersion Include="FluentValidation" Version="12.0.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.224" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="2.0.238" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.9" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
