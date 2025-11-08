@@ -1,5 +1,4 @@
 ﻿using Ardalis.Result;
-using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;

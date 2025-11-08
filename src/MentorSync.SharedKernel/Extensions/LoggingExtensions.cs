@@ -17,8 +17,10 @@ public static class LoggingExtensions
 	/// logger.LogWarning("Login failed for {Email}", sanitized);
 	/// </code>
 	/// </example>
-	public static string? SanitizeForLogging(string? value)
+	public static string SanitizeForLogging(string value)
 	{
-		return value?.Replace("\r", "").Replace("\n", "");
+		return value?
+				.Replace("\r", string.Empty, StringComparison.InvariantCulture)
+				.Replace("\n", string.Empty, StringComparison.InvariantCulture);
 	}
 }
