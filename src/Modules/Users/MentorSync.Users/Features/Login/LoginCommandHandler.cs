@@ -1,4 +1,5 @@
 ﻿using Ardalis.Result;
+using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Features.Common.Responses;
@@ -43,7 +44,7 @@ public sealed class LoginCommandHandler(
 		var user = await userManager.FindByEmailAsync(command.Email);
 		if (user is null)
 		{
-			logger.LogWarning("Login failed: user not found for email {Email}", command.Email);
+			logger.LogWarning("Login failed: user not found for email {Email}", LoggingExtensions.SanitizeForLogging(command.Email));
 			return Result.NotFound("User not found");
 		}
 
@@ -56,7 +57,7 @@ public sealed class LoginCommandHandler(
 		{
 			if (result.IsNotAllowed)
 			{
-				logger.LogWarning("Login failed: User {Email} is not allowed to sign in", command.Email);
+				logger.LogWarning("Login failed: User {Email} is not allowed to sign in", LoggingExtensions.SanitizeForLogging(command.Email));
 				return Result.Forbidden("Login is not allowed. Please verify your email");
 			}
 
@@ -70,7 +71,7 @@ public sealed class LoginCommandHandler(
 		user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenExpirationInDays);
 		await userManager.UpdateAsync(user);
 
-		logger.LogInformation("User {Email} logged in successfully", command.Email);
+		logger.LogInformation("User {Email} logged in successfully", LoggingExtensions.SanitizeForLogging(command.Email));
 
 		var userRoles = await userManager.GetRolesAsync(user);
 		var role = userRoles.FirstOrDefault() ?? Roles.Admin;

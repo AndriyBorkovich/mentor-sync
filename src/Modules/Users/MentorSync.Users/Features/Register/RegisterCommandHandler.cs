@@ -1,4 +1,5 @@
 ﻿using Ardalis.Result;
+using MentorSync.SharedKernel.Extensions;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.User;
 using MentorSync.Users.Extensions;
@@ -27,7 +28,7 @@ public sealed class RegisterCommandHandler(
 		var existingUser = await userManager.FindByEmailAsync(command.Email);
 		if (existingUser is not null)
 		{
-			logger.LogWarning("Registration attempt with existing email: {Email}", command.Email.Replace("\r", "").Replace("\n", ""));
+			logger.LogWarning("Registration attempt with existing email: {Email}", LoggingExtensions.SanitizeForLogging(command.Email));
 
 			return Result.Conflict("User with this email already exists");
 		}
