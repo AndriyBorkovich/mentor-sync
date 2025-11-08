@@ -29,7 +29,7 @@ public sealed class RegisterCommandHandler(
 		var validationError = await ValidateRegistrationAsync(command, cancellationToken);
 		if (validationError is not null)
 		{
-			logger.LogWarning("Registration validation failed for email: {Email}, reason: {Reason}", LoggingExtensions.SanitizeForLogging(email), validationError);
+			logger.LogError("Registration validation failed. Reason: {Reason}", validationError);
 			return Result.Conflict(validationError);
 		}
 

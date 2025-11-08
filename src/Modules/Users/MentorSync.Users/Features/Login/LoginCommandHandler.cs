@@ -44,25 +44,13 @@ public sealed class LoginCommandHandler(
 		var user = await userManager.FindByEmailAsync(email);
 		if (user is null)
 		{
-			logger.LogWarning("Login failed: user not found for email {Email}", LoggingExtensions.SanitizeForLogging(email));
 			return Result.NotFound("User not found");
 		}
 
-		var result = await signInManager.CheckPasswordSignInAsync(
-			user,
-			command.Password,
-			lockoutOnFailure: false);
-
-		if (!result.Succeeded)
+		var passwordCheckResult = await CheckPasswordAsync(user, command.Password);
+		if (!passwordCheckResult.IsSuccess)
 		{
-			if (result.IsNotAllowed)
-			{
-				logger.LogWarning("Login failed: User {Email} is not allowed to sign in", LoggingExtensions.SanitizeForLogging(email));
-				return Result.Forbidden("Login is not allowed. Please verify your email");
-			}
-
-			logger.LogWarning("Login failed: Invalid password or email for user {UserId}", user.Id);
-			return Result.Invalid(new ValidationError("Invalid email or password"));
+			return passwordCheckResult;
 		}
 
 		var tokenResult = await jwtTokenService.GenerateToken(user);
@@ -71,23 +59,42 @@ public sealed class LoginCommandHandler(
 		user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenExpirationInDays);
 		await userManager.UpdateAsync(user);
 
-		logger.LogInformation("User {Email} logged in successfully", LoggingExtensions.SanitizeForLogging(email));
+		logger.LogInformation("User {UserId} logged in successfully", user.Id);
 
 		var userRoles = await userManager.GetRolesAsync(user);
 		var role = userRoles.FirstOrDefault() ?? Roles.Admin;
 
-		var needsOnboarding = false;
-		if (role is Roles.Mentee)
+		var needsOnboarding = role switch
 		{
-			needsOnboarding = !await usersDbContext.MenteeProfiles
-				.AnyAsync(mp => mp.MenteeId == user.Id, cancellationToken);
-		}
-		else if (role is Roles.Mentor)
-		{
-			needsOnboarding = !await usersDbContext.MentorProfiles
-				.AnyAsync(mp => mp.MentorId == user.Id, cancellationToken);
-		}
+			Roles.Mentee => !await usersDbContext.MenteeProfiles.AnyAsync(mp => mp.MenteeId == user.Id,
+				cancellationToken),
+			Roles.Mentor => !await usersDbContext.MentorProfiles.AnyAsync(mp => mp.MentorId == user.Id,
+				cancellationToken),
+			_ => false
+		};
 
 		return Result.Success(new AuthResponse(tokenResult.AccessToken, tokenResult.RefreshToken, tokenResult.Expiration, needsOnboarding));
+	}
+
+	private async Task<Result> CheckPasswordAsync(AppUser user, string password)
+	{
+		var result = await signInManager.CheckPasswordSignInAsync(
+			user,
+			password,
+			lockoutOnFailure: false);
+
+		if (!result.Succeeded)
+		{
+			if (result.IsNotAllowed)
+			{
+				logger.LogWarning("Login failed: User {UserId} is not allowed to sign in", user.Id);
+				return Result.Forbidden("Login is not allowed. Please verify your email");
+			}
+
+			logger.LogWarning("Login failed: Invalid password or email for user {UserId}", user.Id);
+			return Result.Invalid(new ValidationError("Invalid email or password"));
+		}
+
+		return Result.Success();
 	}
 }
