@@ -32,6 +32,17 @@ public sealed class MentorHybridScorer(
 
 		var engine = _mlContext.Model.CreatePredictionEngine<MenteeMentorRatingData, MentorPrediction>(model);
 
+		await ProcessPreferencesAsync(engine, menteePreferences, mentors.ToList(), cancellationToken);
+
+		await db.SaveChangesAsync(cancellationToken);
+		logger.LogInformation("Hybrid recommendations saved.");
+	}
+
+	private async Task ProcessPreferencesAsync(PredictionEngine<MenteeMentorRatingData, MentorPrediction> engine,
+		IReadOnlyList<MenteePreferences> menteePreferences,
+		IReadOnlyList<MentorProfileModel> mentors,
+		CancellationToken cancellationToken)
+	{
 		foreach (var preferences in menteePreferences)
 		{
 			foreach (var mentor in mentors)
@@ -46,37 +57,44 @@ public sealed class MentorHybridScorer(
 				var cbfScore = CalculateCbfScore(preferences, mentor);
 				var finalScore = (normalizedCfScore * 0.7f) + (cbfScore * 0.3f);
 
-				var existingResult = await db.MentorRecommendationResults
-					.FirstOrDefaultAsync(r =>
-						r.MenteeId == preferences.MenteeId &&
-						r.MentorId == mentor.Id,
-						cancellationToken);
-
-				if (existingResult is not null)
-				{
-					existingResult.CollaborativeScore = normalizedCfScore;
-					existingResult.ContentBasedScore = cbfScore;
-					existingResult.FinalScore = finalScore;
-					existingResult.GeneratedAt = DateTime.UtcNow;
-					db.MentorRecommendationResults.Update(existingResult);
-				}
-				else
-				{
-					db.MentorRecommendationResults.Add(new MentorRecommendationResult
-					{
-						MenteeId = preferences.MenteeId,
-						MentorId = mentor.Id,
-						CollaborativeScore = normalizedCfScore,
-						ContentBasedScore = cbfScore,
-						FinalScore = finalScore,
-						GeneratedAt = DateTime.UtcNow
-					});
-				}
+				await UpsertResultAsync(preferences, mentor, normalizedCfScore, cbfScore, finalScore, cancellationToken);
 			}
 		}
+	}
 
-		await db.SaveChangesAsync(cancellationToken);
-		logger.LogInformation("Hybrid recommendations saved.");
+	private async Task UpsertResultAsync(MenteePreferences preferences,
+		MentorProfileModel mentor,
+		float normalizedCfScore,
+		float cbfScore,
+		float finalScore,
+		CancellationToken cancellationToken)
+	{
+		var existingResult = await db.MentorRecommendationResults
+			.FirstOrDefaultAsync(r =>
+					r.MenteeId == preferences.MenteeId &&
+					r.MentorId == mentor.Id,
+				cancellationToken);
+
+		if (existingResult is not null)
+		{
+			existingResult.CollaborativeScore = normalizedCfScore;
+			existingResult.ContentBasedScore = cbfScore;
+			existingResult.FinalScore = finalScore;
+			existingResult.GeneratedAt = DateTime.UtcNow;
+			db.MentorRecommendationResults.Update(existingResult);
+		}
+		else
+		{
+			db.MentorRecommendationResults.Add(new MentorRecommendationResult
+			{
+				MenteeId = preferences.MenteeId,
+				MentorId = mentor.Id,
+				CollaborativeScore = normalizedCfScore,
+				ContentBasedScore = cbfScore,
+				FinalScore = finalScore,
+				GeneratedAt = DateTime.UtcNow
+			});
+		}
 	}
 
 	private static float CalculateCbfScore(MenteePreferences pref, MentorProfileModel mentor)
@@ -90,13 +108,11 @@ public sealed class MentorHybridScorer(
 		var preferredLanguages = pref?.DesiredProgrammingLanguages ?? [];
 		var mentorLanguages = mentor.ProgrammingLanguages ?? [];
 		score += preferredLanguages.Intersect(mentorLanguages, StringComparer.OrdinalIgnoreCase).Count() * 2;
-
 		var preferredSkills = pref?.DesiredSkills ?? [];
 		var mentorSkills = mentor.Skills ?? [];
 		score += preferredSkills.Intersect(mentorSkills, StringComparer.OrdinalIgnoreCase).Count() * 1.25f;
 
 		var hasIndustryMatch = pref?.DesiredIndustries.GetCategories().Split(',').Intersect(mentor.Industry.GetCategories().Split(','), StringComparer.OrdinalIgnoreCase).Any();
-
 		if (pref is not null && hasIndustryMatch.Value)
 		{
 			score += 3;
@@ -113,12 +129,13 @@ public sealed class MentorHybridScorer(
 			score += matchedSkills * 0.75f;
 		}
 
-		if (pref is not null && !string.IsNullOrEmpty(pref.Position))
+		if ( pref is null || string.IsNullOrEmpty(pref.Position) )
 		{
-			var positionTokens = pref.Position.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries).ToList();
-			// intersect checks if any of the position tokens match the mentor's position
-			score += positionTokens.Intersect(mentor.Position.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count() * 0.5f;
+			return score;
 		}
+
+		var positionTokens = pref.Position.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries).ToList();
+		score += positionTokens.Intersect(mentor.Position.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase).Count() * 0.5f;
 
 		return score;
 	}

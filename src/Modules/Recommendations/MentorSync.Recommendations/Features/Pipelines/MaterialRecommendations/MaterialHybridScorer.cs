@@ -1,3 +1,4 @@
+using System.Globalization;
 using MentorSync.Materials.Contracts.Models;
 using MentorSync.Materials.Contracts.Services;
 using MentorSync.Recommendations.Data;
@@ -33,57 +34,74 @@ public sealed class MaterialHybridScorer(
 
 		var engine = _mlContext.Model.CreatePredictionEngine<MenteeMaterialRatingData, MaterialPrediction>(model);
 
+		await ProcessPreferencesAsync(engine, menteePreferences, materials.ToList(), cancellationToken);
+
+		await db.SaveChangesAsync(cancellationToken);
+		logger.LogInformation("Hybrid recommendations for learning materials saved.");
+	}
+
+	private async Task ProcessPreferencesAsync(PredictionEngine<MenteeMaterialRatingData, MaterialPrediction> engine,
+		IReadOnlyList<MenteePreferences> menteePreferences,
+		IReadOnlyList<LearningMaterialModel> materials, CancellationToken cancellationToken)
+	{
 		foreach (var preferences in menteePreferences)
 		{
 			foreach (var material in materials)
 			{
 				var cfScore = engine.Predict(new MenteeMaterialRatingData
 				{
-					MenteeId = preferences.MenteeId.ToString(),
-					MaterialId = material.Id.ToString(),
+					MenteeId = preferences.MenteeId.ToString(CultureInfo.InvariantCulture),
+					MaterialId = material.Id.ToString(CultureInfo.InvariantCulture),
 				}).Score;
 
 				var normalizedCfScore = float.IsNaN(cfScore) ? 0 : cfScore;
-				var cbfScore = CalculateCBFScore(preferences, material);
+				var cbfScore = CalculateCbfScore(preferences, material);
 				var finalScore = (normalizedCfScore * 0.6f) + (cbfScore * 0.4f);
 
-				var existingRec = await db.MaterialRecommendationResults
-					.FirstOrDefaultAsync(r =>
-						r.MenteeId == preferences.MenteeId &&
-						r.MaterialId == material.Id,
-						cancellationToken);
-
-				if (existingRec != null)
-				{
-					existingRec.CollaborativeScore = normalizedCfScore;
-					existingRec.ContentBasedScore = cbfScore;
-					existingRec.FinalScore = finalScore;
-					existingRec.GeneratedAt = DateTime.UtcNow;
-					db.MaterialRecommendationResults.Update(existingRec);
-				}
-				else
-				{
-					db.MaterialRecommendationResults.Add(new MaterialRecommendationResult
-					{
-						MenteeId = preferences.MenteeId,
-						MaterialId = material.Id,
-						CollaborativeScore = normalizedCfScore,
-						ContentBasedScore = cbfScore,
-						FinalScore = finalScore,
-						GeneratedAt = DateTime.UtcNow,
-					});
-				}
+				await UpsertResultAsync(preferences, material, normalizedCfScore, cbfScore, finalScore, cancellationToken);
 			}
 		}
+	}
 
-		await db.SaveChangesAsync(cancellationToken);
-		logger.LogInformation("Hybrid recommendations for learning materials saved.");
+	private async Task UpsertResultAsync(MenteePreferences preferences,
+		LearningMaterialModel material,
+		float normalizedCfScore,
+		float cbfScore,
+		float finalScore,
+		CancellationToken cancellationToken)
+	{
+		var existingRec = await db.MaterialRecommendationResults
+			.FirstOrDefaultAsync(r =>
+					r.MenteeId == preferences.MenteeId &&
+					r.MaterialId == material.Id,
+				cancellationToken);
+
+		if (existingRec != null)
+		{
+			existingRec.CollaborativeScore = normalizedCfScore;
+			existingRec.ContentBasedScore = cbfScore;
+			existingRec.FinalScore = finalScore;
+			existingRec.GeneratedAt = DateTime.UtcNow;
+			db.MaterialRecommendationResults.Update(existingRec);
+		}
+		else
+		{
+			db.MaterialRecommendationResults.Add(new MaterialRecommendationResult
+			{
+				MenteeId = preferences.MenteeId,
+				MaterialId = material.Id,
+				CollaborativeScore = normalizedCfScore,
+				ContentBasedScore = cbfScore,
+				FinalScore = finalScore,
+				GeneratedAt = DateTime.UtcNow,
+			});
+		}
 	}
 
 	/// <summary>
 	/// Calculate content-based filtering score based on the overlap between mentee preferences and material properties
 	/// </summary>
-	private static float CalculateCBFScore(MenteePreferences preferences, LearningMaterialModel material)
+	private static float CalculateCbfScore(MenteePreferences preferences, LearningMaterialModel material)
 	{
 		float score = 0;
 

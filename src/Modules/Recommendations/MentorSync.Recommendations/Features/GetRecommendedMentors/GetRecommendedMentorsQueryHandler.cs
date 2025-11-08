@@ -18,6 +18,48 @@ public sealed class GetRecommendedMentorsQueryHandler(
 		GetRecommendedMentorsQuery request, CancellationToken cancellationToken = default)
 	{
 		var menteeId = request.MenteeId;
+		var mentorsQuery = GetQuery(menteeId);
+
+		ApplyFilters(ref mentorsQuery, request);
+		var totalCount = await mentorsQuery.CountAsync(cancellationToken);
+		if (totalCount == 0)
+		{
+			return Result.NotFound("No recommended mentors found");
+		}
+
+		mentorsQuery = mentorsQuery
+			.Skip((request.PageNumber - 1) * request.PageSize)
+			.Take(request.PageSize);
+
+		var mentors = await mentorsQuery.ToListAsync(cancellationToken);
+
+		var items = mentors.ConvertAll(m => new RecommendedMentorResponse(
+			m.Id,
+			m.Name,
+			m.Title,
+			m.Rating,
+			ConvertSkillsToList(m.Skills),
+			m.ProfileImage,
+			m.ExperienceYears,
+			m.Industries.GetCategories(),
+			float.IsNaN(m.CollaborativeScore) ? 0 : m.CollaborativeScore,
+			float.IsNaN(m.ContentBasedScore) ? 0 : m.ContentBasedScore,
+			float.IsNaN(m.FinalScore) ? 0 : m.FinalScore
+		));
+
+		var paginatedList = new PaginatedList<RecommendedMentorResponse>
+		{
+			Items = items,
+			PageNumber = request.PageNumber,
+			PageSize = request.PageSize,
+			TotalCount = totalCount
+		};
+
+		return Result.Success(paginatedList);
+	}
+
+	private IQueryable<RecommendedMentorResultDto> GetQuery(int menteeId)
+	{
 		var mentorsQuery = recommendationsContext.Database
 			.SqlQuery<RecommendedMentorResultDto>($@"
                 SELECT DISTINCT ON (u.""Id"")
@@ -39,14 +81,18 @@ public sealed class GetRecommendedMentorsQueryHandler(
                 LEFT JOIN ratings.""MentorReviews"" mr ON mp.""MentorId"" = mr.""MentorId""
                 INNER JOIN recommendations.""MentorRecommendationResults"" rr ON mp.""MentorId"" = rr.""MentorId"" AND rr.""MenteeId"" = {menteeId}
                 WHERE rr.""MenteeId"" = {menteeId} AND rr.""FinalScore"" != 'NaN' AND rr.""ContentBasedScore"" > 0.0 AND rr.""CollaborativeScore"" > 0.0");
+		return mentorsQuery;
+	}
 
+	private static void ApplyFilters(ref IQueryable<RecommendedMentorResultDto> mentorsQuery, GetRecommendedMentorsQuery request)
+	{
 		if (!string.IsNullOrWhiteSpace(request.SearchTerm))
 		{
 			var pattern = $"%{request.SearchTerm}%";
 			mentorsQuery = mentorsQuery
 				.Where(m => EF.Functions.ILike(m.Name, pattern) ||
-							EF.Functions.ILike(m.Title, pattern) ||
-							m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
+				            EF.Functions.ILike(m.Title, pattern) ||
+				            m.Skills.Any(skill => EF.Functions.ILike(skill, pattern)));
 		}
 
 		if (request.ProgrammingLanguages != null && request.ProgrammingLanguages.Count != 0)
@@ -81,50 +127,6 @@ public sealed class GetRecommendedMentorsQueryHandler(
 
 		mentorsQuery = mentorsQuery.Where(m => m.IsActive);
 		mentorsQuery = mentorsQuery.OrderByDescending(m => m.FinalScore);
-
-		// Get total count before pagination
-		var totalCount = await mentorsQuery.CountAsync(cancellationToken);
-
-		if (totalCount == 0)
-		{
-			return Result.NotFound("No recommended mentors found");
-		}
-
-		// Apply pagination
-		mentorsQuery = mentorsQuery
-			.Skip((request.PageNumber - 1) * request.PageSize)
-			.Take(request.PageSize);
-
-		var mentors = await mentorsQuery.ToListAsync(cancellationToken);
-
-		if (mentors.Count == 0)
-		{
-			return Result.NotFound("No recommended mentors found on this page");
-		}
-
-		var items = mentors.ConvertAll(m => new RecommendedMentorResponse(
-			m.Id,
-			m.Name,
-			m.Title,
-			m.Rating,
-			ConvertSkillsToList(m.Skills),
-			m.ProfileImage,
-			m.ExperienceYears,
-			m.Industries.GetCategories(),
-			float.IsNaN(m.CollaborativeScore) ? 0 : m.CollaborativeScore,
-			float.IsNaN(m.ContentBasedScore) ? 0 : m.ContentBasedScore,
-			float.IsNaN(m.FinalScore) ? 0 : m.FinalScore
-		));
-
-		var paginatedList = new PaginatedList<RecommendedMentorResponse>
-		{
-			Items = items,
-			PageNumber = request.PageNumber,
-			PageSize = request.PageSize,
-			TotalCount = totalCount
-		};
-
-		return Result.Success(paginatedList);
 	}
 
 	private static List<RecommendedSkillResponse> ConvertSkillsToList(string[] skills)

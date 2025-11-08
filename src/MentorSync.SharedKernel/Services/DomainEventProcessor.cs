@@ -28,34 +28,7 @@ public sealed class DomainEventProcessor(
 			try
 			{
 				logger.LogInformation("Processing of events started");
-				await foreach (var domainEvent in pubSub.Reader.ReadAllAsync(stoppingToken))
-				{
-					var eventType = domainEvent.GetType();
-					logger.LogInformation("Processing domain event: {EventType}", eventType);
-
-					var handlerInterface = typeof(INotificationHandler<>).MakeGenericType(eventType);
-					foreach (var handler in sp.GetServices(handlerInterface))
-					{
-						try
-						{
-							// dynamic dispatch to HandleAsync(T, CancellationToken)
-							dynamic dynHandler = handler;
-							if (dynHandler is not null)
-							{
-								await dynHandler.HandleAsync((dynamic)domainEvent, stoppingToken);
-							}
-						}
-						catch (Exception ex)
-						{
-							if (handler is not null)
-							{
-								logger.LogError(ex,
-									"Error in handler {Handler} for event {Event}",
-									handler.GetType().Name, eventType.Name);
-							}
-						}
-					}
-				}
+				await ProcessAsync(stoppingToken);
 			}
 			catch (OperationCanceledException)
 			{
@@ -69,6 +42,38 @@ public sealed class DomainEventProcessor(
 			{
 				logger.LogInformation("Processing of events finished. Waiting for 5 sec..");
 				await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+			}
+		}
+	}
+
+	private async Task ProcessAsync(CancellationToken stoppingToken)
+	{
+		await foreach (var domainEvent in pubSub.Reader.ReadAllAsync(stoppingToken))
+		{
+			var eventType = domainEvent.GetType();
+			logger.LogInformation("Processing domain event: {EventType}", eventType);
+
+			var handlerInterface = typeof(INotificationHandler<>).MakeGenericType(eventType);
+			foreach (var handler in sp.GetServices(handlerInterface))
+			{
+				try
+				{
+					// dynamic dispatch to HandleAsync(T, CancellationToken)
+					dynamic dynHandler = handler;
+					if (dynHandler is not null)
+					{
+						await dynHandler.HandleAsync((dynamic)domainEvent, stoppingToken);
+					}
+				}
+				catch (Exception ex)
+				{
+					if (handler is not null)
+					{
+						logger.LogError(ex,
+							"Error in handler {Handler} for event {Event}",
+							handler.GetType().Name, eventType.Name);
+					}
+				}
 			}
 		}
 	}

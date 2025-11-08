@@ -1,4 +1,5 @@
-﻿using Bogus;
+﻿using System.Globalization;
+using Bogus;
 using MentorSync.Users.Data;
 using MentorSync.Users.Domain.Enums;
 using MentorSync.Users.Domain.Mentor;
@@ -377,7 +378,7 @@ internal static class MentorsSeeder
 		var mentorProfileFaker = new Faker<MentorProfile>("uk").RuleFor(m => m.Bio, (f, m) =>
 		{
 			// Use the years of experience from mentorProfile.ExperienceYears for consistency
-			var yearsExperience = f.Random.Int(1, 20).ToString();
+			var yearsExperience = f.Random.Int(1, 20).ToString(CultureInfo.InvariantCulture);
 
 			// Get enum name instead of numeric value
 			var industries = Enum.GetValues<Industry>().Where(i => i != Industry.None).ToList();

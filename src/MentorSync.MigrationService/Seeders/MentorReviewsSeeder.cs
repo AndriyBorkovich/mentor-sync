@@ -1,4 +1,5 @@
-﻿using Bogus;
+﻿using System.Globalization;
+using Bogus;
 using MentorSync.Ratings.Data;
 using MentorSync.Ratings.Domain;
 using MentorSync.Users.Data;
@@ -146,7 +147,7 @@ internal static class MentorReviewsSeeder
 				{
 					var detail = faker.PickRandom(negativeDetails);
 					var template = faker.PickRandom(negativeReviewTemplates);
-					reviewText = string.Format(template, detail);
+					reviewText = string.Format(template, detail, CultureInfo.InvariantCulture);
 				}
 
 				// Create the mentor review

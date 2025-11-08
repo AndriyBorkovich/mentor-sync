@@ -88,25 +88,7 @@ internal static class ServiceCollectionExtensions
 	{
 		services.AddRateLimiter(options =>
 		{
-			options.GlobalLimiter = PartitionedRateLimiter.CreateChained(
-				PartitionedRateLimiter.Create<HttpContext, string>(
-					httpContext => RateLimitPartition.GetConcurrencyLimiter(
-						partitionKey: GetPartitionKey(httpContext),
-						factory: _ => new ConcurrencyLimiterOptions
-						{
-							PermitLimit = 1,
-							QueueLimit = 5,
-							QueueProcessingOrder = QueueProcessingOrder.OldestFirst
-						})),
-				PartitionedRateLimiter.Create<HttpContext, string>(
-					httpContext => RateLimitPartition.GetFixedWindowLimiter(
-						partitionKey: GetPartitionKey(httpContext),
-						factory: _ => new FixedWindowRateLimiterOptions
-						{
-							PermitLimit = 100,
-							Window = TimeSpan.FromMinutes(1)
-						}))
-			);
+			options.GlobalLimiter = GetGlobalRateLimiter();
 
 			options.OnRejected = async (context, cancellationToken) =>
 			{
@@ -126,13 +108,6 @@ internal static class ServiceCollectionExtensions
 
 				await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken);
 			};
-
-			return;
-
-			static string GetPartitionKey(HttpContext httpContext)
-			{
-				return httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
-			}
 		});
 	}
 
@@ -173,6 +148,36 @@ internal static class ServiceCollectionExtensions
 		builder.AddMaterialsModule();
 		builder.AddRatingsModule();
 		builder.AddRecommendationsModule();
+	}
+
+	private static PartitionedRateLimiter<HttpContext> GetGlobalRateLimiter()
+	{
+		var partitionedRateLimiter = PartitionedRateLimiter.CreateChained(
+			PartitionedRateLimiter.Create<HttpContext, string>(
+				httpContext => RateLimitPartition.GetConcurrencyLimiter(
+					partitionKey: GetPartitionKey(httpContext),
+					factory: _ => new ConcurrencyLimiterOptions
+					{
+						PermitLimit = 1,
+						QueueLimit = 5,
+						QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+					})),
+			PartitionedRateLimiter.Create<HttpContext, string>(
+				httpContext => RateLimitPartition.GetFixedWindowLimiter(
+					partitionKey: GetPartitionKey(httpContext),
+					factory: _ => new FixedWindowRateLimiterOptions
+					{
+						PermitLimit = 100,
+						Window = TimeSpan.FromMinutes(1)
+					}))
+		);
+
+		return partitionedRateLimiter;
+
+		static string GetPartitionKey(HttpContext httpContext)
+		{
+			return httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
+		}
 	}
 }
 

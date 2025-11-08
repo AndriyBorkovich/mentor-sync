@@ -43,36 +43,7 @@ internal sealed class Worker(
 
 		try
 		{
-			await using var scope = serviceProvider.CreateAsyncScope();
-
-			// CleanDatabase(scope.ServiceProvider);
-
-			await MigrateAsync<UsersDbContext>(
-				scope.ServiceProvider,
-				stoppingToken,
-				() => RolesSeeder.SeedAsync(scope.ServiceProvider),
-				() => MentorsSeeder.SeedAsync(scope.ServiceProvider, logger),
-				() => MenteesSeeder.SeedAsync(scope.ServiceProvider, logger));
-
-			await MigrateAsync<SchedulingDbContext>(
-				scope.ServiceProvider,
-				stoppingToken,
-				postMigrationSteps:
-					() => MentorAvailabilitySeeder.SeedAsync(scope.ServiceProvider, logger));
-
-			await MigrateAsync<RecommendationsDbContext>(scope.ServiceProvider, stoppingToken);
-
-			await MigrateAsync<RatingsDbContext>(
-			  scope.ServiceProvider,
-			  stoppingToken,
-			  () => MentorReviewsSeeder.SeedAsync(scope.ServiceProvider, logger));
-
-			await MigrateAsync<MaterialsDbContext>(
-				scope.ServiceProvider,
-				stoppingToken,
-				postMigrationSteps:
-					() => LearningMaterialsSeeder.SeedAsync(scope.ServiceProvider, logger));
-
+			await PerformMigrationsAsync(stoppingToken);
 			logger.LogInformation("Migrated database successfully.");
 		}
 		catch (Exception ex)
@@ -82,6 +53,39 @@ internal sealed class Worker(
 		}
 
 		hostApplicationLifetime.StopApplication();
+	}
+
+	private async Task PerformMigrationsAsync(CancellationToken stoppingToken)
+	{
+		await using var scope = serviceProvider.CreateAsyncScope();
+
+		// CleanDatabase(scope.ServiceProvider);
+
+		await MigrateAsync<UsersDbContext>(
+			scope.ServiceProvider,
+			stoppingToken,
+			() => RolesSeeder.SeedAsync(scope.ServiceProvider),
+			() => MentorsSeeder.SeedAsync(scope.ServiceProvider, logger),
+			() => MenteesSeeder.SeedAsync(scope.ServiceProvider, logger));
+
+		await MigrateAsync<SchedulingDbContext>(
+			scope.ServiceProvider,
+			stoppingToken,
+			postMigrationSteps:
+			() => MentorAvailabilitySeeder.SeedAsync(scope.ServiceProvider, logger));
+
+		await MigrateAsync<RecommendationsDbContext>(scope.ServiceProvider, stoppingToken);
+
+		await MigrateAsync<RatingsDbContext>(
+			scope.ServiceProvider,
+			stoppingToken,
+			() => MentorReviewsSeeder.SeedAsync(scope.ServiceProvider, logger));
+
+		await MigrateAsync<MaterialsDbContext>(
+			scope.ServiceProvider,
+			stoppingToken,
+			postMigrationSteps:
+			() => LearningMaterialsSeeder.SeedAsync(scope.ServiceProvider, logger));
 	}
 
 	/// <summary>

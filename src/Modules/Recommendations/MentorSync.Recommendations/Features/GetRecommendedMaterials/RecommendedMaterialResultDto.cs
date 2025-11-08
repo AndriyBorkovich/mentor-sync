@@ -24,7 +24,7 @@ public sealed class RecommendedMaterialResultDto
 	/// <summary>
 	/// Tags associated with the recommended material
 	/// </summary>
-	public string[] Tags { get; set; }
+	public IReadOnlyCollection<string> Tags { get; set; }
 	/// <summary>
 	/// Identifier of the mentor who created the material
 	/// </summary>
