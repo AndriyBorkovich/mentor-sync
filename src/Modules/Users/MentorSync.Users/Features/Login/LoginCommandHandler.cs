@@ -40,10 +40,11 @@ public sealed class LoginCommandHandler(
 	/// <inheritdoc />
 	public async Task<Result<AuthResponse>> Handle(LoginCommand command, CancellationToken cancellationToken = default)
 	{
-		var user = await userManager.FindByEmailAsync(command.Email);
+		var email = command.Email;
+		var user = await userManager.FindByEmailAsync(email);
 		if (user is null)
 		{
-			logger.LogWarning("Login failed: user not found for email {Email}", LoggingExtensions.SanitizeForLogging(command.Email));
+			logger.LogWarning("Login failed: user not found for email {Email}", LoggingExtensions.SanitizeForLogging(email));
 			return Result.NotFound("User not found");
 		}
 
@@ -56,7 +57,7 @@ public sealed class LoginCommandHandler(
 		{
 			if (result.IsNotAllowed)
 			{
-				logger.LogWarning("Login failed: User {Email} is not allowed to sign in", LoggingExtensions.SanitizeForLogging(command.Email));
+				logger.LogWarning("Login failed: User {Email} is not allowed to sign in", LoggingExtensions.SanitizeForLogging(email));
 				return Result.Forbidden("Login is not allowed. Please verify your email");
 			}
 
@@ -70,7 +71,7 @@ public sealed class LoginCommandHandler(
 		user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenExpirationInDays);
 		await userManager.UpdateAsync(user);
 
-		logger.LogInformation("User {Email} logged in successfully", LoggingExtensions.SanitizeForLogging(command.Email));
+		logger.LogInformation("User {Email} logged in successfully", LoggingExtensions.SanitizeForLogging(email));
 
 		var userRoles = await userManager.GetRolesAsync(user);
 		var role = userRoles.FirstOrDefault() ?? Roles.Admin;

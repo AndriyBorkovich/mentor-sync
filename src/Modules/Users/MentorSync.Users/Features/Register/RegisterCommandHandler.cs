@@ -24,26 +24,36 @@ public sealed class RegisterCommandHandler(
 	/// <inheritdoc />
 	public async Task<Result<CreatedEntityResponse>> Handle(RegisterCommand command, CancellationToken cancellationToken = default)
 	{
-		var existingUser = await userManager.FindByEmailAsync(command.Email);
-		if (existingUser is not null)
-		{
-			logger.LogWarning("Registration attempt with existing email: {Email}", LoggingExtensions.SanitizeForLogging(command.Email));
+		var email = command.Email;
 
-			return Result.Conflict("User with this email already exists");
-		}
-
-		if (await userManager.Users.AnyAsync(u => u.UserName == command.UserName, cancellationToken))
+		var validationError = await ValidateRegistrationAsync(command, cancellationToken);
+		if (validationError is not null)
 		{
-			return Result.Conflict("User with this name already exists");
+			logger.LogWarning("Registration validation failed for email: {Email}, reason: {Reason}", LoggingExtensions.SanitizeForLogging(email), validationError);
+			return Result.Conflict(validationError);
 		}
 
 		var user = new AppUser
 		{
 			UserName = command.UserName,
-			Email = command.Email,
+			Email = email,
 		};
 
-		var result = await usersDbContext.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+		var result = await CreateAsync(user, command, cancellationToken);
+
+		return result;
+	}
+
+	/// <summary>
+	/// Creates a new user and assigns a role within a transactional context.
+	/// </summary>
+	/// <param name="user">The user to be created.</param>
+	/// <param name="command">The registration command containing user details.</param>
+	/// <param name="cancellationToken">Token to monitor for cancellation requests.</param>
+	/// <returns>A result containing the created entity response or an error message.</returns>
+	private async Task<Result<CreatedEntityResponse>> CreateAsync(AppUser user, RegisterCommand command, CancellationToken cancellationToken)
+	{
+		return await usersDbContext.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
 		{
 			await using var transaction = await usersDbContext.Database.BeginTransactionAsync(cancellationToken);
 
@@ -80,7 +90,27 @@ public sealed class RegisterCommandHandler(
 				return Result.CriticalError($"Transaction failed: {ex.Message}");
 			}
 		});
+	}
 
-		return result;
+	/// <summary>
+	/// Validates registration for duplicate email and username.
+	/// </summary>
+	/// <param name="command">The registration command.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>Error message if validation fails, otherwise null.</returns>
+	private async Task<string> ValidateRegistrationAsync(RegisterCommand command, CancellationToken cancellationToken)
+	{
+		var existingUser = await userManager.FindByEmailAsync(command.Email);
+		if (existingUser is not null)
+		{
+			return "User with this email already exists";
+		}
+
+		if (await userManager.Users.AnyAsync(u => u.UserName == command.UserName, cancellationToken))
+		{
+			return "User with this name already exists";
+		}
+
+		return null;
 	}
 }
