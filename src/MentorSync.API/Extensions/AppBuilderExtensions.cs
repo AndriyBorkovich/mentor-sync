@@ -1,4 +1,5 @@
-﻿using MentorSync.Notifications.Infrastructure.Hubs;
+﻿using System.Text;
+using MentorSync.Notifications.Infrastructure.Hubs;
 using Serilog;
 
 namespace MentorSync.API.Extensions;
@@ -39,6 +40,9 @@ internal static class AppBuilderExtensions
 	/// </example>
 	public static void UseCustomSerilog(this IApplicationBuilder app)
 	{
+		UseBodyReader(app);
+
+		const string requestBodyItemKey = "RequestBody";
 		app.UseSerilogRequestLogging(options =>
 		{
 			options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
@@ -48,6 +52,11 @@ internal static class AppBuilderExtensions
 				diagnosticContext.Set("RequestQueryString", httpContext.Request.QueryString);
 				diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value ?? string.Empty);
 				diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+
+				if (httpContext.Items.TryGetValue(requestBodyItemKey, out var rb) && rb is string body)
+				{
+					diagnosticContext.Set("RequestBody", body);
+				}
 			};
 		});
 	}
@@ -68,5 +77,48 @@ internal static class AppBuilderExtensions
 	public static void MapHubs(this WebApplication app)
 	{
 		app.MapHub<NotificationHub>("/notificationHub");
+	}
+
+	private static void UseBodyReader(IApplicationBuilder app)
+	{
+		const int maxBodyLength = 4 * 1024; // 4 KB limit, adjust as needed
+		const string requestBodyItemKey = "RequestBody";
+
+		// Buffer and capture request body (async) before Serilog reads context
+		app.Use(async (context, next) =>
+		{
+			var request = context.Request;
+
+			try
+			{
+				if (request.ContentLength is > 0)
+				{
+					if (request.ContentLength > maxBodyLength)
+					{
+						context.Items[requestBodyItemKey] = $"[TooLarge:{request.ContentLength}]";
+					}
+					else
+					{
+						request.EnableBuffering();
+
+						using var reader = new StreamReader(request.Body, Encoding.UTF8,
+							detectEncodingFromByteOrderMarks: false, bufferSize: 1024, leaveOpen: true);
+						var body = await reader.ReadToEndAsync(context.RequestAborted).ConfigureAwait(false);
+
+						// rewind for downstream middleware/controllers
+						request.Body.Position = 0;
+
+						context.Items[requestBodyItemKey] = body;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				// Fail silently for logging purposes — don't break the request pipeline
+				context.Items[requestBodyItemKey] = $"[ReadFailed:{ex.Message}]";
+			}
+
+			await next().ConfigureAwait(false);
+		});
 	}
 }
