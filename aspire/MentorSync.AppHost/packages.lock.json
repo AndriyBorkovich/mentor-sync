@@ -2,11 +2,11 @@
   "version": 2,
   "dependencies": {
     "net9.0": {
-      "Aspire.Dashboard.Sdk.linux-x64": {
+      "Aspire.Dashboard.Sdk.win-x64": {
         "type": "Direct",
         "requested": "[9.5.2, )",
         "resolved": "9.5.2",
-        "contentHash": "865tpr/arUdoBRS+qoi56LKtGVuHOM92l+l+RXLSby85emFzjji24NV1DuKncBmLN2KnT5ArgOJ7jdHl5zpvuQ=="
+        "contentHash": "59o0gxsY39F/SNslyuOXeh0bZMokh0inqHi848C7JGVJLNJ1P9p5M3vV+otWhnj9OJMDhvfAqUckslzTGLzXPA=="
       },
       "Aspire.Hosting.AppHost": {
         "type": "Direct",
@@ -236,11 +236,11 @@
           "System.IO.Hashing": "9.0.8"
         }
       },
-      "Aspire.Hosting.Orchestration.linux-x64": {
+      "Aspire.Hosting.Orchestration.win-x64": {
         "type": "Direct",
         "requested": "[9.5.2, )",
         "resolved": "9.5.2",
-        "contentHash": "NwNi+FEKRFT1EKWZDpduNo6ApFYlJ/a1WZyZfWheR953HRcTqk7Udr1Ar+ejyYPcUNhiGCHJPYPTbOuWGs+fqw=="
+        "contentHash": "GQGlyoAntX+ng+VUuXSEKhhK9SazgBe4kC5Mia7sNclmY4sVCSCeAWAXDHYhKF3ayVbG9m/wR+PIgBy66nL6kQ=="
       },
       "CommunityToolkit.Aspire.Hosting.NodeJS.Extensions": {
         "type": "Direct",

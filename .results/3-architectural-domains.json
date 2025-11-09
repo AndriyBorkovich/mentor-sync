@@ -1,0 +1,192 @@
+{
+	"ui": {
+		"required_patterns": {
+			"component-based-architecture": "All UI organized into feature-based components with co-located logic, services, and styling",
+			"react-functional-components": "Components are functional React.FC components with TypeScript",
+			"hooks-for-state": "React hooks (useState, useCallback, useMemo, useEffect) for local state management",
+			"layout-composition": "Layout components (Header, Sidebar, Footer, Section) used as wrappers for pages",
+			"tailwindcss-styling": "TailwindCSS utility classes for all styling (no separate CSS files except module imports)"
+		},
+		"architectural_constraints": {
+			"component-based-architecture": "Components must use React.FC<Props> pattern with TypeScript interfaces",
+			"react-functional-components": "No class components allowed; all components must be functional",
+			"hooks-for-state": "useMemo and useCallback must be used for expensive operations to prevent unnecessary re-renders",
+			"layout-composition": "Pages must use Sidebar, Header, and Footer for consistent layout across the app",
+			"tailwindcss-styling": "All styling done via Tailwind classes; no inline styles except for computed values"
+		}
+	},
+	"routing": {
+		"required_patterns": {
+			"react-router-v6": "React Router v6 with createBrowserRouter for route configuration",
+			"role-based-routes": "RoleBasedRoute component protects routes based on user role (Mentor/Mentee)",
+			"protected-routes": "ProtectedRoute component requires authentication before accessing protected pages",
+			"feature-based-routing": "Routes organized by feature (auth, materials, mentor-profile, etc.)"
+		},
+		"architectural_constraints": {
+			"react-router-v6": "All routing must use React Router v6 patterns with outlet and nested routes",
+			"role-based-routes": "Routes must use RoleBasedRoute wrapper for mentor/mentee specific pages",
+			"protected-routes": "Authentication-required pages must be wrapped with ProtectedRoute or RoleBasedRoute",
+			"feature-based-routing": "New route groups must follow feature folder structure"
+		}
+	},
+	"state-management": {
+		"required_patterns": {
+			"react-context-api": "Global state (auth, user, notifications) managed via React Context API",
+			"custom-hooks-for-logic": "Domain-specific logic extracted into custom hooks (useUserProfile, useMentorProfile, etc.)",
+			"local-component-state": "Component-scoped state managed with useState hook",
+			"provider-pattern": "Context wrapped with Provider components (AuthProvider, OnboardingProvider)"
+		},
+		"architectural_constraints": {
+			"react-context-api": "No Redux or other external state management libraries; Context API only",
+			"custom-hooks-for-logic": "Hooks must have use prefix and handle domain concerns (auth, materials, scheduling)",
+			"local-component-state": "Each component manages its own UI state (loading, form values, modals)",
+			"provider-pattern": "Providers must wrap App component or appropriate feature subtree"
+		}
+	},
+	"data-layer": {
+		"required_patterns": {
+			"api-service-layer": "Centralized API client (api instance) with Axios for HTTP requests",
+			"typed-api-responses": "Services return typed interfaces matching backend response contracts",
+			"service-per-domain": "Separate services for each domain (authService, materialService, schedulingService)",
+			"pagination-support": "Paginated responses wrapped in PaginatedResponse<T> interface with metadata",
+			"error-handling": "API errors caught and transformed into user-friendly messages via toast notifications"
+		},
+		"architectural_constraints": {
+			"api-service-layer": "All HTTP requests must go through the api instance in shared/services/api.ts",
+			"typed-api-responses": "TypeScript interfaces required for all API responses; no any types",
+			"service-per-domain": "Domain services in feature/domain/services/ folder; services export functions not classes",
+			"pagination-support": "All list endpoints must support pagination with pageNumber and pageSize params",
+			"error-handling": "Errors must be caught and displayed via toast notifications; no console.error for user-facing errors"
+		}
+	},
+	"authentication": {
+		"required_patterns": {
+			"jwt-based-auth": "JWT tokens stored in localStorage via authStorage service",
+			"role-based-access-control": "User roles (Mentor, Mentee) determine access to features",
+			"oauth2-providers": "Support for OAuth2 providers (Google, GitHub, LinkedIn)",
+			"protected-component-wrapper": "ProtectedRoute and RoleBasedRoute wrappers for route protection",
+			"auth-context-provider": "AuthContext provides user and auth state globally"
+		},
+		"architectural_constraints": {
+			"jwt-based-auth": "Tokens stored in localStorage with Bearer scheme in Authorization headers",
+			"role-based-access-control": "hasRole utility function checks user role; must be used to conditionally render/access features",
+			"oauth2-providers": "OAuth implementation uses browser-redirected flow to backend",
+			"protected-component-wrapper": "All protected routes must use ProtectedRoute or RoleBasedRoute",
+			"auth-context-provider": "AuthContext must wrap entire App for global auth state"
+		}
+	},
+	"forms-and-validation": {
+		"required_patterns": {
+			"controlled-components": "Form fields controlled by React state with onChange handlers",
+			"inline-validation": "Real-time validation feedback displayed inline under form fields",
+			"form-submission": "Forms use onSubmit handlers with try-catch blocks for error handling",
+			"modal-forms": "Complex forms (upload, create, edit) often in modal components with submit/cancel buttons"
+		},
+		"architectural_constraints": {
+			"controlled-components": "Form fields must be controlled via state; no uncontrolled inputs",
+			"inline-validation": "Validation errors shown immediately, not just on blur",
+			"form-submission": "Forms must handle loading state and show success/error toasts",
+			"modal-forms": "Modal forms must include onClose and onSubmit callbacks"
+		}
+	},
+	"backend-api": {
+		"required_patterns": {
+			"minimal-api-endpoints": "ASP.NET Core Minimal APIs instead of traditional controllers",
+			"endpoint-interface-implementation": "All endpoints implement IEndpoint with MapEndpoint method",
+			"cqrs-pattern": "Commands and Queries separated with custom ICommand/IQuery and handlers",
+			"result-pattern": "All operations return Result<T> from Ardalis.Result for standardized responses",
+			"dependency-injection": "Constructor-based DI with records for commands/queries"
+		},
+		"architectural_constraints": {
+			"minimal-api-endpoints": "No controller classes; all routes via IEndpoint mapper pattern",
+			"endpoint-interface-implementation": "Endpoints must inherit IEndpoint and implement MapEndpoint",
+			"cqrs-pattern": "Commands use ICommandHandler<TCommand, TResponse>; Queries use IQueryHandler<TQuery, TResponse>",
+			"result-pattern": "All endpoint responses wrapped in Result<T>; use DecideWhatToReturn() extension",
+			"dependency-injection": "All dependencies injected into handler constructors; no service locator pattern"
+		}
+	},
+	"database-architecture": {
+		"required_patterns": {
+			"multi-schema-design": "Separate database schemas per module (Users, Scheduling, Materials, Ratings, Recommendations)",
+			"entity-framework-core": "EF Core for ORM with DbContext per domain",
+			"migrations-per-module": "EF Migrations organized per module in Data/Migrations folders",
+			"modular-monolith": "Modules are separate .csproj files within Modules/ folder"
+		},
+		"architectural_constraints": {
+			"multi-schema-design": "Each module has dedicated schema; no cross-schema foreign keys",
+			"entity-framework-core": "EF Core models in Domain/ folder; DbContext in Data/ folder",
+			"migrations-per-module": "Migrations run via MigrationService project; each module self-contained",
+			"modular-monolith": "Modules communicate via APIs (service discovery) not direct DB access"
+		}
+	},
+	"infrastructure": {
+		"required_patterns": {
+			"dotnet-aspire": ".NET Aspire for local development orchestration",
+			"bicep-iac": "Bicep templates for Azure resource provisioning",
+			"health-checks": "Health check endpoints at /health and /alive",
+			"opentelemetry-tracing": "OpenTelemetry for distributed tracing and monitoring",
+			"service-discovery": "Service Discovery for inter-service communication"
+		},
+		"architectural_constraints": {
+			"dotnet-aspire": "AppHost project references all services; aspire-manifest.json generated",
+			"bicep-iac": "All Azure resources defined in Bicep; no manual portal changes",
+			"health-checks": "Services must expose health check endpoints; no liveness without it",
+			"opentelemetry-tracing": "All services instrumented with OpenTelemetry SDK",
+			"service-discovery": "Services use IServiceDiscovery for locating other services"
+		}
+	},
+	"error-handling": {
+		"required_patterns": {
+			"global-exception-handler": "GlobalExceptionHandler middleware catches all unhandled exceptions",
+			"problem-details-rfc7807": "Error responses follow RFC 7807 Problem Details format with trace IDs",
+			"result-pattern-for-operations": "Result<T> wraps all operation outcomes (success or error)",
+			"client-side-toast-errors": "Errors displayed to user via toast notifications from react-toastify"
+		},
+		"architectural_constraints": {
+			"global-exception-handler": "GlobalExceptionHandler processes all exceptions; endpoints don't need try-catch at top level",
+			"problem-details-rfc7807": "Problem Details includes trace-id for request tracing and support references",
+			"result-pattern-for-operations": "All operations return Result<T> or Result; no raw exceptions thrown to client",
+			"client-side-toast-errors": "Errors must be user-friendly messages, not technical stack traces"
+		}
+	},
+	"performance": {
+		"required_patterns": {
+			"memoization": "useMemo and useCallback for expensive computations and function references",
+			"lazy-loading": "Routes loaded lazily with React.lazy and Suspense where appropriate",
+			"pagination": "Large lists paginated with configurable pageSize",
+			"request-caching": "API responses cached where applicable (rarely updated data)"
+		},
+		"architectural_constraints": {
+			"memoization": "Components receiving memoized functions/objects as props must use memo wrapper",
+			"lazy-loading": "Feature routes can be lazy-loaded to reduce initial bundle size",
+			"pagination": "Lists supporting pagination; default pageSize=10-20 items",
+			"request-caching": "Caching only for rarely-changing data; no caching of user-specific data"
+		}
+	},
+	"authorization": {
+		"required_patterns": {
+			"jwt-validation": "JWTs validated in middleware; claims extracted for user identification",
+			"role-based-policies": "Authorization policies (ActiveUserOnly, MentorOnly, MenteeOnly) in PolicyConstants",
+			"claim-based-access": "Access controlled via claims (role, userId, status) in JWT",
+			"attribute-based-auth": "RequireAuthorization() on endpoints with policy specification"
+		},
+		"architectural_constraints": {
+			"jwt-validation": "All protected endpoints validate JWT; disabled only for public endpoints",
+			"role-based-policies": "Policies defined in PolicyConstants; used consistently across modules",
+			"claim-based-access": "User identity extracted from claims; no role elevation without backend verification",
+			"attribute-based-auth": "Endpoints must explicitly specify RequireAuthorization() with policy"
+		}
+	},
+	"notifications": {
+		"required_patterns": {
+			"email-notifications": "Azure Communication Service (ACS) for email notifications",
+			"toast-notifications": "react-toastify for client-side UI notifications",
+			"background-jobs": "Potentially Hangfire or hosted services for async notifications"
+		},
+		"architectural_constraints": {
+			"email-notifications": "ACS templates configured in Bicep; connection string in Key Vault",
+			"toast-notifications": "Success/error/info toasts used for immediate user feedback",
+			"background-jobs": "Notifications sent asynchronously to not block request handling"
+		}
+	}
+}

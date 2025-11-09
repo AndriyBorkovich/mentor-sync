@@ -1,0 +1,264 @@
+{
+	"pages": [
+		"src/MentorSync.UI/src/features/landing/pages/LandingPage.tsx",
+		"src/MentorSync.UI/src/features/auth/pages/RegisterPage.tsx",
+		"src/MentorSync.UI/src/features/auth/pages/LoginPage.tsx",
+		"src/MentorSync.UI/src/features/dashboard/pages/DashboardPage.tsx",
+		"src/MentorSync.UI/src/features/mentor-search/pages/MentorSearchPage.tsx",
+		"src/MentorSync.UI/src/features/mentor-profile/pages/MentorProfilePage.tsx",
+		"src/MentorSync.UI/src/features/mentor-profile/pages/MyAvailabilityPage.tsx",
+		"src/MentorSync.UI/src/features/profile/pages/ProfilePage.tsx",
+		"src/MentorSync.UI/src/features/profile/pages/MentorProfileEditPage.tsx",
+		"src/MentorSync.UI/src/features/profile/pages/MenteeProfileEditPage.tsx",
+		"src/MentorSync.UI/src/features/sessions/pages/SessionsPage.tsx",
+		"src/MentorSync.UI/src/features/messages/pages/MessagesPage.tsx",
+		"src/MentorSync.UI/src/features/materials/pages/MaterialsPage.tsx",
+		"src/MentorSync.UI/src/features/materials/pages/MaterialViewPage.tsx",
+		"src/MentorSync.UI/src/features/settings/pages/SettingsPage.tsx",
+		"src/MentorSync.UI/src/features/onboarding/pages/OnboardingPage.tsx"
+	],
+	"feature-components": [
+		"src/MentorSync.UI/src/features/landing/components/HeroSection.tsx",
+		"src/MentorSync.UI/src/features/landing/components/SocialProofSection.tsx",
+		"src/MentorSync.UI/src/features/landing/components/FeaturesSection.tsx",
+		"src/MentorSync.UI/src/features/landing/components/TestimonialsSection.tsx",
+		"src/MentorSync.UI/src/features/landing/components/CallToAction.tsx",
+		"src/MentorSync.UI/src/features/dashboard/components/DashboardContent.tsx",
+		"src/MentorSync.UI/src/features/mentor-profile/components/MentorProfileContainer.tsx",
+		"src/MentorSync.UI/src/features/mentor-profile/components/MentorProfileTabs.tsx",
+		"src/MentorSync.UI/src/features/mentor-profile/components/tabs/MaterialsTab.tsx",
+		"src/MentorSync.UI/src/features/mentor-profile/components/AvailabilityManagement.tsx",
+		"src/MentorSync.UI/src/features/profile/components/ProfileHeader.tsx",
+		"src/MentorSync.UI/src/features/profile/components/ProfileOverview.tsx",
+		"src/MentorSync.UI/src/features/profile/components/ProfileInfoCard.tsx",
+		"src/MentorSync.UI/src/features/profile/components/ProfileSkeleton.tsx",
+		"src/MentorSync.UI/src/features/profile/components/EditProfileLayout.tsx",
+		"src/MentorSync.UI/src/features/profile/components/AvatarSection.tsx",
+		"src/MentorSync.UI/src/features/materials/components/MaterialsContent.tsx",
+		"src/MentorSync.UI/src/features/materials/components/MaterialsFilter.tsx",
+		"src/MentorSync.UI/src/features/materials/components/MaterialUploadModal.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/OnboardingContent.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/OnboardingStepper.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/Step1BasicInfo.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/Step2ProfessionalInfo.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/Step3SkillsExpertise.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/Step4Availability.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/Step5MentorSpecific.tsx",
+		"src/MentorSync.UI/src/features/onboarding/components/Step5MenteeSpecific.tsx",
+		"src/MentorSync.UI/src/features/auth/components/ProtectedRoute.tsx",
+		"src/MentorSync.UI/src/features/auth/components/RoleBasedRoute.tsx",
+		"src/MentorSync.UI/src/features/auth/components/UnauthorizedPage.tsx"
+	],
+	"ui-components": [
+		"src/MentorSync.UI/src/components/ui/Button.tsx",
+		"src/MentorSync.UI/src/components/ui/Avatar.tsx",
+		"src/MentorSync.UI/src/components/ui/Card.tsx",
+		"src/MentorSync.UI/src/components/ui/Input.tsx",
+		"src/MentorSync.UI/src/components/ui/Modal.tsx",
+		"src/MentorSync.UI/src/components/ui/Badge.tsx",
+		"src/MentorSync.UI/src/components/ui/Rating.tsx",
+		"src/MentorSync.UI/src/components/ui/Tabs.tsx"
+	],
+	"layout-components": [
+		"src/MentorSync.UI/src/components/layout/Navbar.tsx",
+		"src/MentorSync.UI/src/components/layout/Sidebar.tsx",
+		"src/MentorSync.UI/src/components/layout/Header.tsx",
+		"src/MentorSync.UI/src/components/layout/Footer.tsx",
+		"src/MentorSync.UI/src/components/layout/Section.tsx"
+	],
+	"hooks": [
+		"src/MentorSync.UI/src/features/auth/hooks/useUserProfile.ts",
+		"src/MentorSync.UI/src/features/auth/hooks/usePersistentAuth.ts",
+		"src/MentorSync.UI/src/features/mentor-profile/hooks/useMentorProfile.ts",
+		"src/MentorSync.UI/src/features/materials/hooks/useMaterials.ts",
+		"src/MentorSync.UI/src/features/messages/hooks/useChat.ts",
+		"src/MentorSync.UI/src/features/settings/hooks/useUserManagement.ts",
+		"src/MentorSync.UI/src/features/onboarding/hooks/useOnboarding.ts"
+	],
+	"contexts": [
+		"src/MentorSync.UI/src/features/auth/context/AuthContext.tsx",
+		"src/MentorSync.UI/src/features/onboarding/context/OnboardingContext.tsx",
+		"src/MentorSync.UI/src/features/notifications/context/NotificationsContext.tsx"
+	],
+	"services": [
+		"src/MentorSync.UI/src/features/auth/services/authService.ts",
+		"src/MentorSync.UI/src/features/auth/services/authStorage.ts",
+		"src/MentorSync.UI/src/features/mentor-profile/services/mentorProfileService.ts",
+		"src/MentorSync.UI/src/features/materials/services/materialService.ts",
+		"src/MentorSync.UI/src/features/materials/services/recommendedMaterialService.ts",
+		"src/MentorSync.UI/src/features/scheduling/services/schedulingService.ts",
+		"src/MentorSync.UI/src/features/onboarding/services/onboardingService.ts",
+		"src/MentorSync.UI/src/features/messages/services/chatService.ts",
+		"src/MentorSync.UI/src/features/settings/services/userManagementService.ts",
+		"src/MentorSync.UI/src/shared/services/api.ts"
+	],
+	"types": [
+		"src/MentorSync.UI/src/shared/types/index.ts",
+		"src/MentorSync.UI/src/shared/types/pagination.ts",
+		"src/MentorSync.UI/src/shared/types/user.ts",
+		"src/MentorSync.UI/src/shared/types/mentor.ts",
+		"src/MentorSync.UI/src/features/mentor-profile/types/mentorTypes.ts",
+		"src/MentorSync.UI/src/features/materials/types/materialTypes.ts",
+		"src/MentorSync.UI/src/features/onboarding/data/OnboardingTypes.ts",
+		"src/MentorSync.UI/src/features/auth/types/authTypes.ts",
+		"src/MentorSync.UI/src/features/settings/types/userTypes.ts"
+	],
+	"utilities": [
+		"src/MentorSync.UI/src/shared/utils/formatters.ts",
+		"src/MentorSync.UI/src/shared/utils/validators.ts",
+		"src/MentorSync.UI/src/shared/utils/helpers.ts",
+		"src/MentorSync.UI/src/features/auth/utils/authUtils.ts",
+		"src/MentorSync.UI/src/features/materials/utils/materialUtils.ts"
+	],
+	"enums": [
+		"src/MentorSync.UI/src/shared/enums/industry.ts",
+		"src/MentorSync.UI/src/shared/enums/availability.ts",
+		"src/MentorSync.UI/src/shared/enums/materialType.ts",
+		"src/MentorSync.UI/src/shared/enums/userRole.ts"
+	],
+	"constants": [
+		"src/MentorSync.UI/src/shared/constants/programmingLanguages.ts",
+		"src/MentorSync.UI/src/shared/constants/industries.ts",
+		"src/MentorSync.UI/src/shared/constants/apiEndpoints.ts",
+		"src/MentorSync.UI/src/shared/constants/validationMessages.ts"
+	],
+	"routing": [
+		"src/MentorSync.UI/src/routes.tsx",
+		"src/MentorSync.UI/src/App.tsx"
+	],
+	"entry-points": [
+		"src/MentorSync.UI/src/main.tsx",
+		"src/MentorSync.UI/index.html",
+		"src/MentorSync.UI/vite.config.ts",
+		"src/MentorSync.UI/tsconfig.json",
+		"src/MentorSync.UI/eslint.config.ts"
+	],
+	"backend-endpoints": [
+		"src/Modules/Users/MentorSync.Users/Features/Login/LoginEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Register/RegisterEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ResetPassword/ResetPasswordEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Refresh/RefreshTokenEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Confirm/ConfirmAccountEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ForgotPassword/ForgotPasswordEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/UploadAvatar/UploadAvatarEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/DeleteAvatar/DeleteAvatarEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ToggleActiveStatus/ToggleActiveUserEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/GetAllUsers/GetAllUsersEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/GetUserProfile/GetUserProfileEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/GetMentorBasicInfo/GetMentorBasicInfoEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/SearchMentors/SearchMentorsEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentor/CreateProfile/CreateMentorProfileEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentor/EditProfile/EditMentorProfileEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentee/CreateProfile/CreateMenteeProfileEndpoint.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentee/EditProfile/EditMenteeProfileEndpoint.cs"
+	],
+	"backend-commands": [
+		"src/Modules/Users/MentorSync.Users/Features/Login/LoginCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Register/RegisterCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ResetPassword/ResetPasswordCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Refresh/RefreshTokenCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Confirm/ConfirmAccountCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ForgotPassword/ForgotPasswordCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/UploadAvatar/UploadAvatarCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/DeleteAvatar/DeleteAvatarCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ToggleActiveStatus/ToggleActiveUserCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentor/CreateProfile/CreateMentorProfileCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentor/EditProfile/EditMentorProfileCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentee/CreateProfile/CreateMenteeProfileCommand.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentee/EditProfile/EditMenteeProfileCommand.cs"
+	],
+	"backend-command-handlers": [
+		"src/Modules/Users/MentorSync.Users/Features/Login/LoginCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Register/RegisterCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ResetPassword/ResetPasswordCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Refresh/RefreshTokenCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Confirm/ConfirmAccountCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ForgotPassword/ForgotPasswordCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/UploadAvatar/UploadAvatarCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/DeleteAvatar/DeleteAvatarCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/ToggleActiveStatus/ToggleActiveUserCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentor/CreateProfile/CreateMentorProfileCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentor/EditProfile/EditMentorProfileCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentee/CreateProfile/CreateMenteeProfileCommandHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/Mentee/EditProfile/EditMenteeProfileCommandHandler.cs"
+	],
+	"backend-queries": [
+		"src/Modules/Users/MentorSync.Users/Features/GetAllUsers/GetAllUsersQuery.cs",
+		"src/Modules/Users/MentorSync.Users/Features/GetUserProfile/GetUserProfileQuery.cs",
+		"src/Modules/Users/MentorSync.Users/Features/GetMentorBasicInfo/GetMentorBasicInfoQuery.cs",
+		"src/Modules/Users/MentorSync.Users/Features/SearchMentors/SearchMentorsQuery.cs"
+	],
+	"backend-query-handlers": [
+		"src/Modules/Users/MentorSync.Users/Features/GetAllUsers/GetAllUsersQueryHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/GetUserProfile/GetUserProfileQueryHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/GetMentorBasicInfo/GetMentorBasicInfoQueryHandler.cs",
+		"src/Modules/Users/MentorSync.Users/Features/SearchMentors/SearchMentorsQueryHandler.cs"
+	],
+	"backend-entities": [
+		"src/Modules/Users/MentorSync.Users/Domain/User/AppUser.cs",
+		"src/Modules/Users/MentorSync.Users/Domain/User/AppRole.cs",
+		"src/Modules/Users/MentorSync.Users/Domain/User/MentorProfile.cs",
+		"src/Modules/Users/MentorSync.Users/Domain/User/MenteeProfile.cs",
+		"src/Modules/Scheduling/MentorSync.Scheduling/Domain/Availability.cs",
+		"src/Modules/Scheduling/MentorSync.Scheduling/Domain/Booking.cs",
+		"src/Modules/Materials/MentorSync.Materials/Domain/Material.cs",
+		"src/Modules/Materials/MentorSync.Materials/Domain/Attachment.cs",
+		"src/Modules/Ratings/MentorSync.Ratings/Domain/Rating.cs"
+	],
+	"backend-database-contexts": [
+		"src/Modules/Users/MentorSync.Users/Data/UsersDbContext.cs",
+		"src/Modules/Scheduling/MentorSync.Scheduling/Data/SchedulingDbContext.cs",
+		"src/Modules/Materials/MentorSync.Materials/Data/MaterialsDbContext.cs",
+		"src/Modules/Ratings/MentorSync.Ratings/Data/RatingsDbContext.cs",
+		"src/Modules/Recommendations/MentorSync.Recommendations/Data/RecommendationsDbContext.cs"
+	],
+	"backend-abstractions": [
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/ICommand.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/ICommandHandler.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/IQuery.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/IQueryHandler.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/IMediator.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Endpoints/IEndpoint.cs"
+	],
+	"backend-extensions": [
+		"src/MentorSync.API/Extensions/ServiceCollectionExtensions.cs",
+		"src/MentorSync.API/Extensions/AppBuilderExtensions.cs",
+		"src/aspire/MentorSync.ServiceDefaults/ServicesExtensions.cs"
+	],
+	"backend-configurations": [
+		"src/MentorSync.API/Program.cs",
+		"src/MentorSync.MigrationService/Program.cs",
+		"aspire/MentorSync.AppHost/Program.cs"
+	],
+	"infrastructure": [
+		"aspire/bicep-templates/communication-service.module.bicep",
+		"aspire/MentorSync.AppHost/infra/main.bicep",
+		"aspire/MentorSync.AppHost/infra/communication-service/communication-service.module.bicep",
+		"aspire/MentorSync.AppHost/infra/mentor-sync-storage/mentor-sync-storage.module.bicep"
+	],
+	"documentation": [
+		"README.md",
+		"docs/Architecture.md",
+		"docs/Functionality.md",
+		"docs/MentorSync app.md",
+		"docs/Prompts.md",
+		"docs/Config/Configurations.md",
+		"docs/Config/Azure deployment.md",
+		"docs/Config/Deploy via Bicep.md",
+		"docs/Config/Google OAuth2.0.md",
+		"docs/Config/Migrations.md",
+		"docs/Config/Troubleshooting.md",
+		"docs/Config/Users credentials.md"
+	],
+	"shared-kernel": [
+		"src/MentorSync.SharedKernel/Constants.cs",
+		"src/MentorSync.SharedKernel/Registration.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Endpoints/IEndpoint.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/ICommand.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/ICommandHandler.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/IQuery.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/IQueryHandler.cs",
+		"src/MentorSync.SharedKernel/Abstractions/Messaging/IMediator.cs",
+		"src/MentorSync.SharedKernel/Extensions/MediatorExtensions.cs"
+	]
+}
