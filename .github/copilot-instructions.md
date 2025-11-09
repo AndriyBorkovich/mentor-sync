@@ -83,8 +83,7 @@ This file enables GitHub Copilot and AI tools to generate features consistent wi
 
 -   Use `nameof()` instead of string literals for member references
 -   PascalCase: Classes, methods, properties, events
--   camelCase: private fields, local variables, parameters
--   UPPER_CASE: Constants (if used; prefer const for immutability)
+-   camelCase: private fields, local variables, parameters, constants
 -   Interfaces prefixed with `I`: `ICommand`, `IQueryHandler`
 
 ### XML Documentation
