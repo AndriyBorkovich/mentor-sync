@@ -168,9 +168,9 @@ public sealed class NamingConventionTests
 			.That()
 			.HaveNameEndingWith("Response")
 			.And()
-			.ResideInNamespaceMatching("MentorSync.*.Features.*")
+			.ResideInNamespaceMatching("MentorSync.*")
 			.Should()
-			.HaveNameEndingWith("Response")
+			.ResideInNamespaceMatching("MentorSync.*.Features.*")
 			.Check();
 	}
 }
