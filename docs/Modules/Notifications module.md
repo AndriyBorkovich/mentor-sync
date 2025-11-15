@@ -1,4 +1,7 @@
-Система нотифікацій для користувачів.
-- Push-сповіщення про нові ментори, пропозиції, або заплановані сесії.
-- Email-розсилки з нагадуваннями або новинами.
-- Персоналізовані рекомендації через повідомлення.
+# Notifications Module
+
+Notification system for users.
+
+-   Push notifications about new mentors, offers, or scheduled sessions.
+-   Email newsletters with reminders or news.
+-   Personalized recommendations through notifications.

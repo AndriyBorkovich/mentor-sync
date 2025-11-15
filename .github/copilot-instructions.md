@@ -42,7 +42,7 @@ This file enables GitHub Copilot and AI tools to generate features consistent wi
 -   Make only high confidence suggestions when reviewing code changes.
 -   Always use latest C# and .NET 9 features (C# 13).
 -   Never modify global.json unless explicitly asked.
--   Focus on consistency with existing patterns documented in `.results/4-domains/` and `.results/5-style-guides/`.
+-   Focus on consistency with existing patterns documented in `docs/Guides/DomainDeepDives/` and `docs/Guides/CodingStandards/`.
 -   Reference real code examples from the MentorSync codebase when uncertain.
 -   **Architecture tests validate** modular monolith constraints - all module dependencies must go through `*.Contracts` projects only
 -   **Run architecture tests** before committing: `dotnet test tests/MentorSync.ArchitectureTests/`
@@ -1047,11 +1047,17 @@ export const UserProfilePage: React.FC = () => {
 -   **Contracts-first inter-module communication** (no direct module dependencies)
 -   **Architecture tests** validate all constraints automatically
 
+# Project documentation and guidelines
+
+-   when finishing a big or breaking feature, please update relevant documentation in `docs/` folder, please ask user if unsure whether or what to document
+-   refer to docs/Readme.md for overall project documentation structure
+-   DO NOT CREATE SUMMARY FILES IF IT WAS NOT ASKED FOR!
+
 ## When You're Stuck
 
-1. Check `.results/4-domains/` for similar patterns
+1. Check `docs/Guides/DomainDeepDives/` for similar patterns
 2. Search existing codebase for similar features
-3. Review relevant `.results/5-style-guides/*.md` file
+3. Review relevant `docs/Guides/CodingStandards/*.md` file
 4. Look at real implementations in `src/` or `Modules/`
 5. Consult `.editorconfig` for formatting questions
 6. Reference this guide for architecture questions

@@ -6,16 +6,16 @@ This document synthesizes all instruction-generation outputs and provides compre
 
 All outputs are organized by step:
 
-1. **1-techstack.md** - Complete technology stack analysis
-2. **2-file-categorization.json** - 22 file categories with 130+ files cataloged
-3. **3-architectural-domains.json** - 13 architectural domains with patterns
-4. **4-domains/\*.md** - Deep-dive guides (7 files, 2000+ lines) with real code examples:
-    - 1-ui.md, 2-authentication.md, 3-state-management.md
-    - 4-backend-api.md, 5-data-layer.md, 6-error-handling.md, 7-performance.md
-5. **5-style-guides/\*.md** - Per-category coding conventions (11 files started):
-    - 01-pages.md, 02-hooks.md, 03-feature-components.md, 04-ui-components.md
-    - 05-contexts.md, 06-backend-commands.md, 07-backend-queries.md
-    - 08-backend-handlers.md, 09-layout-components.md, 10-frontend-services.md, 11-backend-endpoints.md
+1. **TechStack/overview.md** - Complete technology stack analysis
+2. **CodebaseStructure/file-categorization.json** - 22 file categories with 130+ files cataloged
+3. **Architecture/domains.json** - 13 architectural domains with patterns
+4. **Guides/DomainDeepDives/\*.md** - Deep-dive guides (7 files, 2000+ lines) with real code examples:
+    - frontend-ui.md, auth-flow.md, state-management.md
+    - backend-cqrs.md, data-access.md, error-handling.md, performance-optimization.md
+5. **Guides/CodingStandards/\*.md** - Per-category coding conventions (11 files):
+    - react-pages.md, custom-hooks.md, feature-components.md, ui-components.md
+    - react-contexts.md, csharp-commands.md, csharp-queries.md
+    - csharp-handlers.md, layout-components.md, frontend-services.md, csharp-endpoints.md
 
 ## File Categories Reference
 
@@ -419,9 +419,9 @@ export const RatingForm: React.FC<{ mentorId: string }> = ({ mentorId }) => {
 
 ## Resources
 
--   **Tech Stack**: `.results/1-techstack.md`
--   **File Catalog**: `.results/2-file-categorization.json`
--   **Architectural Domains**: `.results/3-architectural-domains.json`
--   **Domain Deep-Dives**: `.results/4-domains/*.md`
--   **Style Guides**: `.results/5-style-guides/*.md`
+-   **Tech Stack**: `docs/TechStack/overview.md`
+-   **File Catalog**: `docs/CodebaseStructure/file-categorization.json`
+-   **Architectural Domains**: `docs/Architecture/domains.json`
+-   **Domain Deep-Dives**: `docs/Guides/DomainDeepDives/*.md`
+-   **Coding Standards**: `docs/Guides/CodingStandards/*.md`
 -   **Main Instructions**: `/.github/copilot-instructions.md`
