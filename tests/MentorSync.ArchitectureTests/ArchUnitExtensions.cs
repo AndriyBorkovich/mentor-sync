@@ -24,7 +24,6 @@ internal static class ArchUnitExtensions
 		var recommendationsModuleAssembly = typeof(Recommendations.Data.RecommendationsDbContext).Assembly;
 		var notificationsModuleAssembly = typeof(Notifications.Data.NotificationsDbContext).Assembly;
 
-		// load all .contracts assemblies
 		var usersContractsAssembly = typeof(Users.Contracts.Models.MenteePreferences).Assembly;
 		var materialsContractsAssembly = typeof(Materials.Contracts.Models.LearningMaterialModel).Assembly;
 		var ratingsContractsAssembly = typeof(Ratings.Contracts.Models.MaterialReviewResult).Assembly;
