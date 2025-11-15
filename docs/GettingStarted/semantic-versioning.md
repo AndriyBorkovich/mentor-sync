@@ -59,9 +59,9 @@ All commits to `master` follow [Conventional Commits](https://www.conventionalco
 
 The workflow provides:
 
--   `new_version`: The calculated semantic version (e.g., `1.2.3`)
--   `release_created`: Boolean indicating if release was created
--   Automatically tagged commit with release information
+-   `version`: The calculated semantic version (e.g., `1.2.3`)
+-   `version_tag`: The version tag applied to the release (e.g., `v1.2.3`)
+-   `changed`: Boolean indicating if a new version was created (true if a release was made)
 
 ## Examples
 
