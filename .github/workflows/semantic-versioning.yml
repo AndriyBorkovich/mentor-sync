@@ -6,6 +6,10 @@ on:
             - master
         paths-ignore:
             - "scripts/**"
+            - "**/*.md"
+           - "docs/**"
+           - ".github/dependabot.yml"
+           - ".github/dependabot/**"
 
 permissions:
     contents: write
