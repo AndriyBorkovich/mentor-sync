@@ -38,7 +38,7 @@ jobs:
                   major_pattern: "^(break|breaking|major):"
                   minor_pattern: "^(feat|feature):"
                   version_format: "${major}.${minor}.${patch}"
-                  change_path: "src/,tests/,aspire/,docs/"
+                  change_path: "src/,tests/,aspire/"
                   namespace: v
                   search_commit_body: true
 
