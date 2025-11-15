@@ -1,0 +1,82 @@
+name: Semantic Versioning and Release
+
+on:
+    push:
+        branches:
+            - master
+        paths-ignore:
+            - "scripts/**"
+
+permissions:
+    contents: write
+    packages: write
+
+jobs:
+    semantic-release:
+        runs-on: ubuntu-latest
+        name: Semantic Release
+        outputs:
+            version: ${{ steps.semver.outputs.version }}
+            version_tag: ${{ steps.semver.outputs.version_tag }}
+            changed: ${{ steps.semver.outputs.changed }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Calculate semantic version
+              id: semver
+              uses: paulhatch/semantic-version@v5.4.0
+              with:
+                  branch: master
+                  major_pattern: "^(break|breaking|major):"
+                  minor_pattern: "^(feat|feature):"
+                  version_format: "${major}.${minor}.${patch}"
+                  change_path: "src/,tests/,aspire/,docs/"
+                  namespace: v
+                  search_commit_body: true
+
+            - name: Create GitHub Release
+              if: steps.semver.outputs.changed == 'true'
+              uses: ncipollo/release-action@v1
+              with:
+                  tag: ${{ steps.semver.outputs.version_tag }}
+                  name: Release ${{ steps.semver.outputs.version_tag }}
+                  generateReleaseNotes: true
+                  draft: false
+                  prerelease: false
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Generate and Update CHANGELOG.md
+              if: steps.semver.outputs.changed == 'true'
+              run: |
+                  CHANGELOG_ENTRY="## ${{ steps.semver.outputs.version_tag }} - $(date -u +'%Y-%m-%d')"
+                  CHANGELOG_ENTRY+=$'\n\n### Version Info'
+                  CHANGELOG_ENTRY+=$'\n- **Type**: ${{ steps.semver.outputs.version_type }}'
+                  CHANGELOG_ENTRY+=$'\n- **Previous Version**: v${{ steps.semver.outputs.previous_version }}'
+                  CHANGELOG_ENTRY+=$'\n\n### Changelog'
+                  CHANGELOG_ENTRY+=$'\nSee [full release notes on GitHub](https://github.com/${{ github.repository }}/releases/tag/${{ steps.semver.outputs.version_tag }})'
+                  CHANGELOG_ENTRY+=$'\n\n---\n'
+
+                  if [ -f CHANGELOG.md ]; then
+                    echo "$CHANGELOG_ENTRY" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+                  else
+                    echo "$CHANGELOG_ENTRY" > CHANGELOG.md
+                  fi
+
+            - name: Commit and Push CHANGELOG.md
+              if: steps.semver.outputs.changed == 'true'
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git add CHANGELOG.md
+                  git commit -m "chore: update changelog for ${{ steps.semver.outputs.version_tag }}" || echo "No changes to commit"
+                  git push origin master
+
+            - name: Log Version Information
+              run: |
+                  echo "Version: ${{ steps.semver.outputs.version }}"
+                  echo "Version Tag: ${{ steps.semver.outputs.version_tag }}"
+                  echo "Changed: ${{ steps.semver.outputs.changed }}"
+                  echo "Version Type: ${{ steps.semver.outputs.version_type }}"
