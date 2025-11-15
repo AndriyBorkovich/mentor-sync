@@ -35,15 +35,11 @@ public sealed class CqrsAndVsaPatternsTests
 	{
 		Types()
 			.That()
-			.HaveNameEndingWith("QueryHandler")
-			.And()
-			.ResideInNamespaceMatching("MentorSync.*.Features.*")
+			.ImplementInterface(typeof(IQueryHandler<,>))
 			.Should()
-			.Be(Types()
-				.That()
-				.HaveNameEndingWith("QueryHandler")
-				.And()
-				.ResideInNamespaceMatching("MentorSync.*.Features.*"))
+			.HaveNameEndingWith("QueryHandler")
+			.AndShould()
+			.ResideInNamespaceMatching("MentorSync.*.Features.*")
 			.Check();
 	}
 
