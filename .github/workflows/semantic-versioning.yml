@@ -5,11 +5,12 @@ on:
         branches:
             - master
         paths-ignore:
+            - "CHANGELOG.md"
             - "scripts/**"
             - "**/*.md"
-           - "docs/**"
-           - ".github/dependabot.yml"
-           - ".github/dependabot/**"
+            - "docs/**"
+            - ".github/dependabot.yml"
+            - ".github/dependabot/**"
 
 permissions:
     contents: write
