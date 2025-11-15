@@ -143,18 +143,18 @@ public sealed class NamingConventionTests
 	}
 
 	/// <summary>
-	/// Ensures that Request DTOs reside in Features and have consistent naming
+	/// Ensures that Request DTOs reside in Features namespace
 	/// </summary>
 	[Fact]
-	public void RequestDtosShouldFollowNamingConvention()
+	public void RequestDtosShouldResideInFeaturesNamespace()
 	{
 		Types()
 			.That()
 			.HaveNameEndingWith("Request")
 			.And()
-			.ResideInNamespaceMatching("MentorSync.*.Features.*")
+			.ResideInNamespaceMatching("MentorSync.*")
 			.Should()
-			.HaveNameEndingWith("Request")
+			.ResideInNamespaceMatching("MentorSync.*.Features.*")
 			.Check();
 	}
 
