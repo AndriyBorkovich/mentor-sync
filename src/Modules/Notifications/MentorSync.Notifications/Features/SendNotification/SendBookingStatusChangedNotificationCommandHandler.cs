@@ -12,9 +12,9 @@ namespace MentorSync.Notifications.Features.SendNotification;
 /// </summary>
 /// <param name="hubContext"></param>
 /// <param name="logger"></param>
-public sealed class SendBookingStatusChangedNotificationHandler(
+public sealed class SendBookingStatusChangedNotificationCommandHandler(
 	IHubContext<NotificationHub> hubContext,
-	ILogger<SendBookingStatusChangedNotificationHandler> logger)
+	ILogger<SendBookingStatusChangedNotificationCommandHandler> logger)
 		: ICommandHandler<SendBookingStatusChangedNotificationCommand, bool>
 {
 	/// <inheritdoc />

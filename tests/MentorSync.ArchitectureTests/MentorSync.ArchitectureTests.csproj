@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+				<OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit.v3" />
+		<PackageReference Include="xunit.analyzers" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+		<PackageReference Include="TngTech.ArchUnitNET.xUnitV3" />
+		<PackageReference Include="TngTech.ArchUnitNET" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\MentorSync.API\MentorSync.API.csproj" />
+      <ProjectReference Include="..\..\src\MentorSync.MigrationService\MentorSync.MigrationService.csproj" />
+      <ProjectReference Include="..\..\src\MentorSync.SharedKernel\MentorSync.SharedKernel.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Materials\MentorSync.Materials.Contracts\MentorSync.Materials.Contracts.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Notifications\MentorSync.Notifications.Contracts\MentorSync.Notifications.Contracts.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Ratings\MentorSync.Ratings.Contracts\MentorSync.Ratings.Contracts.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Scheduling\MentorSync.Scheduling.Contracts\MentorSync.Scheduling.Contracts.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Users\MentorSync.Users.Contracts\MentorSync.Users.Contracts.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Materials\MentorSync.Materials\MentorSync.Materials.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Scheduling\MentorSync.Scheduling\MentorSync.Scheduling.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Ratings\MentorSync.Ratings\MentorSync.Ratings.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Recommendations\MentorSync.Recommendations\MentorSync.Recommendations.csproj" />
+      <ProjectReference Include="..\..\src\Modules\Notifications\MentorSync.Notifications\MentorSync.Notifications.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -44,6 +44,8 @@ This file enables GitHub Copilot and AI tools to generate features consistent wi
 -   Never modify global.json unless explicitly asked.
 -   Focus on consistency with existing patterns documented in `.results/4-domains/` and `.results/5-style-guides/`.
 -   Reference real code examples from the MentorSync codebase when uncertain.
+-   **Architecture tests validate** modular monolith constraints - all module dependencies must go through `*.Contracts` projects only
+-   **Run architecture tests** before committing: `dotnet test tests/MentorSync.ArchitectureTests/`
 
 ## C# Formatting & Code Style
 
@@ -810,6 +812,14 @@ src/Modules/{Domain}/
 
 ## Modular Monolith Architecture
 
+### Inter-Module Communication
+
+-   Modules communicate **ONLY** through `*.Contracts` projects
+-   Never reference another module's implementation (Data, Domain, Features, Infrastructure)
+-   All cross-module types must be defined in `{Module}.Contracts` namespace
+-   Example: `MentorSync.Users` can only depend on `MentorSync.Materials.Contracts`, NOT `MentorSync.Materials`
+-   **Validated by architecture tests** - violations cause test failures
+
 ### Module Structure
 
 MentorSync uses a **modular monolith** approach with independent feature modules in `src/Modules/{Domain}/`. Each module contains:
@@ -955,6 +965,35 @@ export const UserProfilePage: React.FC = () => {
 4. Endpoint mapping via IEndpoint interface
 5. Register in module's Registration.cs
 
+### Integration Rules
+
+### State Management Integration
+
+-   **Global concerns** → AuthContext, OnboardingContext
+-   **Feature data** → Custom hooks (useUserProfile, useMaterials)
+-   **UI state** → Component useState
+-   **DO NOT** create new contexts for feature data
+-   **DO NOT** use Redux or other state libraries
+
+### API Integration Pattern
+
+1. Define service function in domain service file
+2. Create hook wrapping the service call
+3. Use hook in component
+4. Handle loading/error/success states
+5. Never make API calls directly in components
+
+### Backend Integration Pattern
+
+1. Command/Query record definition
+2. Validator with FluentValidation
+3. Handler implementation (ICommandHandler or IQueryHandler)
+    - Inject DbContext directly (no repositories)
+    - Use LINQ queries directly on DbContext
+    - All database operations via EF Core
+4. Endpoint mapping via IEndpoint interface
+5. Register in module's Registration.cs
+
 ### Error Flow
 
 1. API client interceptor catches all errors
@@ -962,6 +1001,26 @@ export const UserProfilePage: React.FC = () => {
 3. Technical error logged to console
 4. Component state may show error message for retryability
 5. 401 response triggers logout automatically
+
+### Architecture Constraints (Enforced by Tests)
+
+**Module Dependencies:**
+
+-   Modules can ONLY depend on `*.Contracts` from other modules
+-   Direct dependencies on Data, Domain, Features, Infrastructure are forbidden
+-   All inter-module types must be in `*.Contracts` namespace
+
+**CQRS Pattern:**
+
+-   Commands and Queries must follow naming conventions (end with Command/Query)
+-   Handlers must end with CommandHandler/QueryHandler
+-   All must reside in Features namespace
+
+**Layer Encapsulation:**
+
+-   Only Endpoints and Contracts should be public
+-   Data and Domain layers are internal
+-   Features are public entry points for module functionality
 
 ## Performance Best Practices
 
@@ -985,23 +1044,8 @@ export const UserProfilePage: React.FC = () => {
 -   **TailwindCSS only** (no CSS files per component)
 -   **Direct DbContext calls** in handlers (no repository pattern)
 -   **LINQ queries** directly on DbContext (no abstraction layers)
-
-## Important Resources
-
--   **Architecture**: See `docs/Architecture.md`
--   **Full Tech Stack Analysis**: `.results/1-techstack.md`
--   **File Categories & Organization**: `.results/2-file-categorization.json`
--   **Architectural Domains**: `.results/3-architectural-domains.json`
--   **Domain Deep-Dive Guides** (`.results/4-domains/`):
-    -   `1-ui.md` - Component architecture, hooks, layout
-    -   `2-authentication.md` - JWT, role-based access, AuthContext
-    -   `3-state-management.md` - Context API, custom hooks
-    -   `4-backend-api.md` - Custom CQRS, Minimal APIs, Result<T>
-    -   `5-data-layer.md` - API client, services, pagination
-    -   `6-error-handling.md` - Global exception handler, RFC 7807, toast notifications
-    -   `7-performance.md` - Memoization, lazy loading, pagination, caching
--   **Style Guides** (`.results/5-style-guides/`) - Per-category coding conventions
--   **Build Instructions**: `.results/6-build-instructions.md`
+-   **Contracts-first inter-module communication** (no direct module dependencies)
+-   **Architecture tests** validate all constraints automatically
 
 ## When You're Stuck
 
@@ -1011,3 +1055,4 @@ export const UserProfilePage: React.FC = () => {
 4. Look at real implementations in `src/` or `Modules/`
 5. Consult `.editorconfig` for formatting questions
 6. Reference this guide for architecture questions
+7. Run architecture tests: `dotnet test tests/MentorSync.ArchitectureTests/` to validate changes

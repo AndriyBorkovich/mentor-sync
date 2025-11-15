@@ -9,7 +9,7 @@ namespace MentorSync.Notifications.Features.GetChatRooms;
 /// Handler for retrieving chat rooms for a specific user
 /// </summary>
 /// <param name="dbContext"></param>
-public sealed class GetChatRoomsHandler(NotificationsDbContext dbContext)
+public sealed class GetChatRoomsQueryHandler(NotificationsDbContext dbContext)
 	: IQueryHandler<GetChatRoomsQuery, List<GetChatRoomsResponse>>
 {
 	/// <inheritdoc />

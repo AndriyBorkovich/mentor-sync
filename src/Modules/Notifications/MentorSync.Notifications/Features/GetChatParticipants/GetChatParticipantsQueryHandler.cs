@@ -7,7 +7,7 @@ namespace MentorSync.Notifications.Features.GetChatParticipants;
 /// Handler for retrieving chat participants excluding the requesting user
 /// </summary>
 /// <param name="userService"></param>
-public sealed class GetChatParticipantsHandler(IUserService userService)
+public sealed class GetChatParticipantsQueryHandler(IUserService userService)
 	: IQueryHandler<GetChatParticipantsQuery, List<GetChatParticipantsResponse>>
 {
 	/// <inheritdoc />
