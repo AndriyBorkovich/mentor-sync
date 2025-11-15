@@ -10,7 +10,7 @@ namespace MentorSync.Notifications.Features.GetChatMessages;
 /// Handler for processing GetChatMessagesQuery
 /// </summary>
 /// <param name="dbContext">Database context</param>
-public sealed class GetChatMessagesHandler(NotificationsDbContext dbContext)
+public sealed class GetChatMessagesQueryHandler(NotificationsDbContext dbContext)
 	: IQueryHandler<GetChatMessagesQuery, List<GetChatMessagesResponse>>
 {
 	/// <inheritdoc />

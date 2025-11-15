@@ -22,4 +22,8 @@
 		<ProjectReference Include="..\Modules\Users\MentorSync.Users\MentorSync.Users.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="MentorSync.ArchitectureTests" />
+	</ItemGroup>
+
 </Project>
