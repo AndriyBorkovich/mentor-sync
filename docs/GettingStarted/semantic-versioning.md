@@ -29,13 +29,14 @@ All commits to `master` follow [Conventional Commits](https://www.conventionalco
 | **Documentation**   | `docs:`               | No version bump   | `docs: update API endpoints`              |
 | **Chore**           | `chore:`              | No version bump   | `chore: update dependencies`              |
 | **Refactor**        | `refactor:`           | No version bump\* | `refactor: improve database queries`      |
-| **Performance**     | `perf:`               | **PATCH** ↑\*     | `perf: optimize image loading`            |
+| **Performance**     | `perf:`               | **PATCH** ↑\*\*   | `perf: optimize image loading`            |
 | **Style**           | `style:`              | No version bump   | `style: format code`                      |
 | **Testing**         | `test:`               | No version bump   | `test: add unit tests`                    |
 | **CI/CD**           | `ci:`                 | No version bump   | `ci: update workflow`                     |
-| **Infrastructure**  | `infrastructure:`     | **PATCH** ↑\*     | `infrastructure: upgrade database`        |
+| **Infrastructure**  | `infrastructure:`     | **PATCH** ↑\*\*   | `infrastructure: upgrade database`        |
 
-**\* Performance and infrastructure changes bump PATCH version if they impact users or deployment.**
+**\* Refactor changes only bump version if they introduce a breaking change or feature.**
+**\*\* PATCH is the default version bump for any commit type not matching the major or minor patterns in the workflow configuration, including `perf:` and `infrastructure:`. These are not explicitly configured in the workflow, but are handled by the default PATCH fallback.**
 
 ## Workflow: `.github/workflows/semantic-versioning.yml`
 
@@ -58,9 +59,9 @@ All commits to `master` follow [Conventional Commits](https://www.conventionalco
 
 The workflow provides:
 
--   `new_version`: The calculated semantic version (e.g., `1.2.3`)
--   `release_created`: Boolean indicating if release was created
--   Automatically tagged commit with release information
+-   `version`: The calculated semantic version (e.g., `1.2.3`)
+-   `version_tag`: The version tag applied to the release (e.g., `v1.2.3`)
+-   `changed`: Boolean indicating if a new version was created (true if a release was made)
 
 ## Examples
 
