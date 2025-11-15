@@ -56,8 +56,8 @@ MentorSync follows a **Modular Monolith** architecture with independent feature 
 
 -   **Runtime**: .NET 9 with C# 13
 -   **API Framework**: ASP.NET Core Minimal APIs
--   **Architecture**: Modular Monolith with Custom CQRS
--   **ORM**: Entity Framework Core + PostgreSQL
+-   **Architecture**: Modular Monolith with CQRS + VSA
+-   **ORM**: Entity Framework Core + PostgreSQL (NpSQL)
 -   **Validation**: FluentValidation
 -   **Authentication**: JWT with refresh tokens
 -   **Service Orchestration**: .NET Aspire
@@ -85,8 +85,8 @@ MentorSync follows a **Modular Monolith** architecture with independent feature 
 ### Prerequisites
 
 -   .NET 9 SDK
--   Node.js 18+
--   PostgreSQL 14+
+-   Node.js 20+
+-   Docker
 -   Git
 
 ### Installation
@@ -120,7 +120,7 @@ MentorSync follows a **Modular Monolith** architecture with independent feature 
 4. **Access the application:**
     - **Frontend**: http://localhost:5173
     - **API Swagger**: http://localhost:5001/swagger
-    - **Aspire Dashboard**: http://localhost:18888
+    - **Aspire Dashboard**: http://localhost:15177
 
 ## 📚 Documentation
 
