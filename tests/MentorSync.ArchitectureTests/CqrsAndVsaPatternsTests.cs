@@ -8,26 +8,6 @@ namespace MentorSync.ArchitectureTests;
 public sealed class CqrsAndVsaPatternsTests
 {
 	/// <summary>
-	/// Ensures that command handlers have name *CommandHandler and reside in Features namespace
-	/// </summary>
-	[Fact]
-	public void CommandHandlersShouldFollowNamingAndLocationConvention()
-	{
-		Types()
-			.That()
-			.HaveNameEndingWith("CommandHandler")
-			.And()
-			.ResideInNamespaceMatching("MentorSync.*.Features.*")
-			.Should()
-			.Be(Types()
-				.That()
-				.HaveNameEndingWith("CommandHandler")
-				.And()
-				.ResideInNamespaceMatching("MentorSync.*.Features.*"))
-			.Check();
-	}
-
-	/// <summary>
 	/// Ensures that query handlers have name *QueryHandler and reside in Features namespace
 	/// </summary>
 	[Fact]
