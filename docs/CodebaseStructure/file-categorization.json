@@ -236,6 +236,18 @@
 		"aspire/MentorSync.AppHost/infra/communication-service/communication-service.module.bicep",
 		"aspire/MentorSync.AppHost/infra/mentor-sync-storage/mentor-sync-storage.module.bicep"
 	],
+	"github-workflows": [
+		".github/workflows/semantic-versioning.yml",
+		".github/workflows/azure-dev.yml",
+		".github/workflows/backend-build-and-test.yml",
+		".github/workflows/ui-build-and-test.yml"
+	],
+	"github-configuration": [
+		".github/git-commit-instructions.md",
+		".github/copilot-instructions.md",
+		".github/pull_request_template.md",
+		".github/dependabot.yml"
+	],
 	"documentation": [
 		"README.md",
 		"docs/README.md",
