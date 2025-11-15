@@ -5,7 +5,7 @@
 		<Authors>Andrii Borkovych</Authors>
 		<Company>AndrewSolutions</Company>
 		<Product>MentorSync</Product>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/AndriyBorkovich/mentor-sync.git</RepositoryUrl>
 	</PropertyGroup>
