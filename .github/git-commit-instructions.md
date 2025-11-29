@@ -1,22 +1,34 @@
 ## Commit Style Guide
 
-We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) style for our commit messages.
+We follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) with additional semantic-versioning flags used by the CI workflow.
 
-**Important**: Your commit messages directly impact automated semantic versioning and release creation. See [Semantic Versioning Strategy](../../docs/GettingStarted/semantic-versioning.md) for how commits translate to version bumps.
+Important: Your commit messages drive automatic version bumps and release creation. See `docs/GettingStarted/semantic-versioning.md` for details.
 
-### Commit Types and Examples
+### Version Bump Rules (as configured in CI)
 
--   `feat: add new user authentication module` → MINOR version bump
--   `fix: resolve issue with data fetching` → PATCH version bump
--   `break: migrate authentication to OAuth2` → MAJOR version bump
--   `docs: update README with installation instructions` → No version change
--   `style: format code with Prettier` → No version change
--   `refactor: improve performance of data processing` → No version change
--   `test: add unit tests for user service` → No version change
--   `chore: update dependencies` → No version change
--   `ci: add GitHub Actions workflow for CI/CD` → No version change
--   `perf: optimize image loading speed` → PATCH version bump
--   `infrastructure: set up database migrations` → PATCH version bump
+-   `(MAJOR)` prefix anywhere in the subject → MAJOR bump
+    -   Example: `(MAJOR) feat: migrate auth to OAuth2`
+-   `(MINOR)` prefix anywhere in the subject → MINOR bump
+    -   Example: `(MINOR) feat: add materials recommendations`
+-   No flag → defaults to PATCH when there are code changes
+    -   Example: `fix: correct null check in handler`
+
+Notes:
+
+-   The flags `(MAJOR)` and `(MINOR)` are matched by the workflow and take precedence.
+-   Without a flag, any conventional change (e.g., `fix:`) produces a PATCH bump; docs-only changes are typically ignored by CI filters.
+
+### Conventional Types (recommended)
+
+-   `feat:` new, backward-compatible functionality
+-   `fix:` bug fix
+-   `perf:`, `refactor:`, `build:`, `ci:`, `chore:`, `docs:`, `style:`, `test:` as appropriate
+
+Combine flags with types if needed:
+
+-   `(MAJOR) feat: init module`
+-   `(MINOR) feat: add scheduling API`
+-   `fix: handle token refresh race`
 
 ### Commit Message Format
 
@@ -30,10 +42,10 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0
 
 ### Breaking Changes
 
-For commits that introduce breaking changes, add a footer:
+Prefer using the `(MAJOR)` flag in the subject. Additionally, you may include the standard footer:
 
 ```
-break: migrate authentication to OAuth2
+(MAJOR) feat: migrate authentication to OAuth2
 
 BREAKING CHANGE: Legacy API key authentication is no longer supported.
 Users must update their clients to use OAuth2 tokens.

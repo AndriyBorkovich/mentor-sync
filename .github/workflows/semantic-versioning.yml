@@ -12,76 +12,67 @@ on:
             - ".github/dependabot.yml"
             - ".github/dependabot/**"
 
-permissions:
-    contents: write
-    packages: write
+env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    CI_COMMIT_MESSAGE: CI Automatic push on develop
+    CI_COMMIT_AUTHOR: ci@users.noreply.github.com
 
 jobs:
-    semantic-release:
+    semantic_version:
         runs-on: ubuntu-latest
-        name: Semantic Release
-        outputs:
-            version: ${{ steps.semver.outputs.version }}
-            version_tag: ${{ steps.semver.outputs.version_tag }}
-            changed: ${{ steps.semver.outputs.changed }}
+        permissions:
+            contents: write
         steps:
-            - name: Checkout code
+            - name: Checkout
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
-            - name: Calculate semantic version
-              id: semver
-              uses: paulhatch/semantic-version@v5.4.0
+            - name: Perform semantic version
+              uses: paulhatch/semantic-version@v5.3.0
+              id: semantic_version
               with:
-                  branch: master
-                  major_pattern: "^(break|breaking|major):"
-                  minor_pattern: "^(feat|feature):"
-                  version_format: "${major}.${minor}.${patch}"
-                  change_path: "src/,tests/,aspire/"
-                  tag_prefix: v
+                  tag_prefix: "v"
+                  major_pattern: "(MAJOR)"
+                  minor_pattern: "(MINOR)"
+                  version_format: "${major}.${minor}.${patch}-rc${increment}"
+                  user_format_type: "csv"
+                  bump_each_commit: false
                   search_commit_body: true
 
-            - name: Create GitHub Release
-              if: steps.semver.outputs.changed == 'true'
-              uses: ncipollo/release-action@v1
+            - name: Bump version and push tag
+              id: tag_version
+              uses: mathieudutour/github-tag-action@v6.2
               with:
-                  tag: ${{ steps.semver.outputs.version_tag }}
-                  name: Release ${{ steps.semver.outputs.version_tag }}
-                  generateReleaseNotes: true
+                  custom_tag: ${{ steps.semantic_version.outputs.version_tag }}
+                  tag_prefix: ""
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: "Build Changelog"
+              id: build_changelog
+              uses: mikepenz/release-changelog-builder-action@v6.0.1
+              with:
+                  fromTag: v${{ steps.semantic_version.outputs.previous_version }}
+                  toTag: ${{ steps.tag_version.outputs.new_tag }}
+
+            - name: Create production release
+              uses: ncipollo/release-action@v1
+              id: release
+              with:
+                  tag: ${{ steps.tag_version.outputs.new_tag }}
+                  name: ${{ steps.semantic_version.outputs.version_tag }}
+                  body: ${{ steps.build_changelog.outputs.changelog }}
                   draft: false
                   prerelease: false
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  commit: ${{ steps.semantic_version.outputs.current_commit }}
 
-            - name: Generate and Update CHANGELOG.md
-              if: steps.semver.outputs.changed == 'true'
+            - name: Update CHANGELOG & update branch
               run: |
-                  CHANGELOG_ENTRY="## ${{ steps.semver.outputs.version_tag }} - $(date -u +'%Y-%m-%d')"
-                  CHANGELOG_ENTRY+=$'\n\n### Version Info'
-                  CHANGELOG_ENTRY+=$'\n- **Type**: ${{ steps.semver.outputs.version_type }}'
-                  CHANGELOG_ENTRY+=$'\n- **Previous Version**: v${{ steps.semver.outputs.previous_version }}'
-                  CHANGELOG_ENTRY+=$'\n\n### Changelog'
-                  CHANGELOG_ENTRY+=$'\nSee [full release notes on GitHub](https://github.com/${{ github.repository }}/releases/tag/${{ steps.semver.outputs.version_tag }})'
-                  CHANGELOG_ENTRY+=$'\n\n---\n'
-
-                  if [ -f CHANGELOG.md ]; then
-                    echo "$CHANGELOG_ENTRY" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
-                  else
-                    echo "$CHANGELOG_ENTRY" > CHANGELOG.md
-                  fi
-
-            - name: Commit and Push CHANGELOG.md
-              if: steps.semver.outputs.changed == 'true'
-              run: |
-                  git config --local user.email "action@github.com"
-                  git config --local user.name "GitHub Action"
-                  git add CHANGELOG.md
-                  git commit -m "chore: update changelog for ${{ steps.semver.outputs.version_tag }}" || echo "No changes to commit"
+                  git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+                  git config --global user.email "${{ env.CI_COMMIT_AUTHOR }}"
+                  changelog='${{ steps.build_changelog.outputs.changelog }}'
+                  escaped_changelog=$(printf '%s\n' "$changelog" | sed 's/\\/&&/g;s/^[[:blank:]]/\\&/;s/$/\\/')
+                  sed -i "2i ${escaped_changelog%?}" CHANGELOG.md
+                  sed -i "2i ## ${{ steps.semantic_version.outputs.version_tag }} - $(date +'%d-%m-%Y')" CHANGELOG.md
+                  git add -A && git commit -m "chore(docs): update CHANGELOG.MD"
                   git push origin master
-
-            - name: Log Version Information
-              run: |
-                  echo "Version: ${{ steps.semver.outputs.version }}"
-                  echo "Version Tag: ${{ steps.semver.outputs.version_tag }}"
-                  echo "Changed: ${{ steps.semver.outputs.changed }}"
-                  echo "Version Type: ${{ steps.semver.outputs.version_type }}"
