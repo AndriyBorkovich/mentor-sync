@@ -1,3 +1,12 @@
+## v1.3.4 - 2025-11-29
+
+## 📦 Uncategorized
+
+- chore(deps): bump react-hook-form from 7.65.0 to 7.66.1 in /src/MentorSync.UI
+   - PR: #215
+
+
+
 ## v1.3.3 - 2025-11-29
 
 ## 📦 Uncategorized
