@@ -33,7 +33,7 @@ jobs:
                   search_commit_body: true
 
             - name: Comment PR
-              uses: thollander/actions-comment-pull-request@v2
+              uses: thollander/actions-comment-pull-request@v3
               with:
                   message: |
                       :rocket: The next version will be **${{ steps.semantic_version.outputs.version_tag }}** ! :rocket:
