@@ -67,40 +67,38 @@ jobs:
                   commit: ${{ steps.semantic_version.outputs.current_commit }}
 
             - name: Update CHANGELOG and push
-                 run: |
-                    set -e
-                    git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-                    git config --global user.email "${{ env.CI_COMMIT_AUTHOR }}"
+              run: |
+                  set -e
+                  git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+                  git config --global user.email "${{ env.CI_COMMIT_AUTHOR }}"
+                  changelog='${{ steps.build_changelog.outputs.changelog }}'
 
-                    changelog='${{ steps.build_changelog.outputs.changelog }}'
+                  # If no changelog content was generated, skip updating file
+                  if [ -z "$changelog" ]; then
+                    echo "No changelog content generated; skipping CHANGELOG.md update."
+                    exit 0
+                  fi
 
-                    # If no changelog content was generated, skip updating file
-                    if [ -z "$changelog" ]; then
-                        echo "No changelog content generated; skipping CHANGELOG.md update."
-                        exit 0
-                    fi
+                  # Ensure CHANGELOG.md exists
+                  if [ ! -f CHANGELOG.md ]; then
+                    echo "# Changelog" > CHANGELOG.md
+                    echo "" >> CHANGELOG.md
+                  fi
 
-                    # Ensure CHANGELOG.md exists
-                    if [ ! -f CHANGELOG.md ]; then
-                        echo "# Changelog" > CHANGELOG.md
-                        echo "" >> CHANGELOG.md
-                    fi
+                  # Prepend new entry (safe, without complex escaping)
+                  {
+                      echo "## ${{ steps.semantic_version.outputs.version_tag }} - $(date +'%Y-%m-%d')"
+                      echo ""
+                      echo "$changelog"
+                      echo ""
+                      cat CHANGELOG.md
+                  } > CHANGELOG.tmp && mv CHANGELOG.tmp CHANGELOG.md
 
-                    # Prepend new entry (safe, without complex escaping)
-                    {
-                        echo "## ${{ steps.semantic_version.outputs.version_tag }} - $(date +'%Y-%m-%d')"
-                        echo ""
-                        echo "$changelog"
-                        echo ""
-                        cat CHANGELOG.md
-                    } > CHANGELOG.tmp && mv CHANGELOG.tmp CHANGELOG.md
-
-                    # Only commit if there are changes
-                    if git diff --quiet; then
-                        echo "No changes to commit; working tree clean."
-                        exit 0
-                    fi
-
-                    git add CHANGELOG.md
-                    git commit -m "chore(docs): update CHANGELOG.md" || true
-                    git push origin master
+                  # Only commit if there are changes
+                  if git diff --quiet; then
+                      echo "No changes to commit; working tree clean."
+                      exit 0
+                  fi
+                  git add CHANGELOG.md
+                  git commit -m "chore(docs): update CHANGELOG.md" || true
+                  git push origin master
