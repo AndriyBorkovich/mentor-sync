@@ -18,8 +18,7 @@ properties:
             allowInsecure: false
         registries:
             - server: { { .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT } }
-              identity:
-                  { { .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID } }
+              identity: { { .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID } }
         secrets:
             - name: mongo-initdb-root-password
               value: '{{ securedParameter "mongo_password" }}'

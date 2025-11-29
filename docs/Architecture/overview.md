@@ -127,7 +127,7 @@ Violations of architecture constraints will cause test failures and block commit
 
 -   [Users Module](../Modules/Users%20module.md)
 -   [Materials Module](../Modules/Materials%20module.md)
--   [Scheduling Module](../Modules/Scheduling%20(booking)%20module.md>)
+-   [Scheduling Module](<../Modules/Scheduling%20(booking)%20module.md>)
 -   [Ratings Module](../Modules/Ratings%20module.md)
 -   [Recommendations Module](../Modules/Recommendations%20module.md)
 -   [Notifications Module](../Modules/Notifications%20module.md)

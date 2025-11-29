@@ -18,19 +18,19 @@ properties:
             allowInsecure: false
         registries:
             - server: { { .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT } }
-              identity:
-                  { { .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID } }
+              identity: { { .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID } }
         secrets:
             - name: connectionstrings--emailservice
               value: endpoint=https://cs-mentorsync-dev.unitedstates.communication.azure.com/;accesskey=A6Uh5park7JXtTKo5MifjUgJkgbn2Mc1G9jDqShflfr10kjIkG4EJQQJ99BDACULyCpqbLGRAAAAAZCS0yGB
             - name: connectionstrings--files-blobs
               value: "{{ .Env.MENTOR_SYNC_STORAGE_BLOBENDPOINT }}"
             - name: connectionstrings--mongodb
-              value: mongodb://{{ securedParameter "mongo_username" }}:{{ securedParameter "mongo_password" }}@mongo:27017/mongodb?authSource=admin&authMechanism=SCRAM-SHA-256
+              value:
+                  mongodb://{{ securedParameter "mongo_username" }}:{{ securedParameter "mongo_password"
+                  }}@mongo:27017/mongodb?authSource=admin&authMechanism=SCRAM-SHA-256
             - name: connectionstrings--mentorsyncdb
               keyVaultUrl: "{{ .Env.POSTGRES_DB_KV_VAULTURI }}secrets/connectionstrings--MentorSyncDb"
-              identity:
-                  { { .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID } }
+              identity: { { .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID } }
     template:
         containers:
             - image: { { .Image } }
