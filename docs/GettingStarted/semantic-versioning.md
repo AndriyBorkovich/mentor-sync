@@ -1,228 +1,133 @@
-# Semantic Versioning Strategy
+# Semantic Versioning: Step‑by‑Step Dev Workflow
 
-This document outlines how MentorSync uses semantic versioning for automated releases and version management.
+This guide explains exactly how to work in MentorSync with automated versioning, releases, and changelog updates powered by GitHub Actions.
 
-## Overview
+## TL;DR
 
-MentorSync follows **[Semantic Versioning](https://semver.org/)** (SemVer) 2.0.0 specification:
+1. Create a branch → implement changes → commit using Conventional Commits.
+2. For MINOR bump add `(MINOR)`; for MAJOR bump add `(MAJOR)` in the subject.
+3. Open a PR to `master` → the PR bot comments the “next version”.
+4. Merge PR → workflow tags the repo, creates a Release, and updates `CHANGELOG.md`.
 
-```
-MAJOR.MINOR.PATCH
-v1.2.3
-```
+## One‑Time Setup (maintainers)
 
--   **MAJOR** (X.0.0): Breaking changes that require user action
--   **MINOR** (X.Y.0): New features (backward compatible)
--   **PATCH** (X.Y.Z): Bug fixes and non-breaking improvements
+-   Ensure a baseline tag exists (e.g., `v1.0.0`). If missing:
+    ```bash
+    git tag v1.0.0
+    git push origin v1.0.0
+    ```
+-   Branch protection on `master` (recommended): require PRs and passing checks.
 
-## Commit Convention & Version Bumping
+## Daily Development Flow
 
-All commits to `master` follow [Conventional Commits](https://www.conventionalcommits.org/) format. The GitHub Actions workflow automatically calculates and creates releases based on commit message patterns.
+1. Branch
 
-### Commit Types and Version Impact
+    - From `master`: `git checkout -b feat/scheduling-slots`
 
-| Commit Type         | Pattern               | Version Impact    | Example                                   |
-| ------------------- | --------------------- | ----------------- | ----------------------------------------- |
-| **Breaking Change** | `break:`, `breaking:` | **MAJOR** ↑       | `break: migrate authentication to OAuth2` |
-| **Feature**         | `feat:`, `feature:`   | **MINOR** ↑       | `feat: add material recommendations`      |
-| **Bug Fix**         | `fix:`                | **PATCH** ↑       | `fix: resolve session timeout issue`      |
-| **Documentation**   | `docs:`               | No version bump   | `docs: update API endpoints`              |
-| **Chore**           | `chore:`              | No version bump   | `chore: update dependencies`              |
-| **Refactor**        | `refactor:`           | No version bump\* | `refactor: improve database queries`      |
-| **Performance**     | `perf:`               | **PATCH** ↑\*\*   | `perf: optimize image loading`            |
-| **Style**           | `style:`              | No version bump   | `style: format code`                      |
-| **Testing**         | `test:`               | No version bump   | `test: add unit tests`                    |
-| **CI/CD**           | `ci:`                 | No version bump   | `ci: update workflow`                     |
-| **Infrastructure**  | `infrastructure:`     | **PATCH** ↑\*\*   | `infrastructure: upgrade database`        |
+2. Commit with clear messages
 
-**\* Refactor changes only bump version if they introduce a breaking change or feature.**
-**\*\* PATCH is the default version bump for any commit type not matching the major or minor patterns in the workflow configuration, including `perf:` and `infrastructure:`. These are not explicitly configured in the workflow, but are handled by the default PATCH fallback.**
+    - Follow Conventional Commits and our bump flags.
+    - Examples:
+        - Patch: `fix: correct null check in schedule overlap`
+        - Minor: `(MINOR) feat: add scheduling API endpoints`
+        - Major: `(MAJOR) feat: rename /api/materials -> /api/content`
 
-## Workflow: `.github/workflows/semantic-versioning.yml`
+3. Open a PR to `master`
 
-### When It Runs
+    - The workflow `.github/workflows/on-pr-future-version.yml` posts a comment like:
+      “The next version will be v1.3.0”
+    - If the version isn’t what you expect, adjust your commit messages (add/remove `(MINOR)`/`(MAJOR)`) and push again.
 
--   **Trigger**: Push to `master` branch
--   **Ignores**: Markdown files, docs directory, dependabot updates
--   **Frequency**: On every commit that matches the trigger
+4. Merge the PR when approved
 
-### What It Does
+    - On merge, `.github/workflows/semantic-versioning.yml`:
+        - Calculates the next SemVer
+        - Tags the repo (prefix `v`)
+        - Builds release notes/changelog
+        - Creates a GitHub Release
+        - Updates `CHANGELOG.md` (skips gracefully if empty)
 
-1. **Analyzes** all commits since the last version tag
-2. **Determines** the next version based on commit types
-3. **Creates** a GitHub Release with:
-    - Version tag (e.g., `v1.2.3`)
-    - Automated release notes
-    - Reference to commit convention
+5. Verify
+    - Check Releases and Tags on GitHub
+    - `CHANGELOG.md` gets a new section for the version
 
-### Outputs
+## Commit Rules That Drive Bumps
 
-The workflow provides:
+-   We use Conventional Commits plus explicit flags:
+    -   MAJOR bump: add `(MAJOR)` in the subject
+    -   MINOR bump: add `(MINOR)` in the subject
+    -   PATCH bump: default when neither MAJOR nor MINOR is present and relevant code changed
 
--   `version`: The calculated semantic version (e.g., `1.2.3`)
--   `version_tag`: The version tag applied to the release (e.g., `v1.2.3`)
--   `changed`: Boolean indicating if a new version was created (true if a release was made)
-
-## Examples
-
-### Example 1: Feature Release
+Examples:
 
 ```bash
-git commit -m "feat: add mentor availability calendar"
-# Result: v1.3.0 (MINOR bump)
+# PATCH
+git commit -m "fix: prevent NRE in rating calculation"
+
+# MINOR
+git commit -m "(MINOR) feat: add mentor availability search"
+
+# MAJOR
+git commit -m "(MAJOR) feat: change auth scheme to JWT-only"
+# (Optional) Put migration details in the body for reviewers/users
 ```
 
-### Example 2: Bug Fix Release
+Notes:
 
-```bash
-git commit -m "fix: resolve session timeout issue"
-# Result: v1.2.4 (PATCH bump)
-```
+-   The workflows search commit subjects (and body) for the `(MAJOR)` / `(MINOR)` flags.
+-   We intentionally ignore docs-only changes: pushes that only modify `**/*.md`, `docs/**`, `CHANGELOG.md`, or `.github/dependabot*` won’t run the release workflow.
 
-### Example 3: Breaking Change Release
+## Preview The Next Version (on PR)
 
-```bash
-git commit -m "break: migrate authentication to OAuth2
+-   On PR open, a comment shows the computed next version using the PR’s merge ref.
+-   If inaccurate, normalize your commits and push again (squash/amend as needed).
 
-BREAKING CHANGE: Legacy API key authentication is no longer supported"
-# Result: v2.0.0 (MAJOR bump)
-```
+## After Merge: What Gets Created
 
-### Example 4: Multiple Commits (One Release)
+-   Tag: `vX.Y.Z` (or `vX.Y.Z-rcN` if pre-release suffix is enabled in the workflow)
+-   GitHub Release with auto-generated notes
+-   `CHANGELOG.md` entry prepended with the new version and changes
 
-```bash
-git commit -m "feat: add notification preferences"
-git commit -m "fix: resolve email delivery bug"
-git commit -m "docs: update notification docs"
-# Result: v1.4.0 (MINOR from feat, PATCH from fix, docs ignored)
-# HIGHEST version bump wins
-```
+Tip: If you want plain tags without `-rcN`, remove the `version_format` line from `semantic-versioning.yml`.
 
-## Release Process
+## When A Release Won’t Trigger
 
-### For Contributors
-
-1. **Commit** using [Conventional Commits](/.github/git-commit-instructions.md) format
-2. **Push** to a feature branch
-3. **Create PR** with meaningful description
-4. **Merge** to `master` when approved
-5. **Automatic Release** - GitHub Actions creates the release automatically
-
-### For Release Managers
-
-No manual steps required! The workflow is fully automated. Just ensure:
-
--   Commits follow the convention
--   PR descriptions are clear
--   Tests pass before merging
-
-### Monitoring Releases
-
--   **View Releases**: [GitHub Releases](https://github.com/AndriyBorkovich/mentor-sync/releases)
--   **View Tags**: [GitHub Tags](https://github.com/AndriyBorkovich/mentor-sync/tags)
--   **Check Workflow**: [GitHub Actions](https://github.com/AndriyBorkovich/mentor-sync/actions/workflows/semantic-versioning.yml)
-
-## Best Practices
-
-### ✅ DO
-
--   **Use conventional commit format** for all commits to `master`
--   **Be specific** with commit messages (e.g., "fix: resolve email validation regex")
--   **Use breaking change footer** for MAJOR version bumps
--   **Reference issues** in commit body: `Fixes #123`
--   **Write clear PR descriptions** explaining what changed and why
-
-### ❌ DON'T
-
--   Don't commit directly to `master` - always use PRs
--   Don't use generic messages like "update code" or "fixes"
--   Don't mix multiple concerns in one commit
--   Don't forget the commit type prefix
-
-## Examples of Good Commits
-
-```bash
-# Feature with issue reference
-git commit -m "feat: add session recovery mechanism
-
-Implements automatic session recovery for interrupted connections.
-Fixes #188"
-
-# Bug fix with explanation
-git commit -m "fix: resolve race condition in material caching
-
-Modified cache invalidation to use locks during concurrent updates."
-
-# Breaking change with migration guide
-git commit -m "break: require JWT token in all API requests
-
-BREAKING CHANGE: API now requires Authorization header with valid JWT.
-Migration: Update client to use refreshed tokens."
-
-# Infrastructure update
-git commit -m "infrastructure: upgrade PostgreSQL to 16
-
-Includes schema optimization and performance improvements."
-```
-
-## Version History Format
-
-Each release includes:
-
--   **Tag**: `vX.Y.Z` (e.g., `v1.2.3`)
--   **Release Name**: `Release vX.Y.Z`
--   **Notes**: Automated description with:
-    -   Version number and date
-    -   List of commit types included
-    -   Link to commit convention
-    -   Semantic versioning explanation
+-   Your push went to a branch other than `master`
+-   Only docs changed (paths are ignored by design)
+-   No commits since the last tag affected included paths
 
 ## Troubleshooting
 
-### Release Not Created
+-   PR has no “next version” comment
 
-**Problem**: Commits were pushed but no release created.
+    -   Ensure the PR targets `master` and is in “opened” state.
+    -   Re-open the PR or re-run the workflow from Actions if needed.
 
-**Causes**:
+-   Release didn’t appear
 
--   Commit message doesn't follow convention
--   Push was to a branch other than `master`
--   Commits only have type prefixes that don't bump versions (e.g., `docs:`, `style:`)
+    -   Check Actions logs for `semantic-versioning.yml` on the merge commit
+    -   Confirm your commits used `(MINOR)`/`(MAJOR)` or that patch-worthy changes exist
 
-**Solution**: Check workflow logs in [GitHub Actions](https://github.com/AndriyBorkovich/mentor-sync/actions)
+-   Changelog step “nothing to commit”
+    -   That’s OK—our script exits successfully when no content is produced.
 
-### Wrong Version Calculated
+## Cheat Sheet
 
-**Problem**: Version bumped incorrectly.
+```bash
+# New feature (minor)
+git commit -m "(MINOR) feat: add rating summary endpoint"
 
-**Causes**:
+# Breaking change (major)
+git commit -m "(MAJOR) feat: unify materials and resources domain"
 
--   Incorrect commit type prefix
--   Typo in commit message pattern
-
-**Solution**: Create a new commit with correct type to bump version accordingly
-
-### Manual Version Override
-
-If manual intervention is needed:
-
-1. Create annotated tag manually: `git tag -a v1.5.0 -m "Release v1.5.0"`
-2. Push tag: `git push origin v1.5.0`
-3. Create release on GitHub with notes
-
-## Integration with CI/CD
-
-Future integrations (planned):
-
--   [ ] Auto-bump version in `package.json` / `csproj` files
--   [ ] Generate changelog from commits
--   [ ] Create release artifacts
--   [ ] Trigger deployment on release
--   [ ] Notify teams on new releases
+# Bug fix (patch)
+git commit -m "fix: correct pagination off-by-one"
+```
 
 ## References
 
--   [Semantic Versioning Spec](https://semver.org/)
--   [Conventional Commits](https://www.conventionalcommits.org/)
--   [MentorSync Commit Guide](/.github/git-commit-instructions.md)
--   [GitHub Releases Documentation](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
+-   Workflow (releases): `.github/workflows/semantic-versioning.yml`
+-   Workflow (PR preview): `.github/workflows/on-pr-future-version.yml`
+-   Commit guide: `/.github/git-commit-instructions.md`
+-   Semantic Versioning: https://semver.org/
+-   Conventional Commits: https://www.conventionalcommits.org/
