@@ -1,3 +1,12 @@
+## v1.3.8 - 2025-11-29
+
+## 📦 Uncategorized
+
+- feat: add YAML validation workflow and configuration
+   - PR: #217
+
+
+
 ## v1.3.7 - 2025-11-29
 
 - no changes
