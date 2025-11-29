@@ -1,3 +1,12 @@
+## v1.3.5 - 2025-11-29
+
+## 📦 Uncategorized
+
+- chore(deps): bump marked from 16.3.0 to 17.0.1 in /src/MentorSync.UI
+   - PR: #216
+
+
+
 ## v1.3.4 - 2025-11-29
 
 ## 📦 Uncategorized
