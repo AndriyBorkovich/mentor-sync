@@ -1,0 +1,13 @@
+---
+extends: default
+rules:
+    line-length:
+        max: 160
+        level: warning
+    indentation:
+        indent: 2
+        level: error
+    trailing-spaces: disable
+    document-start: disable
+    truthy: disable
+    comments-indentation: disable
