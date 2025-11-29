@@ -14,7 +14,7 @@ on:
 
 env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    CI_COMMIT_MESSAGE: CI Automatic push on develop
+    CI_COMMIT_MESSAGE: CI Automatic push on master
     CI_COMMIT_AUTHOR: ci@users.noreply.github.com
 
 jobs:
