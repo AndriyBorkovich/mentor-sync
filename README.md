@@ -45,9 +45,13 @@ MentorSync follows a **Modular Monolith** architecture with independent feature 
 ### Key Architectural Features
 
 ✅ **Module Independence** – Each module has isolated DbContext, entities, and features
+
 ✅ **Contracts-Only Dependencies** – Modules communicate through `.Contracts` projects only
+
 ✅ **Clear Boundaries** – Architecture tests validate module isolation
+
 ✅ **Scalability Path** – Modules can be extracted to microservices
+
 ✅ **CQRS Pattern** – Custom command/query handlers for explicit operation flow
 
 ## 🛠️ Tech Stack
