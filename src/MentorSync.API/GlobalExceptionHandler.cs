@@ -19,10 +19,10 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
 	/// <returns>A task that represents the asynchronous operation, containing a boolean indicating if the exception was handled</returns>
 	/// <example>
 	/// <code>
-	/// // This handler automatically processes:
-	/// // - ValidationException -> 400 Bad Request with validation errors
-	/// // - OperationCanceledException -> 409 Conflict
-	/// // - Other exceptions -> 500 Internal Server Error
+	/// This handler automatically processes:
+	/// - ValidationException -> 400 Bad Request with validation errors
+	/// - OperationCanceledException -> 409 Conflict
+	/// - Other exceptions -> 500 Internal Server Error
 	/// </code>
 	/// </example>
 	public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)

@@ -140,9 +140,12 @@ dotnet_diagnostic.CA1031.severity = none
 # Specify IFormatProvider in string formatting methods
 dotnet_diagnostic.CA1305.severity = none
 
-#method length configuration
+# method length configuration
 MA0051.maximum_lines_per_method = 40
 MA0051.skip_local_functions = true
+
+# use events where appropriate
+dotnet_diagnostic.CA1030.severity = none
 
 # Types: use var
 csharp_style_var_for_built_in_types = true:error
