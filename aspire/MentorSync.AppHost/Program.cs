@@ -48,7 +48,7 @@ var mongodb = mongo.AddDatabase("mongodb");
 
 // Azure SMTP server
 var csKeyVault = builder.AddParameter("cs-keyvault", secret: true);
-/*var communicationService = */
+
 builder.AddBicepTemplate(name: "communication-service", "../bicep-templates/communication-service.module.bicep")
 								  .WithParameter(name: "isProd", value: false)
 								  .WithParameter("communicationServiceName", "cs-mentorsync-dev")
@@ -76,7 +76,7 @@ var api = builder.AddProject<Projects.MentorSync_API>("api")
 	.WithEnvironment("ConnectionStrings__EmailService", smtpConnectionString)
 	.WithEnvironment(name: "UI_PORT", value: uiPort.ToString(CultureInfo.InvariantCulture));
 
-// React + vite UI project
+// React + Vite Frontend project
 builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scriptName: "dev")
 	.WithReference(api)
 	.WaitFor(api)

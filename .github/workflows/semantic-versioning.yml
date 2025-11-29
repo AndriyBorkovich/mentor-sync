@@ -39,7 +39,7 @@ jobs:
                   minor_pattern: "^(feat|feature):"
                   version_format: "${major}.${minor}.${patch}"
                   change_path: "src/,tests/,aspire/"
-                  namespace: v
+                  tag_prefix: v
                   search_commit_body: true
 
             - name: Create GitHub Release
