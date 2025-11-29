@@ -1,3 +1,12 @@
+## v1.3.3 - 2025-11-29
+
+## 📦 Uncategorized
+
+- chore(deps-dev): bump eslint-plugin-react-hooks from 5.2.0 to 7.0.1 in /src/MentorSync.UI
+   - PR: #214
+
+
+
 ## v1.3.2 - 2025-11-29
 
 ## 📦 Uncategorized
