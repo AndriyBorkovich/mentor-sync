@@ -1,3 +1,12 @@
+## v1.3.9 - 2025-11-29
+
+## 📦 Uncategorized
+
+- chore(deps-dev): bump js-yaml from 4.1.0 to 4.1.1 in /src/MentorSync.UI in the npm_and_yarn group across 1 directory
+   - PR: #218
+
+
+
 ## v1.3.8 - 2025-11-29
 
 ## 📦 Uncategorized
