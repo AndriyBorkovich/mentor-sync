@@ -5,8 +5,8 @@ rules:
         max: 160
         level: warning
     indentation:
-        indent: 2
         level: error
+        indent-sequences: consistent
     trailing-spaces: disable
     document-start: disable
     truthy: disable
