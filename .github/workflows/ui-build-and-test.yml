@@ -1,39 +1,39 @@
 name: UI - build & test
 permissions:
-  contents: read
+    contents: read
 
 on:
-  push:
-    branches: ["master"]
-    paths: ["src/MentorSync.UI/**"]
-  pull_request:
-    branches: ["master"]
-    paths: ["src/MentorSync.UI/**"]
+    push:
+        branches: ["master"]
+        paths: ["src/MentorSync.UI/**"]
+    pull_request:
+        branches: ["master"]
+        paths: ["src/MentorSync.UI/**"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: src/MentorSync.UI
+        defaults:
+            run:
+                working-directory: src/MentorSync.UI
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "npm"
-          cache-dependency-path: src/MentorSync.UI/package-lock.json
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: "npm"
+                  cache-dependency-path: src/MentorSync.UI/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Build project
-        run: npm run build
+            - name: Build project
+              run: npm run build
 
-      - name: Run tests
-        run: npm test --if-present
+            - name: Run tests
+              run: npm test --if-present

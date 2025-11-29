@@ -1,43 +1,43 @@
 name: Backend - build & test
 permissions:
-  contents: read
+    contents: read
 
 on:
-  push:
-    branches: ["master"]
-    paths-ignore: ["src/MentorSync.UI/**"]
-  pull_request:
-    branches: ["master"]
-    paths-ignore: ["src/MentorSync.UI/**"]
+    push:
+        branches: ["master"]
+        paths-ignore: ["src/MentorSync.UI/**", "**/*.md", "docs/**"]
+    pull_request:
+        branches: ["master"]
+        paths-ignore: ["src/MentorSync.UI/**", "**/*.md", "docs/**"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
-          cache: true
-          cache-dependency-path: "**/packages.lock.json"
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 9.0.x
+                  cache: true
+                  cache-dependency-path: "**/packages.lock.json"
 
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+            - name: Cache NuGet packages
+              uses: actions/cache@v4
+              with:
+                  path: ~/.nuget/packages
+                  key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-nuget-
 
-      - name: Restore dependencies
-        run: dotnet restore
+            - name: Restore dependencies
+              run: dotnet restore
 
-      - name: Build project
-        run: dotnet build --no-restore
+            - name: Build project
+              run: dotnet build --no-restore
 
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
+            - name: Test
+              run: dotnet test --no-build --verbosity normal
