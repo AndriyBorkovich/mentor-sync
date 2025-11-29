@@ -2,11 +2,11 @@
   "version": 2,
   "dependencies": {
     "net9.0": {
-      "Aspire.Dashboard.Sdk.win-x64": {
+      "Aspire.Dashboard.Sdk.linux-x64": {
         "type": "Direct",
         "requested": "[9.5.2, )",
         "resolved": "9.5.2",
-        "contentHash": "59o0gxsY39F/SNslyuOXeh0bZMokh0inqHi848C7JGVJLNJ1P9p5M3vV+otWhnj9OJMDhvfAqUckslzTGLzXPA=="
+        "contentHash": "865tpr/arUdoBRS+qoi56LKtGVuHOM92l+l+RXLSby85emFzjji24NV1DuKncBmLN2KnT5ArgOJ7jdHl5zpvuQ=="
       },
       "Aspire.Hosting.AppHost": {
         "type": "Direct",
@@ -171,37 +171,37 @@
       },
       "Aspire.Hosting.MongoDB": {
         "type": "Direct",
-        "requested": "[9.5.2, )",
-        "resolved": "9.5.2",
-        "contentHash": "SUmbhU1IYdq8WflDeFM9if3HB9rW5h36rLVf28kGdPJPCOmmHL4D/zDxpWag3KHOL8MRBk/cWys1YbsROkGcJA==",
+        "requested": "[13.0.1, )",
+        "resolved": "13.0.1",
+        "contentHash": "tsl7zlVii01bUxtjOnNN7WWUfAQ756D5G/qhuXw4Z7yfLYBb7y1Ni502j8TQuJ58eXd8Fmx8LHamvCIktxHapg==",
         "dependencies": {
           "AspNetCore.HealthChecks.MongoDb": "9.0.0",
           "AspNetCore.HealthChecks.Uris": "9.0.0",
-          "Aspire.Hosting": "9.5.2",
+          "Aspire.Hosting": "13.0.1",
           "DnsClient": "1.8.0",
-          "Google.Protobuf": "3.32.0",
+          "Google.Protobuf": "3.33.0",
           "Grpc.AspNetCore": "2.71.0",
           "Grpc.Net.ClientFactory": "2.71.0",
           "Grpc.Tools": "2.72.0",
           "Humanizer.Core": "2.14.1",
           "JsonPatch.Net": "3.3.0",
-          "KubernetesClient": "17.0.14",
+          "KubernetesClient": "18.0.5",
           "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
           "Microsoft.Extensions.Configuration.Binder": "8.0.2",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2",
-          "Microsoft.Extensions.Diagnostics.HealthChecks": "8.0.20",
+          "Microsoft.Extensions.Diagnostics.HealthChecks": "8.0.22",
           "Microsoft.Extensions.Hosting": "8.0.1",
           "Microsoft.Extensions.Hosting.Abstractions": "8.0.1",
           "Microsoft.Extensions.Http": "8.0.1",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
           "Microsoft.Extensions.Options": "8.0.2",
           "Microsoft.Extensions.Primitives": "8.0.0",
-          "MongoDB.Driver": "3.4.3",
-          "Newtonsoft.Json": "13.0.3",
-          "Polly.Core": "8.6.3",
+          "MongoDB.Driver": "3.5.0",
+          "Newtonsoft.Json": "13.0.4",
+          "Polly.Core": "8.6.4",
           "Semver": "3.0.0",
-          "StreamJsonRpc": "2.22.11",
-          "System.IO.Hashing": "9.0.8"
+          "StreamJsonRpc": "2.22.23",
+          "System.IO.Hashing": "9.0.10"
         }
       },
       "Aspire.Hosting.NodeJs": {
@@ -236,11 +236,11 @@
           "System.IO.Hashing": "9.0.8"
         }
       },
-      "Aspire.Hosting.Orchestration.win-x64": {
+      "Aspire.Hosting.Orchestration.linux-x64": {
         "type": "Direct",
         "requested": "[9.5.2, )",
         "resolved": "9.5.2",
-        "contentHash": "GQGlyoAntX+ng+VUuXSEKhhK9SazgBe4kC5Mia7sNclmY4sVCSCeAWAXDHYhKF3ayVbG9m/wR+PIgBy66nL6kQ=="
+        "contentHash": "NwNi+FEKRFT1EKWZDpduNo6ApFYlJ/a1WZyZfWheR953HRcTqk7Udr1Ar+ejyYPcUNhiGCHJPYPTbOuWGs+fqw=="
       },
       "CommunityToolkit.Aspire.Hosting.NodeJS.Extensions": {
         "type": "Direct",
@@ -284,32 +284,32 @@
       },
       "Aspire.Hosting": {
         "type": "Transitive",
-        "resolved": "9.5.2",
-        "contentHash": "CQLIzx6zkQCuok+CHjrj3sEVlP6/elJwnWdkJComkAkQvp82ASPwiUDPF84bt5rO9SBwRqeej7HpFMLoL55fhQ==",
+        "resolved": "13.0.1",
+        "contentHash": "i7ZgwLp8hs0S+SvYPigu4W8wzeVI9e9H9as3OlcBSfllW3HtpfEaCfLoVE9QfBQIbsn7KuyCBSti0hTJue+vGw==",
         "dependencies": {
           "AspNetCore.HealthChecks.Uris": "9.0.0",
-          "Google.Protobuf": "3.32.0",
+          "Google.Protobuf": "3.33.0",
           "Grpc.AspNetCore": "2.71.0",
           "Grpc.Net.ClientFactory": "2.71.0",
           "Grpc.Tools": "2.72.0",
           "Humanizer.Core": "2.14.1",
           "JsonPatch.Net": "3.3.0",
-          "KubernetesClient": "17.0.14",
+          "KubernetesClient": "18.0.5",
           "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
           "Microsoft.Extensions.Configuration.Binder": "8.0.2",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.2",
-          "Microsoft.Extensions.Diagnostics.HealthChecks": "8.0.20",
+          "Microsoft.Extensions.Diagnostics.HealthChecks": "8.0.22",
           "Microsoft.Extensions.Hosting": "8.0.1",
           "Microsoft.Extensions.Hosting.Abstractions": "8.0.1",
           "Microsoft.Extensions.Http": "8.0.1",
           "Microsoft.Extensions.Logging.Abstractions": "8.0.3",
           "Microsoft.Extensions.Options": "8.0.2",
           "Microsoft.Extensions.Primitives": "8.0.0",
-          "Newtonsoft.Json": "13.0.3",
-          "Polly.Core": "8.6.3",
+          "Newtonsoft.Json": "13.0.4",
+          "Polly.Core": "8.6.4",
           "Semver": "3.0.0",
-          "StreamJsonRpc": "2.22.11",
-          "System.IO.Hashing": "9.0.8"
+          "StreamJsonRpc": "2.22.23",
+          "System.IO.Hashing": "9.0.10"
         }
       },
       "Aspire.Hosting.Azure.KeyVault": {
@@ -563,8 +563,8 @@
       },
       "Google.Protobuf": {
         "type": "Transitive",
-        "resolved": "3.32.0",
-        "contentHash": "fsKxV5bhcvXmZi+cUo5+IxzRMBHwHeFO8G5utNa9f+Mu37kmfy8JcUVvWPt4cX7EuQWAjjHUjZqVl7nGSTRHRg=="
+        "resolved": "3.33.0",
+        "contentHash": "+kIa03YipuiSDeRuZwcDcXS1xBQAFeGLIjuLbgJr2i+TlwBPYAqdnQZJ2SDVzIgDyy+q+n/400WyWyrJ5ZqCgQ=="
       },
       "Grpc.AspNetCore": {
         "type": "Transitive",
@@ -658,8 +658,8 @@
       },
       "KubernetesClient": {
         "type": "Transitive",
-        "resolved": "17.0.14",
-        "contentHash": "FMGWjGtN8WEUKAAQxs96PK2tYvPrvwhoJzay/6HiByVTvHoJ0i9u7ykvYb7E3vLTSlfv26Q2Ktxr41zYCppu8A==",
+        "resolved": "18.0.5",
+        "contentHash": "xkttIbnGNibYwAyZ0sqeQle2w90bfaJrkF8BaURWHfSMKPbHwys9t/wq1XmT64eA4WRVXLENYlXtqmWlEstG6A==",
         "dependencies": {
           "Fractions": "7.3.0",
           "YamlDotNet": "16.3.0"
@@ -1026,8 +1026,8 @@
       },
       "MongoDB.Bson": {
         "type": "Transitive",
-        "resolved": "3.4.3",
-        "contentHash": "ZB2nCdlWtmDGItkDFh2E2kfYlXaItG414t9Np7CZhpftLypemYnxtdI52H+0b8RPqoUJD7bUvrf598sDTJd5iA==",
+        "resolved": "3.5.0",
+        "contentHash": "JGNK6BanLDEifgkvPLqVFCPus5EDCy416pxf1dxUBRSVd3D9+NB3AvMVX190eXlk5/UXuCxpsQv7jWfNKvppBQ==",
         "dependencies": {
           "System.Memory": "4.5.5",
           "System.Runtime.CompilerServices.Unsafe": "5.0.0"
@@ -1035,12 +1035,12 @@
       },
       "MongoDB.Driver": {
         "type": "Transitive",
-        "resolved": "3.4.3",
-        "contentHash": "yE6XQiDoFwTH4Xq/STJCbzsz+74RuzCXU45g9gaWFlLyy95xG8utuj+e64uXSbONtzabbp1O/8vfA3/HJXL6Pg==",
+        "resolved": "3.5.0",
+        "contentHash": "ST90u7psyMkNNOWFgSkexsrB3kPn7Ynl2DlMFj2rJyYuc6SIxjmzu4ufy51yzM+cPVE1SvVcdb5UFobrRw6cMg==",
         "dependencies": {
           "DnsClient": "1.6.1",
           "Microsoft.Extensions.Logging.Abstractions": "2.0.0",
-          "MongoDB.Bson": "3.4.3",
+          "MongoDB.Bson": "3.5.0",
           "SharpCompress": "0.30.1",
           "Snappier": "1.0.0",
           "System.Buffers": "4.5.1",
@@ -1059,8 +1059,8 @@
       },
       "Newtonsoft.Json": {
         "type": "Transitive",
-        "resolved": "13.0.3",
-        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+        "resolved": "13.0.4",
+        "contentHash": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
       },
       "Npgsql": {
         "type": "Transitive",
@@ -1091,8 +1091,8 @@
       },
       "Polly.Core": {
         "type": "Transitive",
-        "resolved": "8.6.3",
-        "contentHash": "xRlcE+1FidqIfZ7zxBT6klSblJ/7MAJq1x5yvYoLnwNhs8Xc2gp3Srf8wHG2NpFxVBqrldc3svhkMPJjSzTmzw=="
+        "resolved": "8.6.4",
+        "contentHash": "4AWqYnQ2TME0E+Mzovt1Uu+VyvpR84ymUldMcPw7Mbj799Phaag14CKrMtlJGx5jsvYP+S3oR1QmysgmXoD5cw=="
       },
       "Semver": {
         "type": "Transitive",
@@ -1114,8 +1114,8 @@
       },
       "StreamJsonRpc": {
         "type": "Transitive",
-        "resolved": "2.22.11",
-        "contentHash": "TQcqBFswLNpdSJANjhxZmIIe0Yl0kGqzjZ+uHLdhrkxntofvNu6C53XPEEYQ3Wkj8AorKumkuv/VMvTH4BHOZw==",
+        "resolved": "2.22.23",
+        "contentHash": "Ahq6uUFPnU9alny5h4agyX74th3PRq3NQCRNaDOqWcx20WT06mH/wENSk5IbHDc8BmfreQVEIBx5IXLBbsLFIA==",
         "dependencies": {
           "MessagePack": "2.5.192",
           "Microsoft.VisualStudio.Threading.Only": "17.13.61",
@@ -1151,8 +1151,8 @@
       },
       "System.IO.Hashing": {
         "type": "Transitive",
-        "resolved": "9.0.8",
-        "contentHash": "5TJUS9EIYrp0VEcm06EPYxXmLmsVUakewFnM/CAxQfvlasI9fGkTKM9afSf2dodZcMCzFna/o7Fn+gYRt3uTiA=="
+        "resolved": "9.0.10",
+        "contentHash": "9gv5z71xaWWmcGEs4bXdreIhKp2kYLK2fvPK5gQkgnWMYvZ8ieaxKofDjxL3scZiEYfi/yW2nJTiKV2awcWEdA=="
       },
       "System.IO.Pipelines": {
         "type": "Transitive",
