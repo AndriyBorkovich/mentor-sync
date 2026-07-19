@@ -94,7 +94,7 @@ Configuration and deployment guides
 
 1. Read `Guides/DomainDeepDives/` for your domain (frontend or backend)
 2. Check `Guides/CodingStandards/` for specific patterns
-3. Reference `.github/copilot-instructions.md` for comprehensive guidelines
+3. Read the root `AGENTS.md` and the closest subtree-specific `AGENTS.md` for agent guidance
 
 **Setting up locally?**
 
@@ -112,7 +112,7 @@ Configuration and deployment guides
 
 Documentation files reference each other for easy navigation:
 
--   Copilot instructions (`.github/copilot-instructions.md`) links to this documentation
+-   Root and subtree-specific `AGENTS.md` files link to the relevant documentation
 -   Build instructions link to all guide categories
 -   Architecture documents reference module documentation
 

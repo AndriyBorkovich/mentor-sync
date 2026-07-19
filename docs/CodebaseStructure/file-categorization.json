@@ -244,9 +244,24 @@
 	],
 	"github-configuration": [
 		".github/git-commit-instructions.md",
-		".github/copilot-instructions.md",
 		".github/pull_request_template.md",
 		".github/dependabot.yml"
+	],
+	"agent-guidance": [
+		"AGENTS.md",
+		"aspire/AGENTS.md",
+		"src/MentorSync.API/AGENTS.md",
+		"src/MentorSync.MigrationService/AGENTS.md",
+		"src/MentorSync.SharedKernel/AGENTS.md",
+		"src/MentorSync.UI/AGENTS.md",
+		"src/Modules/AGENTS.md",
+		"src/Modules/Materials/AGENTS.md",
+		"src/Modules/Notifications/AGENTS.md",
+		"src/Modules/Ratings/AGENTS.md",
+		"src/Modules/Recommendations/AGENTS.md",
+		"src/Modules/Scheduling/AGENTS.md",
+		"src/Modules/Users/AGENTS.md",
+		"tests/MentorSync.ArchitectureTests/AGENTS.md"
 	],
 	"documentation": [
 		"README.md",

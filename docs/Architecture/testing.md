@@ -292,6 +292,6 @@ Ensure:
 ## Related Documentation
 
 -   **Main Architecture**: `docs/Architecture/overview.md`
--   **CQRS Pattern**: `.github/copilot-instructions.md` (Custom CQRS section)
+-   **CQRS Pattern**: `AGENTS.md` and `src/Modules/AGENTS.md`
 -   **Module Communication**: `docs/Architecture/overview.md` (Contracts-Only Pattern section)
--   **Development Guidelines**: `.github/copilot-instructions.md` (Modular Monolith Architecture section)
+-   **Development Guidelines**: `AGENTS.md` plus the closest module-specific `AGENTS.md`

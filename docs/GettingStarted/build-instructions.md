@@ -424,4 +424,4 @@ export const RatingForm: React.FC<{ mentorId: string }> = ({ mentorId }) => {
 -   **Architectural Domains**: `docs/Architecture/domains.json`
 -   **Domain Deep-Dives**: `docs/Guides/DomainDeepDives/*.md`
 -   **Coding Standards**: `docs/Guides/CodingStandards/*.md`
--   **Main Instructions**: `/.github/copilot-instructions.md`
+-   **Main Instructions**: `/AGENTS.md` plus the closest subtree-specific `AGENTS.md`
