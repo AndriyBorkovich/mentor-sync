@@ -9,7 +9,7 @@ using MentorSync.Recommendations;
 using MentorSync.Scheduling;
 using MentorSync.Users;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -186,6 +186,9 @@ internal static class ServiceCollectionExtensions
 /// </summary>
 static file class SwaggerConfiguration
 {
+	private const string AntiforgerySchemeName = "XSRF-TOKEN";
+	private const string BearerSchemeName = "Bearer";
+
 	/// <summary>
 	/// Gets the JWT Bearer authentication scheme for OpenAPI
 	/// </summary>
@@ -196,12 +199,7 @@ static file class SwaggerConfiguration
 		Name = "Authorization",
 		Type = SecuritySchemeType.Http,
 		BearerFormat = "JWT",
-		Scheme = "Bearer",
-		Reference = new OpenApiReference
-		{
-			Id = "Bearer",
-			Type = ReferenceType.SecurityScheme,
-		}
+		Scheme = "Bearer"
 	};
 
 	/// <summary>
@@ -212,12 +210,7 @@ static file class SwaggerConfiguration
 		In = ParameterLocation.Header,
 		Name = "X-XSRF-TOKEN",
 		Type = SecuritySchemeType.ApiKey,
-		Description = "Antiforgery token. Get it from /antiforgery/token endpoint and send it here.",
-		Reference = new OpenApiReference
-		{
-			Id = "XSRF-TOKEN",
-			Type = ReferenceType.SecurityScheme
-		}
+		Description = "Antiforgery token. Get it from /antiforgery/token endpoint and send it here."
 	};
 
 	/// <summary>
@@ -228,12 +221,12 @@ static file class SwaggerConfiguration
 	{
 		option.ResolveConflictingActions(apiDesc => apiDesc.First());
 		option.SwaggerDoc("v1", new OpenApiInfo { Title = "MentorSync API", Version = "v1" });
-		option.AddSecurityDefinition(BearerScheme.Reference.Id, BearerScheme);
-		option.AddSecurityDefinition(AntiforgeryScheme.Reference.Id, AntiforgeryScheme);
-		option.AddSecurityRequirement(new OpenApiSecurityRequirement
+		option.AddSecurityDefinition(BearerSchemeName, BearerScheme);
+		option.AddSecurityDefinition(AntiforgerySchemeName, AntiforgeryScheme);
+		option.AddSecurityRequirement(document => new OpenApiSecurityRequirement
 		{
-			{ BearerScheme, Array.Empty<string>() },
-			{ AntiforgeryScheme, Array.Empty<string>() }
+			[new OpenApiSecuritySchemeReference(BearerSchemeName, document)] = [],
+			[new OpenApiSecuritySchemeReference(AntiforgerySchemeName, document)] = []
 		});
 		option.CustomSchemaIds(t => t.FullName?.Replace('+', '.'));
 	}

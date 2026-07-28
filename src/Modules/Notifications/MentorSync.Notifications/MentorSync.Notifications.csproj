@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Aspire.MongoDB.Driver.v3" />
+    <PackageReference Include="Aspire.MongoDB.Driver" />
     <PackageReference Include="Azure.Communication.Email" />
   </ItemGroup>
 

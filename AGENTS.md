@@ -22,7 +22,7 @@
 
 ## Architecture invariants
 
-- This is a .NET 9 modular monolith. Business modules are independently registered and own their data models and schema.
+- This is a .NET 10 modular monolith, orchestrated with Aspire 13. Business modules are independently registered and own their data models and schema.
 - A module may reference another module only through that module's `MentorSync.<Domain>.Contracts` project. Never reference another module's implementation project, `Data`, `Domain`, `Features`, or `Infrastructure` namespaces.
 - Put genuinely shared technical abstractions in `MentorSync.SharedKernel`; do not move domain behavior there to bypass module boundaries.
 - Backend HTTP APIs use Minimal APIs through `IEndpoint`; do not introduce MVC controllers.
@@ -41,6 +41,7 @@ Treat `.editorconfig`, `Directory.Build.props`, enabled analyzers, and architect
 - Use the modifier order configured in `.editorconfig` and declare accessibility on non-interface members.
 - Prefer top-level statements for executable entry points and primary constructors/constructor injection where they keep dependencies clear and match nearby code.
 - Seal classes that are not designed for inheritance. Prefer `sealed record` for immutable commands, queries, requests, responses, events, and value-like DTOs; use classes for mutable entities and stateful services.
+- C# 14 is enabled repository-wide. Use its features when they improve clarity or remove real duplication; do not convert established public extension APIs or backing fields solely to adopt newer syntax.
 
 ### Naming and type usage
 

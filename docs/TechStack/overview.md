@@ -13,7 +13,7 @@
 
 ### Primary Languages & Frameworks
 
--   **Backend**: C# (.NET 9) with ASP.NET Core WebAPI using Minimal APIs
+-   **Backend**: C# (.NET 10) with ASP.NET Core WebAPI using Minimal APIs
 -   **Frontend**: TypeScript with React and Vite
 -   **Infrastructure**: Bicep for IaC, .NET Aspire for orchestration
 -   **Database**: PostgreSQL multi-schema (one schema per module)

@@ -18,7 +18,6 @@
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-		<PackageReference Include="System.Text.Json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -29,7 +28,6 @@
 
 	<ItemGroup>
 		<Folder Include="Data\Migrations\" />
-		<Compile Remove="Data\Migrations\*.cs" />
 	</ItemGroup>
 
 </Project>
