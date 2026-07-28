@@ -26,6 +26,7 @@ if (!builder.ExecutionContext.IsPublishMode)
 {
 	postgres = postgres.RunAsContainer(b =>
 	{
+		b.WithImageTag("17.6");
 		b.WithPgAdmin(cb =>
 			cb.WithImageTag("latest").WithLifetime(ContainerLifetime.Persistent));
 		b.WithDataVolume(name: "postgres-data", isReadOnly: false);
@@ -77,14 +78,15 @@ var api = builder.AddProject<Projects.MentorSync_API>("api")
 	.WithEnvironment(name: "UI_PORT", value: uiPort.ToString(CultureInfo.InvariantCulture));
 
 // React + Vite Frontend project
-builder.AddNpmApp(name: "ui", workingDirectory: "../../src/MentorSync.UI", scriptName: "dev")
+#pragma warning disable ASPIREJAVASCRIPT001
+builder.AddViteApp(name: "ui", appDirectory: "../../src/MentorSync.UI")
 	.WithReference(api)
 	.WaitFor(api)
 	.WithEnvironment("BROWSER", "none")
 	.WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
-	.WithHttpEndpoint(port: uiPort, env: "VITE_PORT")
+	.WithEndpoint("http", endpoint => endpoint.Port = uiPort)
 	.WithExternalHttpEndpoints()
-	.WithNpmPackageInstallation()
-	.PublishAsDockerFile();
+	.PublishAsStaticWebsite();
+#pragma warning restore ASPIREJAVASCRIPT001
 
 await builder.Build().RunAsync().ConfigureAwait(false);

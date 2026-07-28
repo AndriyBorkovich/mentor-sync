@@ -10,7 +10,6 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" />
 		<PackageReference Include="OpenTelemetry.Api" />
-		<PackageReference Include="System.Text.Json" />
 	</ItemGroup>
 
 	<ItemGroup>

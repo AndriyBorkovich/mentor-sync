@@ -74,7 +74,6 @@ public static class ServicesExtensions
 					.AddHttpClientInstrumentation()
 					.AddEntityFrameworkCoreInstrumentation()
 					.AddNpgsql()
-					.AddElasticsearchClientInstrumentation()
 					.SetSampler(new AlwaysOnSampler());
 			});
 

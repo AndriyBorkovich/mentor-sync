@@ -30,13 +30,10 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v4
               with:
-                  dotnet-version: 9.0.x
+                  dotnet-version: 10.0.x
 
             - name: Install azd
               uses: Azure/setup-azd@v2.0.0
-
-            - name: Install .NET Aspire workload
-              run: dotnet workload install aspire
 
             - name: Log in with Azure (Federated Credentials)
               if: ${{ env.AZURE_CLIENT_ID != '' }}
@@ -59,21 +56,13 @@ jobs:
                     --tenant-id "$($info.tenantId)"
               shell: pwsh
 
-            - name: Extract Solution Name
-              id: extract_solution_name
-              run: |
-                  # Extract the solution name from the .sln file
-                  SOLUTION_NAME=$(ls *.sln | sed 's/\.sln$//')
-                  echo "Solution Name: $SOLUTION_NAME"
-                  echo "SOLUTION_NAME=$SOLUTION_NAME" >> $GITHUB_ENV
-
             - name: Check env variables
               run: |
                   echo "AZD_INITIAL_ENVIRONMENT_CONFIG=$AZD_INITIAL_ENVIRONMENT_CONFIG"
 
             - name: Provision Infrastructure
               run: azd provision --no-prompt
-              working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
+              working-directory: aspire/MentorSync.AppHost
               env:
                   AZD_INITIAL_ENVIRONMENT_CONFIG: ${{ secrets.AZD_INITIAL_ENVIRONMENT_CONFIG }}
 
@@ -81,8 +70,8 @@ jobs:
               run: azd env refresh --no-prompt
               env:
                   AZURE_LOCATION: ${{ env.AZURE_LOCATION }}
-              working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
+              working-directory: aspire/MentorSync.AppHost
 
             - name: Deploy Application
               run: azd deploy --no-prompt
-              working-directory: aspire/${{ env.SOLUTION_NAME }}.AppHost
+              working-directory: aspire/MentorSync.AppHost
