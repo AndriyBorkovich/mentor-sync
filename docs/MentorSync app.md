@@ -1,7 +1,7 @@
 Theme: a web application with machine learning elements to search for mentors in the IT field
 Architecture description: [[Architecture]]
 Tech stack:
-BE: C#, .NET 9, ASP.NET WebAPI, MinimalAPI, EF Core, MediatR, FluentValidation,
+BE: C#, .NET 10, ASP.NET WebAPI, MinimalAPI, EF Core, MediatR, FluentValidation,
 ASP.NET Identity (JWT & Google, GitHub, LinkedIn OAuth2.0), SignalR, OpenTelemetry, ML.NET
 FE: Typescipt, React, Vite, TailwindCSS
 DBs: PostgreSQL, MongoDB

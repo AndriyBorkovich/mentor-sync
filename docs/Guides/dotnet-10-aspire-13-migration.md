@@ -40,6 +40,27 @@ Reference:
 - [ASP.NET Core 9 to 10 migration](https://learn.microsoft.com/aspnet/core/migration/90-to-100)
 - [Swashbuckle 10 migration](https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/docs/migrating-to-v10.md)
 
+### C# 14
+
+- C# 14 is enabled repository-wide through the .NET 10 SDK and
+  `LangVersion=latest`.
+- The codebase was reviewed for extension members, null-conditional assignment,
+  unbound generic `nameof`, implicit span conversions, lambda parameter
+  modifiers, field-backed properties, partial constructors and events,
+  user-defined compound assignment, and file-based app directives.
+- No existing production-code site benefits from conversion without either
+  reducing clarity or changing an established public API. In particular,
+  current nullable update paths contain meaningful update/insert branches, and
+  existing extension methods already express action-oriented APIs clearly.
+- Adopt C# 14 features in new or changed code when they remove duplication or
+  make intent clearer. Avoid repository-wide syntax conversions with no
+  behavioral or maintenance benefit.
+
+Reference:
+
+- [What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14)
+- [C# compiler breaking changes in .NET 10](https://learn.microsoft.com/dotnet/csharp/whats-new/breaking-changes/compiler%20breaking%20changes%20-%20dotnet%2010)
+
 ### Entity Framework Core and Npgsql
 
 - EF Core, its design-time tools, the Npgsql provider, and Aspire's Npgsql

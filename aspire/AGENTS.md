@@ -4,11 +4,14 @@ This subtree owns local orchestration, service wiring, Azure Developer CLI confi
 
 ## Orchestration
 
+- Keep the AppHost and integration packages aligned on Aspire `13.4.6` and target .NET 10. Use the Aspire SDK project format; do not restore the retired Aspire workload or an explicit `Aspire.Hosting.AppHost` package reference.
 - Treat `MentorSync.AppHost/Program.cs` as the source of truth for resource names and dependencies: PostgreSQL, MongoDB, blob storage, migration service, API, UI, and communication-service parameters.
+- Use the first-party JavaScript/Vite integration (`Aspire.Hosting.JavaScript` and `AddViteApp`) rather than the retired NodeJs package or community `AddNpmApp` integration.
 - Keep local and publish behavior explicit through `builder.ExecutionContext.IsPublishMode`; do not make cloud resources silently replace local emulators/containers.
 - Preserve dependency ordering: migrations wait for PostgreSQL; the API waits for its stores; the UI waits for the API.
 - Pass endpoints and secrets through Aspire references, parameters, configuration, or environment variables. Never hardcode credentials or generated connection strings.
 - Changes to resource names are compatibility changes: update all references, environment variables, manifests/templates, documentation, and deployment configuration together.
+- Keep the PostgreSQL development container pinned to `17.6` until a deliberate volume migration is planned; Aspire 13.4's PostgreSQL 18 default is not storage-compatible with existing PostgreSQL 17 volumes.
 
 ## Bicep and generated artifacts
 
