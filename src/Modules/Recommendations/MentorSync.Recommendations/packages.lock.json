@@ -36,9 +36,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "Direct",
-        "requested": "[2.0.250, )",
-        "resolved": "2.0.250",
-        "contentHash": "+Y/z+dDTlDbI0iYsG5sad2kskprPH86jscQcS8VfnEaZxbb4WsP0bD0iEG4ZdY0XwZycdUWfRCtJrTKQX/8bJA=="
+        "requested": "[3.0.138, )",
+        "resolved": "3.0.138",
+        "contentHash": "o97FZRHWIpMeg/Mzb5Whhcqe1/95SxZLn1bkG+P8T4ijiAY6eoe9BYTYyINBVzkyl5zehQ7NB6bz1DnEgqVZmQ=="
       },
       "Microsoft.CodeAnalysis.NetAnalyzers": {
         "type": "Direct",
@@ -698,19 +698,19 @@
       "mentorsync.materials.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "mentorsync.ratings.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "mentorsync.scheduling.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "mentorsync.sharedkernel": {
@@ -726,7 +726,7 @@
       "mentorsync.users.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "Ardalis.Result": {

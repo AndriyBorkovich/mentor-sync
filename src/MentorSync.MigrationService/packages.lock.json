@@ -32,9 +32,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "Direct",
-        "requested": "[2.0.250, )",
-        "resolved": "2.0.250",
-        "contentHash": "+Y/z+dDTlDbI0iYsG5sad2kskprPH86jscQcS8VfnEaZxbb4WsP0bD0iEG4ZdY0XwZycdUWfRCtJrTKQX/8bJA=="
+        "requested": "[3.0.138, )",
+        "resolved": "3.0.138",
+        "contentHash": "o97FZRHWIpMeg/Mzb5Whhcqe1/95SxZLn1bkG+P8T4ijiAY6eoe9BYTYyINBVzkyl5zehQ7NB6bz1DnEgqVZmQ=="
       },
       "Microsoft.CodeAnalysis.NetAnalyzers": {
         "type": "Direct",
@@ -858,9 +858,9 @@
         "type": "Project",
         "dependencies": {
           "Aspire.Npgsql.EntityFrameworkCore.PostgreSQL": "[9.5.2, )",
-          "MentorSync.Materials.Contracts": "[1.0.0, )",
-          "MentorSync.SharedKernel": "[1.0.0, )",
-          "MentorSync.Users.Contracts": "[1.0.0, )",
+          "MentorSync.Materials.Contracts": "[1.0.1, )",
+          "MentorSync.SharedKernel": "[1.0.1, )",
+          "MentorSync.Users.Contracts": "[1.0.1, )",
           "Microsoft.EntityFrameworkCore": "[9.0.10, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )",
           "System.Text.Json": "[9.0.10, )"
@@ -869,13 +869,13 @@
       "mentorsync.materials.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "mentorsync.notifications.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "mentorsync.ratings": {
@@ -883,9 +883,9 @@
         "dependencies": {
           "Aspire.Npgsql.EntityFrameworkCore.PostgreSQL": "[9.5.2, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.0, )",
-          "MentorSync.Ratings.Contracts": "[1.0.0, )",
-          "MentorSync.SharedKernel": "[1.0.0, )",
-          "MentorSync.Users.Contracts": "[1.0.0, )",
+          "MentorSync.Ratings.Contracts": "[1.0.1, )",
+          "MentorSync.SharedKernel": "[1.0.1, )",
+          "MentorSync.Users.Contracts": "[1.0.1, )",
           "Microsoft.EntityFrameworkCore": "[9.0.10, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )",
           "System.Text.Json": "[9.0.10, )"
@@ -894,7 +894,7 @@
       "mentorsync.ratings.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "mentorsync.recommendations": {
@@ -902,11 +902,11 @@
         "dependencies": {
           "Aspire.Npgsql.EntityFrameworkCore.PostgreSQL": "[9.5.2, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.0, )",
-          "MentorSync.Materials.Contracts": "[1.0.0, )",
-          "MentorSync.Ratings.Contracts": "[1.0.0, )",
-          "MentorSync.Scheduling.Contracts": "[1.0.0, )",
-          "MentorSync.SharedKernel": "[1.0.0, )",
-          "MentorSync.Users.Contracts": "[1.0.0, )",
+          "MentorSync.Materials.Contracts": "[1.0.1, )",
+          "MentorSync.Ratings.Contracts": "[1.0.1, )",
+          "MentorSync.Scheduling.Contracts": "[1.0.1, )",
+          "MentorSync.SharedKernel": "[1.0.1, )",
+          "MentorSync.Users.Contracts": "[1.0.1, )",
           "Microsoft.EntityFrameworkCore": "[9.0.10, )",
           "Microsoft.ML": "[4.0.3, )",
           "Microsoft.ML.Recommender": "[0.22.3, )",
@@ -919,10 +919,10 @@
         "dependencies": {
           "Aspire.Npgsql.EntityFrameworkCore.PostgreSQL": "[9.5.2, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.0, )",
-          "MentorSync.Notifications.Contracts": "[1.0.0, )",
-          "MentorSync.Scheduling.Contracts": "[1.0.0, )",
-          "MentorSync.SharedKernel": "[1.0.0, )",
-          "MentorSync.Users.Contracts": "[1.0.0, )",
+          "MentorSync.Notifications.Contracts": "[1.0.1, )",
+          "MentorSync.Scheduling.Contracts": "[1.0.1, )",
+          "MentorSync.SharedKernel": "[1.0.1, )",
+          "MentorSync.Users.Contracts": "[1.0.1, )",
           "Microsoft.EntityFrameworkCore": "[9.0.10, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[9.0.4, )",
           "System.Text.Json": "[9.0.10, )"
@@ -931,13 +931,13 @@
       "mentorsync.scheduling.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "mentorsync.servicedefaults": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )",
+          "MentorSync.SharedKernel": "[1.0.1, )",
           "Microsoft.Extensions.Http.Resilience": "[9.10.0, )",
           "Microsoft.Extensions.ServiceDiscovery": "[9.5.2, )",
           "Npgsql.OpenTelemetry": "[9.0.4, )",
@@ -966,9 +966,9 @@
         "dependencies": {
           "Aspire.Npgsql.EntityFrameworkCore.PostgreSQL": "[9.5.2, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.0, )",
-          "MentorSync.Notifications.Contracts": "[1.0.0, )",
-          "MentorSync.SharedKernel": "[1.0.0, )",
-          "MentorSync.Users.Contracts": "[1.0.0, )",
+          "MentorSync.Notifications.Contracts": "[1.0.1, )",
+          "MentorSync.SharedKernel": "[1.0.1, )",
+          "MentorSync.Users.Contracts": "[1.0.1, )",
           "Microsoft.AspNetCore.Authentication.Google": "[9.0.10, )",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[9.0.10, )",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "[9.0.10, )",
@@ -982,7 +982,7 @@
       "mentorsync.users.contracts": {
         "type": "Project",
         "dependencies": {
-          "MentorSync.SharedKernel": "[1.0.0, )"
+          "MentorSync.SharedKernel": "[1.0.1, )"
         }
       },
       "Ardalis.Result": {
